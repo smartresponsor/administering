@@ -1,0 +1,91 @@
+= Managing Field Visibility Explainability Surface
+:toc:
+
+== Purpose
+
+Administering exposes a read-only Managing field visibility explanation surface for operators who need to understand why a field is visible, hidden, or denied in the Managing EasyAdmin runtime.
+
+The surface is diagnostic only. It does not change Rolling permissions, Administering policies, Managing field profiles, or EasyAdmin rendering.
+
+== Surface
+
+[source,text]
+----
+/admin/managing/field-visibility-explanation
+----
+
+Route name:
+
+[source,text]
+----
+administration_managing_field_visibility_explanation
+----
+
+== Managing contract
+
+The runtime diagnostic authority remains in Managing:
+
+[source,text]
+----
+App\Managing\ResolverInterface\Crud\ManageCrudFieldVisibilityExplanationResolverInterface
+----
+
+Administering documents and presents the contract shape but does not execute Managing field filtering.
+
+== Decision axes
+
+Wave 31 aligns the Administering read-only surface with the Managing diagnostic axis model.
+
+[source,text]
+----
+access
+presentation
+availability
+----
+
+The axis is part of the explanation contract and prevents operators from treating every non-rendered field as the same kind of outcome.
+
+== Decision order
+
+. Managing page availability and component hard deny.
+. Managing backend visibility configuration.
+. Rolling effective field-value access decision.
+. Managing field definition defaults.
+. Managing user personal view profile.
+. Managing EasyAdmin field emission.
+
+A deny from Managing hard rules, backend config, or Rolling is terminal. A user profile can only change presentation within an already allowed corridor.
+
+== Access vs. presentation
+
+Rolling-backed denials are access-axis decisions and should be presented as:
+
+[source,text]
+----
+rolling_field_value_access_denied
+----
+
+User/profile hidden states are presentation-axis decisions and should be presented as:
+
+[source,text]
+----
+user_profile_hidden
+backend_configured_hidden
+field_default_hidden
+----
+
+A field that is not available on the requested page is an availability-axis decision:
+
+[source,text]
+----
+field_not_available_on_page
+----
+
+== Safety rules
+
+* The explanation surface is read-only.
+* It must not grant field access.
+* It must not apply profile changes.
+* It must not bypass Rolling deny decisions.
+* It must not expose sensitive field values.
+* It explains decisions through reason codes, decision axes, and layer ownership only.

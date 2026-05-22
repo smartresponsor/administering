@@ -1,0 +1,30 @@
+= Managing Field Access Catalog Hardening
+
+Administering treats Managing field-value access as a narrow policy corridor.
+The only permission that grants or denies access to actual field values is `managing.field.view`.
+
+== Separated concerns
+
+* `managing.field.view` controls access to field values.
+* `managing.field.configure` controls the ability to configure field-access policy surfaces.
+* `managing.field.profile.*` controls profile preference administration and never grants field-value access.
+
+== Review validation
+
+The Managing field-access mutation review surface validates every descriptor before it creates a Rolling ACL mutation review.
+It requires:
+
+* component `Managing`;
+* permission `managing.field.view`;
+* operation `view`;
+* non-empty resource, page, and field;
+* subject type `user`, `role`, or `group`;
+* effect `allow` or `deny`.
+
+Role-level access is reviewed as `permission.grant` or `permission.revoke`.
+Direct user/group access is reviewed as `acl.allow` or `acl.deny`.
+
+== Apply guard
+
+The apply surface remains narrower than generic Rolling ACL apply.
+It accepts only records whose permission begins with `managing.field.`, whose scope starts with `component:managing`, and whose mutation type is one of the approved field-access mutation types.

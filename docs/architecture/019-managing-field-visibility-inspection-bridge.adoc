@@ -1,0 +1,51 @@
+= Managing Field Visibility Inspection Bridge
+
+Administering exposes a read-only preparation surface for Managing field visibility diagnostics.
+
+The surface prepares a payload for:
+
+[source,text]
+----
+App\Managing\InspectorInterface\Crud\ManageCrudFieldVisibilityInspectorInterface
+----
+
+or the equivalent Managing console command:
+
+[source,bash]
+----
+php bin/console managing:field-visibility:explain <resource> <field> <page> --subject=<subject>
+----
+
+== Boundary
+
+Administering does not execute Managing runtime in this surface.
+It prepares and validates the diagnostic request shape so a host integration or operator can submit it to Managing.
+
+The bridge is read-only:
+
+* it does not grant field access;
+* it does not render field values;
+* it does not write profile storage;
+* it does not bypass Rolling deny decisions;
+* it only prepares diagnostic metadata.
+
+== Prepared payload
+
+The prepared payload mirrors Managing's inspection request shape:
+
+[source,yaml]
+----
+resourceClass: App\Cataloging\Entity\Catalog\CatalogCategoryEntity
+fieldName: title
+pageName: index
+subjectIdentifier: user:42
+statusCandidates: []
+publicationFlagCandidates: []
+publicationDateCandidates: []
+----
+
+== Responsibility split
+
+Managing remains the execution owner of the actual field visibility explanation.
+Rolling remains the owner of effective authorization decisions.
+Administering owns the control-plane preparation surface and audit-friendly request shape.

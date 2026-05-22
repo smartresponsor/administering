@@ -1,0 +1,33 @@
+= Administering Ownership Baseline
+
+== Canon
+
+* Component/repository: `Administering`.
+* Composer package: `administering/admin`.
+* Namespace: `App\Administering`.
+* Business/entity stem: `Administration`.
+* UI label: `Admin`.
+* Route prefix: `/admin`.
+* Config root: `administering`.
+* Database prefix: `administration_`.
+
+== Host-application storage boundary
+
+The host application already separates data through two Entity Managers:
+
+* PostgreSQL Entity Manager: user/business data.
+* SQLite/system Entity Manager: system, infrastructure, environment, menu, configuration, and administrative metadata.
+
+Administering entities must be mapped to the SQLite/system Entity Manager. They must not be mapped to the PostgreSQL user-data Entity Manager.
+
+== Component responsibilities
+
+* Accessing authenticates: login, logout, session, current account, password, 2FA, verification, security events.
+* Rolling authorizes: roles, permissions, ACL hierarchy, policy decisions, approvals, delegation, overrides.
+* Administering administers: EasyAdmin UI, ACL management screens, configuration governance, Symfony Secrets governance, snapshots, change requests, generated patches, and audit.
+
+== Direct file and secret policy
+
+Administering may inspect and snapshot configuration files, but Git-owned files remain repository-owned. Administering should create controlled change requests or generated patches for those files.
+
+Credential values must go through Symfony Secrets or another approved vault mechanism. Administering stores only metadata, presence, masked status, fingerprints, validation state, and audit events.

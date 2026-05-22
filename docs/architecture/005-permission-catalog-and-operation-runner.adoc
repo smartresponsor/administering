@@ -1,0 +1,29 @@
+= Administering Wave 6: Permission Catalog and Operation Runner Boundary
+
+Administering owns the administrative UI and orchestration surface, but it must not become the identity owner or the policy engine.
+
+== Operation runner boundary
+
+Messenger messages carry only an operation key.
+
+The concrete host application runner must:
+
+* load the operation from the system SQLite Entity Manager;
+* resolve the operation type from persisted metadata;
+* run only approved operation handlers;
+* keep secrets out of Messenger payloads, logs, exceptions, and snapshots;
+* write safe status transitions back into the system SQLite operation row.
+
+The bootstrap runner intentionally skips execution until the host wires concrete executors.
+
+== Permission catalog boundary
+
+Administering can render and organize a permission catalog, but Rolling remains the authorization owner.
+
+The Administering-local catalog provider is only a projection boundary. In a composed host application, this provider should be backed by Rolling's application ACL catalog.
+
+== Ownership rule
+
+Accessing authenticates.
+Rolling authorizes.
+Administering administers.

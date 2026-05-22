@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Operation;
+
+/**
+ * Safe execution result for a persisted Administering operation.
+ *
+ * The result intentionally carries only non-sensitive status data that may be
+ * shown in the admin UI or written to the system SQLite operation log.
+ */
+final class AdministrationOperationExecutionResult
+{
+    /** @param array<string, mixed> $safeContext */
+    public function __construct(
+        private readonly bool $successful,
+        private readonly string $status,
+        private readonly string $safeMessage,
+        private readonly array $safeContext = [],
+    ) {
+    }
+
+    public static function succeeded(string $safeMessage = 'Operation completed.', array $safeContext = []): self
+    {
+        return new self(true, 'succeeded', $safeMessage, $safeContext);
+    }
+
+    public static function failed(string $safeMessage, array $safeContext = []): self
+    {
+        return new self(false, 'failed', $safeMessage, $safeContext);
+    }
+
+    public static function skipped(string $safeMessage, array $safeContext = []): self
+    {
+        return new self(true, 'skipped', $safeMessage, $safeContext);
+    }
+
+    public function successful(): bool
+    {
+        return $this->successful;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
+    public function safeMessage(): string
+    {
+        return $this->safeMessage;
+    }
+
+    /** @return array<string, mixed> */
+    public function safeContext(): array
+    {
+        return $this->safeContext;
+    }
+}

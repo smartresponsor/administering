@@ -1,0 +1,116 @@
+= Managing / Rolling / Administering Field Visibility Readiness
+:toc:
+
+== Purpose
+
+This document is the Administering-side final readiness checkpoint for the three-component field access and visibility contour.
+It summarizes the production boundary across Managing, Rolling, and Administering.
+
+== Component ownership
+
+[cols="1,3", options="header"]
+|===
+| Component
+| Responsibility
+
+| Managing
+| Runtime EasyAdmin field definition, backend visibility filtering, optional Rolling-backed field access adapter, user personal profile execution, system profile storage seam, inspection/explainability.
+
+| Rolling
+| Authorization semantics, role hierarchy, subject assignment, ACL rules, effective allow/deny/abstain decisions for `managing.field.view`.
+
+| Administering
+| Control-plane UI, review/apply workflows, readiness surfaces, policy/profile diagnostics, audit-oriented guardrails.
+|===
+
+== Decision chain
+
+The cross-component decision chain is:
+
+[source,text]
+----
+Managing field metadata
+  -> Managing backend visibility config
+  -> Rolling field-value access decision
+  -> Administering-reviewed access/profile policy
+  -> Managing user personal profile
+  -> Managing EasyAdmin emission
+----
+
+`denied` is stronger than `hidden`.
+Presentation preferences never grant field-value access.
+
+== Field-value access
+
+Field-value access is controlled by Rolling with the permission:
+
+[source,text]
+----
+managing.field.view
+----
+
+Administering field-access mutation review must validate:
+
+* component is `Managing`;
+* permission is `managing.field.view`;
+* operation is `view`;
+* resource, page, and field are non-empty;
+* subject type is `user`, `role`, or `group`;
+* effect is `allow` or `deny`.
+
+Control-plane permissions such as `managing.field.configure` and `managing.field.profile.user_update` are not field-value access grants.
+
+== Profile visibility
+
+Field view profiles are presentation-only.
+They may hide or show an already allowed field, but they cannot grant access or override Rolling deny.
+
+The Managing profile shape is:
+
+[source,text]
+----
+subjects.{subjectKey}.defaults.{page}.visible/hidden
+subjects.{subjectKey}.resources.{resourceClass}.{page}.visible/hidden
+----
+
+Profile storage is system/internal storage. It must not be mapped to PostgreSQL user/business data.
+
+== Readiness surfaces
+
+Administering exposes read-only/check surfaces for the contour:
+
+* Managing field access catalog;
+* Managing field access matrix;
+* Managing field access mutation review/apply corridor;
+* Managing field view profile catalog;
+* Managing field view profile review/apply preparation;
+* Managing field visibility explanation;
+* Managing field visibility inspection preparation;
+* Rolling-backed Managing access readiness.
+
+These surfaces must not render field values or bypass Managing/Rolling enforcement.
+
+== Host activation sequence
+
+A production host should activate the contour in this order:
+
+. Apply Managing/Rolling/Administering code waves.
+. Verify Rolling catalog contains `managing.field.view`.
+. Verify Administering descriptor validation rejects non-`managing.field.view` field-access grants.
+. Run `php bin/console managing:field-view-profile-storage:check` before enabling Doctrine profile storage.
+. Enable system EntityManager mapping for `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` only in system SQLite.
+. Enable Managing profile reader/writer Doctrine backends explicitly.
+. Enable Managing Rolling external access adapter explicitly with `crud_field_external_access_failure_effect: deny`.
+. Use Managing inspection to confirm `access`, `presentation`, and `availability` diagnostics.
+
+== Final readiness checklist
+
+The contour is ready when these statements remain true:
+
+* Managing runtime emits no field denied by Rolling.
+* Rolling uses `managing.field.view` for field-value access only.
+* Administering review/apply surfaces do not directly write Managing storage.
+* Administering access review emits only the allowed Rolling mutation types.
+* User profile visibility never overrides access denial.
+* Doctrine profile storage is explicitly mapped to system storage.
+* Diagnostics distinguish `rolling_field_value_access_denied` from `user_profile_hidden`.

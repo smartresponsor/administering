@@ -1,0 +1,91 @@
+parameters:
+  administering.product_name: 'Administering'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Administering\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/AdministeringBundle.php'
+
+  App\Administering\Controller\:
+    resource: '../src/Controller/'
+    tags: ['controller.service_arguments']
+
+  App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface: '@App\Administering\Service\Accessing\SymfonyAdministrationCurrentUserContextProvider'
+  App\Administering\ServiceInterface\Security\AdministrationPermissionCheckerInterface: '@App\Administering\Service\Security\RollingAdministrationPermissionChecker'
+  App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface: '@App\Administering\Service\Audit\DoctrineAdministrationAuditRecorder'
+
+  App\Administering\ServiceInterface\Security\AdministrationExternalPermissionDecisionProviderInterface: '@App\Administering\Service\Security\BootstrapAdministrationExternalPermissionDecisionProvider'
+
+  App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface: '@App\Administering\Service\Configuration\FilesystemAdministrationConfigurationScanner'
+  App\Administering\ServiceInterface\Credential\AdministrationCredentialOperatorInterface: '@App\Administering\Service\Credential\SymfonySecretsAdministrationCredentialOperator'
+
+  App\Administering\Service\Credential\SymfonySecretsAdministrationCredentialOperator:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface: '@App\Administering\Service\Operation\AdministrationOperationRunFactory'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface: '@App\Administering\Service\Operation\MessengerAdministrationOperationQueue'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationSubmitterInterface: '@App\Administering\Service\Operation\AdministrationOperationSubmitter'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface: '@App\Administering\Service\Operation\DoctrineAdministrationOperationStatusRecorder'
+
+  App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface: '@App\Administering\Service\Operation\AdministrationGovernanceOperationRunner'
+  App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface: '@App\Administering\Service\Rolling\RollingAclManifestAdministrationPermissionCatalogProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessCatalogProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileCatalogProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldVisibilityExplanationCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityExplanationCatalogProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldVisibilityInspectionPrepareServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityInspectionPrepareService'
+  App\Administering\ServiceInterface\Rolling\AdministrationRollingBackedManagingAccessReadinessProviderInterface: '@App\Administering\Service\Rolling\AdministrationRollingBackedManagingAccessReadinessProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileReviewServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileReviewService'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileApplyService'
+  App\Administering\ValidatorInterface\Rolling\AdministrationFieldAccessPolicyDescriptorValidatorInterface: '@App\Administering\Validator\Rolling\AdministrationManagingFieldAccessPolicyDescriptorValidator'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessMutationReviewServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessMutationReviewService'
+  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessMutationApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessMutationApplyService'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface: '@App\Administering\Service\Accessing\AccessingAdministrationAccountProjectionProvider'
+
+  App\Administering\Service\Operation\AdministrationGovernanceOperationRunner:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface: '@App\Administering\Service\Operation\FilesystemAdministrationOperationArtifactWriter'
+
+  App\Administering\Service\Operation\FilesystemAdministrationOperationArtifactWriter:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface: '@App\Administering\Service\Operation\DoctrineAdministrationOperationReportProvider'
+
+
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface: '@App\Administering\Service\Rolling\DoctrineAdministrationAclMutationReviewRecorder'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface: '@App\Administering\Service\Accessing\DoctrineAdministrationAccountActionRequestRecorder'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionAuditProjectionProviderInterface: '@App\Administering\Service\Accessing\AccessingAdministrationAccountActionAuditProjectionProvider'
+
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface: '@App\Administering\Service\Rolling\RollingAdministrationAclMutationApplyService'
+
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyReportProviderInterface: '@App\Administering\Service\Rolling\DoctrineAdministrationAclMutationApplyReportProvider'
+
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationExecutionReportProviderInterface: '@App\Administering\Service\Rolling\RollingAdministrationAclMutationExecutionReportProvider'
+
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentOverviewProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentOverviewProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentReadinessReportProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentReadinessReportProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentRemediationPlanProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentRemediationPlanProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentWorkPlanProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentWorkPlanProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentExecutionPlanProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentExecutionPlanProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentCapabilityMatrixProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentCapabilityMatrixProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentContractMatrixProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentContractMatrixProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentHealthReportProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentHealthReportProvider'
+
+  App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentDiagnosticReportProviderInterface: '@App\Administering\Service\Connected\AdministrationConnectedComponentDiagnosticReportProvider'

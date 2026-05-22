@@ -1,0 +1,21 @@
+= Wave 24: Connected Contract Matrix
+
+Administering now exposes a metadata-only connected contract matrix for Accessing and Rolling.
+
+== Purpose
+
+The matrix answers which integration contracts exist, which component owns them, which contracts are blocked by bootstrap storage/execution mode, and which contracts are sensitive or forbidden boundaries.
+
+== Endpoint
+
+* `/admin/connected-components/contract-matrix.json`
+
+== Ownership
+
+* Accessing owns authentication, session, passwords, verification and second-factor internals.
+* Rolling owns roles, permissions, ACL storage, policy decisions and mutation execution.
+* Administering consumes safe contracts, visualizes state, and routes reviewed requests to the owning component.
+
+== Safety
+
+The matrix must never expose secrets, password hashes, TOTP secrets, recovery codes, reset tokens, raw sessions, raw subject grants, or raw policy internals.

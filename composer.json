@@ -1,0 +1,135 @@
+{
+  "name": "administering/admin",
+  "description": "Administering administrative governance component for Symfony host applications.",
+  "type": "symfony-bundle",
+  "license": "proprietary",
+  "require": {
+    "doctrine/doctrine-bundle": "^3.2",
+    "doctrine/doctrine-migrations-bundle": "^4.0",
+    "doctrine/orm": "^3.3",
+    "easycorp/easyadmin-bundle": "5.0",
+    "ext-ctype": "*",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "php": "^8.4",
+    "symfony/asset-mapper": "^8.0",
+    "symfony/config": "^8.0",
+    "symfony/console": "^8.0",
+    "symfony/dotenv": "^8.0",
+    "symfony/filesystem": "^8.0",
+    "symfony/finder": "^8.0",
+    "symfony/form": "^8.0",
+    "symfony/framework-bundle": "^8.0",
+    "symfony/lock": "^8.0",
+    "symfony/messenger": "^8.0",
+    "symfony/process": "^8.0",
+    "symfony/runtime": "^8.0",
+    "symfony/scheduler": "^8.0",
+    "symfony/security-bundle": "^8.0",
+    "symfony/security-csrf": "^8.0",
+    "symfony/serializer": "^8.0",
+    "symfony/stimulus-bundle": "^2.35",
+    "symfony/twig-bundle": "^8.0",
+    "symfony/ux-turbo": "^3.0",
+    "symfony/validator": "^8.0",
+    "symfony/yaml": "^8.0",
+    "twig/twig": "^3.15"
+  },
+  "require-dev": {
+    "ergebnis/composer-normalize": "^2.47",
+    "friendsofphp/php-cs-fixer": "^3.94",
+    "icanhazstring/composer-unused": "^0.9.6",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-doctrine": "^2.0",
+    "phpstan/phpstan-symfony": "^2.0",
+    "phpunit/phpunit": "^11.5",
+    "rector/rector": "^2.0",
+    "symfony/maker-bundle": "^1.64",
+    "symfony/phpunit-bridge": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\Administering\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Administering\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "lint:composer": "composer validate --strict",
+    "lint:yaml": "bin/console lint:yaml config",
+    "lint:container": "bin/console lint:container",
+    "stan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
+    "cs:check": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
+    "cs:fix": "vendor/bin/php-cs-fixer fix --verbose",
+    "test": "vendor/bin/phpunit -c phpunit.xml.dist",
+    "quality": [
+      "@lint:composer",
+      "@lint:yaml",
+      "@lint:container",
+      "@stan",
+      "@cs:check",
+      "@test"
+    ],
+    "rc:proof": "bin/console administering:rc:proof --operation-type=administration.configuration.scan --target-prefix=administering:rc-proof --output-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --json",
+    "rc:proof:validate": "bin/console administering:rc:proof-artifact:validate --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --manifest-file=delivery/rc/manifest.yaml --output-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --json",
+    "rc:owner-review": "bin/console administering:rc:owner-review --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --validation-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --manifest-file=delivery/rc/manifest.yaml --output-file=delivery/rc/runtime-proof-results/administering-rc-owner-review.json --json",
+    "rc:final-seal": "bin/console administering:rc:final-seal --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --validation-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --owner-review-file=delivery/rc/runtime-proof-results/administering-rc-owner-review.json --manifest-file=delivery/rc/manifest.yaml --output-file=delivery/rc/runtime-proof-results/administering-rc-final-seal.json --json",
+    "quality:rc-3rc": [
+      "@rc:contract:validate",
+      "@rc:proof",
+      "@rc:proof:index",
+      "@rc:proof:validate",
+      "@rc:owner-review",
+      "@rc:final-seal",
+      "@rc:final-seal:validate",
+      "@rc:status",
+      "@rc:receipt",
+      "@rc:receipt:validate",
+      "@rc:status:final",
+      "@rc:status:final:validate",
+      "@rc:handoff-index",
+      "@rc:handoff-index:validate",
+      "@rc:status:terminal",
+      "@rc:status:terminal:validate",
+      "@rc:handoff-bundle",
+      "@rc:handoff-bundle:validate",
+      "@rc:status:bundle",
+      "@rc:acceptance"
+    ],
+    "rc:proof:index": "bin/console administering:rc:proof-index --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --manifest-file=delivery/rc/manifest.yaml --output-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --operation-type=administration.configuration.scan --target-prefix=administering:rc-proof --json",
+    "rc:final-seal:validate": "bin/console administering:rc:final-seal:validate --final-seal-file=delivery/rc/runtime-proof-results/administering-rc-final-seal.json --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --validation-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --owner-review-file=delivery/rc/runtime-proof-results/administering-rc-owner-review.json --manifest-file=delivery/rc/manifest.yaml --output-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --json",
+    "rc:status": "bin/console administering:rc:status --manifest-file=delivery/rc/manifest.yaml --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --validation-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --owner-review-file=delivery/rc/runtime-proof-results/administering-rc-owner-review.json --final-seal-file=delivery/rc/runtime-proof-results/administering-rc-final-seal.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-status.json --summary-file=delivery/rc/runtime-proof-results/administering-rc-status-summary.txt --json",
+    "rc:receipt": "bin/console administering:rc:receipt --manifest-file=delivery/rc/manifest.yaml --status-file=delivery/rc/runtime-proof-results/administering-rc-status.json --status-summary-file=delivery/rc/runtime-proof-results/administering-rc-status-summary.txt --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --json",
+    "rc:receipt:validate": "bin/console administering:rc:receipt:validate --manifest-file=delivery/rc/manifest.yaml --status-file=delivery/rc/runtime-proof-results/administering-rc-status.json --status-summary-file=delivery/rc/runtime-proof-results/administering-rc-status-summary.txt --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --receipt-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --receipt-text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --output-file=delivery/rc/runtime-proof-results/administering-rc-receipt-validation.json --json",
+    "rc:status:final": "bin/console administering:rc:status --manifest-file=delivery/rc/manifest.yaml --proof-file=delivery/rc/runtime-proof-results/administering-rc-proof.json --index-file=delivery/rc/runtime-proof-results/administering-rc-proof-index.json --validation-file=delivery/rc/runtime-proof-results/administering-rc-proof-validation.json --owner-review-file=delivery/rc/runtime-proof-results/administering-rc-owner-review.json --final-seal-file=delivery/rc/runtime-proof-results/administering-rc-final-seal.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --receipt-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --receipt-text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --receipt-validation-file=delivery/rc/runtime-proof-results/administering-rc-receipt-validation.json --include-receipt-artifacts --output-file=delivery/rc/runtime-proof-results/administering-rc-final-status.json --summary-file=delivery/rc/runtime-proof-results/administering-rc-final-status-summary.txt --json",
+    "rc:status:final:validate": "bin/console administering:rc:final-status:validate --manifest-file=delivery/rc/manifest.yaml --final-status-file=delivery/rc/runtime-proof-results/administering-rc-final-status.json --final-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-final-status-summary.txt --receipt-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --receipt-text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --receipt-validation-file=delivery/rc/runtime-proof-results/administering-rc-receipt-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-final-status-validation.json --json",
+    "rc:handoff-index": "bin/console administering:rc:handoff-index --manifest-file=delivery/rc/manifest.yaml --final-status-file=delivery/rc/runtime-proof-results/administering-rc-final-status.json --final-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-final-status-summary.txt --final-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-status-validation.json --receipt-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --receipt-text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --receipt-validation-file=delivery/rc/runtime-proof-results/administering-rc-receipt-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --json",
+    "rc:handoff-index:validate": "bin/console administering:rc:handoff-index:validate --manifest-file=delivery/rc/manifest.yaml --final-status-file=delivery/rc/runtime-proof-results/administering-rc-final-status.json --final-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-final-status-summary.txt --final-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-status-validation.json --receipt-file=delivery/rc/runtime-proof-results/administering-rc-receipt.json --receipt-text-file=delivery/rc/runtime-proof-results/administering-rc-receipt.txt --receipt-validation-file=delivery/rc/runtime-proof-results/administering-rc-receipt-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --handoff-index-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --handoff-index-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --output-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json --json",
+    "rc:status:terminal": "bin/console administering:rc:status --include-receipt-artifacts --include-handoff-artifacts --output-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status.json --summary-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-summary.txt --json",
+    "rc:status:terminal:validate": "bin/console administering:rc:terminal-status:validate --manifest-file=delivery/rc/manifest.yaml --terminal-status-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status.json --terminal-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-summary.txt --handoff-index-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --handoff-index-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --handoff-index-validation-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json --final-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-status-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-validation.json --json",
+    "rc:handoff-bundle": "bin/console administering:rc:handoff-bundle --manifest-file=delivery/rc/manifest.yaml --terminal-status-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status.json --terminal-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-summary.txt --terminal-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-validation.json --handoff-index-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --handoff-index-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --handoff-index-validation-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.json --text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.txt --json",
+    "rc:handoff-bundle:validate": "bin/console administering:rc:handoff-bundle:validate --manifest-file=delivery/rc/manifest.yaml --terminal-status-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status.json --terminal-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-summary.txt --terminal-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-validation.json --handoff-index-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --handoff-index-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --handoff-index-validation-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --handoff-bundle-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.json --handoff-bundle-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.txt --output-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle-validation.json --json",
+    "rc:status:bundle": "bin/console administering:rc:status --include-receipt-artifacts --include-handoff-artifacts --include-handoff-bundle-artifacts --output-file=delivery/rc/runtime-proof-results/administering-rc-bundle-status.json --summary-file=delivery/rc/runtime-proof-results/administering-rc-bundle-status-summary.txt --json",
+    "rc:acceptance": "bin/console administering:rc:acceptance --manifest-file=delivery/rc/manifest.yaml --bundle-status-file=delivery/rc/runtime-proof-results/administering-rc-bundle-status.json --bundle-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-bundle-status-summary.txt --handoff-bundle-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.json --handoff-bundle-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.txt --handoff-bundle-validation-file=delivery/rc/runtime-proof-results/administering-rc-handoff-bundle-validation.json --terminal-status-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status.json --terminal-status-summary-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-summary.txt --terminal-status-validation-file=delivery/rc/runtime-proof-results/administering-rc-terminal-status-validation.json --handoff-index-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.json --handoff-index-text-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt --handoff-index-validation-file=delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json --final-seal-validation-file=delivery/rc/runtime-proof-results/administering-rc-final-seal-validation.json --output-file=delivery/rc/runtime-proof-results/administering-rc-acceptance.json --text-file=delivery/rc/runtime-proof-results/administering-rc-acceptance.txt --json",
+    "rc:contract:validate": "bin/console administering:rc:contract:validate --json"
+  },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true,
+      "symfony/runtime": true
+    },
+    "process-timeout": 0,
+    "sort-packages": true
+  },
+  "extra": {
+    "public-dir": "public",
+    "product-name": "Administering",
+    "core-entity": "Administration"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

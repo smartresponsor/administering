@@ -1,0 +1,80 @@
+= Managing Field View Profile Host Activation
+:toc:
+
+== Purpose
+
+This note documents the Administering-side expectation when a host application enables Managing field view profile storage.
+Administering is the control plane for review/apply preparation and operator visibility. It does not own the Managing storage table and does not bypass Managing's apply handler.
+
+== Responsibility split
+
+[source,text]
+----
+Rolling
+  owns field access decisions and effective allow/deny semantics
+
+Administering
+  owns operator-facing review, apply preparation, audit, and visibility surfaces
+
+Managing
+  owns EasyAdmin field emission, presentation profile resolution, and profile storage seams
+----
+
+== Required host storage placement
+
+The Managing profile entity is:
+
+[source,text]
+----
+App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule
+----
+
+The table is:
+
+[source,text]
+----
+manage_crud_field_view_profile_rule
+----
+
+The host must place this table in the system/internal database, normally SQLite.
+It must not be placed in user/business PostgreSQL storage.
+
+== Administering expectation
+
+Administering may prepare review/apply payloads for Managing profile changes, but the actual profile write must go through:
+
+[source,text]
+----
+App\Managing\HandlerInterface\Crud\ManageCrudFieldUserProfileApplyHandlerInterface
+----
+
+Administering should treat the Managing storage backend as optional.
+If the host has not enabled `crud_field_user_profile_writer_backend: doctrine`, Administering can still prepare payloads, but persistence remains unavailable by design.
+
+== Activation prerequisites
+
+Before exposing the profile apply workflow as an operator action in a host, verify:
+
+. Managing is configured with `crud_field_user_profile_runtime_backend: reader`.
+. Managing is configured with `crud_field_user_profile_reader_backend: doctrine`.
+. Managing is configured with `crud_field_user_profile_writer_backend: doctrine`.
+. `crud_field_user_profile_entity_manager_service` points to the system EntityManager service.
+. The host migration for `manage_crud_field_view_profile_rule` has run against the system EntityManager.
+. Rolling field-access decisions remain active for field-level allow/deny.
+. Administering review context is retained for auditability.
+
+== Safety invariant
+
+A profile apply action is not a security grant.
+It is a presentation-profile change that can only operate inside the access envelope already allowed by Rolling and Managing backend configuration.
+
+== Managing activation validator
+
+After the host enables the Managing Doctrine backend, operators should run the Managing-side check before exposing profile apply as a normal workflow:
+
+[source,bash]
+----
+php bin/console managing:field-view-profile-storage:check
+----
+
+Administering should treat a failed check as a blocker for persistence-backed profile apply. The command validates the Managing storage wiring; it does not grant field access and does not replace Rolling effective decisions.

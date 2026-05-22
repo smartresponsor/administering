@@ -1,0 +1,40 @@
+= Rolling-backed Managing Field Access Readiness
+
+This note defines the Administering read-only readiness surface for enabling Rolling-backed Managing field access.
+
+== Responsibility split
+
+* Managing owns EasyAdmin field definition, field visibility resolution, and final field emission.
+* Rolling owns effective field access decisions for `managing.field.view`.
+* Administering owns control-plane visibility, review/apply workflows, and readiness inspection.
+
+== Required Managing host configuration
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: rolling
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_permission_key: managing.field.view
+  crud_field_external_access_rolling_decision_service: App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface
+----
+
+The default remains safe: Managing does not use Rolling unless the host explicitly enables `crud_field_external_access_backend: rolling`.
+
+== Readiness checklist
+
+The Administering surface `administration_managing_rolling_field_access_readiness` shows the expected contract and host checklist:
+
+* Managing external access backend is explicitly set to `rolling`.
+* Production failure effect is `deny` so field access fails closed.
+* Rolling exposes `RollingFieldAccessDecisionServiceInterface`.
+* Managing uses `ManageCrudRollingFieldExternalAccessResolver` through the existing external access resolver contract.
+* Rolling catalog includes `managing.field.view`.
+* Field access changes continue through Administering review/apply surfaces.
+* Managing/Administering diagnostics can explain why a field is visible, hidden, denied, or unavailable.
+
+== Safety boundary
+
+This surface is read-only. It does not mutate Rolling ACL, Managing configuration, profile storage, or EasyAdmin rendering.
+
+User field view profiles remain presentation-only. They cannot grant field access and cannot override a Rolling deny.

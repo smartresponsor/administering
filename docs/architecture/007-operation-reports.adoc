@@ -1,0 +1,16 @@
+= Operation Reports
+
+Administering operation reports are metadata-only projections built from system SQLite operation runs, events, and artifacts.
+
+They exist for native Symfony/EasyAdmin visualization and diagnostics. Reports may include counts, statuses, checksums, safe labels, relative artifact paths, and event messages.
+
+They must not include plain secrets, raw `.env` values, decrypted credentials, password hashes, TOTP secrets, recovery codes, session payloads, or raw production configuration dumps.
+
+The canonical report endpoint is:
+
+[source,text]
+----
+/admin/operations/run/{operationKey}/report.json
+----
+
+Messenger messages continue to carry only operation keys. The report provider reconstructs the UI-facing view from persisted system-state records.

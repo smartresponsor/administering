@@ -1,0 +1,29 @@
+= Administering Wave 8: Operation Launch Surface
+
+Administering now has a native Symfony surface for launching safe metadata-only administrative operations.
+
+== Boundary
+
+The UI may queue operations such as configuration scans, credential presence checks, composer validation, Rolling permission catalog refreshes, and Accessing account projection refreshes.
+
+The UI must not queue raw secrets, decrypted credentials, full `.env` payloads, raw source file dumps, or arbitrary executable commands.
+
+== Flow
+
+[source,text]
+----
+/admin/operations
+  -> AdministrationOperationSubmitter
+  -> AdministrationOperationRun in system SQLite
+  -> Messenger message containing only operationKey
+  -> AdministrationOperationRunner
+  -> status/details visible through operation run pages
+----
+
+== Storage
+
+`AdministrationOperationRun` belongs to the system SQLite entity manager. It must not be stored in the PostgreSQL user/business entity manager.
+
+== Security
+
+The launch controller checks the operation type through the Symfony voter boundary. Rolling remains the authorization owner behind the Administering permission checker.

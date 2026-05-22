@@ -1,0 +1,22 @@
+= Administering Connected Audit and Apply Boundaries - Wave 14
+
+Wave 14 adds two boundary refinements.
+
+== Accessing account action audit projection
+
+Administering can now display Accessing-owned controlled account action audit as metadata-only rows.
+
+The `/admin/accessing/account-action-audit` surface reads safe projections through Accessing contracts and does not expose security internals.
+
+== Rolling ACL apply request boundary
+
+Rolling now exposes a safe apply-request DTO built from ACL mutation dry-run reviews.
+
+Administering still does not apply ACL mutations directly. The intended sequence remains:
+
+. Administering creates a review request.
+. Rolling validates and builds a dry-run review.
+. Rolling can build an apply request only from the review metadata.
+. Rolling ACL administration service remains the execution owner.
+
+No credentials, secrets, sessions, password hashes, token payloads, or raw policy internals are allowed in these surfaces.

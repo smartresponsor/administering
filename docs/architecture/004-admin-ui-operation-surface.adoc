@@ -1,0 +1,30 @@
+= Administering Admin UI Operation Surface
+
+Administering uses EasyAdmin as the Symfony-native administrative shell.
+The UI is responsible for visibility, review, and controlled orchestration, not for replacing Accessing or Rolling ownership.
+
+== EasyAdmin areas
+
+* Configuration snapshots: read normalized file/config state.
+* Change requests: review proposed config, composer, generated-file, and secret actions.
+* Operation runs: track async/long operations without storing sensitive payloads.
+* Credential definitions and states: declare required credentials and show safe status metadata only.
+* Audit events: review administrative activity.
+
+== Operation model
+
+Long-running work must be represented as an `AdministrationOperationRun` and executed through Messenger or an explicit controlled command.
+Examples:
+
+* configuration scan
+* credential presence check
+* Symfony Secrets set/remove/rotate
+* composer validation
+* patch generation
+* Rolling permission catalog refresh
+
+Operation context must be safe for SQLite persistence. Secret values, decrypted credentials, raw passwords, TOTP secrets, and private keys are forbidden in operation context.
+
+== Storage boundary
+
+Administering system entities target the host application's SQLite/system entity manager, not the PostgreSQL user/business entity manager.

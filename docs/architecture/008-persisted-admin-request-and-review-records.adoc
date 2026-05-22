@@ -1,0 +1,63 @@
+= Persisted Admin Request and Review Records - Wave 13
+
+Administering now persists metadata-only records for two cross-component surfaces:
+
+* controlled Accessing account action requests
+* Rolling ACL mutation dry-run reviews
+
+These records live in Administering system storage and are intended for operator traceability, EasyAdmin visibility, and later approval workflows.
+
+== Accessing account actions
+
+Administering creates an account action request DTO and sends it to Accessing. Accessing validates and executes or rejects the request. Administering stores only the safe request/result record.
+
+Stored metadata:
+
+* request key
+* action
+* account reference
+* requested-by subject
+* result status
+* safe reason
+* safe result message
+* safe context
+
+Forbidden data:
+
+* password hash
+* TOTP secret
+* recovery codes
+* reset tokens
+* raw session payload
+* verification internals
+
+== Rolling ACL mutation reviews
+
+Administering creates a dry-run ACL mutation request and sends it to Rolling. Rolling builds the review and remains the authorization authority. Administering stores the safe review payload.
+
+Stored metadata:
+
+* request key
+* mutation type
+* subject identifier
+* permission or role key
+* scope key
+* requested-by subject
+* validity flag
+* safe review payload
+
+Forbidden data:
+
+* secrets
+* raw policy internals
+* session payloads
+* password data
+* decrypted values
+
+== Ownership
+
+Accessing authenticates and owns account action execution.
+
+Rolling authorizes and owns ACL mutation review semantics.
+
+Administering administers and stores safe request/review visibility records.

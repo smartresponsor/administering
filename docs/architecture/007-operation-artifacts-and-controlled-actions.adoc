@@ -1,0 +1,16 @@
+= Operation Artifacts and Controlled Actions
+
+Administering may generate metadata-only artifacts for operation results. These artifacts are stored under `var/administering/operation-artifacts/` and indexed by the system SQLite storage through `AdministrationOperationArtifact`.
+
+Artifacts may contain safe summaries, counts, manifest previews, and checksums. They must not contain plain secrets, raw `.env` values, decrypted credentials, password hashes, TOTP secrets, recovery codes, session payloads, or raw production configuration dumps.
+
+The operation lifecycle remains:
+
+. create operation run in system storage;
+. dispatch Messenger message with operation key only;
+. run a metadata-only runner;
+. record status events;
+. optionally write a safe result artifact;
+. expose the artifact pointer in EasyAdmin.
+
+Controlled account actions and ACL mutations are intentionally represented as request DTOs and metadata-only results. Accessing owns account/session internals. Rolling owns ACL mutation validation and authorization policy. Administering owns orchestration and visualisation only.

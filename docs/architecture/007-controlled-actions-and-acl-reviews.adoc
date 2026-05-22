@@ -1,0 +1,45 @@
+= Wave 12: Controlled Actions and ACL Reviews
+
+Administering now exposes two native Symfony surfaces that stay within the established ownership boundaries.
+
+== Accessing controlled account actions
+
+`/admin/accessing/account-actions` lists the controlled action catalog owned by Accessing and creates `AccessingAccountAdministrationRequest` DTOs.
+
+Administering does not edit Accessing security internals. It submits a safe request containing only:
+
+* action key
+* account reference
+* requesting subject
+* safe operator reason
+* metadata-only context
+
+Accessing validates, executes or rejects, and audits the request through its own bridge.
+
+Forbidden payloads remain forbidden:
+
+* password hashes
+* TOTP secrets
+* recovery codes
+* reset tokens
+* raw session payloads
+* verification internals
+
+== Rolling ACL mutation dry-run review
+
+`/admin/rolling/acl-mutations` creates a dry-run review request for Rolling ACL mutation planning.
+
+The controller does not apply mutations. It asks Rolling for a safe `RollingAclMutationReview` built from the mutation planner.
+
+The review may expose:
+
+* mutation type
+* subject identifier
+* permission or role key
+* scope key
+* validation state
+* steps
+* warnings
+* safe context
+
+It must not expose subject grants beyond the requested metadata, secrets, session data, password data, or raw policy internals.

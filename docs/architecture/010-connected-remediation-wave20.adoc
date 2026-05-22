@@ -1,0 +1,27 @@
+= Connected Remediation Wave 20
+
+Wave 20 adds a metadata-only remediation plan surface for the connected Accessing + Rolling + Administering administration track.
+
+== Responsibility
+
+Administering aggregates remediation hints, but does not become the owner of Accessing authentication/session state or Rolling ACL execution.
+
+== Endpoint
+
+`/admin/connected-components/remediation.json`
+
+The response contains only safe operator guidance:
+
+* component name
+* remediation key
+* severity
+* title
+* recommendation
+* blocker flag
+* safe context metadata
+
+It must not contain secrets, password hashes, TOTP secrets, recovery codes, session payloads, raw ACL grants, or decrypted configuration values.
+
+== Intended use
+
+The endpoint helps the owner see which capabilities are still bootstrap-mode before enabling irreversible account or ACL mutations from Administering.

@@ -1,0 +1,12 @@
+= Administering Execution and Audit Reports - Wave 17
+
+Administering adds read-only report surfaces for connected-component governance:
+
+* Accessing controlled account-action audit report
+* Rolling ACL mutation execution report
+
+These surfaces are metadata-only and are designed for dashboards, diagnostics, and operator review.
+
+Administering remains an orchestration and visualization component. It does not own Accessing authentication/session data and does not own Rolling ACL execution. It maps connected-component reports into Administering-owned safe values.
+
+Security rule: report endpoints must not expose secrets, passwords, session payloads, decrypted credential values, raw environment values, or raw policy internals.

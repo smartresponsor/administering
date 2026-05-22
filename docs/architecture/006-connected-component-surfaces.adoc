@@ -1,0 +1,40 @@
+= Connected Component Surfaces
+
+Administering renders native Symfony/EasyAdmin administration surfaces for connected components without becoming the owner of their internals.
+
+== Accessing surface
+
+Accessing owns authentication, login/logout, sessions, passwords, verification, and 2FA internals.
+
+Administering may display safe account projections:
+
+* subject id
+* identifier
+* active/locked status
+* verification status
+* bootstrap Symfony roles
+* display name
+
+Administering must not copy or expose password hashes, TOTP secrets, recovery codes, reset tokens, verification internals, or raw session payloads.
+
+== Rolling surface
+
+Rolling owns roles, permissions, ACL hierarchy, policy decisions, and authorization semantics.
+
+Administering may display the safe Rolling ACL manifest:
+
+* permission key
+* label
+* category
+* scopes
+* sensitivity flag
+
+== Operation runner
+
+Administering may run safe metadata-only operations from the operation queue:
+
+* configuration scan
+* Rolling permission catalog refresh
+* Accessing account projection refresh
+
+Secrets and raw configuration values must not be placed in Messenger messages or operation payloads.

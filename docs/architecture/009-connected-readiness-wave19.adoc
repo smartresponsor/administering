@@ -1,0 +1,17 @@
+= Wave 19: Connected Component Readiness
+
+Administering exposes a metadata-only readiness report for the connected Accessing and Rolling components.
+
+The report is intentionally a read surface. It does not mutate Accessing accounts, does not mutate Rolling ACL records, and does not expose credentials, sessions, password hashes, TOTP secrets, recovery codes, raw grants, or raw policy internals.
+
+The endpoint is:
+
+----
+/admin/connected-components/readiness.json
+----
+
+Ownership remains unchanged:
+
+* Accessing owns authentication, sessions, account state, and controlled account-action execution.
+* Rolling owns application ACL, policy decisions, mutation review, and mutation execution.
+* Administering owns the EasyAdmin control surface, metadata-only reports, records, and governance workflows.

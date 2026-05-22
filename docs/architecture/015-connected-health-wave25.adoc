@@ -1,0 +1,17 @@
+= Wave 25: Connected Component Health
+
+Administering now exposes a metadata-only connected component health report.
+
+== Endpoint
+
+`/admin/connected-components/health.json`
+
+== Responsibility
+
+* Accessing reports authentication/account-administration health without exposing password, session, reset, or second-factor internals.
+* Rolling reports ACL administration health without exposing raw subject grants, raw policy internals, secrets, sessions, or passwords.
+* Administering aggregates these health checks and uses them as an operator-facing diagnostic surface only.
+
+== Guard
+
+Health checks are not executors. Blocking checks should keep real mutations behind review or disabled until the owning component is ready.

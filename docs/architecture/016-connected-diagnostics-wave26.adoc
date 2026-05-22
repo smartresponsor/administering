@@ -1,0 +1,17 @@
+= Wave 26: Connected Component Diagnostics
+
+Administering exposes a metadata-only connected diagnostics register at `/admin/connected-components/diagnostics.json`.
+
+== Responsibility
+
+The diagnostics surface aggregates issues from connected component owners:
+
+* Accessing owns account/session/authentication diagnostics.
+* Rolling owns ACL/authorization diagnostics.
+* Administering only aggregates and visualizes the safe issue register.
+
+== Safety
+
+Diagnostics must not contain plain secrets, password hashes, TOTP secrets, recovery codes, reset tokens, raw session payloads, raw subject grants, or raw policy internals.
+
+Blocking diagnostics indicate that mutation surfaces must remain disabled or review-only until the owning component reports readiness.

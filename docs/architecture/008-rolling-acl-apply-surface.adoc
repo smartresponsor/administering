@@ -1,0 +1,22 @@
+= Rolling ACL Apply Surface
+
+Administering may promote a previously persisted Rolling ACL mutation review to a controlled apply attempt.
+
+== Ownership
+
+* Rolling remains the ACL mutation owner.
+* Administering stores only metadata-only review/apply records in system storage.
+* Accessing remains the identity/session owner.
+
+== Flow
+
+. Operator creates a Rolling ACL dry-run review.
+. Administering persists `AdministrationAclMutationReviewRecord`.
+. Operator submits the review request key for apply.
+. Administering builds a safe apply request from the persisted review.
+. Rolling-owned ACL administration service accepts or rejects execution.
+. Administering persists `AdministrationAclMutationApplyRecord` with safe result metadata.
+
+== Forbidden payloads
+
+Apply records must not contain passwords, TOTP secrets, recovery codes, raw sessions, decrypted secrets, raw production config, or raw policy internals.

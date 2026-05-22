@@ -1,0 +1,30 @@
+= Managing/Rolling Field Access Adapter Boundary
+
+Wave 27 adds a Managing-side optional Rolling adapter for field visibility enforcement.
+Administering remains the control plane: it prepares and reviews field-access policy changes, but it does not execute Managing EasyAdmin field filtering.
+
+== Component responsibilities
+
+* Rolling owns effective field-access decisions: allow, deny, or abstain.
+* Managing owns runtime EasyAdmin field emission and calls the external access seam when configured.
+* Administering owns review/apply/audit surfaces and documents the activation path.
+
+== Activation model
+
+The host application must explicitly configure Managing:
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: rolling
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_rolling_decision_service: 'App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface'
+  crud_field_external_access_permission_key: 'managing.field.view'
+----
+
+By default, the backend remains `none`, so no Rolling runtime dependency is required.
+
+== Safety rule
+
+A Rolling deny is stronger than any Managing user profile preference.
+Field view profiles remain presentation-only and never grant access.

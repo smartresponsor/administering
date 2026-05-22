@@ -1,0 +1,16 @@
+= Wave 22: Connected Execution Plan
+
+Administering now exposes a unified metadata-only execution plan for connected administration components.
+
+Endpoint:
+
+* `/admin/connected-components/execution-plan.json`
+
+The execution plan is not an executor. It aggregates safe execution-step descriptors from Accessing and Rolling and marks which steps remain blocked by bootstrap or non-Doctrine readiness.
+
+Rules:
+
+* Accessing remains the owner of account/authentication/session execution.
+* Rolling remains the owner of role, permission, ACL and policy mutation execution.
+* Administering may display, review and orchestrate execution planning, but must not embed secrets, passwords, TOTP secrets, recovery codes, raw session payloads or raw ACL grants in execution-plan payloads.
+* Blocked steps require component-owned implementation before Administering may launch real mutations.

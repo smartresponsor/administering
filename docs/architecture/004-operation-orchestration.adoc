@@ -1,0 +1,43 @@
+= Administering Operation Orchestration
+
+Administering operations are represented as safe, persisted operation runs.
+The operation record belongs to the system SQLite entity manager and must never be written to the user/business PostgreSQL entity manager.
+
+== Principle
+
+Long-running admin work must not block the native Symfony/EasyAdmin frontend request.
+The UI creates a safe operation run, queues a Messenger message that contains only the operation key, and then displays progress/status from SQLite.
+
+== Safe operation classes
+
+* configuration scan
+* credential presence check
+* Symfony Secrets set/remove operation
+* composer validation
+* generated patch build
+* Rolling ACL catalog refresh
+* Accessing controlled account action
+
+== Forbidden payloads
+
+Operation context must not contain:
+
+* plain secrets
+* decrypted Symfony Secrets values
+* raw `.env` values
+* raw production configuration dumps
+* password hashes
+* TOTP secrets
+* recovery codes
+* raw session payloads
+
+== Runtime ownership
+
+* Accessing owns authentication/session/account internals.
+* Rolling owns authorization and ACL decisions.
+* Administering owns the operation surface, status, audit, and orchestration.
+
+== Queue contract
+
+Messenger messages should carry only `operationKey`.
+The worker loads the operation from system SQLite, runs the mapped safe handler, and records status transitions.

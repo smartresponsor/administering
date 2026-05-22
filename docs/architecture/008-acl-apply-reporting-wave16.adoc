@@ -1,0 +1,14 @@
+= Wave 16: ACL Apply Reporting
+
+Administering now has a metadata-only reporting boundary for Rolling ACL apply attempts.
+
+The report provider reads `AdministrationAclMutationApplyRecord` records from the system storage and exposes only safe summary fields:
+
+* totals by status;
+* totals by mutation type;
+* latest apply timestamp;
+* recent request keys and safe messages.
+
+The report must not expose secrets, raw policy internals, account security internals, session payloads, or decrypted configuration values.
+
+Rolling remains the execution owner. Administering stores only the operator trace and reporting projection.

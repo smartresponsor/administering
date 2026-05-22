@@ -1,0 +1,39 @@
+= Connected Capability Matrix - Wave 23
+
+Wave 23 adds a metadata-only capability matrix to the Administering connected-component surface.
+
+== Purpose
+
+Administering needs one safe place to show what Accessing and Rolling can currently support without becoming the owner of those capabilities.
+
+The capability matrix is intentionally read-only. It is not an executor and it does not apply ACL or account mutations.
+
+== Endpoint
+
+`/admin/connected-components/capability-matrix.json`
+
+The report aggregates:
+
+* Accessing account-administration capabilities.
+* Rolling ACL/permission capabilities.
+* capability status counts.
+* mutation/sensitive counts.
+
+== Ownership
+
+* Accessing owns authentication, sessions, account state, passwords, verification and second-factor internals.
+* Rolling owns roles, permissions, ACL rules, policy decisions and mutation execution.
+* Administering owns visualization, review flow and orchestration surfaces.
+
+== Safety rules
+
+The capability matrix must never serialize:
+
+* secrets;
+* password hashes;
+* TOTP secrets;
+* recovery codes;
+* reset tokens;
+* raw session payloads;
+* raw subject grants;
+* raw policy internals.

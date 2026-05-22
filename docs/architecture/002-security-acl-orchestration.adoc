@@ -1,0 +1,30 @@
+= Administering Security and ACL Orchestration
+
+Administering does not own login, logout, session, passwords, or account identity.
+Those responsibilities belong to Accessing.
+
+Administering does not own the final application ACL decision model.
+Those responsibilities belong to Rolling.
+
+== Runtime Flow
+
+[source,text]
+----
+/admin request
+  -> Accessing authenticates the current account through Symfony Security
+  -> Administering resolves the current user context
+  -> AdministrationAccessVoter receives administration.* permission attributes
+  -> AdministrationPermissionCheckerInterface checks bootstrap access first
+  -> Rolling-backed decision provider decides application ACL permissions
+----
+
+== Bootstrap Rule
+
+ROLE_SUPER_ADMIN is allowed as an emergency/bootstrap role.
+ROLE_ADMIN_BOOTSTRAP may view the dashboard but should not bypass all ACL.
+
+== Rolling Integration
+
+The host application should wire a Rolling-backed implementation of
+AdministrationExternalPermissionDecisionProviderInterface once Rolling ACL persistence is ready.
+Administering must not reach into Rolling internal classes from controllers or EasyAdmin CRUD screens.

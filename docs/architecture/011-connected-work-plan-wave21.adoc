@@ -1,0 +1,34 @@
+= Connected Work Plan — Wave 21
+
+Wave 21 adds an actionable, metadata-only work-plan surface above the previous readiness/remediation reports.
+
+== Responsibility
+
+Administering aggregates work items from Accessing and Rolling. It does not execute irreversible account or ACL mutations from this report.
+
+== Endpoint
+
+`/admin/connected-components/work-plan.json`
+
+The endpoint returns:
+
+* total item count;
+* mutation blockers;
+* priority counts;
+* Accessing work items;
+* Rolling work items;
+* safe execution rules.
+
+== Safety rules
+
+The work plan must not contain:
+
+* credentials or decrypted secrets;
+* password hashes;
+* TOTP secrets;
+* recovery codes;
+* raw session payloads;
+* raw ACL grant dumps;
+* raw policy internals.
+
+The report is intended for planning, sequencing, and operator review only.

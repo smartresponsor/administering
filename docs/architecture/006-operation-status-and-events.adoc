@@ -1,0 +1,20 @@
+= Operation Status and Events
+
+Administering operation workers must keep Messenger messages metadata-only. The queue carries only the operation key.
+
+The operation lifecycle is persisted in the system SQLite entity manager through:
+
+* `AdministrationOperationRun` for the current run state.
+* `AdministrationOperationEvent` for safe status transitions.
+
+Events may contain only safe metadata. They must not contain secrets, raw environment values, decrypted credentials, password hashes, session payloads, 2FA internals, or source file dumps.
+
+The canonical lifecycle is:
+
+. EasyAdmin/native Symfony UI creates an `AdministrationOperationRun`.
+. Messenger dispatches `AdministrationOperationRunMessage` with only the operation key.
+. The worker marks the run as running.
+. The runner performs a safe metadata operation.
+. The status recorder stores success/failure/skipped status and appends an event.
+
+This keeps long-running configuration, credentials, ACL, and projection work observable without leaking sensitive data into queues or logs.

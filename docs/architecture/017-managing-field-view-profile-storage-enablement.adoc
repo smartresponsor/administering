@@ -1,0 +1,53 @@
+= Managing Field View Profile Storage Enablement
+:toc:
+
+== Responsibility split
+
+Field view profile storage is a Managing runtime concern, while Administering remains the control plane for review, apply preparation, audit, and operator-facing visibility.
+
+The boundary is:
+
+[source,text]
+----
+Administering
+  prepares reviewed profile payloads and records operator intent
+
+Managing
+  validates reviewed payloads, applies presentation-only profile rules, and owns profile storage seams
+
+Rolling
+  owns access decisions and field-access grants/denies
+----
+
+== Enablement rule
+
+Doctrine-backed profile storage must be explicitly enabled in the host application.
+Administering must not assume that Managing storage is available just because the review/apply preparation surfaces exist.
+
+A host can enable Managing storage with:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: reader
+  crud_field_user_profile_reader_backend: doctrine
+  crud_field_user_profile_writer_backend: doctrine
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+----
+
+The entity manager service must point to the system/internal SQLite EntityManager, not to user/business PostgreSQL storage.
+
+== Operational expectation
+
+Until the host enables storage, Administering profile apply preparation remains a safe handoff surface.
+It emits the normalized payload and review context for the Managing apply handler, but it does not write profile records by itself.
+
+== Security invariant
+
+Profile rules are presentation-only preferences.
+They can hide or show allowed fields, but cannot grant access or override Rolling/Administering deny decisions.
+
+== Host activation follow-up
+
+The host activation checklist is documented in `docs/architecture/018-managing-field-view-profile-host-activation.adoc`.
+Administering must keep profile apply preparation separate from Managing storage writes and must continue to route persistence through the Managing apply handler contract.

@@ -1,0 +1,39 @@
+= Wave 18: Connected Component Overview
+
+Administering now exposes a metadata-only connected component overview for the Accessing and Rolling integration surfaces.
+
+== Boundary
+
+The overview is a read/report surface only. It aggregates safe counters, summaries, catalog metadata, and generated timestamps.
+
+It must not include:
+
+* plain secrets;
+* decrypted credential values;
+* password hashes;
+* TOTP secrets;
+* recovery codes;
+* reset tokens;
+* raw session payloads;
+* raw policy internals;
+* subject grants beyond aggregate counts.
+
+== Flow
+
+[source,text]
+----
+Administering overview
+  -> Rolling permission catalog provider
+  -> Rolling ACL execution report provider
+  -> Accessing account projection provider
+  -> Accessing account-action audit report provider
+  -> metadata-only overview JSON
+----
+
+== Purpose
+
+The overview gives operators a single status endpoint for the connected administration surfaces without turning Administering into the owner of authentication or authorization.
+
+Accessing still owns identity, authentication, sessions, and account security internals.
+Rolling still owns ACL, permissions, roles, and policy decisions.
+Administering only visualizes and orchestrates safe administration surfaces.

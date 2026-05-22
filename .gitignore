@@ -1,0 +1,16 @@
+/vendor/
+/var/
+/.env.local
+/.env.*.local
+/.phpunit.cache/
+/.php-cs-fixer.cache
+/.phpstan.cache
+/.rector.cache
+/node_modules/
+/public/build/
+/assets/vendor/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.zip
+/config/secrets/*/*.decrypt.private.php

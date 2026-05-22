@@ -1,0 +1,12 @@
+# Host-application reference fragment.
+# Merge this mapping into the existing SQLite/system Entity Manager, not into PostgreSQL/user data.
+doctrine:
+  orm:
+    entity_managers:
+      system:
+        mappings:
+          Administering:
+            type: attribute
+            dir: '%kernel.project_dir%/vendor/administering/admin/src/Entity'
+            prefix: 'App\Administering\Entity'
+            alias: Administering
