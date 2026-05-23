@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Administering\Controller\Admin\Surface;
 
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountActionAuditProjectionProviderInterface;
-use App\Administering\Value\Accessing\AdministrationAccountActionAuditProjection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,29 +26,11 @@ final class AdministrationAccessingAccountActionAuditController extends Abstract
         $this->denyAccessUnlessGranted('administration.accessing.account_action.audit.view', 'administering:accessing');
 
         $summary = $this->auditProjectionProvider->summary(200);
-        $summaryHtml = sprintf(
-            '<pre>%s</pre>',
-            htmlspecialchars(json_encode($summary->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-        );
 
-        $rows = array_map(
-            static fn (AdministrationAccountActionAuditProjection $projection): string => sprintf(
-                '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                htmlspecialchars($projection->createdAt()->format(DATE_ATOM), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($projection->action(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($projection->accountReference(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($projection->requestedBySubject(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($projection->resultStatus(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($projection->safeMessage(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            ),
-            $this->auditProjectionProvider->recent(100),
-        );
-
-        return new Response(sprintf(
-            '<h1>Accessing Account Action Audit</h1><p>Metadata-only projection. Password hashes, TOTP secrets, recovery codes, reset tokens, sessions, and verification internals are never exposed here.</p><h2>Summary</h2>%s<table><thead><tr><th>Created</th><th>Action</th><th>Account</th><th>Requested by</th><th>Status</th><th>Message</th></tr></thead><tbody>%s</tbody></table>',
-            $summaryHtml,
-            implode('', $rows),
-        ));
+        return $this->render('@Administering/administering/accessing_account_action_audit.html.twig', [
+            'summary_json' => json_encode($summary->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+            'projections' => $this->auditProjectionProvider->recent(100),
+        ]);
     }
 
     #[Route('/admin/accessing/account-action-audit/report.json', name: 'administration_accessing_account_action_audit_report', methods: ['GET'])]

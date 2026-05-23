@@ -1,0 +1,40 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Managing Field Access Matrix{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Read-only hierarchy before mutation/apply workflows are introduced. User preferences can only narrow already allowed fields.
+        </p>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Layer</th>
+                    <th>Owner</th>
+                    <th>Decision</th>
+                    <th>Effect</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.priority }}</td>
+                    <td>{{ row.layer }}</td>
+                    <td>{{ row.ownerComponent }}</td>
+                    <td>{{ row.decisionType }}</td>
+                    <td>{{ row.effect }}</td>
+                    <td>{{ row.notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No matrix rows are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

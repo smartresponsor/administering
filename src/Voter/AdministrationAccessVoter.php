@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Voter;
 
-use App\Administering\ServiceInterface\Security\AdministrationPermissionCheckerInterface;
+use App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

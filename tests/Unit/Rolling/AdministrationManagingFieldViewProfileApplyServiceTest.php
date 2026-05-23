@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileApplyService;
+use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileApplyService;
 use App\Administering\Value\Rolling\AdministrationFieldViewProfileApplyRequest;
 use PHPUnit\Framework\TestCase;
 

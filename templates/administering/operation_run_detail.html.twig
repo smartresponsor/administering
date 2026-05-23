@@ -1,0 +1,25 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Operation Run{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <dl>
+            <dt>Key</dt>
+            <dd>{{ operationRun.operationKey }}</dd>
+            <dt>Type</dt>
+            <dd><code>{{ operationRun.operationType }}</code></dd>
+            <dt>Status</dt>
+            <dd>{{ operationRun.status }}</dd>
+            <dt>Subject</dt>
+            <dd>{{ operationRun.subjectIdentifier }}</dd>
+            <dt>Target</dt>
+            <dd>{{ operationRun.targetReference ?? '' }}</dd>
+        </dl>
+
+        <p>
+            <a href="{{ reportUrl }}">JSON report</a> ·
+            <a href="{{ backUrl }}">Back to operations</a>
+        </p>
+    </section>
+{% endblock %}

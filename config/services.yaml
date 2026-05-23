@@ -18,10 +18,23 @@ services:
     tags: ['controller.service_arguments']
 
   App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface: '@App\Administering\Service\Accessing\SymfonyAdministrationCurrentUserContextProvider'
-  App\Administering\ServiceInterface\Security\AdministrationPermissionCheckerInterface: '@App\Administering\Service\Security\RollingAdministrationPermissionChecker'
+  App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerInterface: '@App\Administering\Checker\Security\RollingAdministrationPermissionChecker'
   App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface: '@App\Administering\Service\Audit\DoctrineAdministrationAuditRecorder'
 
-  App\Administering\ServiceInterface\Security\AdministrationExternalPermissionDecisionProviderInterface: '@App\Administering\Service\Security\BootstrapAdministrationExternalPermissionDecisionProvider'
+  App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface: '@App\Administering\Provider\Security\BootstrapAdministrationExternalPermissionDecisionProvider'
+
+  App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface: '@App\Administering\Catalog\Admin\AdministrationServiceSectionCatalog'
+  App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface: '@App\Administering\Builder\Admin\AdministrationMainMenuBuilder'
+  App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface: '@App\Administering\Catalog\Admin\FilesystemAdministrationServiceToolCatalog'
+  App\Administering\CatalogInterface\Admin\AdministrationServiceToolScreenCatalogInterface: '@App\Administering\Catalog\Admin\AdministrationServiceToolScreenCatalog'
+  App\Administering\ProviderInterface\Admin\AdministrationServiceSectionToolDashboardProviderInterface: '@App\Administering\Provider\Admin\AdministrationServiceSectionToolDashboardProvider'
+  App\Administering\ServiceInterface\Symfony\AdministrationSymfonyRouteCatalogProviderInterface: '@App\Administering\Service\Symfony\AdministrationSymfonyRouteCatalogProvider'
+  App\Administering\ServiceInterface\Environment\AdministrationEnvironmentRuntimeStatusProviderInterface: '@App\Administering\Service\Environment\AdministrationEnvironmentRuntimeStatusProvider'
+
+  App\Administering\Service\Environment\AdministrationEnvironmentRuntimeStatusProvider:
+    arguments:
+      $environment: '%kernel.environment%'
+      $debug: '%kernel.debug%'
 
   App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface: '@App\Administering\Service\Configuration\FilesystemAdministrationConfigurationScanner'
   App\Administering\ServiceInterface\Credential\AdministrationCredentialOperatorInterface: '@App\Administering\Service\Credential\SymfonySecretsAdministrationCredentialOperator'
@@ -32,20 +45,21 @@ services:
   App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface: '@App\Administering\Service\Operation\AdministrationOperationRunFactory'
   App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface: '@App\Administering\Service\Operation\MessengerAdministrationOperationQueue'
   App\Administering\ServiceInterface\Operation\AdministrationOperationSubmitterInterface: '@App\Administering\Service\Operation\AdministrationOperationSubmitter'
+  App\Administering\ServiceInterface\Operation\AdministrationServiceSectionAnchorSyncOperationServiceInterface: '@App\Administering\Service\Operation\AdministrationServiceSectionAnchorSyncOperationService'
   App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface: '@App\Administering\Service\Operation\DoctrineAdministrationOperationStatusRecorder'
 
   App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface: '@App\Administering\Service\Operation\AdministrationGovernanceOperationRunner'
   App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface: '@App\Administering\Service\Rolling\RollingAclManifestAdministrationPermissionCatalogProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessCatalogProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileCatalogProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldVisibilityExplanationCatalogProviderInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityExplanationCatalogProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldVisibilityInspectionPrepareServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityInspectionPrepareService'
-  App\Administering\ServiceInterface\Rolling\AdministrationRollingBackedManagingAccessReadinessProviderInterface: '@App\Administering\Service\Rolling\AdministrationRollingBackedManagingAccessReadinessProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileReviewServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileReviewService'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileApplyService'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldAccessCatalogProviderInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessCatalogProvider'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileCatalogProviderInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldViewProfileCatalogProvider'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityExplanationCatalogProviderInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldVisibilityExplanationCatalogProvider'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldVisibilityInspectionPrepareService'
+  App\Administering\ServiceInterface\Managing\AdministrationRollingBackedManagingAccessReadinessProviderInterface: '@App\Administering\Service\Managing\AdministrationRollingBackedManagingAccessReadinessProvider'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileReviewServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldViewProfileReviewService'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileApplyServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldViewProfileApplyService'
   App\Administering\ValidatorInterface\Rolling\AdministrationFieldAccessPolicyDescriptorValidatorInterface: '@App\Administering\Validator\Rolling\AdministrationManagingFieldAccessPolicyDescriptorValidator'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessMutationReviewServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessMutationReviewService'
-  App\Administering\ServiceInterface\Rolling\AdministrationFieldAccessMutationApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationManagingFieldAccessMutationApplyService'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService'
+  App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationApplyService'
   App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface: '@App\Administering\Service\Accessing\AccessingAdministrationAccountProjectionProvider'
 
   App\Administering\Service\Operation\AdministrationGovernanceOperationRunner:

@@ -55,6 +55,8 @@ integrations:
     managing_profile_apply_contract: App\Managing\HandlerInterface\Crud\ManageCrudFieldUserProfileApplyHandlerInterface
     managing_profile_storage_entity: App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule
     managing_profile_storage_entity_manager: system
+    service_section_anchor_sync_operation: administration.service_section_anchors.sync
+    service_section_anchor_sync_doc: docs/architecture/032-service-section-anchor-sync-operation.adoc
 
 administering_wave4:
   operation_entity: App\\Administering\\Entity\\AdministrationOperationRun

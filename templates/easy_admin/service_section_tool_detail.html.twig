@@ -1,0 +1,64 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ detail.tool.label }}{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">{{ detail.tool.label }}</h1>
+                <p class="text-muted mb-0">
+                    {{ detail.section.label }} service tool rendered by an Administering-owned EasyAdmin template.
+                </p>
+            </div>
+            <a class="btn btn-secondary" href="{{ path('administration_service_section_tools', {sectionKey: detail.section.key}) }}">
+                Back to {{ detail.section.label }} tools
+            </a>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        <div class="row g-3">
+            <div class="col-12 col-xl-7">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Service identity</h2>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3">Section</dt>
+                            <dd class="col-sm-9">{{ detail.section.label }}</dd>
+
+                            <dt class="col-sm-3">Kind</dt>
+                            <dd class="col-sm-9"><span class="badge text-bg-secondary">{{ detail.tool.kind }}</span></dd>
+
+                            <dt class="col-sm-3">Class</dt>
+                            <dd class="col-sm-9"><code class="text-break">{{ detail.tool.serviceClass }}</code></dd>
+
+                            <dt class="col-sm-3">Source</dt>
+                            <dd class="col-sm-9"><code>{{ detail.section.serviceDirectory }}/{{ detail.tool.shortName }}.php</code></dd>
+                        </dl>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-xl-5">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Primary screen</h2>
+                        {% if detail.tool.hasPrimaryRoute %}
+                            <p class="text-muted">
+                                This service has a mapped screen/action. Open it from here instead of exposing every internal link in the sidebar.
+                            </p>
+                            <a class="btn btn-primary" href="{{ path(detail.tool.primaryRouteName) }}">
+                                {{ detail.tool.primaryRouteLabel ?? 'Open primary screen' }}
+                            </a>
+                        {% else %}
+                            <div class="alert alert-info mb-0">
+                                No primary screen is mapped yet. The service is still listed because it is a real tool in the canonical service catalog.
+                            </div>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

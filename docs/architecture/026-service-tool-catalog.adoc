@@ -1,0 +1,26 @@
+= Service Tool Catalog Canon
+
+The Administering left menu is intentionally limited to top-level service sections.
+Those sections are represented by `src/Service/<Section>` directories.
+
+Each concrete PHP service file directly under a service-section directory represents one tool in that section. Empty service-section directories remain valid sections with an empty tool list.
+The tool catalog is built by `AdministrationServiceToolCatalogInterface` and implemented by `FilesystemAdministrationServiceToolCatalog`.
+
+This keeps three things aligned:
+
+* the left menu section list;
+* the `src/Service/<Section>` implementation catalog;
+* the future section dashboard cards/tools.
+
+Rules:
+
+* one menu section equals one direct `src/Service/<Section>` directory;
+* one direct service PHP file equals one section tool;
+* an empty service-section directory equals a planned section with no registered tools yet;
+* internal review/apply/diagnostic routes must not become left-menu roots;
+* left-menu roots still point to primary EasyAdmin CRUD index pages;
+* section dashboards may use the service tool catalog to display internal tools.
+
+`src/Service/Managing` is the home for Managing field-access and field-visibility control-plane services.
+`src/Service/Rolling` is the home for Rolling ACL and permission services.
+The two should not be mixed.

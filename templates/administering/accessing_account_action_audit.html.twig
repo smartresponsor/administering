@@ -1,0 +1,43 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Accessing Account Action Audit{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Metadata-only projection. Password hashes, TOTP secrets, recovery codes, reset tokens, sessions, and verification internals are never exposed here.
+        </p>
+
+        <h2>Summary</h2>
+        <pre class="bg-light border rounded p-3 small">{{ summary_json }}</pre>
+
+        <table class="table datagrid mt-4">
+            <thead>
+                <tr>
+                    <th>Created</th>
+                    <th>Action</th>
+                    <th>Account</th>
+                    <th>Requested by</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for projection in projections %}
+                <tr>
+                    <td>{{ projection.createdAt|date('c') }}</td>
+                    <td><code>{{ projection.action }}</code></td>
+                    <td>{{ projection.accountReference }}</td>
+                    <td>{{ projection.requestedBySubject }}</td>
+                    <td>{{ projection.resultStatus }}</td>
+                    <td>{{ projection.safeMessage }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No audit projections are available.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\ServiceInterface\Rolling\AdministrationFieldViewProfileCatalogProviderInterface;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfilePriorityRow;
+use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileCatalogProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,29 +23,8 @@ final class AdministrationManagingFieldViewProfilePriorityController extends Abs
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-priority');
 
-        $rows = array_map(fn (AdministrationFieldViewProfilePriorityRow $row): string => $this->renderRow($row), $this->profileCatalogProvider->priorityRows());
-
-        return new Response(sprintf(
-            '<h1>Managing Field View Profile Priority</h1><p>Read-only priority chain for field access and personal/default presentation profiles. User preferences never create access and cannot override deny decisions.</p><table><thead><tr><th>Priority</th><th>Layer</th><th>Owner</th><th>Decision</th><th>Can Override</th><th>Notes</th></tr></thead><tbody>%s</tbody></table>',
-            implode('', $rows),
-        ));
-    }
-
-    private function renderRow(AdministrationFieldViewProfilePriorityRow $row): string
-    {
-        return sprintf(
-            '<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-            $row->priority,
-            $this->escape($row->layer),
-            $this->escape($row->ownerComponent),
-            $this->escape($row->decisionType),
-            $this->escape($row->canOverride),
-            $this->escape($row->notes),
-        );
-    }
-
-    private function escape(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return $this->render('@Administering/administering/managing_field_view_profile_priority.html.twig', [
+            'rows' => $this->profileCatalogProvider->priorityRows(),
+        ]);
     }
 }

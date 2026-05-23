@@ -1,0 +1,24 @@
+= Administering Service Tool Screen Catalog
+
+Administering keeps three navigation layers separate:
+
+* `AdministrationServiceSectionCatalog` defines left-menu sections from `src/Service/<Section>`.
+* `FilesystemAdministrationServiceToolCatalog` discovers tool classes from `src/Service/<Section>/*.php`.
+* `AdministrationServiceToolScreenCatalog` maps a service tool to its primary EasyAdmin-owned screen when such a screen exists.
+
+The filesystem tool catalog must not contain route-name knowledge. A service file remains the canonical evidence that a tool exists, while the screen catalog is the single place that links a tool to a safe route.
+
+== Rules
+
+* One top-level `src/Service/<Section>` directory represents one sidebar section.
+* One direct PHP file under that directory represents one section tool.
+* The sidebar stays section-only and must not list review, apply, diagnostic, or JSON routes directly.
+* Tool cards use `AdministrationServiceToolScreenCatalog` to show whether a primary screen is mapped.
+* Unmapped tools remain visible as service-only tools.
+* The detail page is rendered through Administering-owned EasyAdmin templates.
+
+== Safety
+
+Screen mapping does not grant permission. The existing route/controller and voter checks remain authoritative.
+
+Screen mapping must not turn the tool catalog into a sitemap. Internal POST routes and parameterized report routes should not be mapped as primary tool screens unless they are safe entry surfaces.

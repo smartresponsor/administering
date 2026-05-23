@@ -1,0 +1,31 @@
+= Service Section Anchor Synchronization
+
+Administering keeps the left EasyAdmin menu aligned with `src/Service/<Section>`.
+Each sidebar section must point to a section-owned EasyAdmin CRUD index, not to an internal review, apply, diagnostic, or fallback surface. Empty service-section directories are valid planned sections.
+
+The primary CRUD anchors are intentionally persisted as administrative/system records:
+
+* Accessing uses `AdministrationAccessingAccountRecord`.
+* Connected uses `AdministrationConnectedComponentRecord`.
+* Environment uses `AdministrationEnvironmentRuntimeRecord`.
+* Managing uses `AdministrationManagingFieldControlRecord`.
+* Symfony uses `AdministrationSymfonyRouteRecord`.
+* Unknown or planned sections use `AdministrationServiceSectionRecord` until a dedicated anchor is introduced.
+
+The synchronization command is explicit and does not run during page rendering:
+
+[source,bash]
+----
+php bin/console administering:service-section-anchors:sync
+php bin/console administering:service-section-anchors:sync Symfony
+php bin/console administering:service-section-anchors:sync Managing --json
+----
+
+== Canon
+
+* `src/Service/<Section>` remains the tool catalog, even when the directory has no PHP service files yet.
+* One direct service file in a service section is one internal tool.
+* Left-menu links remain primary EasyAdmin CRUD index links.
+* The synchronization command refreshes section-owned anchor records from existing providers.
+* Review, apply, diagnostic, and readiness surfaces stay inside section screens and must not become left-menu items.
+* Runtime page rendering must not silently rewrite anchor tables.

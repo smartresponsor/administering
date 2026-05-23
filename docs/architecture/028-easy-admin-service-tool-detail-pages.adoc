@@ -1,0 +1,22 @@
+= EasyAdmin Service Tool Detail Pages
+
+Administering keeps the left sidebar aligned with `src/Service/<Section>` and does not expose every internal tool route directly in the sidebar.
+
+Each service file under `src/Service/<Section>` is listed as a section tool. The tool list and the tool detail page are rendered by Administering-owned Twig templates that extend `@EasyAdmin/page/content.html.twig`.
+
+== Navigation rule
+
+* Left sidebar item: service section root.
+* Section page: EasyAdmin template listing service tools.
+* Tool card: opens an Administering-owned tool detail template.
+* Tool detail: may link to a mapped primary screen when a safe GET route exists.
+
+This prevents review, apply, diagnostics, and JSON/API report routes from becoming sidebar items while still keeping them discoverable inside the owning service section.
+
+== Safety
+
+The detail page does not execute tool mutations. It only displays service identity and a mapped primary screen link when available. State-changing actions must remain behind their existing reviewed surfaces.
+
+== Screen mapping
+
+Tool detail pages read primary screen data from `AdministrationServiceToolScreenCatalog`. The filesystem service tool catalog discovers tools only; it must not own route-name mapping.

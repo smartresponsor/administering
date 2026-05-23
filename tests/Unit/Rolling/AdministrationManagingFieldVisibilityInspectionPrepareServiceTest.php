@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityInspectionPrepareService;
+use App\Administering\Service\Managing\AdministrationManagingFieldVisibilityInspectionPrepareService;
 use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareRequest;
 use PHPUnit\Framework\TestCase;
 

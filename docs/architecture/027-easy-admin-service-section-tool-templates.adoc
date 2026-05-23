@@ -1,0 +1,20 @@
+= EasyAdmin Service Section Tool Templates
+
+Administering keeps the left EasyAdmin menu aligned with `src/Service/<Section>` directories.
+The sidebar links remain primary EasyAdmin CRUD index links, not internal review/apply/diagnostic routes.
+
+Each section may expose a tool dashboard rendered by Administering-owned EasyAdmin Twig templates.
+The canonical template is:
+
+`templates/easy_admin/service_section_tools.html.twig`
+
+The dashboard is read-only and lists tools discovered from direct service files under the matching service section.
+It must not become the sidebar source, and it must not replace the primary CRUD index link.
+
+== Rules
+
+* `src/Service/<Section>` is the service-section source.
+* Direct service files under that section are tool entries.
+* The left menu item for the section points to the primary EasyAdmin CRUD index.
+* The section tool dashboard uses Administering-owned EasyAdmin Twig templates.
+* Internal review/apply/diagnostic tools belong inside section pages, not directly in the sidebar.

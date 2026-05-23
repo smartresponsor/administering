@@ -1,0 +1,89 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Rolling Subject Access Report{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">Read-only inspection of the active Rolling access model used by Administering.</p>
+
+        {% if current_subject_hint is not empty %}
+            <p><strong>Current Administering subject:</strong> <code>{{ current_subject_hint }}</code></p>
+        {% endif %}
+
+        <p>
+            <strong>Report subject:</strong> <code>{{ report.subjectIdentifier }}</code><br>
+            <strong>Scope:</strong> <code>{{ report.scope }}</code><br>
+            <a href="{{ json_url }}">JSON report</a>
+        </p>
+
+        <h2>Effective roles</h2>
+        {% if report.effectiveRoles is empty %}
+            <p>None.</p>
+        {% else %}
+            <ul>
+                {% for item in report.effectiveRoles %}
+                    <li><code>{{ item }}</code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% for section in table_sections %}
+            <h2>{{ section.title }}</h2>
+            {% if section.rows is empty %}
+                <p>None.</p>
+            {% else %}
+                <table class="table datagrid">
+                    <thead>
+                        <tr>
+                            {% for header in section.headers %}
+                                <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in section.rows %}
+                            <tr>
+                                {% for header in section.headers %}
+                                    <td>{{ row[header]|default('') }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+
+        <h2>Granted catalog permissions</h2>
+        {% if report.grantedPermissions is empty %}
+            <p>None.</p>
+        {% else %}
+            <ul>
+                {% for item in report.grantedPermissions %}
+                    <li><code>{{ item }}</code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h2>Denied catalog permissions</h2>
+        {% if report.deniedPermissions is empty %}
+            <p>None.</p>
+        {% else %}
+            <ul>
+                {% for item in report.deniedPermissions %}
+                    <li><code>{{ item }}</code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h2>Full catalogued permissions</h2>
+        {% if report.cataloguedPermissions is empty %}
+            <p>None.</p>
+        {% else %}
+            <ul>
+                {% for item in report.cataloguedPermissions %}
+                    <li><code>{{ item }}</code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+{% endblock %}

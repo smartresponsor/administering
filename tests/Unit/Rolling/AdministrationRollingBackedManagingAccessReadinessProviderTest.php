@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationRollingBackedManagingAccessReadinessProvider;
+use App\Administering\Service\Managing\AdministrationRollingBackedManagingAccessReadinessProvider;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationRollingBackedManagingAccessReadinessProviderTest extends TestCase

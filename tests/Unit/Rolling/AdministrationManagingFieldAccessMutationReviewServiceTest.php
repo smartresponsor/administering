@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
-use App\Administering\Service\Rolling\AdministrationManagingFieldAccessMutationReviewService;
+use App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
 use App\Administering\Validator\Rolling\AdministrationManagingFieldAccessPolicyDescriptorValidator;
 use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewInput;

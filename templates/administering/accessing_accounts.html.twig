@@ -1,0 +1,36 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Accessing Accounts{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">Safe account projections. Security internals remain owned by Accessing.</p>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Identifier</th>
+                    <th>Status</th>
+                    <th>Verification</th>
+                    <th>Bootstrap roles</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for projection in projections %}
+                <tr>
+                    <td>{{ projection.subjectId }}</td>
+                    <td>{{ projection.identifier }}</td>
+                    <td>{{ projection.active ? 'active' : 'inactive' }}</td>
+                    <td>{{ projection.verified ? 'verified' : 'unverified' }}</td>
+                    <td>{{ projection.bootstrapRoles|join(', ') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No account projections are available.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

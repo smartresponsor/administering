@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
+use App\Administering\Form\Rolling\AdministrationRollingAclMutationApplyFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface;
+use App\Administering\Value\Form\Rolling\AdministrationRollingAclMutationApplyData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Native surface for promoting a previously reviewed Rolling ACL mutation to a
@@ -22,7 +22,6 @@ final class AdministrationRollingAclMutationApplyController extends AbstractCont
     public function __construct(
         private readonly AdministrationAclMutationApplyServiceInterface $applyService,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 
@@ -31,40 +30,65 @@ final class AdministrationRollingAclMutationApplyController extends AbstractCont
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        if ($request->isMethod('GET')) {
-            return new Response(sprintf(<<<'HTML'
-<h1>Apply Reviewed Rolling ACL Mutation</h1>
-<p>This surface applies only an existing persisted dry-run review. Rolling remains the ACL execution owner.</p>
-<form method="post" action="%s">
-  <input type="hidden" name="_token" value="%s">
-  <label>Review request key <input name="requestKey" placeholder="acl-review-..." required></label><br>
-  <button type="submit">Apply through Rolling</button>
-</form>
-HTML,
-                htmlspecialchars($this->generateUrl('administration_rolling_acl_mutation_apply'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                htmlspecialchars($this->csrfTokenManager->getToken($this->csrfTokenId())->getValue(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            ));
-        }
+        $data = new AdministrationRollingAclMutationApplyData();
+        $data->requestKey = trim((string) $request->query->get('requestKey', ''));
 
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($this->csrfTokenId(), (string) $request->request->get('_token', '')))) {
-            throw $this->createAccessDeniedException('Invalid ACL mutation apply token.');
+        $form = $this->createForm(AdministrationRollingAclMutationApplyFormType::class, $data, [
+            'action' => $this->generateUrl('administration_rolling_acl_mutation_apply'),
+        ]);
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return $this->render('@Administering/administering/form_page.html.twig', [
+                'page_title' => 'Apply Reviewed Rolling ACL Mutation',
+                'lead' => 'This surface applies only an existing persisted dry-run review. Rolling remains the ACL execution owner.',
+                'form' => $form->createView(),
+                'result_title' => null,
+                'result_json' => null,
+                'error_message' => null,
+                'action_links' => [],
+                'back_url' => null,
+            ]);
         }
 
         $currentUser = $this->currentUserContextProvider->current();
-        $result = $this->applyService->applyReviewedMutation(
-            trim((string) $request->request->get('requestKey', '')),
-            $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
-        );
+        try {
+            $result = $this->applyService->applyReviewedMutation(
+                trim($form->getData()->requestKey),
+                $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
+            );
+            $errorMessage = null;
+        } catch (\InvalidArgumentException $exception) {
+            $result = null;
+            $errorMessage = $exception->getMessage();
+        }
 
-        return new Response(sprintf(
-            '<h1>Rolling ACL Apply Result</h1><pre>%s</pre><p><a href="%s">Back</a></p>',
-            htmlspecialchars(json_encode($result->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            htmlspecialchars($this->generateUrl('administration_rolling_acl_mutation_apply'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-        ));
-    }
+        if (null === $result) {
+            return $this->render('@Administering/administering/form_page.html.twig', [
+                'page_title' => 'Rolling ACL Apply Result',
+                'lead' => 'This surface applies only an existing persisted dry-run review. Rolling remains the ACL execution owner.',
+                'form' => $this->createForm(AdministrationRollingAclMutationApplyFormType::class, $data, [
+                    'action' => $this->generateUrl('administration_rolling_acl_mutation_apply'),
+                ])->createView(),
+                'result_title' => null,
+                'result_json' => null,
+                'error_message' => $errorMessage,
+                'action_links' => [],
+                'back_url' => $this->generateUrl('administration_rolling_acl_mutation_apply'),
+            ]);
+        }
 
-    private function csrfTokenId(): string
-    {
-        return 'administering.rolling.acl_mutation.apply';
+        return $this->render('@Administering/administering/form_page.html.twig', [
+            'page_title' => 'Rolling ACL Apply Result',
+            'lead' => 'This surface applies only an existing persisted dry-run review. Rolling remains the ACL execution owner.',
+            'form' => $this->createForm(AdministrationRollingAclMutationApplyFormType::class, $data, [
+                'action' => $this->generateUrl('administration_rolling_acl_mutation_apply'),
+            ])->createView(),
+            'result_title' => 'Apply result',
+            'result_json' => json_encode($result->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+            'error_message' => null,
+            'action_links' => [],
+            'back_url' => $this->generateUrl('administration_rolling_acl_mutation_apply'),
+        ]);
     }
 }

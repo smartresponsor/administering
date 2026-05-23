@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationManagingFieldViewProfileCatalogProvider;
+use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileCatalogProvider;
 use App\Administering\Value\Rolling\AdministrationManagingFieldPermissionVocabulary;
 use PHPUnit\Framework\TestCase;
 

@@ -8,6 +8,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationAccountProjection
 use App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
+use App\Administering\ServiceInterface\Operation\AdministrationServiceSectionAnchorSyncOperationServiceInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
 use App\Administering\Value\Operation\AdministrationOperationType;
@@ -23,6 +24,7 @@ final class AdministrationGovernanceOperationRunner implements AdministrationOpe
         private readonly AdministrationPermissionCatalogProviderInterface $permissionCatalogProvider,
         private readonly AdministrationAccountProjectionProviderInterface $accountProjectionProvider,
         private readonly AdministrationOperationArtifactWriterInterface $artifactWriter,
+        private readonly AdministrationServiceSectionAnchorSyncOperationServiceInterface $anchorSyncOperationService,
         private readonly string $projectDir,
     ) {
     }
@@ -36,6 +38,7 @@ final class AdministrationGovernanceOperationRunner implements AdministrationOpe
             AdministrationOperationType::COMPOSER_VALIDATE,
             AdministrationOperationType::ROLLING_ACL_CATALOG_REFRESH,
             AdministrationOperationType::ACCESSING_ACCOUNT_ACTION,
+            AdministrationOperationType::SERVICE_SECTION_ANCHORS_SYNC,
         ];
     }
 
@@ -49,6 +52,7 @@ final class AdministrationGovernanceOperationRunner implements AdministrationOpe
             AdministrationOperationType::COMPOSER_VALIDATE => $this->runComposerValidate($operationKey),
             AdministrationOperationType::ROLLING_ACL_CATALOG_REFRESH => $this->runRollingCatalogRefresh($operationKey),
             AdministrationOperationType::ACCESSING_ACCOUNT_ACTION => $this->runAccessingProjectionRefresh($operationKey),
+            AdministrationOperationType::SERVICE_SECTION_ANCHORS_SYNC => $this->runServiceSectionAnchorSync($operationKey),
             default => AdministrationOperationExecutionResult::skipped(
                 'Operation type is registered but has no concrete metadata runner yet.',
                 ['operation_key' => $operationKey, 'operation_type' => $operationType],
@@ -180,6 +184,26 @@ final class AdministrationGovernanceOperationRunner implements AdministrationOpe
 
         return AdministrationOperationExecutionResult::succeeded(
             'Rolling permission catalog refreshed from safe manifest metadata.',
+            $safePayload + ['artifact' => $artifact->relativePath()],
+        );
+    }
+
+    private function runServiceSectionAnchorSync(string $operationKey): AdministrationOperationExecutionResult
+    {
+        $results = $this->anchorSyncOperationService->synchronize();
+        $safePayload = [
+            'sections' => array_map(static fn ($result): array => $result->toArray(), $results),
+            'records' => array_sum(array_map(static fn ($result): int => $result->recordCount, $results)),
+        ];
+        $artifact = $this->artifactWriter->writeJsonArtifact(
+            $operationKey,
+            'service-section-anchor-sync-summary',
+            'Service-section anchor synchronization summary',
+            $safePayload,
+        );
+
+        return AdministrationOperationExecutionResult::succeeded(
+            'Service-section primary CRUD anchors synchronized from safe providers.',
             $safePayload + ['artifact' => $artifact->relativePath()],
         );
     }

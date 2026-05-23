@@ -1,0 +1,71 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Managing Field View Profiles{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Read-only control-plane metadata for field presentation profiles. These profiles can only shape visible/hidden presentation inside access already allowed by Managing, Rolling, and Administering policy.
+        </p>
+
+        <h2>Profile scopes</h2>
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Scope</th>
+                    <th>Label</th>
+                    <th>Owner</th>
+                    <th>Storage</th>
+                    <th>Boundary</th>
+                    <th>Operations</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td><code>{{ item.scopeType }}</code></td>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.ownerComponent }}</td>
+                    <td>{{ item.storageOwner }}</td>
+                    <td>{{ item.securityBoundary }}</td>
+                    <td>{{ item.allowedOperations|join(', ') }}</td>
+                    <td>{{ item.notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No profile scopes are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Execution rule shape</h2>
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Path</th>
+                    <th>Rule Keys</th>
+                    <th>Effect</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for shape in shapes %}
+                <tr>
+                    <td>{{ shape.section }}</td>
+                    <td><code>{{ shape.scopePath }}</code></td>
+                    <td>{{ shape.ruleKeys|join(', ') }}</td>
+                    <td>{{ shape.effect }}</td>
+                    <td>{{ shape.notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No rule shapes are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationManagingFieldAccessCatalogProvider;
+use App\Administering\Service\Managing\AdministrationManagingFieldAccessCatalogProvider;
 use App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface;
 use App\Administering\Value\Rolling\AdministrationManagingFieldPermissionVocabulary;
 use App\Administering\Value\Rolling\AdministrationPermissionDescriptor;

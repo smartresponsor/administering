@@ -1,0 +1,17 @@
+= Administering Component Root Menu: First Five
+
+The Administering left sidebar starts with component/platform roots instead of a flat technical sitemap.
+
+== Sidebar roots in this wave
+
+* Dashboard
+* Rolling
+* Accessing
+* Managing
+* Symfony
+
+Rolling, Accessing, Managing, and Symfony each expose a landing surface. Internal CRUD, review, apply, readiness, and diagnostic links are presented as cards inside the corresponding component surface instead of being listed directly in the EasyAdmin sidebar.
+
+== Boundary
+
+This wave does not remove existing controllers or routes. It only changes root navigation and adds component landing surfaces for the first five menu entries.

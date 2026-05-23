@@ -1,0 +1,56 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ dashboard.section.label }} tools{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">{{ dashboard.section.label }}</h1>
+                <p class="text-muted mb-0">
+                    Service-section tools discovered from <code>{{ dashboard.section.serviceDirectory }}</code>.
+                    Each card opens an Administering-owned EasyAdmin tool detail page first.
+                </p>
+            </div>
+            <a class="btn btn-primary" href="{{ primaryCrudUrl }}">
+                Open primary CRUD index
+            </a>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        <div class="row g-3">
+            {% for tool in dashboard.tools %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <article class="field-group card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <h2 class="h5 mb-2">{{ tool.label }}</h2>
+                                <span class="badge text-bg-secondary">{{ tool.kind }}</span>
+                            </div>
+                            <p class="text-muted small mb-2">{{ tool.shortName }}</p>
+                            <code class="small d-block text-break mb-3">{{ tool.serviceClass }}</code>
+
+                            <div class="mt-auto d-flex flex-wrap gap-2">
+                                <a class="btn btn-sm btn-primary" href="{{ path('administration_service_section_tool_detail', {sectionKey: dashboard.section.key, toolShortName: tool.shortName}) }}">
+                                    Open tool
+                                </a>
+                                {% if tool.hasPrimaryRoute %}
+                                    <span class="badge text-bg-success align-self-center">screen mapped</span>
+                                {% else %}
+                                    <span class="badge text-bg-light align-self-center">service-only</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-warning mb-0">
+                        No direct service tools were found for this section.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

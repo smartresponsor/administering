@@ -1,0 +1,40 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Managing Field Access Catalog{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Read-only control-plane metadata for Managing field access and profile permissions. Rolling owns effective access decisions; Managing enforces final EasyAdmin field filtering.
+        </p>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Label</th>
+                    <th>Group</th>
+                    <th>Scopes</th>
+                    <th>Sensitive</th>
+                    <th>Rolling</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td><code>{{ item.permissionKey }}</code></td>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.controlPlaneGroup }}</td>
+                    <td>{{ item.scopes|join(', ') }}</td>
+                    <td>{{ item.sensitive ? 'yes' : 'no' }}</td>
+                    <td>{{ item.registeredInRolling ? 'registered' : 'missing' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No access catalog items are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

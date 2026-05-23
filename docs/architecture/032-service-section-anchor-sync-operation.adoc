@@ -1,0 +1,33 @@
+= Service Section Anchor Sync Operation
+
+Administering exposes service-section anchor synchronization in two controlled ways:
+
+* console: `administering:service-section-anchors:sync`
+* Operations UI: `administration.service_section_anchors.sync`
+
+The operation synchronizes section-owned primary EasyAdmin CRUD index records for the canonical service sections.
+It does not add internal review, apply, diagnostic, or fallback routes to the left menu.
+
+== Boundary
+
+The left menu remains section-based:
+
+[source,text]
+----
+src/Service/<Section> -> sidebar section -> primary EasyAdmin CRUD index
+----
+
+The sync operation refreshes anchor tables for sections that need indexed metadata, such as Symfony routes, Managing field-control surfaces, Environment runtime status, Connected components, and Accessing account projections.
+
+== Safety
+
+The operation is metadata-only. It must not carry secrets, raw `.env` values, decrypted credentials, DSNs, tokens, passwords, or private configuration payloads.
+
+The operation is launchable from the Administering Operations EasyAdmin surface through the canonical key:
+
+[source,text]
+----
+administration.service_section_anchors.sync
+----
+
+It remains an operation, not a sidebar entry.

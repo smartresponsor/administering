@@ -1,0 +1,30 @@
+= Administering Service-Section Primary CRUD Anchors
+
+The Administering sidebar is rooted in `src/Service/<Section>` directories. Each service section must open a section-owned EasyAdmin CRUD index, not an unrelated fallback screen.
+
+== Canon
+
+* `src/Service/<Section>` is the menu-visible service-section directory.
+* Empty service-section directories are valid planned sections.
+* The left sidebar item for a section points to the section's primary EasyAdmin CRUD index.
+* Borrowed fallback CRUD anchors are forbidden for menu roots.
+* Review, apply, readiness, diagnostic, inspection, and JSON surfaces are internal tools and must not be primary left-menu anchors.
+* Tool links remain available from section-owned EasyAdmin templates.
+
+== Section-owned anchors
+
+The current section-owned CRUD anchors are:
+
+* `Accessing` -> `AdministrationAccessingAccountRecordCrudController`
+* `Connected` -> `AdministrationConnectedComponentRecordCrudController`
+* `Environment` -> `AdministrationEnvironmentRuntimeRecordCrudController`
+* `Managing` -> `AdministrationManagingFieldControlRecordCrudController`
+* `Symfony` -> `AdministrationSymfonyRouteRecordCrudController`
+
+Known sections use these anchors. Unknown or planned sections use `AdministrationServiceSectionRecordCrudController` as a generic EasyAdmin CRUD index until a section-owned anchor exists.
+
+These anchors replace temporary borrowed fallbacks such as `AdministrationConfigSnapshotCrudController` for Symfony/Connected and `AdministrationAclMutationReviewRecordCrudController` for Managing.
+
+== Storage boundary
+
+The new anchor entities, including `AdministrationServiceSectionRecord`, are Administering system records. They belong to the system/internal storage side of the host application. They are not business/user-data entities.

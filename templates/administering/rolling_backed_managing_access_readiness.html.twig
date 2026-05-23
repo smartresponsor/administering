@@ -1,0 +1,57 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Rolling-backed Managing Field Access Readiness{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            This read-only surface documents whether the ecosystem has the required contracts and host checklist for enabling Rolling-backed Managing field access.
+        </p>
+
+        <ul>
+            <li><strong>Expected backend:</strong> <code>{{ report.mode }}</code></li>
+            <li><strong>Expected failure effect:</strong> <code>{{ report.failureEffect }}</code></li>
+            <li><strong>Permission key:</strong> <code>{{ report.permissionKey }}</code></li>
+            <li><strong>Rolling decision contract:</strong> <code>{{ report.rollingDecisionContract }}</code></li>
+            <li><strong>Managing adapter contract:</strong> <code>{{ report.managingAdapterContract }}</code></li>
+        </ul>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Item</th>
+                    <th>Status</th>
+                    <th>Owner</th>
+                    <th>Expected value</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in report.items %}
+                <tr>
+                    <td><code>{{ item.key }}</code></td>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.owner }}</td>
+                    <td><code>{{ item.expectedValue }}</code></td>
+                    <td>{{ item.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No readiness items are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Safe host config target</h2>
+        <pre>managing:
+  crud_field_external_access_backend: rolling
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_permission_key: managing.field.view
+  crud_field_external_access_rolling_decision_service: App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface</pre>
+
+        <p>This surface does not mutate Rolling ACL, Managing configuration, or field profile storage.</p>
+    </section>
+{% endblock %}

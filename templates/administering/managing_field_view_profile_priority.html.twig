@@ -1,0 +1,40 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Managing Field View Profile Priority{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Read-only priority chain for field access and personal/default presentation profiles. User preferences never create access and cannot override deny decisions.
+        </p>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Layer</th>
+                    <th>Owner</th>
+                    <th>Decision</th>
+                    <th>Can Override</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.priority }}</td>
+                    <td>{{ row.layer }}</td>
+                    <td>{{ row.ownerComponent }}</td>
+                    <td>{{ row.decisionType }}</td>
+                    <td>{{ row.canOverride }}</td>
+                    <td>{{ row.notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No priority rows are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

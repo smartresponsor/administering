@@ -1,0 +1,19 @@
+= Service Section CRUD Index Menu Links
+
+Administering left-menu service-section roots must open EasyAdmin CRUD index pages.
+
+== Canon
+
+* `src/Service/<Section>` defines a left-menu section.
+* The section menu item must be built with `MenuItem::linkToCrud(...)`.
+* The section menu item must set `Crud::PAGE_INDEX`.
+* The section menu item must set the section primary CRUD controller.
+* `MenuItem::linkToRoute(...)` and generic fallback/frontend links are forbidden for service-section roots.
+
+== Reason
+
+A service-section root is the stable entry point for a tool area. The sidebar must not point to internal review, apply, diagnostic, or fallback frontend routes. Those tools live inside the section screens.
+
+== Empty sections
+
+Empty `src/Service/<Section>` directories are valid planned sections. They use the generic `AdministrationServiceSectionRecordCrudController` until a section-owned CRUD anchor exists.

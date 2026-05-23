@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Rolling\AdministrationManagingFieldVisibilityExplanationCatalogProvider;
+use App\Administering\Service\Managing\AdministrationManagingFieldVisibilityExplanationCatalogProvider;
 use App\Administering\Value\Rolling\AdministrationFieldVisibilityExplanationStep;
 use PHPUnit\Framework\TestCase;
 

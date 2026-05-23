@@ -1,0 +1,67 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Administering Operations{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">
+            Launches metadata-only Administering operations. Secrets, raw environment values, and decrypted credential payloads are forbidden in operation messages.
+        </p>
+
+        <h2>Launchable operations</h2>
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for operation in operations %}
+                <tr>
+                    <td><code>{{ operation.type }}</code></td>
+                    <td>
+                        {{ form_start(operation.form, { action: path('administration_operation_start', {operationType: operation.type}) }) }}
+                            {{ form_errors(operation.form) }}
+                            {{ form_widget(operation.form.operationType) }}
+                            {{ form_widget(operation.form.submit) }}
+                        {{ form_end(operation.form) }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">No launchable operations are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Recent runs</h2>
+        {% if not operationStorageConfigured %}
+            <p>Operation storage is not configured for App\Administering entities.</p>
+        {% elseif recentRuns is empty %}
+            <p>No operation runs recorded yet.</p>
+        {% else %}
+            <table class="table datagrid">
+                <thead>
+                    <tr>
+                        <th>Run</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for run in recentRuns %}
+                    <tr>
+                        <td><a href="{{ path('administering_operation_run_detail', {operationKey: run.operationKey}) }}">{{ run.operationKey }}</a></td>
+                        <td><code>{{ run.operationType }}</code></td>
+                        <td>{{ run.status }}</td>
+                        <td>{{ run.createdAt|date('c') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </section>
+{% endblock %}

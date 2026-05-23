@@ -1,0 +1,72 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Managing Field Visibility Explanation{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">Read-only diagnostic map for why a field is rendered, hidden, or denied.</p>
+        <p><strong>Decision axes:</strong> access, presentation, availability.</p>
+
+        <h2>Decision Trace</h2>
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Stage</th>
+                    <th>Owner</th>
+                    <th>Axis</th>
+                    <th>Effect</th>
+                    <th>Terminal</th>
+                    <th>Reason Example</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for step in steps %}
+                <tr>
+                    <td>{{ step.priority }}</td>
+                    <td>{{ step.stage }}</td>
+                    <td>{{ step.ownerComponent }}</td>
+                    <td><code>{{ step.decisionAxis }}</code></td>
+                    <td>{{ step.decisionEffect }}</td>
+                    <td>{{ step.terminalBehavior }}</td>
+                    <td><code>{{ step.reasonCodeExample }}</code></td>
+                    <td>{{ step.notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No explanation steps are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Diagnostic Scenarios</h2>
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Axis</th>
+                    <th>Final Decision</th>
+                    <th>Trace</th>
+                    <th>Safety</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for scenario in scenarios %}
+                <tr>
+                    <td><strong>{{ scenario.label }}</strong><br><code>{{ scenario.scenarioKey }}</code></td>
+                    <td><code>{{ scenario.decisionAxis }}</code></td>
+                    <td>{{ scenario.finalDecision }}</td>
+                    <td><code>{{ scenario.trace|join(' → ') }}</code></td>
+                    <td>{{ scenario.safetyNote }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No diagnostic scenarios are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

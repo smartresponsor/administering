@@ -1,0 +1,36 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Rolling Permission Catalog{% endblock %}
+
+{% block main %}
+    <section class="content-panel">
+        <p class="text-muted">Safe metadata exported by Rolling for Administering visualization.</p>
+
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Label</th>
+                    <th>Category</th>
+                    <th>Scopes</th>
+                    <th>Sensitive</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for descriptor in descriptors %}
+                <tr>
+                    <td><code>{{ descriptor.key }}</code></td>
+                    <td>{{ descriptor.label }}</td>
+                    <td>{{ descriptor.category }}</td>
+                    <td>{{ descriptor.scopes|join(', ') }}</td>
+                    <td>{{ descriptor.sensitive ? 'yes' : 'no' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No permissions are registered.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

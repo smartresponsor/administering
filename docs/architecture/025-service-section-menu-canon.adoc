@@ -1,0 +1,40 @@
+= Administering Service-Section Menu Canon
+
+The Administering left menu is a service-section map, not a route sitemap.
+
+== Canon
+
+* A top-level sidebar item represents one `src/Service/<Section>` directory.
+* Empty `src/Service/<Section>` directories are valid planned sections and still appear in the sidebar.
+* One service-section directory represents one Administering tool direction.
+* Internal review, apply, diagnostic, readiness, and JSON surfaces are not listed directly in the sidebar.
+* Every sidebar item must point to a primary EasyAdmin CRUD index.
+* Service-section metadata is centralized in `AdministrationServiceSectionCatalog`.
+* `AdministrationDashboardController::configureMenuItems()` delegates to `AdministrationMainMenuBuilder`.
+
+== Current sections
+
+The current list is discovered from the direct directories under `src/Service`. Known sections receive section-owned CRUD anchors; unknown or planned sections use the generic `AdministrationServiceSectionRecordCrudController` until they receive their own anchor.
+
+* `Accessing`
+* `Audit`
+* `Configuration`
+* `Connected`
+* `Credential`
+* `Environment`
+* `Managing`
+* `Operation`
+* `Rolling`
+* `Symfony`
+
+* `Administering`
+
+== Boundary notes
+
+Managing field-control services belong under `src/Service/Managing`, not under `src/Service/Rolling`.
+Rolling keeps ACL, permission catalog, mutation, and access-decision services.
+Security infrastructure helpers are not menu sections and therefore do not live under `src/Service/Security`.
+
+== Primary anchor hardening
+
+See `030-service-section-primary-crud-anchors.adoc` for the stricter rule that every menu-visible service section must use a section-owned primary EasyAdmin CRUD index instead of a borrowed fallback CRUD.
