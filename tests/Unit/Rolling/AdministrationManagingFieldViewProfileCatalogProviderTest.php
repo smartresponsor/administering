@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileCatalogProvider;
-use App\Administering\Value\Rolling\AdministrationManagingFieldPermissionVocabulary;
+use App\Administering\Provider\Managing\AdministrationManagingFieldViewProfileCatalogProvider;
+use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileCatalogProviderTest extends TestCase
@@ -24,7 +24,7 @@ final class AdministrationManagingFieldViewProfileCatalogProviderTest extends Te
         }
 
         self::assertNotNull($userProfile);
-        self::assertSame(AdministrationManagingFieldPermissionVocabulary::PROFILE_SELF_UPDATE, $userProfile->securityBoundary);
+        self::assertSame(ManagingFieldPermissionVocabulary::PROFILE_SELF_UPDATE, $userProfile->securityBoundary);
         self::assertStringContainsString('already allowed', $userProfile->notes);
     }
 

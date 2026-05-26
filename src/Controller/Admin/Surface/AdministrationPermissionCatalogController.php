@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface;
+use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationPermissionCatalogController extends AbstractController
 {
-    public function __construct(private readonly AdministrationPermissionCatalogProviderInterface $permissionCatalogProvider)
+    public function __construct(private readonly RollingAdministrationPermissionCatalogInterface $permissionCatalog)
     {
     }
 
@@ -24,7 +24,7 @@ final class AdministrationPermissionCatalogController extends AbstractController
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:rolling');
 
         return $this->render('@Administering/administering/rolling_permission_catalog.html.twig', [
-            'descriptors' => $this->permissionCatalogProvider->descriptors(),
+            'descriptors' => $this->permissionCatalog->descriptors(),
         ]);
     }
 }

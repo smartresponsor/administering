@@ -1,0 +1,63 @@
+= Owner Repository Work Order
+:toc:
+
+== Purpose
+
+The owner repository work order is the closing transition artifact between the
+Administering internal transition waves and concrete repository-specific owner
+patch waves.
+
+It intentionally does not create, move, delete, or rewrite files in neighbor
+repositories. It only states which current slices are required before concrete
+patches can be generated.
+
+== Canonical split
+
+* Administering owns the thin orchestration shell: discovery, validation,
+  SQLite materialized projection, EasyAdmin CRUD index, runtime controls, audit,
+  and handoff reporting.
+* Owner repositories own their own configuration tools, forms, data objects,
+  handlers, and component-specific configuration semantics.
+* The host/post-application owns Symfony framework configuration, environment,
+  credentials, secrets, component enablement, and deployment-specific wiring.
+
+== Owner-side prefix
+
+Owner tools use owner-side prefixes, not Administering prefixes:
+
+[source,text]
+----
+ManagingConfiguration{ToolSlug}Service
+AccessingConfiguration{ToolSlug}Service
+RollingConfiguration{ToolSlug}Service
+----
+
+The Administering projection materializes those owner-provided tools into
+SQLite and exposes them through EasyAdmin. It does not become the semantic owner
+of those tools.
+
+== Command
+
+[source,powershell]
+----
+php bin/console administering:owner-configuration-tools:owner-work-order Managing Accessing Rolling `
+  --host-application=App `
+  --workspace-root="D:\PhpstormProjects\www" `
+  --write-json=delivery/patches/administering_owner_repository_work_order.json `
+  --allow-missing-artifacts
+----
+
+The command emits:
+
+* required owner current slice archives;
+* expected repository paths;
+* expected owner-side provider/service/form/data target patterns;
+* expected touched/cumulative/apply-script deliverables for each future owner
+  repository patch wave;
+* host/post-application work order when requested;
+* Administering shell boundaries after transition freeze.
+
+== Delivery rule
+
+Generic external kits are not concrete patches. Concrete patches for owner
+repositories must be generated from the current slice of each target repository.

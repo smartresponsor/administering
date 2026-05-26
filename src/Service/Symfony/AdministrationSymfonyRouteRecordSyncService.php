@@ -6,15 +6,19 @@ namespace App\Administering\Service\Symfony;
 
 use App\Administering\Entity\AdministrationSymfonyRouteRecord;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
+use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Symfony\AdministrationSymfonyRouteCatalogProviderInterface;
+use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Symfony section primary CRUD anchor from route metadata.
  */
-final readonly class AdministrationSymfonyRouteRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface
+final readonly class AdministrationSymfonyRouteRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface, AdministrationServiceToolHandlerInterface
 {
+    use AdministrationServiceSectionAnchorSyncToolHandlerTrait;
+
     public function __construct(
         private AdministrationSymfonyRouteCatalogProviderInterface $routeCatalogProvider,
         private EntityManagerInterface $entityManager,

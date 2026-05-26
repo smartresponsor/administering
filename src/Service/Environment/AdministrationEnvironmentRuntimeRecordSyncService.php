@@ -6,15 +6,19 @@ namespace App\Administering\Service\Environment;
 
 use App\Administering\Entity\AdministrationEnvironmentRuntimeRecord;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
+use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Environment\AdministrationEnvironmentRuntimeStatusProviderInterface;
+use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Environment primary CRUD anchor from safe runtime metadata.
  */
-final readonly class AdministrationEnvironmentRuntimeRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface
+final readonly class AdministrationEnvironmentRuntimeRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface, AdministrationServiceToolHandlerInterface
 {
+    use AdministrationServiceSectionAnchorSyncToolHandlerTrait;
+
     public function __construct(
         private AdministrationEnvironmentRuntimeStatusProviderInterface $runtimeStatusProvider,
         private EntityManagerInterface $entityManager,

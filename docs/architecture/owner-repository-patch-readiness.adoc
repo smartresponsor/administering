@@ -1,0 +1,27 @@
+= Owner Repository Patch Readiness
+
+This command is part of the post-freeze owner-side configuration-tool transition.
+
+It does not create patches, move files, delete files, or apply external packages. It reads the owner repository slice intake report and checks whether the transition/handoff artifacts needed for concrete neighbor patch waves are present.
+
+== Command
+
+[source,bash]
+----
+php bin/console administering:owner-configuration-tools:owner-patch-readiness
+----
+
+Recommended report output:
+
+[source,bash]
+----
+php bin/console administering:owner-configuration-tools:owner-patch-readiness \
+  --write-json=delivery/patches/administering_owner_repository_patch_readiness.json \
+  --allow-missing-artifacts
+----
+
+== Responsibility boundary
+
+Administering remains the administrative projection/orchestration shell. Owner repositories own their configuration tools, forms, data objects, and handlers. The host/post-application owns Symfony environment, credentials, secrets, and component enablement configuration.
+
+Concrete owner repository patches must be generated only from a current slice of that repository. Generic external handoff artifacts are reviewed inputs, not a replacement for current-slice patching.

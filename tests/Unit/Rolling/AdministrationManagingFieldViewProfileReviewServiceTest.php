@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileReviewService;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileEditRequest;
-use App\Administering\Value\Rolling\AdministrationManagingFieldPermissionVocabulary;
+use App\Managing\Service\Administration\ManagingFieldViewProfileReviewService;
+use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
+use App\Managing\Value\Administration\ManagingFieldViewProfileEditRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileReviewServiceTest extends TestCase
 {
     public function testBuildsResourceProfileReviewPayload(): void
     {
-        $service = new AdministrationManagingFieldViewProfileReviewService();
-        $result = $service->review(new AdministrationFieldViewProfileEditRequest(
-            subjectType: AdministrationFieldViewProfileEditRequest::SUBJECT_ROLE,
+        $service = new AdministrationManagingFieldViewProfileReviewService(new ManagingFieldViewProfileReviewService());
+        $result = $service->review(new ManagingFieldViewProfileEditRequest(
+            subjectType: ManagingFieldViewProfileEditRequest::SUBJECT_ROLE,
             subjectIdentifier: 'security.admin',
             pageName: 'index',
             visibleFields: ['title', 'status', 'title'],
@@ -35,15 +36,15 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
             ['createdAt'],
             $result->normalizedProfilePayload['subjects']['role:security.admin']['resources']['App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity']['index']['hidden'],
         );
-        self::assertSame(AdministrationManagingFieldPermissionVocabulary::PROFILE_ROLE_UPDATE, $result->reviewContext['profile_permission']);
+        self::assertSame(ManagingFieldPermissionVocabulary::PROFILE_ROLE_UPDATE, $result->reviewContext['profile_permission']);
         self::assertFalse($result->toSafeArray()['safety']['grants_access']);
     }
 
     public function testBuildsDefaultProfileReviewPayload(): void
     {
-        $service = new AdministrationManagingFieldViewProfileReviewService();
-        $result = $service->review(new AdministrationFieldViewProfileEditRequest(
-            subjectType: AdministrationFieldViewProfileEditRequest::SUBJECT_USER,
+        $service = new AdministrationManagingFieldViewProfileReviewService(new ManagingFieldViewProfileReviewService());
+        $result = $service->review(new ManagingFieldViewProfileEditRequest(
+            subjectType: ManagingFieldViewProfileEditRequest::SUBJECT_USER,
             subjectIdentifier: 'user:42',
             pageName: 'detail',
             visibleFields: ['description'],
@@ -54,7 +55,7 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
             ['description'],
             $result->normalizedProfilePayload['subjects']['user:42']['defaults']['detail']['visible'],
         );
-        self::assertSame(AdministrationManagingFieldPermissionVocabulary::PROFILE_USER_UPDATE, $result->reviewContext['profile_permission']);
+        self::assertSame(ManagingFieldPermissionVocabulary::PROFILE_USER_UPDATE, $result->reviewContext['profile_permission']);
     }
 
     public function testRejectsConflictingVisibleHiddenFields(): void
@@ -62,8 +63,8 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('both visible and hidden');
 
-        (new AdministrationManagingFieldViewProfileReviewService())->review(new AdministrationFieldViewProfileEditRequest(
-            subjectType: AdministrationFieldViewProfileEditRequest::SUBJECT_GROUP,
+        (new AdministrationManagingFieldViewProfileReviewService(new ManagingFieldViewProfileReviewService()))->review(new ManagingFieldViewProfileEditRequest(
+            subjectType: ManagingFieldViewProfileEditRequest::SUBJECT_GROUP,
             subjectIdentifier: 'billing',
             pageName: 'index',
             visibleFields: ['status'],

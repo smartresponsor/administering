@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\Form\Managing\AdministrationFieldAccessMutationApplyFormType;
+use App\Administering\Form\Managing\AdministrationManagingFieldAccessMutationApplyFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface;
-use App\Administering\Value\Form\Managing\AdministrationFieldAccessMutationApplyData;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldAccessMutationApplyData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,10 +30,10 @@ final class AdministrationManagingFieldAccessMutationApplyController extends Abs
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply.view', 'administering:managing-field-access');
 
-        $data = new AdministrationFieldAccessMutationApplyData();
+        $data = new AdministrationManagingFieldAccessMutationApplyData();
         $data->requestKey = trim((string) $request->query->get('requestKey', ''));
 
-        $form = $this->createForm(AdministrationFieldAccessMutationApplyFormType::class, $data, [
+        $form = $this->createForm(AdministrationManagingFieldAccessMutationApplyFormType::class, $data, [
             'action' => $this->generateUrl('administration_managing_field_access_mutation_apply'),
         ]);
         $form->handleRequest($request);
@@ -67,7 +67,7 @@ final class AdministrationManagingFieldAccessMutationApplyController extends Abs
             return $this->render('@Administering/administering/form_page.html.twig', [
                 'page_title' => 'Managing Field Access Apply Result',
                 'lead' => 'This surface applies only persisted Managing field-access review records. Broader Rolling ACL reviews are rejected here.',
-                'form' => $this->createForm(AdministrationFieldAccessMutationApplyFormType::class, $data, [
+                'form' => $this->createForm(AdministrationManagingFieldAccessMutationApplyFormType::class, $data, [
                     'action' => $this->generateUrl('administration_managing_field_access_mutation_apply'),
                 ])->createView(),
                 'result_title' => null,
@@ -81,7 +81,7 @@ final class AdministrationManagingFieldAccessMutationApplyController extends Abs
         return $this->render('@Administering/administering/form_page.html.twig', [
             'page_title' => 'Managing Field Access Apply Result',
             'lead' => 'This surface applies only persisted Managing field-access review records. Broader Rolling ACL reviews are rejected here.',
-            'form' => $this->createForm(AdministrationFieldAccessMutationApplyFormType::class, $data, [
+            'form' => $this->createForm(AdministrationManagingFieldAccessMutationApplyFormType::class, $data, [
                 'action' => $this->generateUrl('administration_managing_field_access_mutation_apply'),
             ])->createView(),
             'result_title' => 'Apply result',

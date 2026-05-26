@@ -8,8 +8,7 @@
             <div>
                 <h1 class="title mb-1">{{ dashboard.section.label }}</h1>
                 <p class="text-muted mb-0">
-                    Service-section tools discovered from <code>{{ dashboard.section.serviceDirectory }}</code>.
-                    Each card opens an Administering-owned EasyAdmin tool detail page first.
+                    Tools for this section.
                 </p>
             </div>
             <a class="btn btn-primary" href="{{ primaryCrudUrl }}">
@@ -36,9 +35,9 @@
                                     Open tool
                                 </a>
                                 {% if tool.hasPrimaryRoute %}
-                                    <span class="badge text-bg-success align-self-center">screen mapped</span>
+                                    <span class="badge text-bg-success align-self-center">screen</span>
                                 {% else %}
-                                    <span class="badge text-bg-light align-self-center">service-only</span>
+                                    <span class="badge text-bg-light align-self-center">service</span>
                                 {% endif %}
                             </div>
                         </div>

@@ -1,0 +1,5 @@
+Explicit stale file to remove after applying touched files:
+
+src/Service/Rolling/RollingAdministrationAclMutationApplyService.php
+
+Reason: renamed to src/Service/Rolling/AdministrationRollingAclMutationApplyService.php to satisfy Administration{Direction}{ToolSlug}Service convention.

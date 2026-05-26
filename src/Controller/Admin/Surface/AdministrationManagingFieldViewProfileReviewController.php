@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\Form\Managing\AdministrationFieldViewProfileReviewFormType;
+use App\Administering\Form\Managing\AdministrationManagingFieldViewProfileReviewFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileReviewServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
-use App\Administering\Value\Form\Managing\AdministrationFieldViewProfileReviewData;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileEditRequest;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldViewProfileReviewData;
+use App\Managing\Value\Administration\ManagingFieldViewProfileEditRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile');
 
-        $form = $this->createForm(AdministrationFieldViewProfileReviewFormType::class, new AdministrationFieldViewProfileReviewData(), [
+        $form = $this->createForm(AdministrationManagingFieldViewProfileReviewFormType::class, new AdministrationManagingFieldViewProfileReviewData(), [
             'action' => $this->generateUrl('administration_managing_field_view_profile_review'),
         ]);
 
@@ -52,7 +52,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile');
 
-        $form = $this->createForm(AdministrationFieldViewProfileReviewFormType::class, new AdministrationFieldViewProfileReviewData(), [
+        $form = $this->createForm(AdministrationManagingFieldViewProfileReviewFormType::class, new AdministrationManagingFieldViewProfileReviewData(), [
             'action' => $this->generateUrl('administration_managing_field_view_profile_review'),
         ]);
         $form->handleRequest($request);
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
-            $result = $this->reviewService->review(new AdministrationFieldViewProfileEditRequest(
+            $result = $this->reviewService->review(new ManagingFieldViewProfileEditRequest(
                 subjectType: trim($data->subjectType),
                 subjectIdentifier: trim($data->subjectIdentifier),
                 pageName: trim($data->pageName),
@@ -94,7 +94,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
             return $this->render('@Administering/administering/form_page.html.twig', [
                 'page_title' => 'Managing Field View Profile Review',
                 'lead' => 'Review-only surface. It builds a normalized Managing profile payload but does not persist or apply it.',
-                'form' => $this->createForm(AdministrationFieldViewProfileReviewFormType::class, $data, [
+                'form' => $this->createForm(AdministrationManagingFieldViewProfileReviewFormType::class, $data, [
                     'action' => $this->generateUrl('administration_managing_field_view_profile_review'),
                 ])->createView(),
                 'result_title' => null,
@@ -108,7 +108,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
         return $this->render('@Administering/administering/form_page.html.twig', [
             'page_title' => 'Managing Field View Profile Review',
             'lead' => 'Review-only surface. It builds a normalized Managing profile payload but does not persist or apply it.',
-            'form' => $this->createForm(AdministrationFieldViewProfileReviewFormType::class, $data, [
+            'form' => $this->createForm(AdministrationManagingFieldViewProfileReviewFormType::class, $data, [
                 'action' => $this->generateUrl('administration_managing_field_view_profile_review'),
             ])->createView(),
             'result_title' => sprintf('Change type: %s', $result->changeType),

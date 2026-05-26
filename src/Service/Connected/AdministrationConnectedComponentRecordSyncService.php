@@ -6,15 +6,19 @@ namespace App\Administering\Service\Connected;
 
 use App\Administering\Entity\AdministrationConnectedComponentRecord;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
+use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentOverviewProviderInterface;
+use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Connected Components primary CRUD anchor from the overview provider.
  */
-final readonly class AdministrationConnectedComponentRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface
+final readonly class AdministrationConnectedComponentRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface, AdministrationServiceToolHandlerInterface
 {
+    use AdministrationServiceSectionAnchorSyncToolHandlerTrait;
+
     public function __construct(
         private AdministrationConnectedComponentOverviewProviderInterface $overviewProvider,
         private EntityManagerInterface $entityManager,

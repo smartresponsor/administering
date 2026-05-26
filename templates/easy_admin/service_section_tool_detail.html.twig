@@ -8,7 +8,7 @@
             <div>
                 <h1 class="title mb-1">{{ detail.tool.label }}</h1>
                 <p class="text-muted mb-0">
-                    {{ detail.section.label }} service tool rendered by an Administering-owned EasyAdmin template.
+                    {{ detail.section.label }} tool detail.
                 </p>
             </div>
             <a class="btn btn-secondary" href="{{ path('administration_service_section_tools', {sectionKey: detail.section.key}) }}">
@@ -46,14 +46,14 @@
                         <h2 class="h5">Primary screen</h2>
                         {% if detail.tool.hasPrimaryRoute %}
                             <p class="text-muted">
-                                This service has a mapped screen/action. Open it from here instead of exposing every internal link in the sidebar.
+                                This service has a mapped screen or action.
                             </p>
                             <a class="btn btn-primary" href="{{ path(detail.tool.primaryRouteName) }}">
                                 {{ detail.tool.primaryRouteLabel ?? 'Open primary screen' }}
                             </a>
                         {% else %}
                             <div class="alert alert-info mb-0">
-                                No primary screen is mapped yet. The service is still listed because it is a real tool in the canonical service catalog.
+                                No primary screen is mapped yet. The service is still listed in the catalog.
                             </div>
                         {% endif %}
                     </div>

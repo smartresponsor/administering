@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Admin;
+
+/**
+ * Read-only transition status for the owner-side configuration-tool migration.
+ *
+ * The report does not move files or change ownership. It identifies which tools
+ * are already owner-provided, which internal Administering tools should stay in
+ * the shell, and which internal tools are candidates for owner/host extraction.
+ */
+final readonly class AdministrationOwnerConfigurationToolTransitionStatusReport
+{
+    /**
+     * @param list<array<string, mixed>>                                $providers
+     * @param list<array<string, mixed>>                                $tools
+     * @param array<string, int>                                        $statusCounts
+     * @param list<array{severity:string, path:string, message:string}> $issues
+     */
+    public function __construct(
+        public ?string $componentFilter,
+        public array $providers,
+        public array $tools,
+        public array $statusCounts,
+        public array $issues,
+    ) {
+    }
+
+    public function providerCount(): int
+    {
+        return count($this->providers);
+    }
+
+    public function toolCount(): int
+    {
+        return count($this->tools);
+    }
+
+    public function ownerReadyCount(): int
+    {
+        return $this->statusCounts['owner_ready'] ?? 0;
+    }
+
+    public function ownerExtractionCandidateCount(): int
+    {
+        return $this->statusCounts['owner_extraction_candidate'] ?? 0;
+    }
+
+    public function hostApplicationCandidateCount(): int
+    {
+        return $this->statusCounts['host_application_candidate'] ?? 0;
+    }
+
+    public function adminShellOwnedCount(): int
+    {
+        return $this->statusCounts['admin_shell_owned'] ?? 0;
+    }
+
+    public function warningCount(): int
+    {
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'warning' === ($issue['severity'] ?? null)));
+    }
+
+    public function errorCount(): int
+    {
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'error' === ($issue['severity'] ?? null)));
+    }
+
+    public function hasErrors(): bool
+    {
+        return 0 < $this->errorCount();
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'schema' => 'smart-responsor.administering.owner_configuration_transition_status.v1',
+            'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+            'componentFilter' => $this->componentFilter,
+            'providerCount' => $this->providerCount(),
+            'toolCount' => $this->toolCount(),
+            'ownerReadyCount' => $this->ownerReadyCount(),
+            'ownerExtractionCandidateCount' => $this->ownerExtractionCandidateCount(),
+            'hostApplicationCandidateCount' => $this->hostApplicationCandidateCount(),
+            'adminShellOwnedCount' => $this->adminShellOwnedCount(),
+            'warningCount' => $this->warningCount(),
+            'errorCount' => $this->errorCount(),
+            'statusCounts' => $this->statusCounts,
+            'providers' => $this->providers,
+            'tools' => $this->tools,
+            'issues' => $this->issues,
+        ];
+    }
+}

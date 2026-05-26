@@ -1,0 +1,236 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Command;
+
+use App\Administering\Value\Admin\AdministrationOwnerRepositorySliceIntakeReport;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+#[AsCommand(
+    name: 'administering:owner-configuration-tools:owner-slice-intake',
+    description: 'Builds the post-freeze intake checklist for owner/host repository current slices.',
+)]
+final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
+{
+    public function __construct(private readonly string $projectDir)
+    {
+        parent::__construct();
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example Managing Accessing Rolling.')
+            ->addOption('workspace-root', null, InputOption::VALUE_REQUIRED, 'Workspace root used to check whether sibling repositories are present.', dirname($this->projectDir))
+            ->addOption('repository-map-json', null, InputOption::VALUE_REQUIRED, 'Optional JSON object mapping component key to repository folder name.')
+            ->addOption('host-application', null, InputOption::VALUE_REQUIRED, 'Optional host/post-application repository folder name to include in the intake.')
+            ->addOption('json', null, InputOption::VALUE_NONE, 'Print intake report as JSON.')
+            ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write intake report JSON to this path.')
+            ->addOption('fail-if-missing', null, InputOption::VALUE_NONE, 'Fail if any requested repository current slice is missing.')
+            ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Allow an empty component list.');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+        $components = array_values(array_filter(array_map(
+            static fn (mixed $value): string => is_string($value) ? trim($value) : '',
+            (array) $input->getArgument('components'),
+        ), static fn (string $value): bool => '' !== $value));
+
+        $hostApplication = $this->normalizeOptionalString($input->getOption('host-application'));
+        if ([] === $components && null === $hostApplication && !(bool) $input->getOption('allow-empty')) {
+            $io->error('Provide at least one owner component, or pass --host-application, or use --allow-empty for transition smoke checks.');
+
+            return Command::FAILURE;
+        }
+
+        $workspaceRoot = $this->projectPath((string) $input->getOption('workspace-root'));
+        $repositoryMap = $this->loadRepositoryMap($input->getOption('repository-map-json'), $io);
+        if (null === $repositoryMap) {
+            return Command::FAILURE;
+        }
+
+        $repositorySlices = [];
+        foreach ($components as $componentKey) {
+            $repositoryName = $repositoryMap[$componentKey] ?? $componentKey;
+            $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
+            $available = is_dir($expectedPath);
+            $repositorySlices[] = [
+                'componentKey' => $componentKey,
+                'repositoryName' => $repositoryName,
+                'expectedPath' => $expectedPath,
+                'sliceStatus' => $available ? 'available' : 'pending_current_slice',
+                'reason' => $available
+                    ? 'Sibling repository folder is present; verify that it is the current slice before applying owner-side overlays.'
+                    : 'Current slice is not available in the workspace root yet.',
+                'nextAction' => $available
+                    ? 'Run repository-specific audit before applying external overlay.'
+                    : 'Request/upload current repository slice before generating a concrete neighbor patch.',
+            ];
+        }
+
+        if (null !== $hostApplication) {
+            $repositoryName = $repositoryMap[$hostApplication] ?? $hostApplication;
+            $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
+            $available = is_dir($expectedPath);
+            $repositorySlices[] = [
+                'componentKey' => 'host_application',
+                'repositoryName' => $repositoryName,
+                'expectedPath' => $expectedPath,
+                'sliceStatus' => $available ? 'available' : 'pending_current_slice',
+                'reason' => $available
+                    ? 'Host/post-application repository folder is present; verify current slice and system configuration ownership.'
+                    : 'Host/post-application current slice is not available yet.',
+                'nextAction' => $available
+                    ? 'Audit host-owned Symfony environment, credentials, secrets, and component enablement configuration.'
+                    : 'Request/upload host/post-application current slice before host configuration work.',
+            ];
+        }
+
+        $missingCount = count(array_filter($repositorySlices, static fn (array $item): bool => 'available' !== ($item['sliceStatus'] ?? null)));
+        $readyForOwnerSliceWork = 0 === $missingCount && [] !== $repositorySlices;
+        $nextWorkMode = $readyForOwnerSliceWork ? 'start_owner_repository_current_slice_patches' : 'request_missing_owner_repository_current_slices';
+
+        $requiredArtifacts = [
+            'Administering transition freeze report should be generated and reviewed.',
+            'External package pipeline report should be generated and reviewed.',
+            'External handoff bundle should be generated and validated.',
+            'Each owner/host repository must be represented by a current slice before concrete patches are built.',
+        ];
+
+        $recommendedNextActions = $readyForOwnerSliceWork
+            ? [
+                'Stop internal Administering expansion for ecosystem-owned configuration tools.',
+                'Build the next patch wave against the first available owner repository current slice.',
+                'Apply external overlays only as reviewed touched-file patches per owner repository.',
+            ]
+            : [
+                'Request/upload missing owner repository current slices.',
+                'Do not generate destructive or inferred patches for unavailable repositories.',
+                'Keep Administering changes limited to orchestration shell fixes until owner slices are available.',
+            ];
+
+        $report = new AdministrationOwnerRepositorySliceIntakeReport(
+            $repositorySlices,
+            $requiredArtifacts,
+            $recommendedNextActions,
+            $readyForOwnerSliceWork,
+            $nextWorkMode,
+        );
+
+        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
+        if (null !== $writeJson) {
+            $targetPath = $this->projectPath($writeJson);
+            $targetDirectory = dirname($targetPath);
+            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+                $io->error(sprintf('Unable to create owner slice intake report directory: %s', $targetDirectory));
+
+                return Command::FAILURE;
+            }
+            file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            $io->success(sprintf('Owner slice intake report written to %s.', $targetPath));
+        }
+
+        $shouldFail = (bool) $input->getOption('fail-if-missing') && !$report->readyForOwnerSliceWork;
+        if ((bool) $input->getOption('json')) {
+            $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+        }
+
+        $io->section('Owner repository current-slice intake');
+        $io->writeln(sprintf('Ready for owner-slice work: <info>%s</info>', $report->readyForOwnerSliceWork ? 'yes' : 'not yet'));
+        $io->writeln(sprintf('Next work mode: <info>%s</info>', $report->nextWorkMode));
+        $io->writeln(sprintf('Ready slices: <info>%d</info>', $report->readySliceCount()));
+        $io->writeln(sprintf('Pending slices: <comment>%d</comment>', $report->pendingSliceCount()));
+
+        $io->table(
+            ['Component', 'Repository', 'Status', 'Expected path', 'Next action'],
+            array_map(static fn (array $item): array => [
+                $item['componentKey'],
+                $item['repositoryName'],
+                $item['sliceStatus'],
+                $item['expectedPath'],
+                $item['nextAction'],
+            ], $repositorySlices),
+        );
+
+        $io->section('Recommended next actions');
+        foreach ($report->recommendedNextActions as $action) {
+            $io->writeln('- '.$action);
+        }
+
+        return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    /** @return array<string, string>|null */
+    private function loadRepositoryMap(mixed $pathOption, SymfonyStyle $io): ?array
+    {
+        $path = $this->normalizeOptionalString($pathOption);
+        if (null === $path) {
+            return [];
+        }
+
+        $absolutePath = $this->projectPath($path);
+        if (!is_file($absolutePath)) {
+            $io->error(sprintf('Repository map JSON was not found: %s', $absolutePath));
+
+            return null;
+        }
+
+        try {
+            $decoded = json_decode((string) file_get_contents($absolutePath), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            $io->error(sprintf('Repository map JSON is invalid: %s', $exception->getMessage()));
+
+            return null;
+        }
+
+        if (!is_array($decoded)) {
+            $io->error('Repository map JSON must be an object mapping component keys to repository folder names.');
+
+            return null;
+        }
+
+        $map = [];
+        foreach ($decoded as $key => $value) {
+            if (is_string($key) && is_string($value) && '' !== trim($key) && '' !== trim($value)) {
+                $map[trim($key)] = trim($value);
+            }
+        }
+
+        return $map;
+    }
+
+    private function projectPath(string $path): string
+    {
+        if ('' === $path) {
+            return $this->projectDir;
+        }
+
+        if (str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\\\\/]/', $path)) {
+            return $path;
+        }
+
+        return rtrim($this->projectDir, '/\\').'/'.ltrim($path, '/\\');
+    }
+
+    private function normalizeOptionalString(mixed $value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return '' === $trimmed ? null : $trimmed;
+    }
+}

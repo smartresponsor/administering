@@ -7,10 +7,15 @@ namespace App\Administering\Catalog\Admin;
 use App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface;
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolScreenCatalogInterface;
+use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\Value\Admin\AdministrationServiceTool;
+use App\Administering\Value\Operation\AdministrationOperationType;
 
 /**
- * Builds the canonical tool catalog from src/Service/<Section> implementation files.
+ * Builds the canonical tool catalog from src/Service/<Direction> implementation files.
+ *
+ * A file is indexed only when its namespace and short name prove that it is a
+ * menu/openable service tool: Administration{Direction}{ToolSlug}Service.
  */
 final readonly class FilesystemAdministrationServiceToolCatalog implements AdministrationServiceToolCatalogInterface
 {
@@ -48,14 +53,34 @@ final readonly class FilesystemAdministrationServiceToolCatalog implements Admin
 
         $tools = [];
         foreach ($files as $file) {
+            $path = $directory.'/'.$file;
             $shortName = basename($file, '.php');
+            $toolSlug = $this->toolSlug($section, $shortName);
+            if (null === $toolSlug) {
+                continue;
+            }
+
+            $serviceClass = 'App\\Administering\\Service\\'.$section.'\\'.$shortName;
+            if ($this->declaredNamespace($path) !== 'App\\Administering\\Service\\'.$section) {
+                continue;
+            }
+
             $screen = $this->screenCatalog->screenForTool($section, $shortName);
             $tools[] = new AdministrationServiceTool(
                 section: $section,
-                serviceClass: 'App\\Administering\\Service\\'.$section.'\\'.$shortName,
+                directionToken: $section,
+                toolSlug: $toolSlug,
+                toolKey: $this->toolKey($section, $toolSlug),
+                serviceClass: $serviceClass,
                 shortName: $shortName,
-                label: $this->labelFromClassName($shortName),
-                kind: $this->kindFromClassName($shortName),
+                serviceFile: 'src/Service/'.$section.'/'.$file,
+                label: $this->labelFromToolSlug($toolSlug),
+                kind: 'service',
+                operationType: AdministrationOperationType::SERVICE_TOOL_LAUNCH,
+                checksum: hash_file('sha256', $path) ?: hash('sha256', $serviceClass),
+                formTypeClass: $this->formTypeClass($section, $toolSlug),
+                formDataClass: $this->formDataClass($section, $toolSlug),
+                executable: is_subclass_of($serviceClass, AdministrationServiceToolHandlerInterface::class),
                 primaryRouteName: $screen?->routeName,
                 primaryRouteLabel: $screen?->label,
             );
@@ -69,22 +94,84 @@ final readonly class FilesystemAdministrationServiceToolCatalog implements Admin
         return dirname(__DIR__, 2).'/Service';
     }
 
-    private function labelFromClassName(string $className): string
+    private function toolSlug(string $section, string $shortName): ?string
     {
-        $label = preg_replace('/(?<!^)[A-Z]/', ' $0', $className) ?? $className;
-        $label = str_replace(' Administration ', ' ', $label);
+        $prefix = 'Administration'.$section;
+        $suffix = 'Service';
+
+        if (!str_starts_with($shortName, $prefix) || !str_ends_with($shortName, $suffix)) {
+            return null;
+        }
+
+        $slug = substr($shortName, strlen($prefix), -strlen($suffix));
+        if (!is_string($slug) || '' === $slug || !ctype_upper($slug[0])) {
+            return null;
+        }
+
+        return $slug;
+    }
+
+    private function declaredNamespace(string $path): ?string
+    {
+        $contents = file_get_contents($path);
+        if (!is_string($contents)) {
+            return null;
+        }
+
+        if (1 !== preg_match('/^namespace\s+([^;]+);/m', $contents, $matches)) {
+            return null;
+        }
+
+        return trim($matches[1]);
+    }
+
+    private function toolKey(string $section, string $toolSlug): string
+    {
+        return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $section.'.'.$toolSlug));
+    }
+
+    private function labelFromToolSlug(string $toolSlug): string
+    {
+        $label = preg_replace('/(?<!^)[A-Z]/', ' $0', $toolSlug) ?? $toolSlug;
 
         return trim($label);
     }
 
-    private function kindFromClassName(string $className): string
+    private function formTypeClass(string $section, string $toolSlug): ?string
     {
-        foreach (['Provider', 'Service', 'Recorder', 'Runner', 'Factory', 'Submitter', 'Queue', 'Scanner', 'Operator', 'Writer'] as $suffix) {
-            if (str_ends_with($className, $suffix)) {
-                return strtolower($suffix);
+        foreach ($this->formTypeCandidates($section, $toolSlug) as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
             }
         }
 
-        return 'service';
+        return null;
+    }
+
+    private function formDataClass(string $section, string $toolSlug): ?string
+    {
+        foreach ($this->formDataClassCandidates($section, $toolSlug) as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return list<class-string> */
+    private function formDataClassCandidates(string $section, string $toolSlug): array
+    {
+        return [
+            'App\\Administering\\Value\\Form\\'.$section.'\\Administration'.$section.$toolSlug.'Data',
+        ];
+    }
+
+    /** @return list<class-string> */
+    private function formTypeCandidates(string $section, string $toolSlug): array
+    {
+        return [
+            'App\\Administering\\Form\\'.$section.'\\Administration'.$section.$toolSlug.'FormType',
+        ];
     }
 }

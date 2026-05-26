@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\Form\Managing\AdministrationFieldAccessMutationReviewFormType;
+use App\Administering\Form\Managing\AdministrationManagingFieldAccessMutationReviewFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
-use App\Administering\Value\Form\Managing\AdministrationFieldAccessMutationReviewData;
-use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewInput;
-use App\Administering\Value\Rolling\AdministrationFieldAccessPolicyDescriptor;
-use App\Administering\Value\Rolling\AdministrationFieldAccessTarget;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldAccessMutationReviewData;
+use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput;
+use App\Managing\Value\Administration\ManagingFieldAccessPolicyDescriptor;
+use App\Managing\Value\Administration\ManagingFieldAccessTarget;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review.view', 'administering:managing-field-access');
 
-        $form = $this->createForm(AdministrationFieldAccessMutationReviewFormType::class, new AdministrationFieldAccessMutationReviewData(), [
+        $form = $this->createForm(AdministrationManagingFieldAccessMutationReviewFormType::class, new AdministrationManagingFieldAccessMutationReviewData(), [
             'action' => $this->generateUrl('administration_managing_field_access_mutation_review'),
         ]);
 
@@ -53,7 +53,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review', 'administering:managing-field-access');
 
-        $form = $this->createForm(AdministrationFieldAccessMutationReviewFormType::class, new AdministrationFieldAccessMutationReviewData(), [
+        $form = $this->createForm(AdministrationManagingFieldAccessMutationReviewFormType::class, new AdministrationManagingFieldAccessMutationReviewData(), [
             'action' => $this->generateUrl('administration_managing_field_access_mutation_review'),
         ]);
         $form->handleRequest($request);
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
 
         $data = $form->getData();
         try {
-            $result = $this->reviewService->review(new AdministrationFieldAccessMutationReviewInput(
+            $result = $this->reviewService->review(new ManagingFieldAccessMutationReviewInput(
                 $this->descriptorFromData($data),
                 $this->currentUserSubject(),
             ));
@@ -87,7 +87,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
             return $this->render('@Administering/administering/form_page.html.twig', [
                 'page_title' => 'Managing Field Access Mutation Review',
                 'lead' => 'Review-only surface. No Rolling ACL changes are applied here.',
-                'form' => $this->createForm(AdministrationFieldAccessMutationReviewFormType::class, $data, [
+                'form' => $this->createForm(AdministrationManagingFieldAccessMutationReviewFormType::class, $data, [
                     'action' => $this->generateUrl('administration_managing_field_access_mutation_review'),
                 ])->createView(),
                 'result_title' => null,
@@ -101,7 +101,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
         return $this->render('@Administering/administering/form_page.html.twig', [
             'page_title' => 'Managing Field Access Mutation Review',
             'lead' => 'Review-only surface. No Rolling ACL changes are applied here.',
-            'form' => $this->createForm(AdministrationFieldAccessMutationReviewFormType::class, $data, [
+            'form' => $this->createForm(AdministrationManagingFieldAccessMutationReviewFormType::class, $data, [
                 'action' => $this->generateUrl('administration_managing_field_access_mutation_review'),
             ])->createView(),
             'result_title' => 'Review result',
@@ -110,17 +110,17 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
             'action_links' => [
                 [
                     'label' => 'Open apply surface',
-                    'url' => $this->generateUrl('administration_managing_field_access_mutation_apply', ['requestKey' => $result->record->requestKey()]),
+                    'url' => $this->generateUrl('administration_managing_field_access_mutation_apply', ['requestKey' => $result->requestKey]),
                 ],
             ],
             'back_url' => $this->generateUrl('administration_managing_field_access_mutations'),
         ]);
     }
 
-    private function descriptorFromData(AdministrationFieldAccessMutationReviewData $data): AdministrationFieldAccessPolicyDescriptor
+    private function descriptorFromData(AdministrationManagingFieldAccessMutationReviewData $data): ManagingFieldAccessPolicyDescriptor
     {
-        return new AdministrationFieldAccessPolicyDescriptor(
-            new AdministrationFieldAccessTarget(
+        return new ManagingFieldAccessPolicyDescriptor(
+            new ManagingFieldAccessTarget(
                 'managing',
                 trim($data->resourceClass),
                 trim($data->fieldName),

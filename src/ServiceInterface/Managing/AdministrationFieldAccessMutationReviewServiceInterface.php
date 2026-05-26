@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewInput;
-use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewResult;
+use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput;
+use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewResult;
 
 interface AdministrationFieldAccessMutationReviewServiceInterface
 {
-    public function review(AdministrationFieldAccessMutationReviewInput $input): AdministrationFieldAccessMutationReviewResult;
+    public function review(ManagingFieldAccessMutationReviewInput $input): ManagingFieldAccessMutationReviewResult;
 }

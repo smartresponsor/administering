@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareRequest;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareResult;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareResult;
 
 interface AdministrationFieldVisibilityInspectionPrepareServiceInterface
 {
-    public function prepare(AdministrationFieldVisibilityInspectionPrepareRequest $request): AdministrationFieldVisibilityInspectionPrepareResult;
+    public function prepare(ManagingFieldVisibilityInspectionPrepareRequest $request): ManagingFieldVisibilityInspectionPrepareResult;
 }

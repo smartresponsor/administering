@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\Form\Managing\AdministrationFieldViewProfileApplyFormType;
+use App\Administering\Form\Managing\AdministrationManagingFieldViewProfileApplyFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileApplyServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
-use App\Administering\Value\Form\Managing\AdministrationFieldViewProfileApplyData;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileApplyRequest;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldViewProfileApplyData;
+use App\Managing\Value\Administration\ManagingFieldViewProfileApplyRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');
 
-        $form = $this->createForm(AdministrationFieldViewProfileApplyFormType::class, new AdministrationFieldViewProfileApplyData(), [
+        $form = $this->createForm(AdministrationManagingFieldViewProfileApplyFormType::class, new AdministrationManagingFieldViewProfileApplyData(), [
             'action' => $this->generateUrl('administration_managing_field_view_profile_apply_prepare'),
         ]);
 
@@ -52,7 +52,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');
 
-        $form = $this->createForm(AdministrationFieldViewProfileApplyFormType::class, new AdministrationFieldViewProfileApplyData(), [
+        $form = $this->createForm(AdministrationManagingFieldViewProfileApplyFormType::class, new AdministrationManagingFieldViewProfileApplyData(), [
             'action' => $this->generateUrl('administration_managing_field_view_profile_apply_prepare'),
         ]);
         $form->handleRequest($request);
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
-            $result = $this->applyService->prepare(new AdministrationFieldViewProfileApplyRequest(
+            $result = $this->applyService->prepare(new ManagingFieldViewProfileApplyRequest(
                 normalizedProfilePayload: AdministrationFormInputParser::parseJsonObject($data->normalizedProfilePayload, 'normalizedProfilePayload'),
                 reviewContext: AdministrationFormInputParser::parseJsonObject($data->reviewContext, 'reviewContext'),
                 requestedBySubject: $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
@@ -89,7 +89,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
             return $this->render('@Administering/administering/form_page.html.twig', [
                 'page_title' => 'Managing Field View Profile Apply Preparation',
                 'lead' => 'This surface validates a reviewed profile payload and prepares a Managing apply-handler payload. It does not write Managing storage directly.',
-                'form' => $this->createForm(AdministrationFieldViewProfileApplyFormType::class, $data, [
+                'form' => $this->createForm(AdministrationManagingFieldViewProfileApplyFormType::class, $data, [
                     'action' => $this->generateUrl('administration_managing_field_view_profile_apply_prepare'),
                 ])->createView(),
                 'result_title' => null,
@@ -103,7 +103,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
         return $this->render('@Administering/administering/form_page.html.twig', [
             'page_title' => 'Managing Field View Profile Apply Preparation',
             'lead' => 'This surface validates a reviewed profile payload and prepares a Managing apply-handler payload. It does not write Managing storage directly.',
-            'form' => $this->createForm(AdministrationFieldViewProfileApplyFormType::class, $data, [
+            'form' => $this->createForm(AdministrationManagingFieldViewProfileApplyFormType::class, $data, [
                 'action' => $this->generateUrl('administration_managing_field_view_profile_apply_prepare'),
             ])->createView(),
             'result_title' => 'Apply preparation result',

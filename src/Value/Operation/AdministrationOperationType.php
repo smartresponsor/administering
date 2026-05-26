@@ -21,6 +21,7 @@ final class AdministrationOperationType
     public const ROLLING_ACL_CATALOG_REFRESH = 'administration.rolling_acl.catalog_refresh';
     public const ACCESSING_ACCOUNT_ACTION = 'administration.accessing_account.action';
     public const SERVICE_SECTION_ANCHORS_SYNC = 'administration.service_section_anchors.sync';
+    public const SERVICE_TOOL_LAUNCH = 'administration.service_tool.launch';
 
     /** @return list<string> */
     public static function launchable(): array
@@ -32,6 +33,7 @@ final class AdministrationOperationType
             self::ROLLING_ACL_CATALOG_REFRESH,
             self::ACCESSING_ACCOUNT_ACTION,
             self::SERVICE_SECTION_ANCHORS_SYNC,
+            self::SERVICE_TOOL_LAUNCH,
         ];
     }
 
@@ -53,6 +55,7 @@ final class AdministrationOperationType
             self::ROLLING_ACL_CATALOG_REFRESH,
             self::ACCESSING_ACCOUNT_ACTION,
             self::SERVICE_SECTION_ANCHORS_SYNC,
+            self::SERVICE_TOOL_LAUNCH,
         ];
     }
 

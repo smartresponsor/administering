@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Managing\AdministrationManagingFieldAccessCatalogProvider;
-use App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface;
-use App\Administering\Value\Rolling\AdministrationManagingFieldPermissionVocabulary;
-use App\Administering\Value\Rolling\AdministrationPermissionDescriptor;
+use App\Administering\Provider\Managing\AdministrationManagingFieldAccessCatalogProvider;
+use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
+use App\Rolling\Value\Administration\RollingAdministrationPermissionDescriptor;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldAccessCatalogProviderTest extends TestCase
 {
     public function testCatalogItemsExposeManagingFieldPermissions(): void
     {
-        $provider = new AdministrationManagingFieldAccessCatalogProvider(new class implements AdministrationPermissionCatalogProviderInterface {
+        $provider = new AdministrationManagingFieldAccessCatalogProvider(new class implements \App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface {
+            public function permissions(): array
+            {
+                return [ManagingFieldPermissionVocabulary::FIELD_VIEW];
+            }
+
             public function descriptors(): array
             {
                 return [
-                    new AdministrationPermissionDescriptor(
-                        AdministrationManagingFieldPermissionVocabulary::FIELD_VIEW,
+                    new RollingAdministrationPermissionDescriptor(
+                        ManagingFieldPermissionVocabulary::FIELD_VIEW,
                         'View Managing field',
                         'managing_field_access',
                         ['component', 'resource', 'field'],
@@ -32,14 +36,19 @@ final class AdministrationManagingFieldAccessCatalogProviderTest extends TestCas
         $items = $provider->catalogItems();
         $keys = array_map(static fn ($item): string => $item->permissionKey, $items);
 
-        self::assertContains(AdministrationManagingFieldPermissionVocabulary::FIELD_VIEW, $keys);
-        self::assertContains(AdministrationManagingFieldPermissionVocabulary::PROFILE_ASSIGN, $keys);
+        self::assertContains(ManagingFieldPermissionVocabulary::FIELD_VIEW, $keys);
+        self::assertContains(ManagingFieldPermissionVocabulary::PROFILE_ASSIGN, $keys);
         self::assertTrue($items[0]->registeredInRolling);
     }
 
     public function testMatrixRowsKeepSecurityBeforeUserPreference(): void
     {
-        $provider = new AdministrationManagingFieldAccessCatalogProvider(new class implements AdministrationPermissionCatalogProviderInterface {
+        $provider = new AdministrationManagingFieldAccessCatalogProvider(new class implements \App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface {
+            public function permissions(): array
+            {
+                return [];
+            }
+
             public function descriptors(): array
             {
                 return [];

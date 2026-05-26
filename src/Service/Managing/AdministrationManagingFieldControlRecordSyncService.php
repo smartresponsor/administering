@@ -6,15 +6,19 @@ namespace App\Administering\Service\Managing;
 
 use App\Administering\Entity\AdministrationManagingFieldControlRecord;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
+use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessCatalogProviderInterface;
+use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Managing section primary CRUD anchor from field-access catalog metadata.
  */
-final readonly class AdministrationManagingFieldControlRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface
+final readonly class AdministrationManagingFieldControlRecordSyncService implements AdministrationServiceSectionAnchorSyncServiceInterface, AdministrationServiceToolHandlerInterface
 {
+    use AdministrationServiceSectionAnchorSyncToolHandlerTrait;
+
     public function __construct(
         private AdministrationFieldAccessCatalogProviderInterface $fieldAccessCatalogProvider,
         private EntityManagerInterface $entityManager,

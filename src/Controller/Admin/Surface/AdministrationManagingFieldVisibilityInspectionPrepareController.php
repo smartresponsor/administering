@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\Form\Managing\AdministrationFieldVisibilityInspectionPrepareFormType;
+use App\Administering\Form\Managing\AdministrationManagingFieldVisibilityInspectionPrepareFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
-use App\Administering\Value\Form\Managing\AdministrationFieldVisibilityInspectionPrepareData;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldVisibilityInspectionPrepareData;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');
 
-        $form = $this->createForm(AdministrationFieldVisibilityInspectionPrepareFormType::class, new AdministrationFieldVisibilityInspectionPrepareData(), [
+        $form = $this->createForm(AdministrationManagingFieldVisibilityInspectionPrepareFormType::class, new AdministrationManagingFieldVisibilityInspectionPrepareData(), [
             'action' => $this->generateUrl('administration_managing_field_visibility_inspection_prepare'),
         ]);
 
@@ -52,7 +52,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');
 
-        $form = $this->createForm(AdministrationFieldVisibilityInspectionPrepareFormType::class, new AdministrationFieldVisibilityInspectionPrepareData(), [
+        $form = $this->createForm(AdministrationManagingFieldVisibilityInspectionPrepareFormType::class, new AdministrationManagingFieldVisibilityInspectionPrepareData(), [
             'action' => $this->generateUrl('administration_managing_field_visibility_inspection_prepare'),
         ]);
         $form->handleRequest($request);
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
-            $result = $this->prepareService->prepare(new AdministrationFieldVisibilityInspectionPrepareRequest(
+            $result = $this->prepareService->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
                 resourceClass: trim($data->resourceClass),
                 fieldName: trim($data->fieldName),
                 pageName: trim($data->pageName),
@@ -94,7 +94,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
             return $this->render('@Administering/administering/form_page.html.twig', [
                 'page_title' => 'Prepared Managing Field Visibility Inspection',
                 'lead' => 'Prepares a read-only Managing diagnostic request. Administering does not execute Managing runtime here.',
-                'form' => $this->createForm(AdministrationFieldVisibilityInspectionPrepareFormType::class, $data, [
+                'form' => $this->createForm(AdministrationManagingFieldVisibilityInspectionPrepareFormType::class, $data, [
                     'action' => $this->generateUrl('administration_managing_field_visibility_inspection_prepare'),
                 ])->createView(),
                 'result_title' => null,
@@ -108,7 +108,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
         return $this->render('@Administering/administering/form_page.html.twig', [
             'page_title' => 'Prepared Managing Field Visibility Inspection',
             'lead' => 'Prepares a read-only Managing diagnostic request. Administering does not execute Managing runtime here.',
-            'form' => $this->createForm(AdministrationFieldVisibilityInspectionPrepareFormType::class, $data, [
+            'form' => $this->createForm(AdministrationManagingFieldVisibilityInspectionPrepareFormType::class, $data, [
                 'action' => $this->generateUrl('administration_managing_field_visibility_inspection_prepare'),
             ])->createView(),
             'result_title' => 'Inspection preparation result',

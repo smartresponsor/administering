@@ -1,0 +1,41 @@
+config_tools:
+  - application_code: Administering
+    tool_code: administering.integration
+    label: Administering Integration
+    description: Safe integration flags and component metadata stored in the component manifest.
+    form_class: App\Administering\Form\Config\AdministeringIntegrationConfigFormType
+    service_class: App\Administering\Service\Config\AdministeringIntegrationConfigService
+    required_permission: administration.config.update
+    editable_fields:
+      - ui_label
+      - route_prefix
+      - rolling_external_access_backend
+      - rolling_external_access_failure_effect
+      - rolling_external_access_permission_key
+      - rolling_external_access_readiness_surface
+      - profile_storage_entity_manager
+    sensitive_fields: []
+    readable_files:
+      - config/component/component.yaml
+    writable_files:
+      - config/component/component.yaml
+    apply_strategy: component_yaml
+  - application_code: Administering
+    tool_code: administering.credentials
+    label: Administering Credentials
+    description: Symfony Secrets replacement flow for approved host credentials.
+    form_class: App\Administering\Form\Config\AdministeringCredentialConfigFormType
+    service_class: App\Administering\Service\Config\AdministeringCredentialConfigService
+    required_permission: administration.symfony_secret.set
+    editable_fields:
+      - app_secret_replacement
+      - administering_database_url_replacement
+    sensitive_fields:
+      - app_secret_replacement
+      - administering_database_url_replacement
+    readable_files: []
+    writable_files: []
+    secret_names:
+      appSecretReplacement: APP_SECRET
+      administrationDatabaseUrlReplacement: ADMINISTERING_DATABASE_URL
+    apply_strategy: symfony_secrets

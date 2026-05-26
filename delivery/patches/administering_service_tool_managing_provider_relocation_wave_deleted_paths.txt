@@ -1,0 +1,4 @@
+src/Service/Managing/AdministrationManagingFieldAccessCatalogProvider.php
+src/Service/Managing/AdministrationManagingFieldViewProfileCatalogProvider.php
+src/Service/Managing/AdministrationManagingFieldVisibilityExplanationCatalogProvider.php
+src/Service/Managing/AdministrationRollingBackedManagingAccessReadinessProvider.php

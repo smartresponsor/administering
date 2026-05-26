@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Admin;
+
+/**
+ * Summary report for the full non-destructive owner-side external handoff pipeline.
+ *
+ * The pipeline only generates and validates handoff artifacts. It does not apply
+ * overlays, delete files, move files, or rewrite neighbor repositories.
+ */
+final readonly class AdministrationOwnerConfigurationToolExternalPackagePipelineReport
+{
+    /**
+     * @param list<array{step:string, command:string, status:string, exitCode:int, outputPath?:string|null}> $steps
+     * @param list<array{severity:string, path:string, message:string}>                                      $issues
+     */
+    public function __construct(
+        public string $outputRoot,
+        public string $handoffDir,
+        public array $steps,
+        public array $issues,
+    ) {
+    }
+
+    public function errorCount(): int
+    {
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'error' === ($issue['severity'] ?? null)));
+    }
+
+    public function warningCount(): int
+    {
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'warning' === ($issue['severity'] ?? null)));
+    }
+
+    public function hasErrors(): bool
+    {
+        return 0 < $this->errorCount();
+    }
+
+    public function stepCount(): int
+    {
+        return count($this->steps);
+    }
+
+    public function failedStepCount(): int
+    {
+        return count(array_filter($this->steps, static fn (array $step): bool => 0 !== ($step['exitCode'] ?? 1)));
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'schema' => 'smart-responsor.administering.owner_configuration_external_package_pipeline.v1',
+            'deliveryMode' => 'overlay_only',
+            'deleteMode' => 'none',
+            'automaticMoveAllowed' => false,
+            'manualReviewRequired' => true,
+            'outputRoot' => $this->outputRoot,
+            'handoffDir' => $this->handoffDir,
+            'stepCount' => $this->stepCount(),
+            'failedStepCount' => $this->failedStepCount(),
+            'errorCount' => $this->errorCount(),
+            'warningCount' => $this->warningCount(),
+            'steps' => $this->steps,
+            'issues' => $this->issues,
+        ];
+    }
+}

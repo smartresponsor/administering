@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareRequest;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareResult;
+use App\Managing\ServiceInterface\Administration\ManagingFieldVisibilityInspectionPrepareServiceInterface as OwnerPrepareServiceInterface;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareResult;
 
 /**
  * Prepares a concrete Managing field visibility inspection request from Administering.
@@ -16,61 +17,13 @@ use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepa
  */
 final readonly class AdministrationManagingFieldVisibilityInspectionPrepareService implements AdministrationFieldVisibilityInspectionPrepareServiceInterface
 {
-    /** @var list<string> */
-    private const PAGE_NAMES = ['index', 'detail', 'new', 'edit'];
-
-    public function prepare(AdministrationFieldVisibilityInspectionPrepareRequest $request): AdministrationFieldVisibilityInspectionPrepareResult
-    {
-        $error = $this->validate($request);
-        if (null !== $error) {
-            return AdministrationFieldVisibilityInspectionPrepareResult::rejected($error);
-        }
-
-        $payload = $request->toManagingInspectionPayload();
-        $warnings = [];
-
-        if (null === $request->subjectIdentifier || '' === trim($request->subjectIdentifier)) {
-            $warnings[] = 'No subject identifier was provided; Managing will inspect the anonymous/default visibility corridor.';
-        }
-
-        if (in_array($payload['pageName'], ['new', 'edit'], true)) {
-            $warnings[] = 'Form-page inspection must still be interpreted with required/non-hideable field protection in Managing.';
-        }
-
-        return AdministrationFieldVisibilityInspectionPrepareResult::accepted($payload, [
-            'source' => 'administering_ui',
-            'surface' => 'managing_field_visibility_inspection_prepare',
-            'requested_by_subject' => $request->requestedBySubject,
-            'resource_class' => $payload['resourceClass'],
-            'field_name' => $payload['fieldName'],
-            'page_name' => $payload['pageName'],
-            'subject_identifier' => $payload['subjectIdentifier'],
-            'reason' => $request->reason,
-        ], $warnings);
+    public function __construct(
+        private OwnerPrepareServiceInterface $prepareService,
+    ) {
     }
 
-    private function validate(AdministrationFieldVisibilityInspectionPrepareRequest $request): ?string
+    public function prepare(ManagingFieldVisibilityInspectionPrepareRequest $request): ManagingFieldVisibilityInspectionPrepareResult
     {
-        if (!str_contains(trim($request->resourceClass), '\\')) {
-            return 'field_visibility_inspection_resource_class_fqcn_required';
-        }
-
-        if (1 !== preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', trim($request->fieldName))) {
-            return 'field_visibility_inspection_invalid_field_name';
-        }
-
-        if (!in_array(strtolower(trim($request->pageName)), self::PAGE_NAMES, true)) {
-            return 'field_visibility_inspection_invalid_page_name';
-        }
-
-        foreach ([$request->statusCandidates, $request->publicationFlagCandidates, $request->publicationDateCandidates] as $fields) {
-            foreach ($fields as $field) {
-                if (1 !== preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', trim($field))) {
-                    return 'field_visibility_inspection_invalid_candidate_field_name';
-                }
-            }
-        }
-
-        return null;
+        return $this->prepareService->prepare($request);
     }
 }

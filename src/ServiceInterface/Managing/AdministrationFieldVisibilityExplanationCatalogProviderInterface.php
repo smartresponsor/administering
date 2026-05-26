@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityExplanationScenario;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityExplanationStep;
+use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationScenario;
+use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationStep;
 
 interface AdministrationFieldVisibilityExplanationCatalogProviderInterface
 {
-    /** @return list<AdministrationFieldVisibilityExplanationStep> */
+    /** @return list<ManagingFieldVisibilityExplanationStep> */
     public function explanationSteps(): array;
 
-    /** @return list<AdministrationFieldVisibilityExplanationScenario> */
+    /** @return list<ManagingFieldVisibilityExplanationScenario> */
     public function diagnosticScenarios(): array;
 }

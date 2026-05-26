@@ -1,0 +1,6 @@
+src/Service/Operation/AdministrationGovernanceOperationRunner.php
+src/Service/Operation/BootstrapAdministrationOperationRunner.php
+src/Service/Operation/DoctrineAdministrationOperationReportProvider.php
+src/Service/Operation/DoctrineAdministrationOperationStatusRecorder.php
+src/Service/Operation/FilesystemAdministrationOperationArtifactWriter.php
+src/Service/Operation/MessengerAdministrationOperationQueue.php

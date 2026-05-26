@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Admin;
+
+/**
+ * Read-only intake report for deciding which owner/host repository current slices
+ * are needed before applying owner-side configuration tool packages.
+ */
+final readonly class AdministrationOwnerRepositorySliceIntakeReport
+{
+    /**
+     * @param list<array{componentKey:string, repositoryName:string, expectedPath:string, sliceStatus:string, reason:string, nextAction:string}> $repositorySlices
+     * @param list<string>                                                                                                                       $requiredArtifacts
+     * @param list<string>                                                                                                                       $recommendedNextActions
+     */
+    public function __construct(
+        public array $repositorySlices,
+        public array $requiredArtifacts,
+        public array $recommendedNextActions,
+        public bool $readyForOwnerSliceWork,
+        public string $nextWorkMode,
+    ) {
+    }
+
+    public function readySliceCount(): int
+    {
+        return count(array_filter($this->repositorySlices, static fn (array $item): bool => 'available' === ($item['sliceStatus'] ?? null)));
+    }
+
+    public function missingSliceCount(): int
+    {
+        return count(array_filter($this->repositorySlices, static fn (array $item): bool => 'missing' === ($item['sliceStatus'] ?? null)));
+    }
+
+    public function pendingSliceCount(): int
+    {
+        return count(array_filter($this->repositorySlices, static fn (array $item): bool => 'pending_current_slice' === ($item['sliceStatus'] ?? null)));
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'schema' => 'smart-responsor.administering.owner_repository_slice_intake.v1',
+            'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+            'readyForOwnerSliceWork' => $this->readyForOwnerSliceWork,
+            'nextWorkMode' => $this->nextWorkMode,
+            'readySliceCount' => $this->readySliceCount(),
+            'missingSliceCount' => $this->missingSliceCount(),
+            'pendingSliceCount' => $this->pendingSliceCount(),
+            'requiredArtifacts' => $this->requiredArtifacts,
+            'recommendedNextActions' => $this->recommendedNextActions,
+            'repositorySlices' => $this->repositorySlices,
+        ];
+    }
+}

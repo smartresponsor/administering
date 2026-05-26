@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileApplyRequest;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileApplyResult;
+use App\Managing\Value\Administration\ManagingFieldViewProfileApplyRequest;
+use App\Managing\Value\Administration\ManagingFieldViewProfileApplyResult;
 
 interface AdministrationFieldViewProfileApplyServiceInterface
 {
-    public function prepare(AdministrationFieldViewProfileApplyRequest $request): AdministrationFieldViewProfileApplyResult;
+    public function prepare(ManagingFieldViewProfileApplyRequest $request): ManagingFieldViewProfileApplyResult;
 }

@@ -49,7 +49,7 @@ integrations:
     managing_rolling_external_access_backend: rolling
     managing_rolling_external_access_failure_effect: deny
     managing_rolling_external_access_permission_key: managing.field.view
-    managing_field_access_descriptor_validator: App\Administering\ValidatorInterface\Rolling\AdministrationFieldAccessPolicyDescriptorValidatorInterface
+    managing_field_access_descriptor_validator: App\Managing\ValidatorInterface\Administration\ManagingFieldAccessPolicyDescriptorValidatorInterface
     managing_field_access_hardening_doc: docs/architecture/022-managing-field-access-catalog-hardening.adoc
     managing_field_visibility_readiness_doc: docs/architecture/023-managing-rolling-administering-field-visibility-readiness.adoc
     managing_profile_apply_contract: App\Managing\HandlerInterface\Crud\ManageCrudFieldUserProfileApplyHandlerInterface
@@ -66,6 +66,6 @@ administering_wave4:
 
 administering_wave6:
   operation_runner_contract: App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface
-  permission_catalog_provider_contract: App\Administering\ServiceInterface\Rolling\AdministrationPermissionCatalogProviderInterface
+  permission_catalog_provider_contract: App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface
   messenger_payload_policy: operation_key_only
   secrets_payload_policy: no_secret_values_in_messenger_or_sqlite

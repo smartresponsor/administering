@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Administering\ServiceInterface\Managing\AdministrationRollingBackedManagingAccessReadinessProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationRollingBackedManagingAccessReadinessController extends AbstractController
 {
     public function __construct(
-        private readonly AdministrationRollingBackedManagingAccessReadinessProviderInterface $readinessProvider,
+        private readonly \App\Managing\ServiceInterface\Administration\RollingBackedManagingAccessReadinessProviderInterface $readinessProvider,
     ) {
     }
 

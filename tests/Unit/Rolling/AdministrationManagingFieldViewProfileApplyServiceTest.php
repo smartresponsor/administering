@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileApplyService;
-use App\Administering\Value\Rolling\AdministrationFieldViewProfileApplyRequest;
+use App\Managing\Service\Administration\ManagingFieldViewProfileApplyService;
+use App\Managing\Value\Administration\ManagingFieldViewProfileApplyRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestCase
 {
     public function testPreparesManagingApplyPayload(): void
     {
-        $service = new AdministrationManagingFieldViewProfileApplyService();
-        $result = $service->prepare(new AdministrationFieldViewProfileApplyRequest(
+        $service = new AdministrationManagingFieldViewProfileApplyService(new ManagingFieldViewProfileApplyService());
+        $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
             normalizedProfilePayload: [
                 'subjects' => [
                     'user:42' => [
@@ -44,8 +45,8 @@ final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestC
 
     public function testRejectsUntrustedSurface(): void
     {
-        $service = new AdministrationManagingFieldViewProfileApplyService();
-        $result = $service->prepare(new AdministrationFieldViewProfileApplyRequest(
+        $service = new AdministrationManagingFieldViewProfileApplyService(new ManagingFieldViewProfileApplyService());
+        $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
             normalizedProfilePayload: ['subjects' => ['user:42' => ['defaults' => ['index' => ['hidden' => ['createdAt']]]]]],
             reviewContext: [
                 'surface' => 'random_surface',

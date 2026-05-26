@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Admin;
+
+/**
+ * Read-only checklist for switching from internal Administering transition waves
+ * to owner/host current-slice work.
+ */
+final readonly class AdministrationOwnerConfigurationToolTransitionHandoffChecklistReport
+{
+    /**
+     * @param list<array{key:string, title:string, status:string, path:?string, note:string}> $checklist
+     * @param list<string>                                                                    $recommendedNextActions
+     */
+    public function __construct(
+        public array $checklist,
+        public array $recommendedNextActions,
+        public bool $readyForOwnerSlices,
+        public bool $readyForHostSlice,
+    ) {
+    }
+
+    public function completedCount(): int
+    {
+        return count(array_filter($this->checklist, static fn (array $item): bool => 'ready' === ($item['status'] ?? null)));
+    }
+
+    public function missingCount(): int
+    {
+        return count(array_filter($this->checklist, static fn (array $item): bool => 'missing' === ($item['status'] ?? null)));
+    }
+
+    public function warningCount(): int
+    {
+        return count(array_filter($this->checklist, static fn (array $item): bool => 'warning' === ($item['status'] ?? null)));
+    }
+
+    public function canStartOwnerSliceWork(): bool
+    {
+        return $this->readyForOwnerSlices && 0 === $this->missingCount();
+    }
+
+    public function nextWorkMode(): string
+    {
+        if (!$this->canStartOwnerSliceWork()) {
+            return 'finish_administering_transition_artifacts';
+        }
+
+        if ($this->readyForHostSlice) {
+            return 'request_owner_and_host_current_slices';
+        }
+
+        return 'request_owner_repository_current_slices_first';
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'schema' => 'smart-responsor.administering.owner_configuration_transition_handoff_checklist.v1',
+            'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+            'readyForOwnerSlices' => $this->readyForOwnerSlices,
+            'readyForHostSlice' => $this->readyForHostSlice,
+            'canStartOwnerSliceWork' => $this->canStartOwnerSliceWork(),
+            'nextWorkMode' => $this->nextWorkMode(),
+            'completedCount' => $this->completedCount(),
+            'missingCount' => $this->missingCount(),
+            'warningCount' => $this->warningCount(),
+            'recommendedNextActions' => $this->recommendedNextActions,
+            'checklist' => $this->checklist,
+        ];
+    }
+}

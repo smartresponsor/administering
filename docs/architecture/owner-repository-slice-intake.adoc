@@ -1,0 +1,20 @@
+= Owner Repository Current-Slice Intake
+
+After the owner-side transition freeze, Administering should stop expanding ecosystem-owned configuration tools internally.
+The next work mode is based on current slices of owner repositories.
+
+The command below builds a read-only intake checklist:
+
+[source,powershell]
+----
+php bin/console administering:owner-configuration-tools:owner-slice-intake Managing Accessing Rolling   --write-json=delivery/patches/administering_owner_repository_slice_intake.json
+----
+
+The command does not patch neighboring repositories. It only verifies whether expected sibling repository folders are present and records which current slices must be requested before building concrete owner-side patches.
+
+The intended rule is:
+
+* no inferred patches for repositories without a current slice;
+* no destructive repository cleanup;
+* owner-side overlays are applied only as reviewed touched-file patches;
+* Symfony environment, credentials, secrets, deployment profile, and component enablement remain host/post-application concerns.

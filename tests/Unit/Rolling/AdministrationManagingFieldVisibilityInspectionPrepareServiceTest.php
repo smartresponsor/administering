@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldVisibilityInspectionPrepareService;
-use App\Administering\Value\Rolling\AdministrationFieldVisibilityInspectionPrepareRequest;
+use App\Managing\Service\Administration\ManagingFieldVisibilityInspectionPrepareService;
+use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldVisibilityInspectionPrepareServiceTest extends TestCase
 {
     public function testPreparesManagingInspectionPayload(): void
     {
-        $service = new AdministrationManagingFieldVisibilityInspectionPrepareService();
-        $result = $service->prepare(new AdministrationFieldVisibilityInspectionPrepareRequest(
+        $service = new AdministrationManagingFieldVisibilityInspectionPrepareService(new ManagingFieldVisibilityInspectionPrepareService());
+        $result = $service->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
             resourceClass: 'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
             fieldName: 'title',
             pageName: 'index',
@@ -31,8 +32,8 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareServiceTest ex
 
     public function testRejectsInvalidPageName(): void
     {
-        $service = new AdministrationManagingFieldVisibilityInspectionPrepareService();
-        $result = $service->prepare(new AdministrationFieldVisibilityInspectionPrepareRequest(
+        $service = new AdministrationManagingFieldVisibilityInspectionPrepareService(new ManagingFieldVisibilityInspectionPrepareService());
+        $result = $service->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
             resourceClass: 'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
             fieldName: 'title',
             pageName: 'delete',

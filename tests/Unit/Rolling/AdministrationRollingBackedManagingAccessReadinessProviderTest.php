@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Service\Managing\AdministrationRollingBackedManagingAccessReadinessProvider;
+use App\Managing\Provider\Administration\RollingBackedManagingAccessReadinessProvider;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationRollingBackedManagingAccessReadinessProviderTest extends TestCase
 {
     public function testProvidesReadOnlyRollingBackedManagingAccessChecklist(): void
     {
-        $report = (new AdministrationRollingBackedManagingAccessReadinessProvider())->report();
+        $report = (new RollingBackedManagingAccessReadinessProvider())->report();
         $safe = $report->toSafeArray();
 
         self::assertSame('rolling', $safe['mode']);

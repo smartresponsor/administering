@@ -3,47 +3,61 @@
 {% block page_title %}{{ page_title }}{% endblock %}
 
 {% block main %}
+    {% set error_message = error_message|default('') %}
+    {% set result_title = result_title|default('') %}
+    {% set result_html = result_html|default('') %}
+    {% set result_json = result_json|default('') %}
+    {% set action_links = action_links|default([]) %}
+    {% set back_url = back_url|default('') %}
+
     <section class="content-header">
-        <h1 class="title mb-1">{{ page_title }}</h1>
-        {% if lead is not empty %}
-            <p class="text-muted mb-0">{{ lead }}</p>
-        {% endif %}
-    </section>
-
-    <section class="content-body mt-4">
-        {% if error_message is not empty %}
-            <div class="alert alert-danger">
-                {{ error_message }}
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">{{ page_title }}</h1>
+                {% if lead is not empty %}
+                    <p class="text-muted mb-0">{{ lead }}</p>
+                {% endif %}
             </div>
-        {% endif %}
-
-        {{ form_start(form) }}
-            {{ form_errors(form) }}
-            <div class="row g-3">
-                {{ form_widget(form) }}
-            </div>
-        {{ form_end(form) }}
-
-        {% if result_html is not empty %}
-            <h2 class="mt-4">{{ result_title }}</h2>
-            <div class="mt-3">
-                {{ result_html|raw }}
-            </div>
-        {% elseif result_json is not empty %}
-            <h2 class="mt-4">{{ result_title }}</h2>
-            <pre class="bg-light border rounded p-3 small">{{ result_json }}</pre>
-        {% endif %}
-
-        {% if action_links is not empty %}
-            <div class="d-flex flex-wrap gap-2 mt-3">
+            <div class="d-flex flex-wrap gap-2">
+                {% if back_url is not empty %}
+                    <a class="btn btn-outline-primary" href="{{ back_url }}">Back</a>
+                {% endif %}
                 {% for link in action_links %}
                     <a class="btn btn-outline-primary" href="{{ link.url }}">{{ link.label }}</a>
                 {% endfor %}
             </div>
-        {% endif %}
+        </div>
+    </section>
 
-        {% if back_url is not empty %}
-            <p class="mt-4"><a href="{{ back_url }}">Back</a></p>
-        {% endif %}
+    <section class="content-body mt-4">
+        <div class="row g-4">
+            <div class="col-12{% if result_title is not empty or result_html is not empty or result_json is not empty %} col-xl-8{% endif %}">
+                {% if error_message is not empty %}
+                    <div class="alert alert-danger">
+                        {{ error_message }}
+                    </div>
+                {% endif %}
+
+                {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+
+            {% if result_title is not empty or result_html is not empty or result_json is not empty %}
+                <div class="col-12 col-xl-4">
+                    <div class="alert alert-secondary mb-0">
+                        <div class="fw-semibold mb-2">{{ result_title ?: 'Result' }}</div>
+                        {% if result_html is not empty %}
+                            <div>{{ result_html|raw }}</div>
+                        {% elseif result_json is not empty %}
+                            <pre class="bg-light border rounded p-3 small mb-0">{{ result_json }}</pre>
+                        {% else %}
+                            <div class="small text-muted">No result available yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </section>
 {% endblock %}

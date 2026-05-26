@@ -1,0 +1,4 @@
+src/Service/Configuration/FilesystemAdministrationConfigurationScanner.php
+src/Service/Credential/SymfonySecretsAdministrationCredentialOperator.php
+src/Service/Environment/AdministrationEnvironmentRuntimeStatusProvider.php
+src/Service/Symfony/AdministrationSymfonyRouteCatalogProvider.php

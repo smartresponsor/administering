@@ -6,40 +6,39 @@ namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Administering\ValidatorInterface\Rolling\AdministrationFieldAccessPolicyDescriptorValidatorInterface;
-use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewInput;
-use App\Administering\Value\Rolling\AdministrationFieldAccessMutationReviewResult;
-use App\Administering\Value\Rolling\AdministrationFieldAccessPolicyDescriptor;
-use App\Rolling\ServiceInterface\Administration\RollingAclMutationReviewBuilderInterface;
+use App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationReviewServiceInterface;
+use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput;
+use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewResult;
+use App\Managing\Value\Administration\ManagingFieldAccessPolicyDescriptor;
 use App\Rolling\Value\Administration\RollingAclMutationRequest;
 use App\Rolling\Value\Administration\RollingFieldAccessDecisionRequest;
 use App\Rolling\Value\Administration\RollingFieldAccessScopeSet;
 
 /**
- * Builds review-only Rolling ACL mutation requests for Managing field access policies.
- *
- * Administering owns the control-plane review surface; Rolling still owns effective ACL mutation semantics.
+ * Thin Administering adapter for the owner-side Managing field access review service.
  */
 final readonly class AdministrationManagingFieldAccessMutationReviewService implements AdministrationFieldAccessMutationReviewServiceInterface
 {
     public function __construct(
-        private RollingAclMutationReviewBuilderInterface $reviewBuilder,
+        private ManagingFieldAccessMutationReviewServiceInterface $reviewService,
         private AdministrationAclMutationReviewRecorderInterface $reviewRecorder,
-        private AdministrationFieldAccessPolicyDescriptorValidatorInterface $descriptorValidator,
     ) {
     }
 
-    public function review(AdministrationFieldAccessMutationReviewInput $input): AdministrationFieldAccessMutationReviewResult
+    public function review(ManagingFieldAccessMutationReviewInput $input): ManagingFieldAccessMutationReviewResult
     {
-        $this->descriptorValidator->assertValid($input->descriptor);
-        $mutationRequest = $this->toRollingMutationRequest($input);
-        $review = $this->reviewBuilder->review($mutationRequest);
-        $record = $this->reviewRecorder->record($mutationRequest, $review);
+        $ownerResult = $this->reviewService->review($input);
+        $review = $ownerResult->review;
+        $record = $this->reviewRecorder->record($this->toRollingMutationRequest($input), $review);
 
-        return new AdministrationFieldAccessMutationReviewResult($input->descriptor, $review, $record);
+        return new ManagingFieldAccessMutationReviewResult(
+            $input->descriptor,
+            $review,
+            $record->requestKey(),
+        );
     }
 
-    private function toRollingMutationRequest(AdministrationFieldAccessMutationReviewInput $input): RollingAclMutationRequest
+    private function toRollingMutationRequest(ManagingFieldAccessMutationReviewInput $input): RollingAclMutationRequest
     {
         $descriptor = $input->descriptor;
         $scope = RollingFieldAccessScopeSet::fromRequest(new RollingFieldAccessDecisionRequest(
@@ -63,20 +62,20 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
         );
     }
 
-    private function mutationType(AdministrationFieldAccessPolicyDescriptor $descriptor): string
+    private function mutationType(ManagingFieldAccessPolicyDescriptor $descriptor): string
     {
-        if (AdministrationFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
+        if (ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
             return $descriptor->allows() ? 'permission.grant' : 'permission.revoke';
         }
 
         return $descriptor->allows() ? 'acl.allow' : 'acl.deny';
     }
 
-    private function subjectIdentifier(AdministrationFieldAccessPolicyDescriptor $descriptor): string
+    private function subjectIdentifier(ManagingFieldAccessPolicyDescriptor $descriptor): string
     {
         $identifier = trim($descriptor->subjectIdentifier);
 
-        if (AdministrationFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
+        if (ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
             return $identifier;
         }
 

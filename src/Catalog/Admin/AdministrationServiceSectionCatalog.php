@@ -5,17 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Catalog\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface;
-use App\Administering\Controller\Admin\Crud\AdministrationAccessingAccountRecordCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationAuditEventCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationConfigSnapshotCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationConnectedComponentRecordCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationCredentialDefinitionCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationEnvironmentRuntimeRecordCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationManagingFieldControlRecordCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationOperationRunCrudController;
 use App\Administering\Controller\Admin\Crud\AdministrationServiceSectionRecordCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationSymfonyRouteRecordCrudController;
-use App\Administering\Controller\Admin\Crud\RollingRoleCrudController;
+use App\Administering\Controller\Admin\Crud\AdministrationServiceToolRecordCrudController;
 use App\Administering\Value\Admin\AdministrationServiceSection;
 
 /**
@@ -55,61 +46,61 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
             'Rolling' => [
                 'label' => 'Rolling',
                 'icon' => 'fa fa-user-shield',
-                'crud' => RollingRoleCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.rolling.subject_access_report.view',
             ],
             'Accessing' => [
                 'label' => 'Accessing',
                 'icon' => 'fa fa-user-lock',
-                'crud' => AdministrationAccessingAccountRecordCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.accessing.account_action.audit.view',
             ],
             'Managing' => [
                 'label' => 'Managing',
                 'icon' => 'fa fa-table-list',
-                'crud' => AdministrationManagingFieldControlRecordCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.rolling.permission_catalog.view',
             ],
             'Symfony' => [
                 'label' => 'Symfony',
                 'icon' => 'fa fa-route',
-                'crud' => AdministrationSymfonyRouteRecordCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.config.view',
             ],
             'Environment' => [
                 'label' => 'Environment',
                 'icon' => 'fa fa-server',
-                'crud' => AdministrationEnvironmentRuntimeRecordCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.config.view',
             ],
             'Connected' => [
                 'label' => 'Connected Components',
                 'icon' => 'fa fa-layer-group',
-                'crud' => AdministrationConnectedComponentRecordCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.connected_component.overview.view',
             ],
             'Operation' => [
                 'label' => 'Operations',
                 'icon' => 'fa fa-list-check',
-                'crud' => AdministrationOperationRunCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.operation.view',
             ],
             'Configuration' => [
                 'label' => 'Configuration',
                 'icon' => 'fa fa-file-code',
-                'crud' => AdministrationConfigSnapshotCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.config.view',
             ],
             'Credential' => [
                 'label' => 'Credentials',
                 'icon' => 'fa fa-key',
-                'crud' => AdministrationCredentialDefinitionCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.config.view',
             ],
             'Audit' => [
                 'label' => 'Audit',
                 'icon' => 'fa fa-clock-rotate-left',
-                'crud' => AdministrationAuditEventCrudController::class,
+                'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.accessing.account_action.audit.view',
             ],
         ];
@@ -143,7 +134,7 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
 
         $directories = array_values(array_filter(
             scandir($root) ?: [],
-            static fn (string $entry): bool => !str_starts_with($entry, '.') && is_dir($root.'/'.$entry),
+            static fn (string $entry): bool => !str_starts_with($entry, '.') && is_dir($root.'/'.$entry) && 'Config' !== $entry,
         ));
         sort($directories);
 

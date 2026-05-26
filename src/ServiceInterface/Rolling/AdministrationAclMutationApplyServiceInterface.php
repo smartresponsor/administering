@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Rolling;
 
-use App\Administering\Value\Rolling\AdministrationAclMutationApplyResult;
+use App\Managing\Value\Administration\ManagingAclMutationApplyResult;
 
 interface AdministrationAclMutationApplyServiceInterface
 {
-    public function applyReviewedMutation(string $requestKey, string $requestedBySubject): AdministrationAclMutationApplyResult;
+    public function applyReviewedMutation(string $requestKey, string $requestedBySubject): ManagingAclMutationApplyResult;
 }

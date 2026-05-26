@@ -1,0 +1,89 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ record.displayLabel }}{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">{{ record.displayLabel }}</h1>
+                <p class="text-muted mb-0">
+                    Tool opened from the admin registry.
+                </p>
+            </div>
+            <a class="btn btn-secondary" href="{{ indexUrl }}">Back to section tools</a>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        <div class="row g-3">
+            <div class="col-12 col-xl-7">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Tool form</h2>
+                        {% if submitted %}
+                            <div class="alert alert-success">
+                                Form input was accepted. Execution remains reserved for the operation/audit layer.
+                            </div>
+                        {% endif %}
+
+                        <div class="alert {{ record.executable ? 'alert-primary' : 'alert-warning' }}">
+                            {% if record.executable %}
+                                This tool is executable. Submitting the form creates an audited run.
+                            {% else %}
+                                This tool has a form but no executable handler yet. Submission still creates a run, but execution stays disabled.
+                            {% endif %}
+                        </div>
+
+                        {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                            {{ form_widget(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-xl-5">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Service identity</h2>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Tool key</dt>
+                            <dd class="col-sm-8"><code>{{ record.toolKey }}</code></dd>
+
+                            <dt class="col-sm-4">Generated label</dt>
+                            <dd class="col-sm-8">{{ record.generatedLabel }}</dd>
+
+                            <dt class="col-sm-4">Label override</dt>
+                            <dd class="col-sm-8">{{ record.labelOverride ?? 'none' }}</dd>
+
+                            <dt class="col-sm-4">Section</dt>
+                            <dd class="col-sm-8">{{ record.sectionKey }}</dd>
+
+                            <dt class="col-sm-4">Class</dt>
+                            <dd class="col-sm-8"><code class="text-break">{{ record.serviceClass }}</code></dd>
+
+                            <dt class="col-sm-4">Form</dt>
+                            <dd class="col-sm-8"><code class="text-break">{{ record.formTypeClass ?? 'not mapped' }}</code></dd>
+
+                            <dt class="col-sm-4">Data class</dt>
+                            <dd class="col-sm-8"><code class="text-break">{{ record.formDataClass ?? 'not mapped' }}</code></dd>
+
+                            <dt class="col-sm-4">Executable</dt>
+                            <dd class="col-sm-8">{{ record.executable ? 'yes' : 'no' }}</dd>
+
+                            <dt class="col-sm-4">Openable</dt>
+                            <dd class="col-sm-8">{{ record.openable ? 'yes' : 'no' }}</dd>
+
+                            <dt class="col-sm-4">Runnable</dt>
+                            <dd class="col-sm-8">{{ record.runnable ? 'yes' : 'no' }}</dd>
+
+                            <dt class="col-sm-4">Status</dt>
+                            <dd class="col-sm-8">{{ record.status }}</dd>
+                        </dl>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Runtime controls: {{ record.displayLabel }}{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">Runtime controls</h1>
+                <p class="text-muted mb-0">
+                    These controls are stored in the admin registry.
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                {% if openUrl %}
+                    <a class="btn btn-primary" href="{{ openUrl }}">Open tool</a>
+                {% endif %}
+                <a class="btn btn-secondary" href="{{ indexUrl }}">Back to section tools</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        <div class="row g-3">
+            <div class="col-12 col-xl-7">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Editable runtime controls</h2>
+                        <div class="alert alert-info">
+                            This form only changes runtime controls.
+                        </div>
+                        {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                            {{ form_widget(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-xl-5">
+                <article class="field-group card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Immutable tool identity</h2>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Tool key</dt>
+                            <dd class="col-sm-8"><code>{{ record.toolKey }}</code></dd>
+
+                            <dt class="col-sm-4">Generated label</dt>
+                            <dd class="col-sm-8">{{ record.generatedLabel }}</dd>
+
+                            <dt class="col-sm-4">Label override</dt>
+                            <dd class="col-sm-8">{{ record.labelOverride ?? 'none' }}</dd>
+
+                            <dt class="col-sm-4">Section</dt>
+                            <dd class="col-sm-8">{{ record.sectionKey }}</dd>
+
+                            <dt class="col-sm-4">Tool slug</dt>
+                            <dd class="col-sm-8"><code>{{ record.toolSlug }}</code></dd>
+
+                            <dt class="col-sm-4">Service</dt>
+                            <dd class="col-sm-8"><code class="text-break">{{ record.serviceClass }}</code></dd>
+
+                            <dt class="col-sm-4">Form</dt>
+                            <dd class="col-sm-8"><code class="text-break">{{ record.formTypeClass ?? 'not mapped' }}</code></dd>
+
+                            <dt class="col-sm-4">Status</dt>
+                            <dd class="col-sm-8">{{ record.status }}</dd>
+
+                            <dt class="col-sm-4">Runnable</dt>
+                            <dd class="col-sm-8">{{ record.runnable ? 'yes' : 'no' }}</dd>
+                        </dl>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Value\Admin;
+
+/**
+ * Final read-only freeze report for pausing internal Administering transition waves
+ * before switching to owner/host current-slice work.
+ */
+final readonly class AdministrationOwnerConfigurationToolTransitionFreezeReport
+{
+    /**
+     * @param list<array{key:string, title:string, status:string, path:?string, note:string}> $artifacts
+     * @param list<string>                                                                    $freezeReasons
+     * @param list<string>                                                                    $remainingActions
+     */
+    public function __construct(
+        public array $artifacts,
+        public array $freezeReasons,
+        public array $remainingActions,
+        public bool $internalWavesFrozen,
+        public string $nextWorkMode,
+    ) {
+    }
+
+    public function readyArtifactCount(): int
+    {
+        return count(array_filter($this->artifacts, static fn (array $item): bool => 'ready' === ($item['status'] ?? null)));
+    }
+
+    public function missingArtifactCount(): int
+    {
+        return count(array_filter($this->artifacts, static fn (array $item): bool => 'missing' === ($item['status'] ?? null)));
+    }
+
+    public function warningArtifactCount(): int
+    {
+        return count(array_filter($this->artifacts, static fn (array $item): bool => 'warning' === ($item['status'] ?? null)));
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'schema' => 'smart-responsor.administering.owner_configuration_transition_freeze.v1',
+            'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+            'internalWavesFrozen' => $this->internalWavesFrozen,
+            'nextWorkMode' => $this->nextWorkMode,
+            'readyArtifactCount' => $this->readyArtifactCount(),
+            'missingArtifactCount' => $this->missingArtifactCount(),
+            'warningArtifactCount' => $this->warningArtifactCount(),
+            'freezeReasons' => $this->freezeReasons,
+            'remainingActions' => $this->remainingActions,
+            'artifacts' => $this->artifacts,
+        ];
+    }
+}

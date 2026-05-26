@@ -1,0 +1,76 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Configuration Center{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">Configuration Center</h1>
+                <p class="text-muted mb-0">
+                    Connected applications and approved tools. Safe values stay in the registry; sensitive values are handled separately.
+                </p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-primary" href="{{ applicationIndexUrl }}">Applications</a>
+                <a class="btn btn-outline-primary" href="{{ toolIndexUrl }}">Tools</a>
+                <a class="btn btn-outline-primary" href="{{ valueIndexUrl }}">Values</a>
+                <a class="btn btn-outline-primary" href="{{ applyLogIndexUrl }}">Apply log</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-uppercase small text-muted fw-semibold">Applications</div>
+                        <div class="display-6 mb-0">{{ applicationCount }}</div>
+                        <div class="text-muted small">Connected components in the registry.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-uppercase small text-muted fw-semibold">Tools</div>
+                        <div class="display-6 mb-0">{{ toolCount }}</div>
+                        <div class="text-muted small">Approved tools ready to edit.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-uppercase small text-muted fw-semibold">Secret-backed</div>
+                        <div class="display-6 mb-0">{{ secretToolCount }}</div>
+                        <div class="text-muted small">Tools with sensitive values handled separately.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <article class="card shadow-sm">
+                    <div class="card-header">
+                        <h2 class="h5 mb-1">Native EasyAdmin index pages</h2>
+                        <p class="text-muted mb-0 small">Use the standard CRUD screens for registry data. The dashboard stays intentionally thin.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-primary" href="{{ toolIndexUrl }}">Tools</a>
+                            <a class="btn btn-outline-primary" href="{{ applicationIndexUrl }}">Applications</a>
+                            <a class="btn btn-outline-primary" href="{{ valueIndexUrl }}">Values</a>
+                            <a class="btn btn-outline-primary" href="{{ applyLogIndexUrl }}">Apply log</a>
+                        </div>
+                        <div class="text-muted small mt-3">
+                            These pages are rendered by native EasyAdmin CRUD controllers and use the registry.
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}
