@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Command\Config;
 
-use App\Administering\Service\Config\ConfigFormResolverService;
-use App\Administering\Service\Config\ConfigStateService;
-use App\Administering\Service\Config\ConfigToolRegistryService;
-use App\Administering\Service\Config\ConfigToolServiceLocator;
+use App\Administering\Service\Config\AdministrationConfigFormResolverService;
+use App\Administering\Service\Config\AdministrationConfigStateService;
+use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
+use App\Administering\Service\Config\AdministrationConfigToolServiceLocator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,10 +23,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class AdministrationConfigApplyCommand extends Command
 {
     public function __construct(
-        private readonly ConfigToolRegistryService $registryService,
-        private readonly ConfigToolServiceLocator $toolServiceLocator,
-        private readonly ConfigFormResolverService $formResolverService,
-        private readonly ConfigStateService $stateService,
+        private readonly AdministrationConfigToolRegistryService $registryService,
+        private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
+        private readonly AdministrationConfigFormResolverService $formResolverService,
+        private readonly AdministrationConfigStateService $stateService,
     ) {
         parent::__construct();
     }

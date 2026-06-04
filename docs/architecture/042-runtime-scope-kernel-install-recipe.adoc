@@ -1,0 +1,56 @@
+= Runtime Scope Kernel Install Recipe
+
+Administering owns runtime scope generation, but the host application owns the Kernel boot code.
+
+This keeps the production boot path independent from Administering services, Doctrine, SQLite, EasyAdmin, and Configuring contracts. Administering may be disabled as a UI/runtime bundle after a lock is exported; the host Kernel still reads plain PHP lock files.
+
+== Responsibility boundary
+
+* Administering generates and validates `config/kernel/runtime_scope.lock.php` and `config/kernel/runtime_scope.prod.lock.php`.
+* The host App owns `src/Kernel/RuntimeCompositionLockReader.php` and `src/Kernel/RuntimeBundleIterator.php`.
+* The host Kernel reads `config/bundles.php` first, then yields bundles from the selected runtime scope lock.
+* Configuring does not decide runtime scope and does not generate Kernel locks.
+* Producer components do not export lifecycle manifests.
+
+== Installed files
+
+The command `administering:runtime-scope:install-kernel-recipe` prepares the host application with:
+
+[source,text]
+----
+src/Kernel/RuntimeCompositionLockReader.php
+src/Kernel/RuntimeBundleIterator.php
+config/kernel/runtime_scope.lock.php
+config/kernel/runtime_scope.prod.lock.php
+docs/recipe/runtime-scope-kernel/Kernel.runtime-scope.example.php
+docs/recipe/runtime-scope-kernel/README.adoc
+----
+
+The command is dry-run by default. Use `--apply` to write files.
+
+== Lock selection
+
+[source,text]
+----
+APP_ENV=prod       -> config/kernel/runtime_scope.prod.lock.php
+APP_ENV=dev/test/* -> config/kernel/runtime_scope.lock.php
+----
+
+`runtime_scope.lock.php` is the default/local scope. `runtime_scope.prod.lock.php` is the production scope.
+
+== Kernel patching
+
+When possible, the command patches `src/Kernel.php` to add:
+
+[source,php]
+----
+yield from \App\Kernel\RuntimeBundleIterator::fromProjectDir($this->getProjectDir(), $this->environment);
+----
+
+Before modifying `src/Kernel.php`, the command writes a timestamped backup next to it. If the Kernel is too custom to patch safely, the command leaves it untouched and writes an example file for manual review.
+
+== Bundles file discipline
+
+`config/bundles.php` remains the Symfony/static bootstrap registry. It should contain framework/system/dev-only bundles and any truly always-on boot bundles.
+
+Profile-controlled Smart Responsor bundles belong in the runtime scope lock files.

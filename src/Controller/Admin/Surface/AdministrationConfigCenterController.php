@@ -6,9 +6,9 @@ namespace App\Administering\Controller\Admin\Surface;
 
 use App\Accessing\Entity\AccessAccountEntity;
 use App\Administering\Entity\Config\AdministrationConfigTool;
-use App\Administering\Service\Config\ConfigFormResolverService;
-use App\Administering\Service\Config\ConfigStateService;
-use App\Administering\Service\Config\ConfigToolServiceLocator;
+use App\Administering\Service\Config\AdministrationConfigFormResolverService;
+use App\Administering\Service\Config\AdministrationConfigStateService;
+use App\Administering\Service\Config\AdministrationConfigToolServiceLocator;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
@@ -21,9 +21,9 @@ final class AdministrationConfigCenterController extends AbstractController
 {
     public function __construct(
         private readonly ManagerRegistry $managerRegistry,
-        private readonly ConfigToolServiceLocator $toolServiceLocator,
-        private readonly ConfigFormResolverService $formResolverService,
-        private readonly ConfigStateService $stateService,
+        private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
+        private readonly AdministrationConfigFormResolverService $formResolverService,
+        private readonly AdministrationConfigStateService $stateService,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
     ) {
     }
@@ -37,7 +37,7 @@ final class AdministrationConfigCenterController extends AbstractController
     public function index(): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $this->denyAccessUnlessGranted('administration.config.view');
@@ -64,7 +64,7 @@ final class AdministrationConfigCenterController extends AbstractController
     public function edit(string $applicationCode, string $toolCode, Request $request): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $tool = $this->tool($applicationCode, $toolCode);

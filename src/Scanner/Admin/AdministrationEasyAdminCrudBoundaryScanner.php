@@ -1,0 +1,134 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Scanner\Admin;
+
+use App\Administering\Value\Admin\AdministrationEasyAdminCrudBoundaryReport;
+
+final class AdministrationEasyAdminCrudBoundaryScanner
+{
+    public function scan(string $projectDir): AdministrationEasyAdminCrudBoundaryReport
+    {
+        $root = rtrim($projectDir, '/\\');
+        $crudDir = $root.'/src/Controller/Admin/Crud';
+        $items = [];
+        $errors = [];
+        $warnings = [];
+
+        foreach (glob($crudDir.'/*CrudController.php') ?: [] as $controllerFile) {
+            $controller = basename($controllerFile, '.php');
+            if (str_starts_with($controller, 'Abstract')) {
+                continue;
+            }
+
+            $source = (string) file_get_contents($controllerFile);
+            $messages = [];
+            $nativeCrudTemplate = !str_contains($source, 'overrideTemplate(') && !str_contains($source, 'setTemplatePath(');
+            if (!$nativeCrudTemplate) {
+                $errors[] = sprintf('%s overrides an EasyAdmin CRUD template. CRUD screens must use native EasyAdmin CRUD templates.', $controller);
+                $messages[] = 'custom_crud_template_override';
+            }
+
+            $entity = $this->resolveReturnedClass($source);
+            $table = null;
+            $sqliteSystemTable = false;
+
+            if (null === $entity) {
+                $errors[] = sprintf('%s does not expose a getEntityFqcn() return class.', $controller);
+                $messages[] = 'missing_entity_fqcn';
+            } else {
+                $entityFile = $this->entityFile($root, $source, $entity);
+                if (null === $entityFile || !is_file($entityFile)) {
+                    $warnings[] = sprintf('%s points to %s, but the entity source is outside the Administering slice. SQLite/system table cannot be verified here.', $controller, $entity);
+                    $messages[] = 'external_entity_unverified_sqlite';
+                } else {
+                    $entitySource = (string) file_get_contents($entityFile);
+                    $table = $this->tableName($entitySource);
+                    $sqliteSystemTable = null !== $table && str_starts_with($table, 'administration_');
+                    if (!$sqliteSystemTable) {
+                        $errors[] = sprintf('%s entity %s is not mapped to an administration_* SQLite/system table.', $controller, $entity);
+                        $messages[] = 'non_system_sqlite_table';
+                    }
+                }
+            }
+
+            $symfonyFormSafe = $this->isSymfonyFormSafe($source);
+            if (!$symfonyFormSafe) {
+                $errors[] = sprintf('%s has custom CRUD actions that are not rendered as Symfony form submissions.', $controller);
+                $messages[] = 'custom_action_without_form_submission';
+            }
+
+            $items[] = [
+                'controller' => $controller,
+                'entity' => $entity,
+                'table' => $table,
+                'nativeCrudTemplate' => $nativeCrudTemplate,
+                'sqliteSystemTable' => $sqliteSystemTable,
+                'symfonyFormSafe' => $symfonyFormSafe,
+                'messages' => $messages,
+            ];
+        }
+
+        return new AdministrationEasyAdminCrudBoundaryReport($items, $errors, $warnings);
+    }
+
+    private function resolveReturnedClass(string $source): ?string
+    {
+        if (!preg_match('/return\\s+([A-Za-z_][A-Za-z0-9_]*)::class\\s*;/', $source, $match)) {
+            return null;
+        }
+
+        $short = $match[1];
+        if (preg_match('/use\\s+([^;]+\\\\'.preg_quote($short, '/').')\\s*;/', $source, $useMatch)) {
+            return $useMatch[1];
+        }
+
+        if (preg_match('/namespace\\s+([^;]+);/', $source, $namespaceMatch)) {
+            return $namespaceMatch[1].'\\\\'.$short;
+        }
+
+        return $short;
+    }
+
+    private function entityFile(string $root, string $controllerSource, string $entityClass): ?string
+    {
+        if (!str_starts_with($entityClass, 'App\\Administering\\Entity\\')) {
+            return null;
+        }
+
+        $relative = substr($entityClass, strlen('App\\Administering\\'));
+
+        return $root.'/src/'.str_replace('\\', '/', $relative).'.php';
+    }
+
+    private function tableName(string $entitySource): ?string
+    {
+        if (preg_match('/#\\[ORM\\\\Table\\(name:\\s*[\'\"]([^\'\"]+)[\'\"]\\)\\]/', $entitySource, $match)) {
+            return $match[1];
+        }
+
+        return null;
+    }
+
+    private function isSymfonyFormSafe(string $source): bool
+    {
+        if (!str_contains($source, 'linkToCrudAction(')) {
+            return true;
+        }
+
+        preg_match_all('/Action::new\\(\\s*[\'\"]([^\'\"]+)[\'\"]/', $source, $actionMatches);
+        foreach ($actionMatches[1] as $actionName) {
+            if (str_starts_with($actionName, 'batch')) {
+                continue;
+            }
+
+            $pattern = '/Action::new\\(\\s*[\'\"]'.preg_quote($actionName, '/').'[\'\"](?:(?!Action::new\\().)*?->linkToCrudAction\\([^)]*\\)(?:(?!Action::new\\().)*?->renderAsForm\\(\\)/s';
+            if (!preg_match($pattern, $source)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}

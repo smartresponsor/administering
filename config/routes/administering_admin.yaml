@@ -1,3 +1,10 @@
-administering_admin:
+# EasyAdmin must load its dashboard/CRUD route map through its own route loader.
+# The attribute import below is only for Administering custom Symfony admin pages.
+administering_easyadmin:
+  resource: .
+  type: easyadmin.routes
+
+administering_admin_attribute:
   resource: '../../src/Controller/Admin/'
   type: attribute
+

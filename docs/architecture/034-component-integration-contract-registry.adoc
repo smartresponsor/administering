@@ -1,0 +1,97 @@
+= Contract Registry: Component Integration Boundary
+:toc:
+
+== What was changed
+
+Before this patch, `Administering/config/component/component.yaml` contained
+an `integrations:` block with detailed knowledge of Rolling's internal class names,
+route names, and Managing-specific contracts:
+
+[source,yaml]
+----
+integrations:
+  rolling:
+    decision_contract: App\Rolling\ServiceInterface\...
+    managing_rolling_external_access_backend: rolling
+    # ... 25+ lines Administering should not own
+----
+
+That is now **owned by Rolling**.
+
+== The cut
+
+[source,text]
+----
+BEFORE                              AFTER
+
+Administering/component.yaml        Rolling/src/Contract/
+  integrations:                       RollingIntegrationContract.php  ← Rolling owns this
+    rolling:                        Rolling/src/Provider/Configuration/
+      decision_contract: ...          RollingConfigurationToolProvider.php
+      managing_*: ...
+                                    Administering/src/Contract/
+                                      ComponentIntegrationContractInterface.php
+                                      ComponentIntegrationContractRegistry.php
+                                      Rolling/
+                                        RollingComponentIntegrationContractProvider.php
+                                      Accessing/
+                                        AccessingComponentIntegrationContractStub.php
+----
+
+== Ownership rule
+
+[cols="1,2", options="header"]
+|===
+| Who
+| Knows what
+
+| Rolling
+| Its own contract fields, class names, route names, Managing adapter keys.
+  Exposed via `RollingIntegrationContract` loaded from Rolling's own `component.yaml`.
+
+| Administering
+| That Rolling exists (`componentKey: rolling`).
+  Nothing about Rolling's internals.
+
+| Consumer (any of 20+ apps)
+| Calls `$registry->get('rolling')` → gets `RollingIntegrationContract`.
+  Reads only the fields it needs.
+  Does not depend on Administering's component.yaml.
+|===
+
+== What Administering's component.yaml should look like after migration
+
+[source,yaml]
+----
+# KEEP: topology — who owns what in the ecosystem
+ownership:
+  identity_owner: Accessing
+  authorization_owner: Rolling
+  administration_owner: Administering
+
+# KEEP: Administering's own credentials and storage config
+credentials: [...]
+storage: [...]
+
+# REMOVE: integrations.rolling — Rolling owns this now
+# REMOVE: integrations.accessing — Accessing will own this next
+----
+
+== Adding a new component (e.g. Billing)
+
+. Create `Billing/src/Contract/BillingIntegrationContract.php` (readonly DTO).
+. Create `Billing/src/Provider/Configuration/BillingConfigurationToolProvider.php`
+  implementing `AdministrationOwnerConfigurationToolProviderInterface`.
+  Add `integrationContract(): BillingIntegrationContract`.
+. Create `Administering/src/Contract/Billing/BillingComponentIntegrationContractProvider.php`
+  (thin adapter, ~20 lines).
+. Add two lines to `Administering/config/services.yaml`.
+. **Zero changes** to Administering core, zero changes to other components.
+
+== Migration path for Accessing
+
+. Move `integrations.accessing` fields from `Administering/component.yaml`
+  to `Accessing/src/Contract/AccessingIntegrationContract.php`.
+. Create `Accessing/src/Provider/Configuration/AccessingConfigurationToolProvider.php`.
+. Replace `AccessingComponentIntegrationContractStub` with a real adapter.
+. Delete the `integrations.accessing` block from Administering.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationExecutionPlanProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationExecutionPlanProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentExecutionPlanProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentExecutionPlan;
 use App\Administering\Value\Connected\AdministrationConnectedComponentExecutionStep;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclExecutionPlanProviderI
 final readonly class AdministrationConnectedComponentExecutionPlanProvider implements AdministrationConnectedComponentExecutionPlanProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationExecutionPlanProviderInterface $accessingExecutionPlanProvider,
+        private AccessAccountAdministrationExecutionPlanProviderInterface $accessingExecutionPlanProvider,
         private RollingAclExecutionPlanProviderInterface $rollingExecutionPlanProvider,
     ) {
     }

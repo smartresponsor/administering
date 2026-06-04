@@ -67,7 +67,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         }
 
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -134,7 +134,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceSectionTools(string $sectionKey): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $dashboard = $this->toolDashboardProvider->dashboardForSection($sectionKey);
@@ -156,7 +156,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceSectionToolDetail(string $sectionKey, string $toolShortName): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $detail = $this->toolDashboardProvider->detailForTool($sectionKey, $toolShortName);
@@ -180,7 +180,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function openServiceTool(string $toolKey, Request $request): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
@@ -237,7 +237,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceToolRuntimeControls(string $toolKey, Request $request): Response
     {
         if (!$this->getUser() instanceof AccessAccountEntity) {
-            return $this->disableCaching($this->redirectToRoute('accessing_sign_in'));
+            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
         $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);

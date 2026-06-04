@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Administering\Catalog\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
-use App\Administering\ServiceInterface\Admin\AdministrationOwnerConfigurationToolProviderInterface;
-use App\Administering\ValidatorInterface\Admin\AdministrationOwnerConfigurationToolDefinitionValidatorInterface;
-use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolDefinition;
+use App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationServiceTool;
+use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Configuring\Value\Tool\ConfigurationToolDefinition;
 
 /**
  * Merges Administering-owned legacy tools with owner-provided configuration tools.
@@ -20,10 +20,10 @@ use App\Administering\Value\Admin\AdministrationServiceTool;
  */
 final readonly class CompositeAdministrationServiceToolCatalog implements AdministrationServiceToolCatalogInterface
 {
-    /** @param iterable<AdministrationOwnerConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private FilesystemAdministrationServiceToolCatalog $internalCatalog,
-        private AdministrationOwnerConfigurationToolDefinitionValidatorInterface $ownerToolDefinitionValidator,
+        private ConfigurationToolDefinitionValidatorInterface $ownerToolDefinitionValidator,
         private iterable $ownerToolProviders = [],
     ) {
     }
@@ -66,7 +66,7 @@ final readonly class CompositeAdministrationServiceToolCatalog implements Admini
         return $this->sortBySectionAndKey($tools);
     }
 
-    private function hasMaterializationError(AdministrationOwnerConfigurationToolProviderInterface $provider, AdministrationOwnerConfigurationToolDefinition $definition): bool
+    private function hasMaterializationError(ConfigurationToolProviderInterface $provider, ConfigurationToolDefinition $definition): bool
     {
         foreach ($this->ownerToolDefinitionValidator->validate($provider, $definition) as $violation) {
             if ($violation->isError()) {
@@ -77,7 +77,7 @@ final readonly class CompositeAdministrationServiceToolCatalog implements Admini
         return false;
     }
 
-    private function fromOwnerDefinition(AdministrationOwnerConfigurationToolProviderInterface $provider, AdministrationOwnerConfigurationToolDefinition $definition): AdministrationServiceTool
+    private function fromOwnerDefinition(ConfigurationToolProviderInterface $provider, ConfigurationToolDefinition $definition): AdministrationServiceTool
     {
         return new AdministrationServiceTool(
             section: $definition->componentKey,

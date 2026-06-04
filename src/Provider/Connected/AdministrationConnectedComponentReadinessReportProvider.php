@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationReadinessReportProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationReadinessReportProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentReadinessReportProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentReadinessReport;
 use App\Rolling\ServiceInterface\Administration\RollingAclAdministrationReadinessReportProviderInterface;
@@ -15,7 +15,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclAdministrationReadines
 final readonly class AdministrationConnectedComponentReadinessReportProvider implements AdministrationConnectedComponentReadinessReportProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationReadinessReportProviderInterface $accessingReadinessProvider,
+        private AccessAccountAdministrationReadinessReportProviderInterface $accessingReadinessProvider,
         private RollingAclAdministrationReadinessReportProviderInterface $rollingReadinessProvider,
     ) {
     }

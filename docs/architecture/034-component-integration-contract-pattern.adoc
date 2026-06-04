@@ -1,0 +1,208 @@
+= Component Integration Contract: Canonical Pattern
+:toc:
+
+== Principle
+
+Administering knows WHO exists. Components know WHAT they provide.
+
+[source,text]
+----
+BEFORE                              AFTER
+──────────────────────────────────────────────────────────────
+Administering/component.yaml        Rolling/component.yaml
+  integrations:                       integrations.rolling: ...  ← Rolling owns this
+    rolling:                              (25 fields)
+      decision_contract: ...
+      managing_*: ...   (25 lines)   Administering/component.yaml
+                                       ownership:           ← topology only
+                                         authorization_owner: Rolling
+----
+
+== Files involved
+
+=== Rolling side (owner)
+
+[source,text]
+----
+Rolling/
+  config/component/component.yaml          ← ADD integrations.rolling section
+  src/Contract/
+    RollingIntegrationContract.php         ← NEW: typed DTO, Rolling owns all fields
+  src/Provider/Configuration/
+    RollingConfigurationToolProvider.php   ← NEW: self-registration + contract loader
+----
+
+=== Administering side (discovery)
+
+[source,text]
+----
+Administering/
+  config/component/component.yaml          ← REMOVE integrations.rolling block
+  src/Contract/
+    ComponentIntegrationContractInterface.php   ← NEW: registry interface
+    ComponentIntegrationContractRegistry.php    ← NEW: tagged_iterator discovery
+    Rolling/
+      RollingComponentIntegrationContractProvider.php  ← NEW: thin adapter (~10 lines)
+    Accessing/
+      AccessingComponentIntegrationContractProvider.php ← STUB: pending Accessing migration
+  config/services_additions.yaml           ← NEW: 3 service registrations
+----
+
+== Adding a new component (e.g. Billing) — step by step
+
+=== Step 1 — Billing creates its contract DTO
+
+[source,php]
+----
+// Billing/src/Contract/BillingIntegrationContract.php
+final readonly class BillingIntegrationContract
+{
+    public function __construct(
+        public string $owns,
+        public string $stripePublicKeyService,
+        public string $webhookHandlerService,
+        public string $invoiceStorageEntityManager,
+    ) {}
+
+    public static function fromYaml(array $data): self
+    {
+        return new self(
+            owns:                      $data['owns'] ?? 'billing_invoices',
+            stripePublicKeyService:    $data['stripe_public_key_service'] ?? '',
+            webhookHandlerService:     $data['webhook_handler_service'] ?? '',
+            invoiceStorageEntityManager: $data['invoice_storage_entity_manager'] ?? 'system',
+        );
+    }
+}
+----
+
+=== Step 2 — Billing creates its tool provider
+
+[source,php]
+----
+// Billing/src/Provider/Configuration/BillingConfigurationToolProvider.php
+final class BillingConfigurationToolProvider
+    implements AdministrationOwnerConfigurationToolProviderInterface
+{
+    public function __construct(private readonly string $projectDir) {}
+
+    public function componentKey(): string   { return 'Billing'; }
+    public function componentToken(): string { return 'billing'; }
+
+    public function tools(): iterable
+    {
+        yield new AdministrationOwnerConfigurationToolDefinition(
+            componentKey:    'Billing',
+            componentToken:  'billing',
+            toolSlug:        'StripeGateway',
+            serviceClass:    BillingConfigurationStripeGatewayService::class,
+            serviceShortName:'BillingConfigurationStripeGatewayService',
+            label:           'Billing Stripe Gateway',
+            formTypeClass:   BillingConfigurationStripeGatewayFormType::class,
+            formDataClass:   BillingConfigurationStripeGatewayData::class,
+            executable:      true,
+        );
+    }
+
+    public function integrationContract(): BillingIntegrationContract
+    {
+        $path   = $this->projectDir . '/config/component/component.yaml';
+        $parsed = is_file($path) ? Yaml::parseFile($path) : [];
+        $data   = $parsed['integrations']['billing'] ?? [];
+        return BillingIntegrationContract::fromYaml(is_array($data) ? $data : []);
+    }
+}
+----
+
+=== Step 3 — Administering adds a thin adapter (~10 lines)
+
+[source,php]
+----
+// Administering/src/Contract/Billing/BillingComponentIntegrationContractProvider.php
+final class BillingComponentIntegrationContractProvider
+    implements ComponentIntegrationContractInterface
+{
+    public function __construct(
+        private readonly BillingConfigurationToolProvider $billingProvider,
+    ) {}
+
+    public function componentKey(): string { return 'billing'; }
+
+    public function contract(): BillingIntegrationContract
+    {
+        return $this->billingProvider->integrationContract();
+    }
+}
+----
+
+=== Step 4 — Wire 3 lines in Administering/config/services.yaml
+
+[source,yaml]
+----
+App\Billing\Provider\Configuration\BillingConfigurationToolProvider:
+  arguments:
+    $projectDir: '%kernel.project_dir%/../Billing'
+  tags: ['configuring.configuration_tool_provider']
+
+App\Administering\Contract\Billing\BillingComponentIntegrationContractProvider:
+  tags: ['administering.component_integration_contract']
+----
+
+=== Step 5 — Any consumer reads the contract
+
+[source,php]
+----
+// In any of the 20+ apps — no dependency on Administering internals
+public function __construct(
+    private readonly ComponentIntegrationContractRegistry $contracts,
+) {}
+
+public function handle(): void
+{
+    /** @var BillingIntegrationContract $billing */
+    $billing = $this->contracts->get('billing');
+
+    $em = $billing->invoiceStorageEntityManager; // 'system'
+}
+----
+
+Administering and all other components require ZERO changes.
+
+== What stays in Administering/component.yaml
+
+[source,yaml]
+----
+# KEEP — topology: who owns what in the ecosystem
+ownership:
+  identity_owner: Accessing
+  authorization_owner: Rolling
+  administration_owner: Administering
+
+# KEEP — Administering's own infrastructure
+storage: ...
+credentials: ...
+
+# REMOVE — any integrations.* block whose owner has migrated
+----
+
+== Naming convention (enforced by convention auditor)
+
+[cols="1,2", options="header"]
+|===
+| Artifact | Pattern
+| Contract DTO | `{Component}IntegrationContract`
+| Tool provider | `{Component}ConfigurationToolProvider`
+| Tool service | `{Component}Configuration{ToolSlug}Service`
+| Tool form | `{Component}Configuration{ToolSlug}FormType`
+| Tool data | `{Component}Configuration{ToolSlug}Data`
+| Adapter | `{Component}ComponentIntegrationContractProvider`
+|===
+
+== Ownership invariants
+
+* Rolling owns `RollingIntegrationContract` — Administering never touches it.
+* Administering owns `ComponentIntegrationContractRegistry` — components never touch it.
+* The adapter (`RollingComponentIntegrationContractProvider`) is the only file that
+  references both sides — it is intentionally thin.
+* A consumer reading `$registry->get('rolling')` depends on Rolling's contract
+  DTO only — not on Administering internals.

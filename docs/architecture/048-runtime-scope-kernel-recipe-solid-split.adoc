@@ -1,0 +1,31 @@
+= Runtime Scope Kernel Recipe SOLID Split
+
+Administering owns the runtime-scope Kernel install recipe, but the Console command must stay a thin Symfony adapter.
+
+This wave moves the recipe installation action out of `AdministrationRuntimeScopeKernelRecipeCommand` and into a runtime-scope service layer.
+
+== Canon
+
+* `Command` reads CLI input and renders CLI output only.
+* `Service/RuntimeScope` performs the recipe plan/apply action.
+* `Value/RuntimeScope` carries request/result data.
+* App-side generated Kernel helper code remains self-contained and does not depend on Administering services during host boot.
+
+== Files
+
+* `src/Command/AdministrationRuntimeScopeKernelRecipeCommand.php`
+* `src/Service/RuntimeScope/AdministrationRuntimeScopeKernelRecipeService.php`
+* `src/Value/RuntimeScope/AdministrationRuntimeScopeKernelRecipeRequest.php`
+* `src/Value/RuntimeScope/AdministrationRuntimeScopeKernelRecipeResult.php`
+
+== Boundary
+
+The recipe service may generate files into a host App, including:
+
+* `src/Kernel/RuntimeComposerInventoryReader.php`
+* `src/Kernel/RuntimeCompositionLockReader.php`
+* `src/Kernel/RuntimeBundleIterator.php`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+The generated App-side code reads Composer inventory only as fingerprint/proof input. Enabled runtime bundles still come from `runtime_scope*.lock.php`.

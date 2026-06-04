@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationDiagnosticReportProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationDiagnosticReportProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentDiagnosticReportProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentDiagnosticIssue;
 use App\Administering\Value\Connected\AdministrationConnectedComponentDiagnosticReport;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclDiagnosticReportProvid
 final readonly class AdministrationConnectedComponentDiagnosticReportProvider implements AdministrationConnectedComponentDiagnosticReportProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationDiagnosticReportProviderInterface $accessingDiagnosticsProvider,
+        private AccessAccountAdministrationDiagnosticReportProviderInterface $accessingDiagnosticsProvider,
         private RollingAclDiagnosticReportProviderInterface $rollingDiagnosticsProvider,
     ) {
     }

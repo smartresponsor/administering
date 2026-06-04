@@ -1,0 +1,63 @@
+= Runtime Scope Composer Inventory Boundary
+
+Administering owns runtime-scope decisions and lock generation.
+The host App owns the Kernel boot hook and the pre-container lock readers.
+
+Composer files are part of the runtime-scope input model, but they are not the source of enabled bundles.
+
+== Canon
+
+* `composer.json` is the default/local physical inventory.
+* `composer.prod.json` is the production physical inventory.
+* `config/kernel/runtime_scope.lock.php` is the default/local runtime scope.
+* `config/kernel/runtime_scope.prod.lock.php` is the production runtime scope.
+* `APP_ENV=prod` selects `composer.prod.json` and `runtime_scope.prod.lock.php`.
+* Non-prod environments select `composer.json` and `runtime_scope.lock.php`.
+
+The Kernel reads composer inventory only as a guard/fingerprint input:
+
+* expected composer file for the current environment;
+* existence of that composer file in strict mode;
+* optional SHA-256 fingerprint match between the lock and the composer file.
+
+The Kernel must not derive enabled bundles from Composer packages.
+Enabled bundles must come from the runtime-scope lock.
+
+== Responsibility split
+
+Administering:
+
+* reads `composer.json` and `composer.prod.json` while preparing/exporting runtime-scope locks;
+* writes `sourceComposerFile`, `sourceComposerSha256`, and `sourceComposerPackageCount` into locks;
+* reports inventory status in the install recipe;
+* regenerates locks after Composer inventory changes.
+
+App Kernel:
+
+* reads the environment-selected lock;
+* reads the environment-selected Composer inventory as validation input;
+* registers only `enabledBundles` from the lock;
+* fails in strict mode when the lock was generated against a stale or wrong Composer inventory.
+
+Configuring:
+
+* does not generate runtime-scope locks;
+* does not decide enabled bundles;
+* remains a neutral configuration-contract component.
+
+Producer components:
+
+* do not export lifecycle manifests;
+* do not decide their own runtime enablement.
+
+== Production rule
+
+Any production Composer inventory change must be followed by runtime-scope lock regeneration:
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:install-kernel-recipe --apply --force
+# later: dedicated export command should regenerate runtime_scope.prod.lock.php
+----
+
+After the lock changes, clear and warm the Symfony cache.

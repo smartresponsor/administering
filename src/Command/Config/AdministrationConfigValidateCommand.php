@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command\Config;
 
-use App\Administering\Service\Config\ConfigToolRegistryService;
-use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
-use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
+use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
+use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Configuring\Value\Config\ConfigToolDescriptor;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\Form\AbstractType;
 )]
 final class AdministrationConfigValidateCommand extends Command
 {
-    public function __construct(private readonly ConfigToolRegistryService $registryService)
+    public function __construct(private readonly AdministrationConfigToolRegistryService $registryService)
     {
         parent::__construct();
     }
@@ -32,7 +32,7 @@ final class AdministrationConfigValidateCommand extends Command
         $errors = [];
 
         foreach ($descriptors as $descriptor) {
-            if (!$descriptor instanceof AdministrationConfigToolDescriptor) {
+            if (!$descriptor instanceof ConfigToolDescriptor) {
                 continue;
             }
 
@@ -40,7 +40,7 @@ final class AdministrationConfigValidateCommand extends Command
                 $errors[] = sprintf('%s/%s: invalid form class %s', $descriptor->applicationCode, $descriptor->toolCode, $descriptor->formClass);
             }
 
-            if (!class_exists($descriptor->serviceClass) || !is_subclass_of($descriptor->serviceClass, AdministrationConfigToolServiceInterface::class)) {
+            if (!class_exists($descriptor->serviceClass) || !is_subclass_of($descriptor->serviceClass, ConfigToolServiceInterface::class)) {
                 $errors[] = sprintf('%s/%s: missing service class %s', $descriptor->applicationCode, $descriptor->toolCode, $descriptor->serviceClass);
             }
 

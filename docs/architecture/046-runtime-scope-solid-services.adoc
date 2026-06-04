@@ -1,0 +1,27 @@
+= Runtime Scope SOLID service extraction
+
+Administering owns runtime scope governance, but Symfony console commands must remain thin adapters.
+
+This wave moves runtime-scope export and validation logic out of command classes and into dedicated services:
+
+* `AdministrationRuntimeScopeExportService`
+* `AdministrationRuntimeScopeValidationService`
+* `AdministrationRuntimeScopePathResolver`
+* `AdministrationRuntimeScopeComposerInventoryReader`
+* `AdministrationRuntimeScopeBundleCatalogReader`
+* `AdministrationRuntimeScopePhpLockSourceFactory` (`src/Factory/RuntimeScope`)
+
+Commands now own only CLI input/output concerns. The services own reusable runtime-scope application logic.
+
+== Canon
+
+* `composer.json` and `composer.prod.json` are physical inventory sources.
+* `runtime_scope.lock.php` and `runtime_scope.prod.lock.php` are materialized runtime decisions.
+* Kernel reads lock files; Kernel does not call Administering services.
+* Administering commands generate, validate, report, and audit the lock files.
+* Configuring does not generate runtime-scope locks.
+* Producer components do not export lifecycle manifests.
+
+== SOLID effect
+
+The command classes are no longer the unit of business logic. Export and validate actions can now be reused by UI, CI orchestration, and future SQLite-backed Administering runtime-scope flows without duplicating console code.

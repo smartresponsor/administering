@@ -1,0 +1,95 @@
+= Administration Runtime Scope Export and Validate
+
+Administering owns runtime-scope decision materialization for host applications.
+The host Kernel must not call Administering services during boot; it only reads `config/kernel/runtime_scope.lock.php` or `config/kernel/runtime_scope.prod.lock.php`.
+
+== Canon
+
+* `composer.json` is the local/default physical inventory.
+* `composer.prod.json` is the production physical inventory.
+* `config/kernel/runtime_scope.lock.php` is the local/default runtime-scope lock.
+* `config/kernel/runtime_scope.prod.lock.php` is the production runtime-scope lock.
+* Composer files are inventory and fingerprint sources only.
+* Runtime-scope lock files are the only source for enabled bundle classes.
+* Producer components do not export lifecycle manifests.
+* Configuring does not generate runtime-scope locks.
+
+== Bundle catalog
+
+Administering keeps one central catalog:
+
+[source]
+----
+Administering/config/runtime-scope/bundle_catalog.php
+----
+
+The catalog maps component keys to Composer package names and host App bundle classes.
+This is intentionally central; component packages do not own enabled/disabled manifests.
+
+== Export
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:export --env=prod --host-dir=/path/to/App
+php bin/console administering:runtime-scope:export --env=dev --host-dir=/path/to/App
+----
+
+Production export reads `composer.prod.json` and writes:
+
+[source]
+----
+config/kernel/runtime_scope.prod.lock.php
+----
+
+Non-production export reads `composer.json` and writes:
+
+[source]
+----
+config/kernel/runtime_scope.lock.php
+----
+
+The lock contains:
+
+* schema
+* scope
+* environment
+* sourceComposerFile
+* sourceComposerSha256
+* sourceComposerPackageCount
+* strict
+* generatedAt
+* generatedBy
+* enabledComponents
+* enabledBundles
+* disabledComponents
+* skippedComponents
+
+== Validate
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:validate --env=prod --host-dir=/path/to/App
+php bin/console administering:runtime-scope:validate --env=prod --host-dir=/path/to/App --max-age-seconds=86400
+php bin/console administering:runtime-scope:validate --env=prod --host-dir=/path/to/App --json
+----
+
+Validation fails when:
+
+* the expected lock is missing;
+* the expected Composer file is missing;
+* lock schema is invalid;
+* lock sourceComposerFile does not match the selected environment;
+* lock sourceComposerSha256 is stale;
+* strict enabled bundle classes are not autoloadable;
+* disabled components leak into host config/routes/services/env files;
+* generatedAt is older than the configured max age.
+
+== Environment selection
+
+The host Kernel selects lock files by `APP_ENV`:
+
+* `APP_ENV=prod` -> `config/kernel/runtime_scope.prod.lock.php`
+* every other environment -> `config/kernel/runtime_scope.lock.php`
+
+No additional profile environment variable is required for the Kernel path.
+Profiles, phases, and operator choices are Administering-side generation concerns.

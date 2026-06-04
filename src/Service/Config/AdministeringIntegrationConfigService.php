@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Form\Config\AdministeringIntegrationConfigFormType;
-use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
-use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
 use App\Administering\Value\Form\Config\AdministeringIntegrationConfigData;
+use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Configuring\Value\Config\ConfigToolDescriptor;
 use Symfony\Component\Yaml\Yaml;
 
-final readonly class AdministeringIntegrationConfigService implements AdministrationConfigToolServiceInterface
+final readonly class AdministeringIntegrationConfigService implements ConfigToolServiceInterface
 {
     public function __construct(
         private string $projectDir,
@@ -19,9 +19,9 @@ final readonly class AdministeringIntegrationConfigService implements Administra
     ) {
     }
 
-    public function descriptor(): AdministrationConfigToolDescriptor
+    public function descriptor(): ConfigToolDescriptor
     {
-        return new AdministrationConfigToolDescriptor(
+        return new ConfigToolDescriptor(
             applicationCode: 'Administering',
             toolCode: 'administering.integration',
             label: 'Administering Integration',

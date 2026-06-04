@@ -1,0 +1,102 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ index.title }}{% endblock %}
+
+{% block main %}
+    <section class="content-header">
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+            <div>
+                <h1 class="title mb-1">{{ index.title }}</h1>
+                <p class="text-muted mb-0">{{ index.description }}</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                {% for item in navigation %}
+                    <a class="btn btn-outline-primary" href="{{ path(item.route) }}">{{ item.label }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="content-body mt-4">
+        {% if index.errors is not empty %}
+            <div class="alert alert-danger">
+                <strong>Source issues</strong>
+                <ul class="mb-0 mt-2">
+                    {% for error in index.errors %}
+                        <li><code>{{ error }}</code></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="row g-3 mb-4">
+            {% for item in index.summaryItems %}
+                <div class="col-12 col-md-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="text-uppercase small text-muted fw-semibold">{{ item.label }}</div>
+                            <div class="fs-5 mb-0"><code>{{ item.value }}</code></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4">
+            {% for section in index.sections %}
+                <div class="col-12">
+                    <article class="card shadow-sm">
+                        <div class="card-header">
+                            <h2 class="h5 mb-0">{{ section.title }}</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if section.rows is empty %}
+                                <p class="text-muted mb-0">No rows.</p>
+                            {% else %}
+                                {% set first = section.rows|first %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped align-middle">
+                                        <thead>
+                                        <tr>
+                                            {% for key, value in first %}
+                                                {% if value is not iterable %}
+                                                    <th>{{ key }}</th>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for row in section.rows %}
+                                            <tr>
+                                                {% for key, value in row %}
+                                                    {% if value is not iterable %}
+                                                        <td><code>{{ value is same as(null) ? '' : value }}</code></td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                            {% for key, value in row %}
+                                                {% if value is iterable %}
+                                                    <tr>
+                                                        <td colspan="99">
+                                                            <strong>{{ key }}</strong>
+                                                            {% if value is empty %}
+                                                                <span class="text-muted">empty</span>
+                                                            {% else %}
+                                                                <pre class="small bg-light border rounded p-2 mt-2 mb-0" style="white-space: pre-wrap;">{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

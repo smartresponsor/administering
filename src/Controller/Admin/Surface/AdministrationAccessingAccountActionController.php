@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationActionCatalogInterface;
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationBridgeInterface;
-use App\Accessing\Value\Admin\AccessingAccountAdministrationActionDescriptor;
-use App\Accessing\Value\Admin\AccessingAccountAdministrationRequest;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationActionCatalogInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationBridgeInterface;
+use App\Accessing\Value\Admin\AccessAccountAdministrationActionDescriptor;
+use App\Accessing\Value\Admin\AccessAccountAdministrationRequest;
 use App\Administering\Form\Accessing\AdministrationAccessingAccountActionFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
@@ -27,8 +27,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationAccessingAccountActionController extends AbstractController
 {
     public function __construct(
-        private readonly AccessingAccountAdministrationActionCatalogInterface $actionCatalog,
-        private readonly AccessingAccountAdministrationBridgeInterface $accountAdministrationBridge,
+        private readonly AccessAccountAdministrationActionCatalogInterface $actionCatalog,
+        private readonly AccessAccountAdministrationBridgeInterface $accountAdministrationBridge,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
         private readonly AdministrationAccountActionRequestRecorderInterface $requestRecorder,
         private readonly FormFactoryInterface $formFactory,
@@ -75,7 +75,7 @@ final class AdministrationAccessingAccountActionController extends AbstractContr
 
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
-        $actionRequest = new AccessingAccountAdministrationRequest(
+        $actionRequest = new AccessAccountAdministrationRequest(
             $descriptor->key(),
             trim($data->accountReference),
             $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
@@ -97,7 +97,7 @@ final class AdministrationAccessingAccountActionController extends AbstractContr
         return $this->redirectToRoute('administration_accessing_account_actions');
     }
 
-    /** @return list<array{descriptor: AccessingAccountAdministrationActionDescriptor, form: \Symfony\Component\Form\FormView}> */
+    /** @return list<array{descriptor: AccessAccountAdministrationActionDescriptor, form: \Symfony\Component\Form\FormView}> */
     private function actionRows(?string $selectedAction = null, ?\Symfony\Component\Form\FormInterface $submittedForm = null): array
     {
         $rows = [];
@@ -128,7 +128,7 @@ final class AdministrationAccessingAccountActionController extends AbstractContr
         return $rows;
     }
 
-    private function descriptorFromRequest(Request $request): ?AccessingAccountAdministrationActionDescriptor
+    private function descriptorFromRequest(Request $request): ?AccessAccountAdministrationActionDescriptor
     {
         foreach ($this->actionCatalog->descriptors() as $descriptor) {
             if ($request->request->has($this->formNameForAction($descriptor->key()))) {

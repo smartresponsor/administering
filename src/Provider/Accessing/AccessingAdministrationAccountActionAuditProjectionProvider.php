@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Accessing;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationAuditProjectionProviderInterface;
-use App\Accessing\Value\Admin\AccessingAccountAdministrationAuditFilter;
-use App\Accessing\Value\Admin\AccessingAccountAdministrationAuditProjection;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationAuditProjectionProviderInterface;
+use App\Accessing\Value\Admin\AccessAccountAdministrationAuditFilter;
+use App\Accessing\Value\Admin\AccessAccountAdministrationAuditProjection;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountActionAuditProjectionProviderInterface;
 use App\Administering\Value\Accessing\AdministrationAccountActionAuditProjection;
 use App\Administering\Value\Accessing\AdministrationAccountActionAuditReport;
@@ -17,7 +17,7 @@ use App\Administering\Value\Accessing\AdministrationAccountActionAuditSummary;
  */
 final readonly class AccessingAdministrationAccountActionAuditProjectionProvider implements AdministrationAccountActionAuditProjectionProviderInterface
 {
-    public function __construct(private AccessingAccountAdministrationAuditProjectionProviderInterface $provider)
+    public function __construct(private AccessAccountAdministrationAuditProjectionProviderInterface $provider)
     {
     }
 
@@ -25,7 +25,7 @@ final readonly class AccessingAdministrationAccountActionAuditProjectionProvider
     public function recent(int $limit = 50): array
     {
         return array_map(
-            static fn (AccessingAccountAdministrationAuditProjection $projection): AdministrationAccountActionAuditProjection => new AdministrationAccountActionAuditProjection(
+            static fn (AccessAccountAdministrationAuditProjection $projection): AdministrationAccountActionAuditProjection => new AdministrationAccountActionAuditProjection(
                 $projection->action(),
                 $projection->accountReference(),
                 $projection->requestedBySubject(),
@@ -52,7 +52,7 @@ final readonly class AccessingAdministrationAccountActionAuditProjectionProvider
 
     public function filteredReport(?string $action = null, ?string $status = null, ?string $accountReference = null, int $limit = 100): AdministrationAccountActionAuditReport
     {
-        $filter = new AccessingAccountAdministrationAuditFilter(
+        $filter = new AccessAccountAdministrationAuditFilter(
             '' !== $action ? $action : null,
             '' !== $status ? $status : null,
             '' !== $accountReference ? $accountReference : null,
@@ -70,7 +70,7 @@ final readonly class AccessingAdministrationAccountActionAuditProjectionProvider
                 $summary->latestAt(),
             ),
             array_map(
-                static fn (AccessingAccountAdministrationAuditProjection $projection): AdministrationAccountActionAuditProjection => new AdministrationAccountActionAuditProjection(
+                static fn (AccessAccountAdministrationAuditProjection $projection): AdministrationAccountActionAuditProjection => new AdministrationAccountActionAuditProjection(
                     $projection->action(),
                     $projection->accountReference(),
                     $projection->requestedBySubject(),

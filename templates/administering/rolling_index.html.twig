@@ -1,0 +1,29 @@
+{% set ea = ea() %}
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block table_body_empty %}
+    <tr class="rolling-empty-state">
+        <td colspan="100">
+            <div class="rolling-empty-state__panel">
+                <div class="rolling-empty-state__eyebrow">Rolling</div>
+                <h2 class="rolling-empty-state__title">{{ empty_state_title|default('No records yet') }}</h2>
+                <p class="rolling-empty-state__message">
+                    {{ empty_state_message|default('This screen has no rows yet. Use the actions above to inspect the catalog or open the ACL mutation surfaces.') }}
+                </p>
+
+                {% if empty_state_links is defined and empty_state_links is not empty %}
+                    <div class="rolling-empty-state__actions">
+                        {% for link in empty_state_links %}
+                            <a href="{{ link.url }}" class="btn btn-{{ link.variant|default('secondary') }} btn-sm">
+                                {% if link.icon is defined and link.icon is not empty %}
+                                    <i class="{{ link.icon }}"></i>
+                                {% endif %}
+                                <span>{{ link.label }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+{% endblock %}

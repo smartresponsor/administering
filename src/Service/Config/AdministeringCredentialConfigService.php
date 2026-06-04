@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Form\Config\AdministeringCredentialConfigFormType;
-use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
-use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
 use App\Administering\Value\Form\Config\AdministeringCredentialConfigData;
+use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Configuring\Value\Config\ConfigToolDescriptor;
 
-final readonly class AdministeringCredentialConfigService implements AdministrationConfigToolServiceInterface
+final readonly class AdministeringCredentialConfigService implements ConfigToolServiceInterface
 {
     public function __construct(
         private ConfigApplyService $applyService,
@@ -17,9 +17,9 @@ final readonly class AdministeringCredentialConfigService implements Administrat
     ) {
     }
 
-    public function descriptor(): AdministrationConfigToolDescriptor
+    public function descriptor(): ConfigToolDescriptor
     {
-        return new AdministrationConfigToolDescriptor(
+        return new ConfigToolDescriptor(
             applicationCode: 'Administering',
             toolCode: 'administering.credentials',
             label: 'Administering Credentials',

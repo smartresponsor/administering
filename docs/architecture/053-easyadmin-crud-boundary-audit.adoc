@@ -1,0 +1,32 @@
+= EasyAdmin CRUD Boundary Audit
+
+Administering EasyAdmin CRUD screens are administrative evidence surfaces. They must stay inside the EasyAdmin/admin boundary and must not become front controllers or business-operation endpoints.
+
+== Canon
+
+* EasyAdmin CRUD controllers use native EasyAdmin CRUD templates.
+* EasyAdmin CRUD controllers do not override `crud/index`, `crud/detail`, `crud/new`, or `crud/edit` templates.
+* Administering-owned CRUD entities are SQLite/system records mapped to `administration_*` tables.
+* State-changing custom CRUD actions must be rendered as Symfony form submissions with EasyAdmin `renderAsForm()` or batch action mechanics.
+* Business operations outside native CRUD must go through dedicated services and Symfony Form types on admin surface pages.
+* Frontend usage is outside Administering controllers and must go through Cruding + Viewing/Interfacing while reusing the same business services.
+
+== Command
+
+[source,bash]
+----
+php bin/console administering:ea-crud:boundary-audit
+php bin/console administering:ea-crud:boundary-audit --json
+----
+
+The command checks:
+
+* custom EasyAdmin CRUD template overrides;
+* missing `getEntityFqcn()` declarations;
+* Administering entity table names that do not start with `administration_`;
+* custom CRUD actions that are not form-safe;
+* external entity references that cannot be verified inside the Administering slice.
+
+== Notes
+
+External entities, such as Rolling ACL records, are reported as warnings when the entity source is not present in the Administering slice. They must be verified in the owning component or moved behind source-driven runtime-scope checks when the component is disabled.

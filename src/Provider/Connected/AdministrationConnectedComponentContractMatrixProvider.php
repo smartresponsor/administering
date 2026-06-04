@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationContractMatrixProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationContractMatrixProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentContractMatrixProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentContract;
 use App\Administering\Value\Connected\AdministrationConnectedComponentContractMatrix;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclAdministrationContract
 final readonly class AdministrationConnectedComponentContractMatrixProvider implements AdministrationConnectedComponentContractMatrixProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationContractMatrixProviderInterface $accessingContractMatrixProvider,
+        private AccessAccountAdministrationContractMatrixProviderInterface $accessingContractMatrixProvider,
         private RollingAclAdministrationContractMatrixProviderInterface $rollingContractMatrixProvider,
     ) {
     }

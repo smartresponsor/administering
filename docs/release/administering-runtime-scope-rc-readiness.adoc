@@ -1,0 +1,59 @@
+= Administering Runtime Scope RC Readiness
+
+== Scope
+
+This readiness note freezes the current Administering runtime-scope canon before RC tagging.
+The runtime-scope feature is responsible for reading host runtime inputs, reporting drift, exporting materialized Kernel lock files, validating those locks, auditing out-of-scope references, and installing the host Kernel recipe.
+
+== Canonical ownership
+
+* `Administering` reads and manages runtime-scope state.
+* `Administering` generates `config/kernel/runtime_scope.lock.php` and `config/kernel/runtime_scope.prod.lock.php` in the host App.
+* `Administering` may later rewrite `composer.prod.json`, but only through an explicit operator action.
+* `App` owns `Kernel.php`, `src/Kernel/RuntimeCompositionLockReader.php`, `src/Kernel/RuntimeComposerInventoryReader.php`, and `src/Kernel/RuntimeBundleIterator.php` after recipe installation.
+* `Configuring` does not generate runtime-scope locks.
+* Producer components do not export lifecycle manifests and do not decide their own runtime enablement.
+
+== Source of truth
+
+Administering must start from host sources only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+Administering must not keep a second component enablement catalog. Composer files are physical inventory. Runtime-scope lock files are materialized Kernel decisions.
+
+== Commands in scope
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:install-kernel-recipe --host-dir=/path/to/App
+php bin/console administering:runtime-scope:install-kernel-recipe --host-dir=/path/to/App --apply
+php bin/console administering:runtime-scope:export --env=dev --host-dir=/path/to/App
+php bin/console administering:runtime-scope:export --env=prod --host-dir=/path/to/App
+php bin/console administering:runtime-scope:report --env=prod --host-dir=/path/to/App
+php bin/console administering:runtime-scope:validate --env=prod --host-dir=/path/to/App --max-age-seconds=86400
+php bin/console administering:runtime-scope:reference-audit --env=prod --host-dir=/path/to/App
+----
+
+== RC hard gates
+
+A runtime-scope RC candidate must pass these checks:
+
+* PHP syntax succeeds for runtime-scope commands, services, scanners, factories, and value objects.
+* `services.yaml` does not reference deleted optional-integration classes.
+* No active source file references the removed optional-integration catalog.
+* No active source file uses old `SMART_` runtime-scope environment keys.
+* No active source file uses `ADMINISTRATION_RUNTIME_COMPONENT_PROFILE` as the active runtime selector.
+* `Administering*` configuration class names are replaced by `Administration*` names.
+* Runtime-scope commands are thin adapters where export, validate, and recipe actions delegate to services.
+* App-side Kernel reader remains self-contained and does not depend on Administering services during boot.
+
+== RC decision
+
+Status: pre-RC ready after the smoke script passes on the current repository slice.
+Next allowed step: tag or package `Administering Runtime Scope RC1` after applying the touched patch and running the smoke script in the real working tree.

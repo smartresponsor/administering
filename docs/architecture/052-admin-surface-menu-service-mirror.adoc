@@ -1,0 +1,64 @@
+= Admin Surface Menu/Service Mirror Canon
+
+Administering custom admin pages are EasyAdmin/admin-surface pages only. They must not become frontend controllers. Frontend access belongs to Cruding + Viewing/Interfacing and may reuse the same application services later.
+
+== Canon
+
+Every URI-based admin index action must satisfy the mirror:
+
+[source,text]
+----
+/admin/.../index
+  -> thin Admin/Surface controller action
+  -> one business index service
+  -> mirrored EasyAdmin left-menu item
+----
+
+The service name does not need an `EntryPoint` suffix. The entrypoint is a role, not a mandatory class-name suffix.
+
+Current Runtime Scope mirrors:
+
+[source,text]
+----
+/admin/runtime/scope/composer/index
+  -> administration_composer_index
+  -> AdministrationComposerIndexService
+  -> EasyAdmin menu: Runtime Scope / Composer inventory
+
+/admin/runtime/scope/app/index
+  -> administration_runtime_scope_index
+  -> AdministrationAppRuntimeScopeIndexService
+  -> EasyAdmin menu: Runtime Scope / APP_RUNTIME_SCOPE
+
+/admin/runtime/scope/lock/index
+  -> administration_runtime_lock_index
+  -> AdministrationRuntimeLockIndexService
+  -> EasyAdmin menu: Runtime Scope / Runtime locks
+----
+
+== Shared navigation metadata
+
+The left EasyAdmin menu and the runtime source index template navigation are both fed by:
+
+[source,text]
+----
+AdministrationRuntimeSourceNavigationProvider
+----
+
+This prevents drift between the EasyAdmin left menu and the page-level navigation.
+
+== Guard
+
+Run:
+
+[source,bash]
+----
+php bin/console administering:admin-surface:mirror-audit
+php bin/console administering:admin-surface:mirror-audit --json
+----
+
+The audit fails if an admin-surface `/admin/.../index` route:
+
+* is not under `/admin/`;
+* is not backed by an `*IndexService->index(...)` call;
+* is not mirrored by the EasyAdmin left menu.

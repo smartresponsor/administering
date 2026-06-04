@@ -1,0 +1,67 @@
+= Runtime Scope Admin Index Entrypoints
+
+Administering exposes runtime-scope source indexes through ordinary Symfony routes and links them from the EasyAdmin left menu.
+
+The business entrypoint is the service layer, not EasyAdmin and not the controller.
+
+== Canon
+
+* `composer.json` and `composer.prod.json` are physical inventory sources.
+* `APP_RUNTIME_SCOPE` is operator input / desired runtime scope.
+* `config/kernel/runtime_scope.lock.php` and `config/kernel/runtime_scope.prod.lock.php` are materialized Kernel decisions.
+* Administering starts by reading those host sources. It does not carry a hardcoded enabled/disabled component policy.
+* EasyAdmin menu items and ordinary `/administration/.../index` routes call the same `Administration*IndexService` classes.
+
+== Routes
+
+[source,text]
+----
+/admin/runtime/scope/composer/index
+/admin/runtime/scope/app/index
+/admin/runtime/scope/lock/index
+----
+
+These routes are intentionally outside the EasyAdmin CRUD controller model so a future frontend can call the same business entrypoints without depending on EasyAdmin.
+
+== Services
+
+[source,text]
+----
+AdministrationComposerIndexService
+AdministrationAppRuntimeScopeIndexService
+AdministrationRuntimeLockIndexService
+----
+
+The controller renders the returned `AdministrationRuntimeSourceIndex` projection. It does not parse composer files, environment values, or lock files directly.
+
+== EasyAdmin
+
+The left menu contains a `Runtime Scope` section with links to the ordinary routes. This preserves one business path:
+
+[source,text]
+----
+EasyAdmin menu
+  -> /admin/runtime/scope/composer/index
+     -> AdministrationComposerIndexService
+
+Future frontend
+  -> Cruding + Viewing/Interfacing surface
+  -> the same AdministrationComposerIndexService through the component service layer
+     -> AdministrationComposerIndexService
+----
+
+
+== Frontend boundary
+
+These routes are Administering EasyAdmin/admin-surface routes only.
+They are not the public frontend contract.
+
+Frontend administration must be exposed through the existing Cruding + Viewing/Interfacing stack and must call the same Administration*IndexService services instead of adding parallel controller business logic.
+
+The canon is:
+
+[source,text]
+----
+EasyAdmin admin surface -> Admin/Surface controller -> Administration*IndexService
+Frontend surface         -> Cruding + Viewing/Interfacing -> same Administration*IndexService
+----

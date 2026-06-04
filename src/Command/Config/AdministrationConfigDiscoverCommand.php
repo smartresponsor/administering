@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command\Config;
 
-use App\Administering\Service\Config\ConfigToolRegistryService;
+use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationConfigDiscoverCommand extends Command
 {
-    public function __construct(private readonly ConfigToolRegistryService $registryService)
+    public function __construct(private readonly AdministrationConfigToolRegistryService $registryService)
     {
         parent::__construct();
     }

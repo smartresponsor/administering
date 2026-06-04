@@ -1,3 +1,0 @@
-src/Service/Operation/AdministrationOperationRunFactory.php
-src/Service/Operation/AdministrationOperationSubmitter.php
-src/Service/Operation/AdministrationServiceSectionAnchorSyncOperationService.php

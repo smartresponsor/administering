@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Accessing;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationProjectionProviderInterface;
-use App\Accessing\Value\Admin\AccessingAccountAdministrationProjection;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationProjectionProviderInterface;
+use App\Accessing\Value\Admin\AccessAccountAdministrationProjection;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface;
 use App\Administering\Value\Accessing\AdministrationAccountProjection;
 
@@ -14,7 +14,7 @@ use App\Administering\Value\Accessing\AdministrationAccountProjection;
  */
 final class AccessingAdministrationAccountProjectionProvider implements AdministrationAccountProjectionProviderInterface
 {
-    public function __construct(private readonly AccessingAccountAdministrationProjectionProviderInterface $accessingProjectionProvider)
+    public function __construct(private readonly AccessAccountAdministrationProjectionProviderInterface $accessingProjectionProvider)
     {
     }
 
@@ -31,10 +31,10 @@ final class AccessingAdministrationAccountProjectionProvider implements Administ
     {
         $projection = $this->accessingProjectionProvider->findBySubjectId($subjectId);
 
-        return $projection instanceof AccessingAccountAdministrationProjection ? $this->map($projection) : null;
+        return $projection instanceof AccessAccountAdministrationProjection ? $this->map($projection) : null;
     }
 
-    private function map(AccessingAccountAdministrationProjection $projection): AdministrationAccountProjection
+    private function map(AccessAccountAdministrationProjection $projection): AdministrationAccountProjection
     {
         return new AdministrationAccountProjection(
             $projection->subjectId(),

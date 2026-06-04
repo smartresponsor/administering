@@ -1,0 +1,25 @@
+= Administration Service Layout and Suffix Canon
+
+Status: active.
+
+Administering service classes must use the `Administration` stem for owner-side services. Short `Config*` service names are not allowed inside `App\Administering\Service\Config` because they create mixed naming alongside the rest of the component.
+
+Canonical examples:
+
+* `AdministrationConfigApplicationDiscoveryService`
+* `AdministrationConfigApplyService`
+* `AdministrationConfigToolRegistryService`
+* `AdministrationRuntimeScopeExportService`
+* `AdministrationRuntimeScopePathResolver`
+* `AdministrationRuntimeScopeComposerInventoryReader`
+
+Suffix placement canon:
+
+* `*Service` lives in `src/Service/<Area>/`.
+* `*Reader` may live in `src/Service/<Area>/` when it is a narrow application service with no separate infrastructure dependency.
+* `*Resolver` may live in `src/Service/<Area>/` when it resolves host/application state.
+* `*Factory` lives in `src/Factory/<Area>/`.
+* `*Scanner` lives in `src/Scanner/<Area>/`.
+* `*Request`, `*Result`, `*Report`, and small DTOs live in `src/Value/<Area>/`.
+
+Empty component-placeholder folders under `src/Service` or `src/ServiceInterface` are not canonical. A folder exists only when it contains real code owned by Administering. Administering must not reserve empty folders for producer components.

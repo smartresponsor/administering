@@ -1,0 +1,40 @@
+= Runtime Scope Report
+
+Administering owns runtime-scope reporting for host applications.
+
+The report command validates the materialized Kernel-readable lock files without making the Kernel depend on Administering services during boot.
+
+== Command
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:report --env=prod
+php bin/console administering:runtime-scope:report --env=dev
+php bin/console administering:runtime-scope:report --env=prod --json
+----
+
+== Canon
+
+* `composer.json` and `composer.prod.json` are physical inventory sources.
+* `config/kernel/runtime_scope.lock.php` and `config/kernel/runtime_scope.prod.lock.php` are the runtime enablement sources.
+* Composer files do not decide enabled bundles.
+* The lock stores the composer file name, sha256 fingerprint, and package count used when the lock was generated.
+* The Kernel reads the lock directly.
+* Administering reports and regenerates the lock.
+
+== Validations
+
+The report validates:
+
+* selected lock path based on environment;
+* expected composer inventory file;
+* composer fingerprint when present in the lock;
+* enabled bundle class autoloadability;
+* disabled-component config leaks in host `config/` and `.env*` files;
+* optional `generatedAt` age.
+
+== Ownership
+
+Administering owns report/export/audit commands.
+The App owns `src/Kernel/*` reader files and `config/kernel/runtime_scope*.lock.php`.
+Configuring does not generate runtime-scope locks.

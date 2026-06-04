@@ -5,6 +5,13 @@ declare(strict_types=1);
 namespace App\Administering\Builder\Admin;
 
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
+use App\Administering\Controller\Admin\Crud\RollingAclRuleCrudController;
+use App\Administering\Controller\Admin\Crud\RollingPermissionCrudController;
+use App\Administering\Controller\Admin\Crud\RollingRoleCrudController;
+use App\Administering\Controller\Admin\Crud\RollingRoleHierarchyCrudController;
+use App\Administering\Controller\Admin\Crud\RollingRolePermissionCrudController;
+use App\Administering\Controller\Admin\Crud\RollingSubjectRoleAssignmentCrudController;
+use App\Administering\Provider\Admin\AdministrationRuntimeSourceNavigationProvider;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
@@ -21,6 +28,7 @@ final readonly class AdministrationMainMenuBuilder implements AdministrationMain
 {
     public function __construct(
         private AdministrationServiceToolMenuSectionProviderInterface $menuSectionProvider,
+        private AdministrationRuntimeSourceNavigationProvider $runtimeSourceNavigationProvider,
     ) {
     }
 
@@ -31,6 +39,26 @@ final readonly class AdministrationMainMenuBuilder implements AdministrationMain
 
         yield MenuItem::linkToUrl('Configuration Center', 'fa fa-cogs', '/admin/config')
             ->setPermission('administration.config.view');
+
+        yield MenuItem::subMenu('Runtime Scope', 'fa fa-layer-group')
+            ->setPermission('administration.dashboard.view')
+            ->setSubItems(array_map(
+                static fn ($item): MenuItem => MenuItem::linkToRoute($item->label, $item->icon, $item->routeName)
+                    ->setPermission($item->permission),
+                $this->runtimeSourceNavigationProvider->items(),
+            ));
+
+        yield MenuItem::subMenu('Rolling ACL', 'fa fa-shield-alt')
+            ->setPermission('administration.rolling.subject_access_report.view')
+            ->setSubItems([
+                MenuItem::linkTo(RollingRoleCrudController::class, 'Roles', 'fa fa-users-cog'),
+                MenuItem::linkTo(RollingRoleHierarchyCrudController::class, 'Role hierarchy', 'fa fa-sitemap'),
+                MenuItem::linkTo(RollingRolePermissionCrudController::class, 'Role permissions', 'fa fa-key'),
+                MenuItem::linkTo(RollingSubjectRoleAssignmentCrudController::class, 'Subject assignments', 'fa fa-user-lock'),
+                MenuItem::linkTo(RollingAclRuleCrudController::class, 'ACL rules', 'fa fa-balance-scale'),
+                MenuItem::linkTo(RollingPermissionCrudController::class, 'Permission catalog', 'fa fa-list-check')
+                    ->setPermission('administration.rolling.permission_catalog.view'),
+            ]);
 
         foreach ($this->menuSectionProvider->menuSections() as $section) {
             $sectionUrl = '/admin/administration-service-tool-record?'.http_build_query([

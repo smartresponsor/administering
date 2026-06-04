@@ -1,5 +1,0 @@
-src/Service/Rolling/BootstrapAdministrationPermissionCatalogProvider.php
-src/Service/Rolling/DoctrineAdministrationAclMutationApplyReportProvider.php
-src/Service/Rolling/DoctrineAdministrationAclMutationReviewRecorder.php
-src/Service/Rolling/RollingAclManifestAdministrationPermissionCatalogProvider.php
-src/Service/Rolling/RollingAdministrationAclMutationExecutionReportProvider.php

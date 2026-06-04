@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationRemediationPlanProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationRemediationPlanProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentRemediationPlanProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentRemediationItem;
 use App\Administering\Value\Connected\AdministrationConnectedComponentRemediationPlan;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclRemediationPlanProvide
 final readonly class AdministrationConnectedComponentRemediationPlanProvider implements AdministrationConnectedComponentRemediationPlanProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationRemediationPlanProviderInterface $accessingProvider,
+        private AccessAccountAdministrationRemediationPlanProviderInterface $accessingProvider,
         private RollingAclRemediationPlanProviderInterface $rollingProvider,
     ) {
     }

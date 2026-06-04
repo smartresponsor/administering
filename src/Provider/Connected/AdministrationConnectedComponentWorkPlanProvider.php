@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationWorkPlanProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationWorkPlanProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentWorkPlanProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentWorkItem;
 use App\Administering\Value\Connected\AdministrationConnectedComponentWorkPlan;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclWorkPlanProviderInterf
 final readonly class AdministrationConnectedComponentWorkPlanProvider implements AdministrationConnectedComponentWorkPlanProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationWorkPlanProviderInterface $accessingWorkPlanProvider,
+        private AccessAccountAdministrationWorkPlanProviderInterface $accessingWorkPlanProvider,
         private RollingAclWorkPlanProviderInterface $rollingWorkPlanProvider,
     ) {
     }

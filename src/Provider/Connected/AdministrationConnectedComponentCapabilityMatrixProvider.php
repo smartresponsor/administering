@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationCapabilityMatrixProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationCapabilityMatrixProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentCapabilityMatrixProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentCapability;
 use App\Administering\Value\Connected\AdministrationConnectedComponentCapabilityMatrix;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclCapabilityMatrixProvid
 final readonly class AdministrationConnectedComponentCapabilityMatrixProvider implements AdministrationConnectedComponentCapabilityMatrixProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationCapabilityMatrixProviderInterface $accessingCapabilityMatrixProvider,
+        private AccessAccountAdministrationCapabilityMatrixProviderInterface $accessingCapabilityMatrixProvider,
         private RollingAclCapabilityMatrixProviderInterface $rollingCapabilityMatrixProvider,
     ) {
     }

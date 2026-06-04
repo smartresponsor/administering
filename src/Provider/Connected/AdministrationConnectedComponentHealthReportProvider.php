@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessingAccountAdministrationHealthReportProviderInterface;
+use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationHealthReportProviderInterface;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentHealthReportProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentHealthCheck;
 use App\Administering\Value\Connected\AdministrationConnectedComponentHealthReport;
@@ -16,7 +16,7 @@ use App\Rolling\ServiceInterface\Administration\RollingAclHealthReportProviderIn
 final readonly class AdministrationConnectedComponentHealthReportProvider implements AdministrationConnectedComponentHealthReportProviderInterface
 {
     public function __construct(
-        private AccessingAccountAdministrationHealthReportProviderInterface $accessingHealthProvider,
+        private AccessAccountAdministrationHealthReportProviderInterface $accessingHealthProvider,
         private RollingAclHealthReportProviderInterface $rollingHealthProvider,
     ) {
     }

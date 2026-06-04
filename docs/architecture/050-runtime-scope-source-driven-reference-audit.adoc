@@ -1,0 +1,40 @@
+= Runtime Scope Source-Driven Reference Audit
+
+Administering must not carry a second component enablement catalog.
+Runtime-scope state is read from the host application sources only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json` / `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php` / `config/kernel/runtime_scope.prod.lock.php`
+
+Administering starts by reading these sources. It does not know in advance which component is required, optional, enabled, disabled, installed, or missing.
+
+== Responsibilities
+
+Administering may:
+
+* read composer inventory;
+* read `APP_RUNTIME_SCOPE` as operator input;
+* read the materialized lock selected by environment;
+* report drift between the sources;
+* validate whether disabled or out-of-scope components leak into host code/config;
+* export/update runtime-scope lock files;
+* explicitly rewrite `composer.prod.json` in a future command.
+
+Administering must not:
+
+* hardcode `Accessing = required` or `Managing = optional`;
+* keep a second dependency catalog for component enablement;
+* decide runtime-scope from internal component policy;
+* make Kernel depend on Administering services during boot.
+
+== Command
+
+[source,bash]
+----
+php bin/console administering:runtime-scope:reference-audit --env=prod --host-dir=/path/to/App
+php bin/console administering:runtime-scope:reference-audit --env=dev --host-dir=/path/to/App --json
+----
+
+The command builds state from the host sources and scans `src/`, `config/`, `templates/`, `migrations/`, and `.env*` for references to components outside the active runtime scope.

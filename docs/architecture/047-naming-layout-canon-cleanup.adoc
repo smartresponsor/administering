@@ -1,0 +1,31 @@
+= Runtime Scope Naming and Layout Canon Cleanup
+
+This cleanup keeps the runtime-scope responsibility unchanged and only normalizes naming and layout.
+
+== Canon
+
+* Administering-owned classes use the `Administration*` business stem.
+* `Administering*` remains reserved for bundle/package infrastructure names such as `AdministeringBundle` and `AdministeringExtension`.
+* Symfony command classes stay under `src/Command` and must remain thin adapters.
+* Runtime-scope services stay under `src/Service/RuntimeScope`.
+* Runtime-scope factories stay under `src/Factory/RuntimeScope`.
+* Runtime-scope scanners stay under `src/Scanner/RuntimeScope`.
+* Runtime-scope request/result values stay under `src/Value/RuntimeScope`.
+* Empty future-component folders are not allowed inside Administering.
+
+== Applied changes
+
+The Administering configuration tool classes were renamed to the `Administration*` stem:
+
+* `AdministrationCredentialConfigService`
+* `AdministrationIntegrationConfigService`
+* `AdministrationCredentialConfigFormType`
+* `AdministrationIntegrationConfigFormType`
+* `AdministrationCredentialConfigData`
+* `AdministrationIntegrationConfigData`
+
+The PHP lock source factory was moved from `src/Service/RuntimeScope` to `src/Factory/RuntimeScope`:
+
+* `AdministrationRuntimeScopePhpLockSourceFactory`
+
+Empty drift folders were removed. Administering must not reserve empty folders for other ecosystem components.

@@ -9,10 +9,10 @@ services:
   _instanceof:
     App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface:
       tags: ['administering.service_tool_handler']
-    App\Administering\ServiceInterface\Admin\AdministrationOwnerConfigurationToolProviderInterface:
-      tags: ['administering.owner_configuration_tool_provider']
-    App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface:
-      tags: ['administering.config_tool']
+    App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface:
+      tags: ['configuring.configuration_tool_provider']
+    App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface:
+      tags: ['configuring.config_tool']
 
   App\Administering\:
     resource: '../src/'
@@ -38,30 +38,30 @@ services:
 
   App\Administering\Catalog\Admin\CompositeAdministrationServiceToolCatalog:
     arguments:
-      $ownerToolDefinitionValidator: '@App\Administering\ValidatorInterface\Admin\AdministrationOwnerConfigurationToolDefinitionValidatorInterface'
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
-  App\Administering\Service\Config\ConfigApplicationDiscoveryService:
+      $ownerToolDefinitionValidator: '@App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface'
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
+  App\Administering\Service\Config\AdministrationConfigApplicationDiscoveryService:
     arguments:
       $projectDir: '%kernel.project_dir%'
       $connectedComponents: '%app.connected_components%'
-  App\Administering\Service\Config\ConfigToolServiceLocator:
+  App\Administering\Service\Config\AdministrationConfigToolServiceLocator:
     arguments:
-      $toolServices: !tagged_iterator administering.config_tool
-  App\Administering\Service\Config\ConfigFileWriterService:
+      $toolServices: !tagged_iterator configuring.config_tool
+  App\Administering\Service\Config\AdministrationConfigFileWriterService:
     arguments:
       $projectDir: '%kernel.project_dir%'
   App\Administering\Command\AdministrationOwnerConfigurationToolDiscoveryCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Command\AdministrationOwnerConfigurationToolValidateCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Command\AdministrationOwnerConfigurationToolMaterializationPreviewCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Command\AdministrationOwnerConfigurationToolTransitionStatusCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Command\AdministrationOwnerConfigurationToolTransitionDecisionCommand:
     arguments:
       $projectDir: '%kernel.project_dir%'
@@ -86,10 +86,10 @@ services:
       $projectDir: '%kernel.project_dir%'
   App\Administering\Command\AdministrationOwnerConfigurationToolExternalPackageSpecCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Command\AdministrationOwnerConfigurationToolExternalPackageManifestCommand:
     arguments:
-      $ownerToolProviders: !tagged_iterator administering.owner_configuration_tool_provider
+      $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\ProviderInterface\Admin\AdministrationServiceSectionToolDashboardProviderInterface: '@App\Administering\Provider\Admin\AdministrationServiceSectionToolDashboardProvider'
   App\Administering\ProviderInterface\Admin\AdministrationServiceToolIndexReadinessProviderInterface: '@App\Administering\Provider\Admin\DoctrineAdministrationServiceToolIndexReadinessProvider'
   App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface: '@App\Administering\Provider\Admin\DoctrineAdministrationServiceToolMenuSectionProvider'
@@ -99,7 +99,7 @@ services:
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface: '@App\Administering\Auditor\Admin\AdministrationServiceToolConventionAuditor'
   App\Administering\PlannerInterface\Admin\AdministrationServiceToolRelocationPlannerInterface: '@App\Administering\Planner\Admin\AdministrationServiceToolRelocationPlanner'
   App\Administering\ValidatorInterface\Admin\AdministrationServiceToolRelocationPlanValidatorInterface: '@App\Administering\Validator\Admin\AdministrationServiceToolRelocationPlanValidator'
-  App\Administering\ValidatorInterface\Admin\AdministrationOwnerConfigurationToolDefinitionValidatorInterface: '@App\Administering\Validator\Admin\AdministrationOwnerConfigurationToolDefinitionValidator'
+  App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface: '@App\Administering\Validator\Admin\ConfigurationToolDefinitionValidator'
   App\Administering\ServiceInterface\Symfony\AdministrationSymfonyRouteCatalogProviderInterface: '@App\Administering\Provider\Symfony\AdministrationSymfonyRouteCatalogProvider'
   App\Administering\ServiceInterface\Environment\AdministrationEnvironmentRuntimeStatusProviderInterface: '@App\Administering\Provider\Environment\AdministrationEnvironmentRuntimeStatusProvider'
 
@@ -136,7 +136,7 @@ services:
   App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService'
   App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationApplyService'
   App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface: '@App\Administering\Provider\Accessing\AccessingAdministrationAccountProjectionProvider'
-  App\Administering\Service\Config\AdministeringIntegrationConfigService:
+  App\Administering\Service\Config\AdministrationIntegrationConfigService:
     arguments:
       $projectDir: '%kernel.project_dir%'
   App\Administering\Executor\Admin\AdministrationServiceToolExecutor:
@@ -184,3 +184,45 @@ services:
   App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentHealthReportProviderInterface: '@App\Administering\Provider\Connected\AdministrationConnectedComponentHealthReportProvider'
 
   App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentDiagnosticReportProviderInterface: '@App\Administering\Provider\Connected\AdministrationConnectedComponentDiagnosticReportProvider'
+
+
+
+  App\Administering\Service\RuntimeScope\AdministrationComposerIndexService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Service\RuntimeScope\AdministrationRuntimeLockIndexService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Service\RuntimeScope\AdministrationRuntimeScopePathResolver:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationRuntimeScopeKernelRecipeCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationRuntimeScopeReportCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationRuntimeScopeExportCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationRuntimeScopeValidateCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationRuntimeScopeReferenceAuditCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationAdminSurfaceMirrorAuditCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Command\AdministrationEasyAdminCrudBoundaryAuditCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
