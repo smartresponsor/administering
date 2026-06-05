@@ -437,7 +437,7 @@ The stale non-canonical path is removed after overlay by the touched-archive del
 
 [source,text]
 ----
-src/Service/Accessing/AccessingAdministrationAccountRecordSyncService.php
+src/Service/Accessing/AdministrationAccessingAccountRecordSyncService.php
 ----
 
 This keeps `src/Service/Accessing` aligned with the `Administration{Direction}{ToolSlug}Service` parser while preserving the existing section anchor synchronization responsibility.
@@ -726,7 +726,7 @@ App\Administering\Value\Admin\AdministrationOwnerConfigurationToolDefinition
 
 Administering converts these owner definitions into the same `AdministrationServiceToolRecord` SQLite projection used by EasyAdmin. The external owner tool is therefore visible in the same stock EasyAdmin CRUD index, but the owner repository remains responsible for the real tool service, form type, data class, and handler.
 
-During the transition, `CompositeAdministrationServiceToolCatalog` merges:
+During the transition, `AdministrationCompositeServiceToolCatalog` merges:
 
 * internal Administering filesystem tools, as the legacy/internal source;
 * owner-provided configuration tools, discovered through tagged owner providers.
@@ -802,7 +802,7 @@ Validation is intentionally separate from `refresh-index`. Discovery answers "wh
 
 == Owner-side materialization guard
 
-Owner-side discovery and validation are now connected to materialization through `CompositeAdministrationServiceToolCatalog`.
+Owner-side discovery and validation are now connected to materialization through `AdministrationCompositeServiceToolCatalog`.
 
 The composite catalog continues to merge two sources:
 

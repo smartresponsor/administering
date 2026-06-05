@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\Reader\RuntimeScope\AdministrationRuntimeScopeStateReader;
 use App\Administering\Scanner\RuntimeScope\AdministrationRuntimeScopeReferenceScanner;
-use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeStateReader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

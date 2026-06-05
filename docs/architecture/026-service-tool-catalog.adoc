@@ -4,7 +4,7 @@ The Administering left menu is intentionally limited to top-level service sectio
 Those sections are represented by `src/Service/<Section>` directories.
 
 Each concrete PHP service file directly under a service-section directory represents one tool in that section. Empty service-section directories remain valid sections with an empty tool list.
-The tool catalog is built by `AdministrationServiceToolCatalogInterface` and implemented by `FilesystemAdministrationServiceToolCatalog`.
+The tool catalog is built by `AdministrationServiceToolCatalogInterface` and implemented by `AdministrationFilesystemServiceToolCatalog`.
 
 This keeps three things aligned:
 

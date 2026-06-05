@@ -1,0 +1,13 @@
+= Component Integration Contract Stem Fix
+
+Administering component integration contracts use the `Administration*` owner stem.
+
+Canonical names:
+
+* `AdministrationComponentIntegrationContractInterface`
+* `AdministrationComponentIntegrationContractRegistry`
+* `AdministrationAccessingComponentIntegrationContractProvider`
+* `AdministrationAccessingComponentIntegrationContractStub`
+* `AdministrationRollingComponentIntegrationContractProvider`
+
+Old `ComponentIntegrationContract*`, `AccessingComponentIntegrationContract*`, and `RollingComponentIntegrationContract*` names are deleted.

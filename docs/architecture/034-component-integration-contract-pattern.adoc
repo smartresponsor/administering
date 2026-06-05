@@ -39,12 +39,12 @@ Rolling/
 Administering/
   config/component/component.yaml          ← REMOVE integrations.rolling block
   src/Contract/
-    ComponentIntegrationContractInterface.php   ← NEW: registry interface
-    ComponentIntegrationContractRegistry.php    ← NEW: tagged_iterator discovery
+    AdministrationComponentIntegrationContractInterface.php   ← NEW: registry interface
+    AdministrationComponentIntegrationContractRegistry.php    ← NEW: tagged_iterator discovery
     Rolling/
-      RollingComponentIntegrationContractProvider.php  ← NEW: thin adapter (~10 lines)
+      AdministrationRollingComponentIntegrationContractProvider.php  ← NEW: thin adapter (~10 lines)
     Accessing/
-      AccessingComponentIntegrationContractProvider.php ← STUB: pending Accessing migration
+      AdministrationAccessingComponentIntegrationContractProvider.php ← STUB: pending Accessing migration
   config/services_additions.yaml           ← NEW: 3 service registrations
 ----
 
@@ -120,7 +120,7 @@ final class BillingConfigurationToolProvider
 ----
 // Administering/src/Contract/Billing/BillingComponentIntegrationContractProvider.php
 final class BillingComponentIntegrationContractProvider
-    implements ComponentIntegrationContractInterface
+    implements AdministrationComponentIntegrationContractInterface
 {
     public function __construct(
         private readonly BillingConfigurationToolProvider $billingProvider,
@@ -154,7 +154,7 @@ App\Administering\Contract\Billing\BillingComponentIntegrationContractProvider:
 ----
 // In any of the 20+ apps — no dependency on Administering internals
 public function __construct(
-    private readonly ComponentIntegrationContractRegistry $contracts,
+    private readonly AdministrationComponentIntegrationContractRegistry $contracts,
 ) {}
 
 public function handle(): void
@@ -201,8 +201,8 @@ credentials: ...
 == Ownership invariants
 
 * Rolling owns `RollingIntegrationContract` — Administering never touches it.
-* Administering owns `ComponentIntegrationContractRegistry` — components never touch it.
-* The adapter (`RollingComponentIntegrationContractProvider`) is the only file that
+* Administering owns `AdministrationComponentIntegrationContractRegistry` — components never touch it.
+* The adapter (`AdministrationRollingComponentIntegrationContractProvider`) is the only file that
   references both sides — it is intentionally thin.
 * A consumer reading `$registry->get('rolling')` depends on Rolling's contract
   DTO only — not on Administering internals.

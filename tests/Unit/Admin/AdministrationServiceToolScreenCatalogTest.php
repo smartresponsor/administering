@@ -24,6 +24,6 @@ final class AdministrationServiceToolScreenCatalogTest extends TestCase
     {
         $catalog = new AdministrationServiceToolScreenCatalog();
 
-        self::assertNull($catalog->screenForTool('Audit', 'DoctrineAdministrationAuditRecorder'));
+        self::assertNull($catalog->screenForTool('Audit', 'AdministrationDoctrineAuditRecorder'));
     }
 }

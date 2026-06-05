@@ -30,12 +30,12 @@ Administering/component.yaml        Rolling/src/Contract/
       decision_contract: ...          RollingConfigurationToolProvider.php
       managing_*: ...
                                     Administering/src/Contract/
-                                      ComponentIntegrationContractInterface.php
-                                      ComponentIntegrationContractRegistry.php
+                                      AdministrationComponentIntegrationContractInterface.php
+                                      AdministrationComponentIntegrationContractRegistry.php
                                       Rolling/
-                                        RollingComponentIntegrationContractProvider.php
+                                        AdministrationRollingComponentIntegrationContractProvider.php
                                       Accessing/
-                                        AccessingComponentIntegrationContractStub.php
+                                        AdministrationAccessingComponentIntegrationContractStub.php
 ----
 
 == Ownership rule
@@ -93,5 +93,5 @@ storage: [...]
 . Move `integrations.accessing` fields from `Administering/component.yaml`
   to `Accessing/src/Contract/AccessingIntegrationContract.php`.
 . Create `Accessing/src/Provider/Configuration/AccessingConfigurationToolProvider.php`.
-. Replace `AccessingComponentIntegrationContractStub` with a real adapter.
+. Replace `AdministrationAccessingComponentIntegrationContractStub` with a real adapter.
 . Delete the `integrations.accessing` block from Administering.

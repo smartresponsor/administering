@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Entity\Config\AdministrationConfigApplication;
+use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
 use App\Configuring\Value\Config\ConfigToolDescriptor;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Types;

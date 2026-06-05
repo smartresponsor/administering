@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface;
+use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
 use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
@@ -25,7 +25,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
 {
     /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
-        private readonly ConfigurationToolDefinitionValidatorInterface $validator,
+        private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
     ) {
         parent::__construct();

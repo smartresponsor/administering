@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Security;
 
-use App\Administering\Checker\Security\RollingAdministrationPermissionChecker;
-use App\Administering\Provider\Security\BootstrapAdministrationExternalPermissionDecisionProvider;
+use App\Administering\Checker\Security\AdministrationRollingPermissionChecker;
+use App\Administering\Provider\Security\AdministrationBootstrapExternalPermissionDecisionProvider;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\Value\AdministrationCurrentUserContext;
 use PHPUnit\Framework\TestCase;
 
-final class RollingAdministrationPermissionCheckerTest extends TestCase
+final class AdministrationRollingPermissionCheckerTest extends TestCase
 {
     public function testBootstrapAdminRoleCanSeeAdministrationShell(): void
     {
-        $checker = new RollingAdministrationPermissionChecker(
+        $checker = new AdministrationRollingPermissionChecker(
             new class implements AdministrationCurrentUserContextProviderInterface {
                 public function current(): ?AdministrationCurrentUserContext
                 {
@@ -25,7 +25,7 @@ final class RollingAdministrationPermissionCheckerTest extends TestCase
                     );
                 }
             },
-            new BootstrapAdministrationExternalPermissionDecisionProvider(),
+            new AdministrationBootstrapExternalPermissionDecisionProvider(),
         );
 
         self::assertTrue($checker->isGranted('administration.dashboard.view'));
@@ -35,14 +35,14 @@ final class RollingAdministrationPermissionCheckerTest extends TestCase
 
     public function testMissingCurrentUserIsDenied(): void
     {
-        $checker = new RollingAdministrationPermissionChecker(
+        $checker = new AdministrationRollingPermissionChecker(
             new class implements AdministrationCurrentUserContextProviderInterface {
                 public function current(): ?AdministrationCurrentUserContext
                 {
                     return null;
                 }
             },
-            new BootstrapAdministrationExternalPermissionDecisionProvider(),
+            new AdministrationBootstrapExternalPermissionDecisionProvider(),
         );
 
         self::assertFalse($checker->isGranted('administration.dashboard.view'));

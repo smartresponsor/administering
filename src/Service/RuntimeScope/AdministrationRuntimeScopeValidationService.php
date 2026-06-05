@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\RuntimeScope;
 
+use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Scanner\RuntimeScope\AdministrationRuntimeScopeConfigLeakScanner;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeValidationResult;
 

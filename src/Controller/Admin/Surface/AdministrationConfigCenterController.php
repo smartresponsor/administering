@@ -6,9 +6,9 @@ namespace App\Administering\Controller\Admin\Surface;
 
 use App\Accessing\Entity\AccessAccountEntity;
 use App\Administering\Entity\Config\AdministrationConfigTool;
+use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
 use App\Administering\Service\Config\AdministrationConfigFormResolverService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
-use App\Administering\Service\Config\AdministrationConfigToolServiceLocator;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;

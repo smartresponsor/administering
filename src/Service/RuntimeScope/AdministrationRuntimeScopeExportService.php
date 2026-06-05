@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Service\RuntimeScope;
 
 use App\Administering\Factory\RuntimeScope\AdministrationRuntimeScopePhpLockSourceFactory;
+use App\Administering\Reader\RuntimeScope\AdministrationRuntimeScopeBundleCatalogReader;
+use App\Administering\Reader\RuntimeScope\AdministrationRuntimeScopeComposerInventoryReader;
+use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportRequest;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportResult;
 

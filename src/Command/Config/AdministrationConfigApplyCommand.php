@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Command\Config;
 
+use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
 use App\Administering\Service\Config\AdministrationConfigFormResolverService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
 use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
-use App\Administering\Service\Config\AdministrationConfigToolServiceLocator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

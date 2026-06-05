@@ -15,7 +15,7 @@ storage:
 # Ecosystem topology: WHO owns WHAT.
 # This is the only integration knowledge Administering keeps.
 # HOW each owner works is declared in the owner's own component.yaml
-# and discovered via ComponentIntegrationContractRegistry.
+# and discovered via AdministrationComponentIntegrationContractRegistry.
 ownership:
   identity_owner: Accessing
   authorization_owner: Rolling

@@ -25,26 +25,26 @@ services:
     resource: '../src/Controller/'
     tags: ['controller.service_arguments']
 
-  App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface: '@App\Administering\Provider\Accessing\SymfonyAdministrationCurrentUserContextProvider'
-  App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerInterface: '@App\Administering\Checker\Security\RollingAdministrationPermissionChecker'
-  App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface: '@App\Administering\Recorder\Audit\DoctrineAdministrationAuditRecorder'
+  App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface: '@App\Administering\Provider\Accessing\AdministrationSymfonyCurrentUserContextProvider'
+  App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerInterface: '@App\Administering\Checker\Security\AdministrationRollingPermissionChecker'
+  App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface: '@App\Administering\Recorder\Audit\AdministrationDoctrineAuditRecorder'
 
-  App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface: '@App\Administering\Provider\Security\BootstrapAdministrationExternalPermissionDecisionProvider'
+  App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface: '@App\Administering\Provider\Security\AdministrationBootstrapExternalPermissionDecisionProvider'
 
   App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface: '@App\Administering\Catalog\Admin\AdministrationServiceSectionCatalog'
   App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface: '@App\Administering\Builder\Admin\AdministrationMainMenuBuilder'
-  App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface: '@App\Administering\Catalog\Admin\CompositeAdministrationServiceToolCatalog'
+  App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface: '@App\Administering\Catalog\Admin\AdministrationCompositeServiceToolCatalog'
   App\Administering\CatalogInterface\Admin\AdministrationServiceToolScreenCatalogInterface: '@App\Administering\Catalog\Admin\AdministrationServiceToolScreenCatalog'
 
-  App\Administering\Catalog\Admin\CompositeAdministrationServiceToolCatalog:
+  App\Administering\Catalog\Admin\AdministrationCompositeServiceToolCatalog:
     arguments:
-      $ownerToolDefinitionValidator: '@App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface'
+      $ownerToolDefinitionValidator: '@App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface'
       $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\Service\Config\AdministrationConfigApplicationDiscoveryService:
     arguments:
       $projectDir: '%kernel.project_dir%'
       $connectedComponents: '%app.connected_components%'
-  App\Administering\Service\Config\AdministrationConfigToolServiceLocator:
+  App\Administering\Locator\Config\AdministrationConfigToolServiceLocator:
     arguments:
       $toolServices: !tagged_iterator configuring.config_tool
   App\Administering\Service\Config\AdministrationConfigFileWriterService:
@@ -91,15 +91,15 @@ services:
     arguments:
       $ownerToolProviders: !tagged_iterator configuring.configuration_tool_provider
   App\Administering\ProviderInterface\Admin\AdministrationServiceSectionToolDashboardProviderInterface: '@App\Administering\Provider\Admin\AdministrationServiceSectionToolDashboardProvider'
-  App\Administering\ProviderInterface\Admin\AdministrationServiceToolIndexReadinessProviderInterface: '@App\Administering\Provider\Admin\DoctrineAdministrationServiceToolIndexReadinessProvider'
-  App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface: '@App\Administering\Provider\Admin\DoctrineAdministrationServiceToolMenuSectionProvider'
+  App\Administering\ProviderInterface\Admin\AdministrationServiceToolIndexReadinessProviderInterface: '@App\Administering\Provider\Admin\AdministrationDoctrineServiceToolIndexReadinessProvider'
+  App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface: '@App\Administering\Provider\Admin\AdministrationDoctrineServiceToolMenuSectionProvider'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolOperationPlanFactoryInterface: '@App\Administering\Factory\Admin\AdministrationServiceToolOperationPlanFactory'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolExecutorInterface: '@App\Administering\Executor\Admin\AdministrationServiceToolExecutor'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface: '@App\Administering\Guard\Admin\AdministrationServiceToolOpenGuard'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface: '@App\Administering\Auditor\Admin\AdministrationServiceToolConventionAuditor'
   App\Administering\PlannerInterface\Admin\AdministrationServiceToolRelocationPlannerInterface: '@App\Administering\Planner\Admin\AdministrationServiceToolRelocationPlanner'
   App\Administering\ValidatorInterface\Admin\AdministrationServiceToolRelocationPlanValidatorInterface: '@App\Administering\Validator\Admin\AdministrationServiceToolRelocationPlanValidator'
-  App\Administering\ValidatorInterface\Admin\ConfigurationToolDefinitionValidatorInterface: '@App\Administering\Validator\Admin\ConfigurationToolDefinitionValidator'
+  App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface: '@App\Administering\Validator\Admin\AdministrationConfigurationToolDefinitionValidator'
   App\Administering\ServiceInterface\Symfony\AdministrationSymfonyRouteCatalogProviderInterface: '@App\Administering\Provider\Symfony\AdministrationSymfonyRouteCatalogProvider'
   App\Administering\ServiceInterface\Environment\AdministrationEnvironmentRuntimeStatusProviderInterface: '@App\Administering\Provider\Environment\AdministrationEnvironmentRuntimeStatusProvider'
 
@@ -108,10 +108,10 @@ services:
       $environment: '%kernel.environment%'
       $debug: '%kernel.debug%'
 
-  App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface: '@App\Administering\Scanner\Configuration\FilesystemAdministrationConfigurationScanner'
-  App\Administering\ServiceInterface\Credential\AdministrationCredentialOperatorInterface: '@App\Administering\Operator\Credential\SymfonySecretsAdministrationCredentialOperator'
+  App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface: '@App\Administering\Scanner\Configuration\AdministrationFilesystemConfigurationScanner'
+  App\Administering\ServiceInterface\Credential\AdministrationCredentialOperatorInterface: '@App\Administering\Operator\Credential\AdministrationSymfonySecretsCredentialOperator'
 
-  App\Administering\Operator\Credential\SymfonySecretsAdministrationCredentialOperator:
+  App\Administering\Operator\Credential\AdministrationSymfonySecretsCredentialOperator:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
@@ -119,10 +119,10 @@ services:
     arguments:
       $projectDir: '%kernel.project_dir%'
   App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface: '@App\Administering\Factory\Operation\AdministrationOperationRunFactory'
-  App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface: '@App\Administering\Queue\Operation\MessengerAdministrationOperationQueue'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface: '@App\Administering\Queue\Operation\AdministrationMessengerOperationQueue'
   App\Administering\ServiceInterface\Operation\AdministrationOperationSubmitterInterface: '@App\Administering\Submitter\Operation\AdministrationOperationSubmitter'
   App\Administering\ServiceInterface\Operation\AdministrationServiceSectionAnchorSyncOperationServiceInterface: '@App\Administering\Service\Operation\AdministrationOperationServiceSectionAnchorSyncService'
-  App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface: '@App\Administering\Recorder\Operation\DoctrineAdministrationOperationStatusRecorder'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface: '@App\Administering\Recorder\Operation\AdministrationDoctrineOperationStatusRecorder'
 
   App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface: '@App\Administering\Runner\Operation\AdministrationGovernanceOperationRunner'
   App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface: '@App\Rolling\Service\Administration\RollingAdministrationPermissionCatalog'
@@ -135,7 +135,7 @@ services:
   App\Managing\ValidatorInterface\Administration\ManagingFieldAccessPolicyDescriptorValidatorInterface: '@App\Managing\Validator\Administration\ManagingFieldAccessPolicyDescriptorValidator'
   App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService'
   App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface: '@App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationApplyService'
-  App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface: '@App\Administering\Provider\Accessing\AccessingAdministrationAccountProjectionProvider'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface: '@App\Administering\Provider\Accessing\AdministrationAccessingAccountProjectionProvider'
   App\Administering\Service\Config\AdministrationIntegrationConfigService:
     arguments:
       $projectDir: '%kernel.project_dir%'
@@ -147,24 +147,24 @@ services:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
-  App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface: '@App\Administering\Writer\Operation\FilesystemAdministrationOperationArtifactWriter'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface: '@App\Administering\Writer\Operation\AdministrationFilesystemOperationArtifactWriter'
 
-  App\Administering\Writer\Operation\FilesystemAdministrationOperationArtifactWriter:
+  App\Administering\Writer\Operation\AdministrationFilesystemOperationArtifactWriter:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
-  App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface: '@App\Administering\Provider\Operation\DoctrineAdministrationOperationReportProvider'
+  App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface: '@App\Administering\Provider\Operation\AdministrationDoctrineOperationReportProvider'
 
 
-  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface: '@App\Administering\Recorder\Rolling\DoctrineAdministrationAclMutationReviewRecorder'
-  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface: '@App\Administering\Recorder\Accessing\DoctrineAdministrationAccountActionRequestRecorder'
-  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionAuditProjectionProviderInterface: '@App\Administering\Provider\Accessing\AccessingAdministrationAccountActionAuditProjectionProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface: '@App\Administering\Recorder\Rolling\AdministrationDoctrineAclMutationReviewRecorder'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface: '@App\Administering\Recorder\Accessing\AdministrationDoctrineAccountActionRequestRecorder'
+  App\Administering\ServiceInterface\Accessing\AdministrationAccountActionAuditProjectionProviderInterface: '@App\Administering\Provider\Accessing\AdministrationAccessingAccountActionAuditProjectionProvider'
 
   App\Rolling\ServiceInterface\Administration\RollingAclMutationApplyServiceInterface: '@App\Rolling\Service\Administration\RollingAclMutationApplyService'
   App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationRollingAclMutationApplyService'
   App\Rolling\ServiceInterface\Administration\RollingAclMutationExecutionReportProviderInterface: '@App\Rolling\Service\Administration\DoctrineRollingAclMutationExecutionReportProvider'
 
-  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyReportProviderInterface: '@App\Administering\Provider\Rolling\DoctrineAdministrationAclMutationApplyReportProvider'
+  App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyReportProviderInterface: '@App\Administering\Provider\Rolling\AdministrationDoctrineAclMutationApplyReportProvider'
 
 
   App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentOverviewProviderInterface: '@App\Administering\Provider\Connected\AdministrationConnectedComponentOverviewProvider'
@@ -195,7 +195,7 @@ services:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
-  App\Administering\Service\RuntimeScope\AdministrationRuntimeScopePathResolver:
+  App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver:
     arguments:
       $projectDir: '%kernel.project_dir%'
 

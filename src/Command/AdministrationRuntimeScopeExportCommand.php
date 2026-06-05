@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeExportService;
-use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportRequest;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

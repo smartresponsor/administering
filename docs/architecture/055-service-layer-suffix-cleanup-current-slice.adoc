@@ -1,0 +1,46 @@
+= Administering Service Layer Suffix Cleanup Current Slice
+
+This cleanup is based on the current uploaded Administering slice, not on older cumulative archives.
+
+== Canon
+
+`src/Service/**` is reserved for classes with the `*Service` suffix.
+
+Non-service operational helpers must live in their own layer folders:
+
+* `src/Reader/**` for `*Reader` classes.
+* `src/Resolver/**` for `*Resolver` classes.
+* `src/Locator/**` for `*Locator` classes.
+* `src/Mapper/**` for `*Mapper` classes.
+* `src/Factory/**` for `*Factory` classes.
+* `src/Scanner/**` for `*Scanner` classes.
+
+Empty placeholder folders are not valid canon. A folder exists only when it contains a real source file.
+
+== Runtime scope moves
+
+The following runtime-scope helper classes were moved out of `src/Service/RuntimeScope`:
+
+* `AdministrationRuntimeScopeBundleCatalogReader` to `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopeComposerInventoryReader` to `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopeStateReader` to `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopePathResolver` to `src/Resolver/RuntimeScope`.
+
+The runtime-scope service folder now contains only `*Service` classes.
+
+== Config helper moves
+
+The following config helpers were moved out of `src/Service/Config`:
+
+* `AdministrationConfigToolServiceLocator` to `src/Locator/Config`.
+* `AdministrationConfigVariableFormMapper` to `src/Mapper/Config`.
+
+The config service folder now contains only `Administration*Service` classes.
+
+== Removed drift
+
+Old duplicate `Administering*` config classes were removed after their `Administration*` replacements already existed.
+
+Old duplicate `Config*` unit tests were removed after their `AdministrationConfig*` replacements already existed.
+
+Empty `src/Service/*` and `src/ServiceInterface/*` component placeholder folders were removed.

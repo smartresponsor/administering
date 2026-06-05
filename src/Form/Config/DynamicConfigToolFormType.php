@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Form\Config;
 
-use App\Administering\Service\Config\AdministrationConfigVariableFormMapper;
+use App\Administering\Mapper\Config\AdministrationConfigVariableFormMapper;
 use App\Configuring\Value\Config\ConfigVariable;
 use App\Configuring\Value\Config\ConfigVariableType;
 use Symfony\Component\Form\AbstractType;

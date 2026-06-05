@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Admin;
 
+use App\Administering\Catalog\Admin\AdministrationFilesystemServiceToolCatalog;
 use App\Administering\Catalog\Admin\AdministrationServiceSectionCatalog;
 use App\Administering\Catalog\Admin\AdministrationServiceToolScreenCatalog;
-use App\Administering\Catalog\Admin\FilesystemAdministrationServiceToolCatalog;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationServiceToolCatalogTest extends TestCase
 {
     public function testEveryDirectServiceFileIsCataloguedAsSectionTool(): void
     {
-        $catalog = new FilesystemAdministrationServiceToolCatalog(new AdministrationServiceSectionCatalog(), new AdministrationServiceToolScreenCatalog());
+        $catalog = new AdministrationFilesystemServiceToolCatalog(new AdministrationServiceSectionCatalog(), new AdministrationServiceToolScreenCatalog());
         $catalogued = [];
 
         foreach ($catalog->tools() as $tool) {
@@ -38,7 +38,7 @@ final class AdministrationServiceToolCatalogTest extends TestCase
 
     public function testManagingToolsAreNotCataloguedUnderRolling(): void
     {
-        $catalog = new FilesystemAdministrationServiceToolCatalog(new AdministrationServiceSectionCatalog(), new AdministrationServiceToolScreenCatalog());
+        $catalog = new AdministrationFilesystemServiceToolCatalog(new AdministrationServiceSectionCatalog(), new AdministrationServiceToolScreenCatalog());
 
         foreach ($catalog->toolsForSection('Rolling') as $tool) {
             self::assertStringNotContainsString('ManagingField', $tool->shortName);

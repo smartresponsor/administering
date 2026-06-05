@@ -1,0 +1,28 @@
+= Administering Service Suffix Hard Cleanup
+
+Administering keeps `src/Service` reserved for concrete `*Service` classes only.
+
+Non-service infrastructure helpers must live in their matching layer:
+
+* `src/Reader/**` for `*Reader` classes.
+* `src/Resolver/**` for `*Resolver` classes.
+* `src/Locator/**` for `*Locator` classes.
+* `src/Mapper/**` for `*Mapper` classes.
+* `src/Factory/**` for `*Factory` classes.
+* `src/Scanner/**` for `*Scanner` classes.
+
+This avoids false service-layer ownership and keeps Symfony autowiring readable.
+
+Runtime-scope classes follow the same rule:
+
+* `AdministrationRuntimeScopeBundleCatalogReader` is under `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopeComposerInventoryReader` is under `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopeStateReader` is under `src/Reader/RuntimeScope`.
+* `AdministrationRuntimeScopePathResolver` is under `src/Resolver/RuntimeScope`.
+
+Config helper classes follow the same rule:
+
+* `AdministrationConfigToolServiceLocator` is under `src/Locator/Config`.
+* `AdministrationConfigVariableFormMapper` is under `src/Mapper/Config`.
+
+Old `Administering*` duplicates are not allowed. Administering package classes use the `Administration*` owner stem.

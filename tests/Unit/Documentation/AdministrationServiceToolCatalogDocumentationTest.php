@@ -16,7 +16,7 @@ final class AdministrationServiceToolCatalogDocumentationTest extends TestCase
         self::assertIsString($contents);
         self::assertStringContainsString('one menu section equals one direct `src/Service/<Section>` directory', $contents);
         self::assertStringContainsString('one direct service PHP file equals one section tool', $contents);
-        self::assertStringContainsString('FilesystemAdministrationServiceToolCatalog', $contents);
+        self::assertStringContainsString('AdministrationFilesystemServiceToolCatalog', $contents);
         self::assertStringContainsString('section dashboard cards/tools', $contents);
     }
 }

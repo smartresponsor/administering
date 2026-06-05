@@ -10,7 +10,7 @@ use App\Administering\Value\Admin\AdministrationServiceToolScreen;
 /**
  * Canonical service-tool to primary-screen mapping.
  *
- * FilesystemAdministrationServiceToolCatalog discovers tools from service files;
+ * AdministrationFilesystemServiceToolCatalog discovers tools from service files;
  * this catalog owns the optional screen mapping. Keeping these responsibilities
  * separate prevents the service filesystem catalog from becoming a route sitemap.
  */

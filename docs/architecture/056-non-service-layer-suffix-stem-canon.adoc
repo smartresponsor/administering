@@ -1,0 +1,39 @@
+= Administering Non-Service Layer Suffix and Stem Canon
+
+Administering keeps `src/Service` reserved for concrete `*Service` classes only.
+All non-service operational roles must live in their dedicated layer and must use the `Administration*` owner stem.
+
+== Canon
+
+* `src/Provider/**/Administration*Provider.php`
+* `src/Checker/**/Administration*Checker.php`
+* `src/Validator/**/Administration*Validator.php`
+* `src/ValidatorInterface/**/Administration*ValidatorInterface.php`
+* `src/Writer/**/Administration*Writer.php`
+* `src/Catalog/**/Administration*Catalog.php`
+* `src/Scanner/**/Administration*Scanner.php`
+* `src/Recorder/**/Administration*Recorder.php`
+* `src/Runner/**/Administration*Runner.php`
+* `src/Queue/**/Administration*Queue.php`
+* `src/Operator/**/Administration*Operator.php`
+* `src/Subscriber/**/Administration*Subscriber.php`
+* `src/Controller/Admin/Crud/**/Administration*CrudController.php`
+
+The legacy ordering `DoctrineAdministration*`, `FilesystemAdministration*`, `RollingAdministration*`, `AccessingAdministration*`, `SymfonyAdministration*`, `BootstrapAdministration*`, `MessengerAdministration*`, and `NullAdministration*` is not canonical inside Administering.
+
+== Boundary
+
+Technology/source qualifiers may remain after the owner stem:
+
+* `AdministrationDoctrineOperationReportProvider`
+* `AdministrationFilesystemConfigurationScanner`
+* `AdministrationRollingPermissionChecker`
+* `AdministrationSymfonySecretsCredentialOperator`
+
+This preserves the owner prefix while keeping the implementation technology visible.
+
+== Front boundary
+
+Administering does not expose frontend controllers for Viewing/Interfacing.
+Administering keeps EasyAdmin/admin-surface controllers only.
+Frontend entrypoints must be handled through Cruding + Viewing/Interfacing while reusing the same Administration business services.
