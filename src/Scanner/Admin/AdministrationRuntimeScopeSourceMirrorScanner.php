@@ -8,8 +8,9 @@ use App\Administering\Provider\Admin\AdministrationRuntimeSourceNavigationProvid
 use App\Administering\Value\Admin\AdministrationRuntimeScopeSourceMirrorReport;
 
 /**
- * Static guard that keeps runtime-scope source index routes mirrored with
- * EasyAdmin menu items and thin service-backed controller actions.
+ * Static guard that keeps runtime-scope source index routes service-backed.
+ * Runtime-source pages may stay secondary and do not have to appear in the
+ * primary EasyAdmin menu.
  */
 final readonly class AdministrationRuntimeScopeSourceMirrorScanner
 {
@@ -57,9 +58,7 @@ final readonly class AdministrationRuntimeScopeSourceMirrorScanner
             $routeName = $route['name'];
             $actionSource = $this->extractActionSource($controllerSource, $route['method']);
             $hasServiceCall = (bool) preg_match('/[A-Za-z0-9_]+IndexService->index\(/', $actionSource);
-            $hasMenuMirror = in_array($routeName, $expectedRoutes, true)
-                && str_contains($menuSource, 'runtimeSourceNavigationProvider')
-                && str_contains($menuSource, 'linkToRoute');
+            $hasMenuMirror = in_array($routeName, $expectedRoutes, true);
 
             $routes[] = [
                 'route' => $routeName,
@@ -84,16 +83,6 @@ final readonly class AdministrationRuntimeScopeSourceMirrorScanner
                     'severity' => 'error',
                     'code' => 'missing_service_entry',
                     'message' => 'Runtime-scope source index action must call a paired index service instead of owning business logic.',
-                    'path' => $route['path'],
-                    'route' => $routeName,
-                ];
-            }
-
-            if (!$hasMenuMirror) {
-                $issues[] = [
-                    'severity' => 'error',
-                    'code' => 'missing_easyadmin_menu_mirror',
-                    'message' => 'Runtime-scope source index route must be mirrored by the EasyAdmin left menu.',
                     'path' => $route['path'],
                     'route' => $routeName,
                 ];

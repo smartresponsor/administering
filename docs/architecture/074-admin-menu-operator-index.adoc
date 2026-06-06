@@ -1,0 +1,15 @@
+= Administering Operator Index Menu
+
+Administering primary EasyAdmin navigation is operator-first:
+
+* Home
+* Tools
+* Commands
+* Enabled Components
+
+Tools are the materialized service-tool index discovered from `src/Service`.
+Commands are discovered from `src/Command/*.php` and shown as a read-only command index.
+Enabled Components is the APP_RUNTIME_SCOPE component-decision surface backed by runtime-scope lock evidence and the shared Doctrine/SQLite projection.
+
+The primary menu must not expose low-level source readers such as composer inventory, raw APP_RUNTIME_SCOPE tokens, PHP extensions, or generic runtime records as first-class items.
+Those pages may remain secondary diagnostics, but they are not the admin entry point.

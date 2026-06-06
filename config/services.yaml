@@ -1,4 +1,5 @@
 parameters:
+  app.connected_components: []
   administering.product_name: 'Administering'
 
 services:
@@ -17,6 +18,7 @@ services:
     exclude:
       - '../src/DependencyInjection/'
       - '../src/Entity/'
+      - '../src/Controller/'
       - '../src/AdministeringBundle.php'
 
   App\Administering\Controller\:
@@ -48,6 +50,10 @@ services:
   App\Administering\Service\Config\AdministrationConfigFileWriterService:
     arguments:
       $projectDir: '%kernel.project_dir%'
+  App\Administering\Service\Admin\AdministrationCommandIndexService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
   App\Administering\Command\AdministrationOwnerConfigurationToolTransitionDecisionCommand:
     arguments:
       $projectDir: '%kernel.project_dir%'
@@ -181,5 +187,14 @@ services:
       $projectDir: '%kernel.project_dir%'
 
   App\Administering\Command\AdministrationAdminSurfaceMirrorAuditCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Administering\Service\Connected\AdministrationConnectedComponentRecordSyncService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $environment: '%kernel.environment%'
+
+  App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeComponentDecisionApplyService:
     arguments:
       $projectDir: '%kernel.project_dir%'

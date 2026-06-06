@@ -1,0 +1,32 @@
+= Administering Symfony 8.1 Readiness
+
+Administering targets Symfony 8.1 while keeping the component runtime model simple:
+
+* `config/services.yaml` is the base DI graph and the prod-by-default dry-runtime graph.
+* `config/services_dev.yaml` is the optional dev dry-runtime overlay.
+* `config/services_prod.yaml` is intentionally absent while prod has no delta from the base graph.
+* `src/Kernel.php` exists only as a DI/runtime dry harness, not as a full standalone application contract.
+
+== Compatibility actions
+
+The component must not use Symfony 8.1 deprecated HttpKernel moved class aliases for bundle/runtime recipes.
+Use `Symfony\Component\DependencyInjection\Kernel\BundleInterface` instead of the deprecated HttpKernel bundle interface alias.
+
+The dry-runtime container must have a safe default for `app.connected_components`, because host applications may provide component data while local dry-runtime checks must still compile without a host-specific parameter file.
+
+== Verification
+
+Run:
+
+[source,bash]
+----
+composer inspect:symfony81-readiness
+----
+
+Then update dependencies in the host/root app:
+
+[source,bash]
+----
+composer update "symfony/*" -W
+php bin/console lint:container
+----

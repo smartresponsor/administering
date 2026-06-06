@@ -1,0 +1,22 @@
+= Runtime Scope Component Decision Form Coverage
+
+Administering keeps the Enabled Components operator flow small and explicit.
+The runtime-scope component decision surface uses `AdministrationRuntimeScopeComponentDecisionType`, not a `*FormType` suffix, by convention for this operator decision flow.
+
+The form is responsible for one business decision:
+
+* component key
+* runtime environment: `dev` or `prod`
+* enabled decision
+* operator note
+
+The `enabled` checkbox is intentionally optional. An omitted checkbox value must map to `false`, because unchecked means the component is explicitly disabled for the selected `APP_RUNTIME_SCOPE` lock.
+
+The coverage guard and unit tests protect this behavior after Symfony 8.1 form changes and future upgrades.
+
+Canonical files:
+
+* `src/Form/RuntimeScope/AdministrationRuntimeScopeComponentDecisionType.php`
+* `src/Value/Form/RuntimeScope/AdministrationRuntimeScopeComponentDecisionData.php`
+* `tests/Unit/RuntimeScope/AdministrationRuntimeScopeComponentDecisionTypeTest.php`
+* `tests/Unit/RuntimeScope/AdministrationRuntimeScopeComponentDecisionDataTest.php`

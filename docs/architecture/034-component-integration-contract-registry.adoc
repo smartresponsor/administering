@@ -35,7 +35,7 @@ Administering/component.yaml        Rolling/src/Contract/
                                       Rolling/
                                         AdministrationRollingComponentIntegrationContractProvider.php
                                       Accessing/
-                                        AdministrationAccessingComponentIntegrationContractStub.php
+                                        AdministrationAccessingComponentIntegrationContractProvider.php
 ----
 
 == Ownership rule
@@ -93,5 +93,5 @@ storage: [...]
 . Move `integrations.accessing` fields from `Administering/component.yaml`
   to `Accessing/src/Contract/AccessingIntegrationContract.php`.
 . Create `Accessing/src/Provider/Configuration/AccessingConfigurationToolProvider.php`.
-. Replace `AdministrationAccessingComponentIntegrationContractStub` with a real adapter.
+. Keep the base provider self-contained; add a host-specific bridge only when Accessing is installed.
 . Delete the `integrations.accessing` block from Administering.

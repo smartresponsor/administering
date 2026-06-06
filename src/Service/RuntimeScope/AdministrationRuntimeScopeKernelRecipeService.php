@@ -328,7 +328,7 @@ declare(strict_types=1);
 
 namespace App\Kernel;
 
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\DependencyInjection\Kernel\BundleInterface;
 
 final class RuntimeBundleIterator
 {

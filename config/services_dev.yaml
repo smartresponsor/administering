@@ -1,0 +1,6 @@
+# Dev-only dry-runtime service overlay.
+# Production uses config/services.yaml directly.
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true

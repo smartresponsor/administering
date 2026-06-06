@@ -1,0 +1,17 @@
+= Runtime Scope Component Decision
+
+Administering exposes Enabled Components as an operator-facing runtime-scope decision surface.
+
+The first write workflow is intentionally narrow:
+
+* open Enabled Components;
+* choose Change decision on one component;
+* select dev or prod;
+* set enabled/disabled;
+* save the decision.
+
+The save operation writes the selected runtime lock file, synchronizes the SQLite projection, and records an audit event.
+
+The Symfony form class is named `AdministrationRuntimeScopeComponentDecisionType` by convention for this workflow. It is an `AbstractType`, but it intentionally does not use the `FormType` suffix.
+
+The EasyAdmin CRUD remains read-only. State changes are routed through the reviewed decision surface.

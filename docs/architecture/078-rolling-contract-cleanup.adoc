@@ -1,0 +1,23 @@
+= Administering Rolling Contract Cleanup
+
+Administering must compile as a dry-runtime package without requiring optional sibling components.
+
+The base `AdministrationRollingComponentIntegrationContractProvider` is therefore self-contained and must not type-hint or import `App\Rolling\*` classes.
+
+The host application may provide a richer Rolling bridge when Rolling is installed, but the base Administering package owns only a minimal safe contract shape.
+
+== Rule
+
+Do not introduce hard dependencies on optional sibling component contracts in base `src/Contract/*` providers.
+
+Allowed:
+
+* `AdministrationComponentIntegrationContractInterface`
+* self-contained anonymous readonly contract values
+* primitive/string/array contract metadata
+
+Forbidden in base provider:
+
+* `App\Rolling\Contract\RollingIntegrationContract`
+* `App\Rolling\Provider\Configuration\RollingConfigurationToolProvider`
+* constructor injection of optional Rolling provider classes

@@ -44,7 +44,7 @@ Administering/
     Rolling/
       AdministrationRollingComponentIntegrationContractProvider.php  ← NEW: thin adapter (~10 lines)
     Accessing/
-      AdministrationAccessingComponentIntegrationContractProvider.php ← STUB: pending Accessing migration
+      AdministrationAccessingComponentIntegrationContractProvider.php ← self-contained base contract; optional host bridge may override later
   config/services_additions.yaml           ← NEW: 3 service registrations
 ----
 

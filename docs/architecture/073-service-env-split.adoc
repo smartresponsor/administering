@@ -1,0 +1,33 @@
+= Administering Service Environment Split
+
+Administering is not a standalone application. Its `Kernel` and `bin/console` exist only as a DI/runtime dry harness for local inspection, smoke checks, and component runtime validation.
+
+== Canon
+
+[source,text]
+----
+config/services.yaml      # base component/bundle DI graph; prod dry-runtime default
+config/services_dev.yaml  # dev-only dry-runtime service overlay
+----
+
+`config/services_prod.yaml` is intentionally absent while production equals the base graph.
+
+== Kernel loading
+
+[source,php]
+----
+$container->import('../config/services.yaml');
+$container->import('../config/services_'.$this->environment.'.yaml', null, true);
+----
+
+This keeps production dry-runtime native and minimal:
+
+[source,text]
+----
+APP_ENV=prod => config/services.yaml
+APP_ENV=dev  => config/services.yaml + config/services_dev.yaml
+----
+
+== Host rule
+
+A host Symfony application must enable Administering through `AdministeringBundle`. It must not import `../../Administering/config/services.yaml` from host `config/services.yaml`. Host-specific overrides belong to the host application's own config files.

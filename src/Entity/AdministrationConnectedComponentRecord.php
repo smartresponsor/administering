@@ -70,6 +70,122 @@ final class AdministrationConnectedComponentRecord
         return $this->safeSummary;
     }
 
+    public function getRuntimeScope(): string
+    {
+        return $this->safeString('runtimeScope');
+    }
+
+    public function getComposerPackage(): string
+    {
+        return $this->safeString('composerPackage');
+    }
+
+    public function getBundleToken(): string
+    {
+        return $this->safeString('bundleToken');
+    }
+
+    public function isInstalled(): bool
+    {
+        return $this->safeBool('present');
+    }
+
+    public function isInRuntimeScope(): bool
+    {
+        return $this->safeBool('allowed');
+    }
+
+    public function isEnabledInCurrentScope(): bool
+    {
+        return $this->safeBool('enabled');
+    }
+
+    public function isDisabledByRuntimeLock(): bool
+    {
+        return $this->safeBool('disabled');
+    }
+
+    public function isEnabledForDev(): bool
+    {
+        return $this->scopeBool('dev', 'enabled');
+    }
+
+    public function isEnabledForProd(): bool
+    {
+        return $this->scopeBool('prod', 'enabled');
+    }
+
+    public function getDevDecision(): string
+    {
+        return $this->scopeString('dev', 'status');
+    }
+
+    public function getProdDecision(): string
+    {
+        return $this->scopeString('prod', 'status');
+    }
+
+    private function scopeBool(string $scope, string $key): bool
+    {
+        $metadata = $this->safeSummary['metadata'] ?? [];
+        if (!is_array($metadata)) {
+            return false;
+        }
+
+        $row = $metadata[$scope] ?? [];
+        if (!is_array($row)) {
+            return false;
+        }
+
+        return true === ($row[$key] ?? false);
+    }
+
+    private function scopeString(string $scope, string $key): string
+    {
+        $metadata = $this->safeSummary['metadata'] ?? [];
+        if (!is_array($metadata)) {
+            return '';
+        }
+
+        $row = $metadata[$scope] ?? [];
+        if (!is_array($row)) {
+            return '';
+        }
+
+        $value = $row[$key] ?? '';
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    public function getDecisionReason(): string
+    {
+        $message = $this->safeSummary['message'] ?? null;
+
+        return is_string($message) ? $message : '';
+    }
+
+    private function safeBool(string $key): bool
+    {
+        $metadata = $this->safeSummary['metadata'] ?? [];
+        if (!is_array($metadata)) {
+            return false;
+        }
+
+        return true === ($metadata[$key] ?? false);
+    }
+
+    private function safeString(string $key): string
+    {
+        $metadata = $this->safeSummary['metadata'] ?? [];
+        if (!is_array($metadata)) {
+            return '';
+        }
+
+        $value = $metadata[$key] ?? '';
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     public function getSynchronizedAt(): \DateTimeImmutable
     {
         return $this->synchronizedAt;

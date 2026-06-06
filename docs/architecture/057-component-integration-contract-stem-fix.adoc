@@ -7,7 +7,7 @@ Canonical names:
 * `AdministrationComponentIntegrationContractInterface`
 * `AdministrationComponentIntegrationContractRegistry`
 * `AdministrationAccessingComponentIntegrationContractProvider`
-* `AdministrationAccessingComponentIntegrationContractStub`
+* `AdministrationAccessingComponentIntegrationContractProvider`
 * `AdministrationRollingComponentIntegrationContractProvider`
 
 Old `ComponentIntegrationContract*`, `AccessingComponentIntegrationContract*`, and `RollingComponentIntegrationContract*` names are deleted.
