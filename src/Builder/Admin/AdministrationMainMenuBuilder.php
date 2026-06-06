@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace App\Administering\Builder\Admin;
 
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingAclRuleCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingPermissionCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingRoleCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingRoleHierarchyCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingRolePermissionCrudController;
-use App\Administering\Controller\Admin\Crud\AdministrationRollingSubjectRoleAssignmentCrudController;
 use App\Administering\Provider\Admin\AdministrationRuntimeSourceNavigationProvider;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 
 /**
  * Builds the left EasyAdmin menu from the materialized service-tool index.
@@ -43,21 +38,23 @@ final readonly class AdministrationMainMenuBuilder implements AdministrationMain
         yield MenuItem::subMenu('Runtime Scope', 'fa fa-layer-group')
             ->setPermission('administration.dashboard.view')
             ->setSubItems(array_map(
-                static fn ($item): MenuItem => MenuItem::linkToRoute($item->label, $item->icon, $item->routeName)
+                static fn ($item): MenuItemInterface => MenuItem::linkToRoute($item->label, $item->icon, $item->routeName)
                     ->setPermission($item->permission),
                 $this->runtimeSourceNavigationProvider->items(),
             ));
 
-        yield MenuItem::subMenu('Rolling ACL', 'fa fa-shield-alt')
-            ->setPermission('administration.rolling.subject_access_report.view')
+        yield MenuItem::subMenu('Connected Components', 'fa fa-plug')
+            ->setPermission('administration.connected_component.overview.view')
             ->setSubItems([
-                MenuItem::linkTo(AdministrationRollingRoleCrudController::class, 'Roles', 'fa fa-users-cog'),
-                MenuItem::linkTo(AdministrationRollingRoleHierarchyCrudController::class, 'Role hierarchy', 'fa fa-sitemap'),
-                MenuItem::linkTo(AdministrationRollingRolePermissionCrudController::class, 'Role permissions', 'fa fa-key'),
-                MenuItem::linkTo(AdministrationRollingSubjectRoleAssignmentCrudController::class, 'Subject assignments', 'fa fa-user-lock'),
-                MenuItem::linkTo(AdministrationRollingAclRuleCrudController::class, 'ACL rules', 'fa fa-balance-scale'),
-                MenuItem::linkTo(AdministrationRollingPermissionCrudController::class, 'Permission catalog', 'fa fa-list-check')
-                    ->setPermission('administration.rolling.permission_catalog.view'),
+                MenuItem::linkToRoute('Overview', 'fa fa-diagram-project', 'administration_connected_component_overview'),
+                MenuItem::linkToRoute('Readiness', 'fa fa-clipboard-check', 'administration_connected_component_readiness'),
+                MenuItem::linkToRoute('Capability matrix', 'fa fa-table-cells', 'administration_connected_component_capability_matrix'),
+                MenuItem::linkToRoute('Contract matrix', 'fa fa-code-compare', 'administration_connected_component_contract_matrix'),
+                MenuItem::linkToRoute('Health', 'fa fa-heart-pulse', 'administration_connected_component_health'),
+                MenuItem::linkToRoute('Diagnostics', 'fa fa-stethoscope', 'administration_connected_component_diagnostics'),
+                MenuItem::linkToRoute('Remediation', 'fa fa-screwdriver-wrench', 'administration_connected_component_remediation'),
+                MenuItem::linkToRoute('Work plan', 'fa fa-list-check', 'administration_connected_component_work_plan'),
+                MenuItem::linkToRoute('Execution plan', 'fa fa-person-running', 'administration_connected_component_execution_plan'),
             ]);
 
         foreach ($this->menuSectionProvider->menuSections() as $section) {

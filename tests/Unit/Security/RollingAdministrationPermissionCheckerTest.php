@@ -16,7 +16,7 @@ final class AdministrationRollingPermissionCheckerTest extends TestCase
     {
         $checker = new AdministrationRollingPermissionChecker(
             new class implements AdministrationCurrentUserContextProviderInterface {
-                public function current(): ?AdministrationCurrentUserContext
+                public function current(): AdministrationCurrentUserContext
                 {
                     return new AdministrationCurrentUserContext(
                         'accessing:account:1',

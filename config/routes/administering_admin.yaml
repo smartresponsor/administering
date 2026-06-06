@@ -4,7 +4,13 @@ administering_easyadmin:
   resource: .
   type: easyadmin.routes
 
+administering_admin_connected_attribute:
+  resource: '../../src/Controller/Admin/Connected/'
+  type: attribute
+
 administering_admin_attribute:
   resource: '../../src/Controller/Admin/'
   type: attribute
+  exclude:
+    - '../../src/Controller/Admin/Connected/'
 

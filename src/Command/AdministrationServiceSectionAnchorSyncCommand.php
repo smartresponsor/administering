@@ -27,7 +27,7 @@ final class AdministrationServiceSectionAnchorSyncCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to synchronize, for example Symfony or Managing.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to synchronize, for example Symfony or Connected.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the sync result as JSON.');
     }
 

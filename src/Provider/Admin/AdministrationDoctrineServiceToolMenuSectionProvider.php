@@ -76,9 +76,9 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
 
             $sections[] = new AdministrationServiceToolMenuSection(
                 key: $key,
-                label: $record?->getLabel() ?? $catalog?->label ?? $this->labelFromKey($key),
-                icon: $catalog?->icon ?? 'fa fa-folder-tree',
-                permission: $catalog?->permission ?? 'administration.dashboard.view',
+                label: $record?->getLabel() ?? $catalog->label ?? $this->labelFromKey($key),
+                icon: $catalog->icon ?? 'fa fa-folder-tree',
+                permission: $catalog->permission ?? 'administration.dashboard.view',
                 toolCount: $stats['toolCount'],
                 executableCount: $stats['executableCount'],
                 formReadyCount: $stats['formReadyCount'],
@@ -164,6 +164,11 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
 
     /** @param array<string, AdministrationServiceSection> $catalogSections */
     /** @return list<AdministrationServiceToolMenuSection> */
+    /**
+     * @param array<string, mixed> $catalogSections
+     *
+     * @return list<AdministrationServiceToolMenuSection>
+     */
     private function fallbackSections(array $catalogSections): array
     {
         $sections = [];

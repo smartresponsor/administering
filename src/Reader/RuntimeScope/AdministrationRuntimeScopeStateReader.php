@@ -5,28 +5,17 @@ declare(strict_types=1);
 namespace App\Administering\Reader\RuntimeScope;
 
 use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockNormalizer;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeState;
+use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeVisibility;
 
 final readonly class AdministrationRuntimeScopeStateReader
 {
-    private const NON_COMPONENT_PACKAGE_PREFIXES = [
-        'doctrine/',
-        'easycorp/',
-        'fakerphp/',
-        'friendsofphp/',
-        'lexik/',
-        'nelmio/',
-        'phpstan/',
-        'phpunit/',
-        'scheb/',
-        'symfony/',
-        'symfonycasts/',
-        'twig/',
-    ];
-
     public function __construct(
         private AdministrationRuntimeScopePathResolver $pathResolver,
         private AdministrationRuntimeScopeComposerInventoryReader $composerInventoryReader,
+        private AdministrationRuntimeScopeBundleCatalogReader $catalogReader,
+        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
     ) {
     }
 
@@ -36,14 +25,27 @@ final readonly class AdministrationRuntimeScopeStateReader
         $composerFile = $this->pathResolver->composerFile($environment);
         $composerPath = rtrim($hostDir, '/\\').'/'.$composerFile;
         $lockPath = $this->pathResolver->lockPath($hostDir, $environment);
+        $catalogPath = $this->pathResolver->bundleCatalogPath();
         $sourceErrors = [];
 
+        $catalog = ['components' => []];
+        try {
+            $catalog = $this->catalogReader->catalog($catalogPath);
+        } catch (\Throwable $exception) {
+            $sourceErrors[] = $exception->getMessage();
+        }
+
         $composerPackages = [];
+        $composerComponentPackages = [];
+        $ignoredRuntimeScopePackages = [];
         if (!is_file($composerPath)) {
             $sourceErrors[] = sprintf('Composer inventory is missing: %s', $composerPath);
         } else {
             try {
-                $composerPackages = $this->composerInventoryReader->packages($composerPath);
+                $composerInventory = $this->composerInventoryReader->inventory($composerPath, $catalog);
+                $composerPackages = $composerInventory->packages;
+                $composerComponentPackages = $composerInventory->componentPackages;
+                $ignoredRuntimeScopePackages = $composerInventory->ignoredRuntimeScopePackages;
             } catch (\Throwable $exception) {
                 $sourceErrors[] = $exception->getMessage();
             }
@@ -52,29 +54,17 @@ final readonly class AdministrationRuntimeScopeStateReader
         $appRuntimeScopeRaw = $this->runtimeScopeFromEnvironment();
         $appRuntimeScope = $this->parseRuntimeScope($appRuntimeScopeRaw);
 
-        $lockPresent = is_file($lockPath);
-        $enabledBundles = [];
-        $enabledComponents = [];
-        $disabledComponents = [];
+        $lockEvidence = $this->lockNormalizer->normalize($lockPath);
+        $sourceErrors = [...$sourceErrors, ...$lockEvidence->errors];
 
-        if (!$lockPresent) {
-            $sourceErrors[] = sprintf('Runtime scope lock is missing: %s', $lockPath);
-        } else {
-            try {
-                $payload = require $lockPath;
-                if (!is_array($payload)) {
-                    throw new \RuntimeException('Runtime scope lock must return an array.');
-                }
-
-                $enabledBundles = $this->readStringList($payload['enabledBundles'] ?? []);
-                $disabledComponents = $this->readComponentList($payload['disabledComponents'] ?? []);
-                $enabledComponents = $this->componentsFromBundles($enabledBundles);
-            } catch (\Throwable $exception) {
-                $sourceErrors[] = sprintf('Unable to read runtime scope lock %s: %s', $lockPath, $exception->getMessage());
-            }
+        if ([] !== $ignoredRuntimeScopePackages) {
+            $sourceErrors[] = sprintf(
+                'Composer inventory contains runtime-scope-like packages absent from Administering token catalog: %s',
+                implode(', ', $ignoredRuntimeScopePackages),
+            );
         }
 
-        $installedComponents = $this->componentsFromComposerPackages(array_keys($composerPackages));
+        $installedComponents = array_keys($composerComponentPackages);
 
         return new AdministrationRuntimeScopeState(
             hostDir: $hostDir,
@@ -82,13 +72,14 @@ final readonly class AdministrationRuntimeScopeStateReader
             composerFile: $composerFile,
             composerPath: $composerPath,
             composerPackages: $composerPackages,
+            composerComponentPackages: $composerComponentPackages,
             appRuntimeScopeRaw: $appRuntimeScopeRaw,
             appRuntimeScope: $appRuntimeScope,
             lockPath: $lockPath,
-            lockPresent: $lockPresent,
-            enabledBundles: $enabledBundles,
-            enabledComponents: $enabledComponents,
-            disabledComponents: $disabledComponents,
+            lockPresent: $lockEvidence->present && $lockEvidence->isValid(),
+            enabledBundleTokens: $lockEvidence->enabledBundleTokens,
+            enabledComponents: $lockEvidence->enabledComponents,
+            disabledComponents: $lockEvidence->disabledComponents,
             installedComponents: $installedComponents,
             sourceErrors: $sourceErrors,
         );
@@ -98,113 +89,14 @@ final readonly class AdministrationRuntimeScopeStateReader
     {
         $value = $_SERVER['APP_RUNTIME_SCOPE'] ?? $_ENV['APP_RUNTIME_SCOPE'] ?? null;
 
-        return is_string($value) && '' !== trim($value) ? trim($value) : null;
+        return is_string($value) ? trim($value) : null;
     }
 
     /** @return list<string> */
     private function parseRuntimeScope(?string $runtimeScope): array
     {
-        if (null === $runtimeScope) {
-            return [];
-        }
+        $visibility = AdministrationRuntimeScopeVisibility::fromRaw($runtimeScope);
 
-        $tokens = preg_split('/[|,\s]+/', $runtimeScope) ?: [];
-
-        return $this->readComponentList($tokens);
-    }
-
-    /** @param mixed $payload @return list<string> */
-    private function readStringList(mixed $payload): array
-    {
-        if (!is_array($payload)) {
-            return [];
-        }
-
-        $result = [];
-        foreach ($payload as $item) {
-            if (is_string($item) && '' !== trim($item)) {
-                $result[] = trim($item);
-            }
-        }
-
-        return array_values(array_unique($result));
-    }
-
-    /** @param mixed $payload @return list<string> */
-    private function readComponentList(mixed $payload): array
-    {
-        if (!is_array($payload)) {
-            return [];
-        }
-
-        $result = [];
-        foreach ($payload as $item) {
-            if (!is_string($item) || '' === trim($item)) {
-                continue;
-            }
-            $result[] = $this->normalizeComponent($item);
-        }
-
-        return array_values(array_unique(array_filter($result)));
-    }
-
-    /** @param list<string> $bundleClasses @return list<string> */
-    private function componentsFromBundles(array $bundleClasses): array
-    {
-        $components = [];
-        foreach ($bundleClasses as $bundleClass) {
-            if (!preg_match('/^App\\\\([^\\\\]+)\\\\/', $bundleClass, $matches)) {
-                continue;
-            }
-            $components[] = $this->normalizeComponent($matches[1]);
-        }
-
-        return array_values(array_unique($components));
-    }
-
-    /** @param list<string> $packages @return list<string> */
-    private function componentsFromComposerPackages(array $packages): array
-    {
-        $components = [];
-        foreach ($packages as $package) {
-            if (!$this->looksLikeComponentPackage($package)) {
-                continue;
-            }
-
-            [$vendor, $name] = array_pad(explode('/', $package, 2), 2, '');
-            $component = match ($vendor) {
-                'smart-responsor', 'smartresponsor' => $name,
-                default => $vendor,
-            };
-
-            $components[] = $this->normalizeComponent($component);
-        }
-
-        return array_values(array_unique(array_filter($components)));
-    }
-
-    private function looksLikeComponentPackage(string $package): bool
-    {
-        if (!str_contains($package, '/')) {
-            return false;
-        }
-
-        foreach (self::NON_COMPONENT_PACKAGE_PREFIXES as $prefix) {
-            if (str_starts_with($package, $prefix)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function normalizeComponent(string $component): string
-    {
-        $component = trim($component);
-        $component = preg_replace('/Bundle$/', '', $component) ?? $component;
-        $component = preg_replace('/[^A-Za-z0-9]+/', '-', $component) ?? $component;
-        $component = strtolower(trim((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $component), '-'));
-
-        return str_replace('--', '-', $component);
+        return $visibility->allComponentsVisible ? ['*'] : $visibility->componentKeys;
     }
 }

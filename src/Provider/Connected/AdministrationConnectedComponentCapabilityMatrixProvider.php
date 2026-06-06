@@ -4,60 +4,45 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationCapabilityMatrixProviderInterface;
+use App\Administering\Service\Connected\AdministrationRuntimeScopeConnectedComponentProjectionService;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentCapabilityMatrixProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentCapability;
 use App\Administering\Value\Connected\AdministrationConnectedComponentCapabilityMatrix;
-use App\Rolling\ServiceInterface\Administration\RollingAclCapabilityMatrixProviderInterface;
 
-/**
- * Aggregates safe capability matrices from connected components.
- */
+/** Builds metadata-only capabilities without foreign service contracts. */
 final readonly class AdministrationConnectedComponentCapabilityMatrixProvider implements AdministrationConnectedComponentCapabilityMatrixProviderInterface
 {
-    public function __construct(
-        private AccessAccountAdministrationCapabilityMatrixProviderInterface $accessingCapabilityMatrixProvider,
-        private RollingAclCapabilityMatrixProviderInterface $rollingCapabilityMatrixProvider,
-    ) {
+    public function __construct(private AdministrationRuntimeScopeConnectedComponentProjectionService $projection)
+    {
     }
 
     public function matrix(): AdministrationConnectedComponentCapabilityMatrix
     {
         $capabilities = [];
-
-        foreach ($this->accessingCapabilityMatrixProvider->matrix()->capabilities() as $capability) {
-            $capabilities[] = $this->mapCapability('Accessing', $capability->toSafeArray(), 'executable');
+        foreach ($this->projection->decisionRows() as $row) {
+            $component = $row->component;
+            $capabilities[] = new AdministrationConnectedComponentCapability(
+                component: $component,
+                key: $component.'.runtime_scope.read',
+                label: $component.' runtime-scope visibility',
+                category: 'runtime_scope',
+                status: $row->status,
+                sensitive: false,
+                mutation: false,
+                requiresReview: false,
+                context: $row->toArray(),
+            );
         }
 
-        foreach ($this->rollingCapabilityMatrixProvider->matrix()->capabilities() as $capability) {
-            $capabilities[] = $this->mapCapability('Rolling', $capability->toSafeArray(), 'mutation');
-        }
-
-        return new AdministrationConnectedComponentCapabilityMatrix(
-            new \DateTimeImmutable(),
-            $capabilities,
-            [
-                'This endpoint is a capability matrix, not an executor.',
-                'Accessing capabilities describe account-administration surfaces without exposing auth internals.',
-                'Rolling capabilities describe ACL/policy surfaces without exposing raw grants or policy internals.',
-                'Administering may visualize capabilities and route reviewed requests to owning components only.',
-            ],
-        );
+        return new AdministrationConnectedComponentCapabilityMatrix(new \DateTimeImmutable(), $capabilities, $this->guards());
     }
 
-    /** @param array<string, mixed> $capability */
-    private function mapCapability(string $component, array $capability, string $mutationFlag): AdministrationConnectedComponentCapability
+    /** @return list<string> */
+    private function guards(): array
     {
-        return new AdministrationConnectedComponentCapability(
-            $component,
-            (string) $capability['key'],
-            (string) $capability['label'],
-            (string) $capability['category'],
-            (string) $capability['status'],
-            (bool) ($capability['sensitive'] ?? false),
-            (bool) ($capability[$mutationFlag] ?? false),
-            (bool) ($capability['requiresReview'] ?? true),
-            is_array($capability['context'] ?? null) ? $capability['context'] : [],
-        );
+        return [
+            'No foreign PHP service contracts are used for capability discovery.',
+            'Capabilities are derived only from APP_RUNTIME_SCOPE, composer inventory, and runtime-scope lock files.',
+        ];
     }
 }

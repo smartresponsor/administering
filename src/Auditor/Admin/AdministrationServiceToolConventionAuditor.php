@@ -115,7 +115,7 @@ final readonly class AdministrationServiceToolConventionAuditor implements Admin
         }
 
         $toolSlug = substr($shortName, strlen($prefix), -strlen('Service'));
-        if (!is_string($toolSlug) || '' === $toolSlug) {
+        if ('' === $toolSlug) {
             return 'empty_tool_slug';
         }
 

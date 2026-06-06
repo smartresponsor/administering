@@ -4,59 +4,57 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationDiagnosticReportProviderInterface;
+use App\Administering\Service\Connected\AdministrationRuntimeScopeConnectedComponentProjectionService;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentDiagnosticReportProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentDiagnosticIssue;
 use App\Administering\Value\Connected\AdministrationConnectedComponentDiagnosticReport;
-use App\Rolling\ServiceInterface\Administration\RollingAclDiagnosticReportProviderInterface;
 
-/**
- * Aggregates safe diagnostic issue registers from connected administration components.
- */
+/** Builds diagnostics from local evidence instead of foreign diagnostics providers. */
 final readonly class AdministrationConnectedComponentDiagnosticReportProvider implements AdministrationConnectedComponentDiagnosticReportProviderInterface
 {
-    public function __construct(
-        private AccessAccountAdministrationDiagnosticReportProviderInterface $accessingDiagnosticsProvider,
-        private RollingAclDiagnosticReportProviderInterface $rollingDiagnosticsProvider,
-    ) {
+    public function __construct(private AdministrationRuntimeScopeConnectedComponentProjectionService $projection)
+    {
     }
 
     public function report(): AdministrationConnectedComponentDiagnosticReport
     {
         $issues = [];
+        foreach ($this->projection->decisionRows() as $row) {
+            if (in_array($row->status, ['available', 'package_installed'], true)) {
+                continue;
+            }
 
-        foreach ($this->accessingDiagnosticsProvider->report()->issues() as $issue) {
-            $issues[] = $this->mapIssue('Accessing', $issue->toSafeArray());
+            $issues[] = new AdministrationConnectedComponentDiagnosticIssue(
+                component: $row->component,
+                key: $row->component.'.'.$row->status,
+                label: $row->message,
+                category: 'runtime_scope',
+                severity: 'missing_package' === $row->status ? 'high' : 'medium',
+                status: $row->status,
+                blocking: 'missing_package' === $row->status,
+                context: $row->toArray(),
+            );
         }
 
-        foreach ($this->rollingDiagnosticsProvider->report()->issues() as $issue) {
-            $issues[] = $this->mapIssue('Rolling', $issue->toSafeArray());
+        foreach ($this->projection->sourceErrors() as $index => $error) {
+            $issues[] = new AdministrationConnectedComponentDiagnosticIssue(
+                component: 'administering',
+                key: 'runtime_scope.source_error.'.($index + 1),
+                label: $error,
+                category: 'runtime_scope_source',
+                severity: 'medium',
+                status: 'source_warning',
+                blocking: false,
+                context: ['message' => $error],
+            );
         }
 
-        return new AdministrationConnectedComponentDiagnosticReport(
-            new \DateTimeImmutable(),
-            $issues,
-            [
-                'This diagnostic register is metadata-only and does not execute account or ACL mutations.',
-                'Accessing diagnostics must not expose password hashes, TOTP secrets, recovery codes, reset tokens, or raw session payloads.',
-                'Rolling diagnostics must not expose raw subject grants, raw policy internals, sessions, passwords, or secrets.',
-                'Blocking issues should keep Administering mutation screens in review/disabled mode until the owning component is ready.',
-            ],
-        );
+        return new AdministrationConnectedComponentDiagnosticReport(new \DateTimeImmutable(), $issues, $this->guards());
     }
 
-    /** @param array<string, mixed> $issue */
-    private function mapIssue(string $component, array $issue): AdministrationConnectedComponentDiagnosticIssue
+    /** @return list<string> */
+    private function guards(): array
     {
-        return new AdministrationConnectedComponentDiagnosticIssue(
-            $component,
-            (string) $issue['key'],
-            (string) $issue['label'],
-            (string) $issue['category'],
-            (string) $issue['severity'],
-            (string) $issue['status'],
-            (bool) ($issue['blocking'] ?? false),
-            is_array($issue['context'] ?? null) ? $issue['context'] : [],
-        );
+        return ['Diagnostics are derived from local runtime-scope sources only.'];
     }
 }

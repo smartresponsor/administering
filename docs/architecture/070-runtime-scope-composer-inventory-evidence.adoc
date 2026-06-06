@@ -1,0 +1,37 @@
+= Runtime-scope composer inventory evidence boundary
+
+Administering treats host Composer files as runtime-scope evidence only.
+Composer package presence may prove that a component package is installed, but it must not become an autoload, class, service, route, or container boundary.
+
+== Rule
+
+Runtime-scope component detection is based on this chain only:
+
+[source,text]
+----
+APP_ENV
+APP_RUNTIME_SCOPE
+composer.json / composer.prod.json
+config/runtime-scope/bundle_catalog.php
+config/kernel/runtime_scope.lock.php / runtime_scope.prod.lock.php
+----
+
+The Composer inventory reader returns raw package presence plus component package evidence mapped through Administering's token catalog.
+It does not infer component ownership from vendor names or package naming conventions.
+
+== Consequence
+
+A package such as `cruding/crud` can mark the `cruding` token as installed only when the Administering-owned runtime-scope catalog maps that package to the `cruding` token.
+Unknown runtime-scope-like packages are reported as source warnings instead of being promoted into enabled component status.
+
+== Guard
+
+The architecture suite includes:
+
+[source,bash]
+----
+composer inspect:composer-inventory-evidence
+composer inspect:architecture
+----
+
+The guard blocks package-to-component heuristics in the state reader and status service.

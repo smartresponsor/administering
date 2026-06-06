@@ -26,12 +26,12 @@ final readonly class AdministrationOwnerConfigurationToolExternalPackagePipeline
 
     public function errorCount(): int
     {
-        return count(array_filter($this->issues, static fn (array $issue): bool => 'error' === ($issue['severity'] ?? null)));
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'error' === $issue['severity']));
     }
 
     public function warningCount(): int
     {
-        return count(array_filter($this->issues, static fn (array $issue): bool => 'warning' === ($issue['severity'] ?? null)));
+        return count(array_filter($this->issues, static fn (array $issue): bool => 'warning' === $issue['severity']));
     }
 
     public function hasErrors(): bool
@@ -46,7 +46,7 @@ final readonly class AdministrationOwnerConfigurationToolExternalPackagePipeline
 
     public function failedStepCount(): int
     {
-        return count(array_filter($this->steps, static fn (array $step): bool => 0 !== ($step['exitCode'] ?? 1)));
+        return count(array_filter($this->steps, static fn (array $step): bool => 0 !== $step['exitCode']));
     }
 
     /** @return array<string, mixed> */

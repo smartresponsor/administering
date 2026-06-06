@@ -7,7 +7,7 @@ namespace App\Administering\Provider\Security;
 use App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface;
 
 /**
- * Safe default provider used before the host wires Rolling as the decision authority.
+ * Safe default provider used before the host wires an external decision authority.
  */
 final class AdministrationBootstrapExternalPermissionDecisionProvider implements AdministrationExternalPermissionDecisionProviderInterface
 {

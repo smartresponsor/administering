@@ -31,7 +31,7 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
     protected function configure(): void
     {
         $this
-            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component/section key or token, for example Managing or managing.')
+            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component/section key or token, for example Connected or connected.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print transition decision as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write transition decision JSON to this path.')
             ->addOption('fail-if-not-ready', null, InputOption::VALUE_NONE, 'Fail when the transition is not ready to pause internal Administering waves.')
@@ -216,6 +216,11 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
     }
 
     /** @param array<string, int> $decisionCounts */
+    /**
+     * @param array<string, int> $decisionCounts
+     *
+     * @return list<string>
+     */
     private function recommendedNextActions(array $decisionCounts, bool $externalPipelinePresent, bool $handoffBundlePresent): array
     {
         $actions = [];

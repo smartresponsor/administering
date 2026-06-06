@@ -45,7 +45,7 @@ final class AdministrationSymfonyRouteRecord
     {
         $this->routeName = $routeName;
         $this->path = $path;
-        $this->methods = array_values($methods);
+        $this->methods = $methods;
         $this->controller = $controller;
         $this->statusCode = $statusCode;
         $this->statusClass = $statusClass;

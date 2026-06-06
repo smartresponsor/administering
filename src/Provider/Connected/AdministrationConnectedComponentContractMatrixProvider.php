@@ -4,64 +4,47 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationContractMatrixProviderInterface;
+use App\Administering\Service\Connected\AdministrationRuntimeScopeConnectedComponentProjectionService;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentContractMatrixProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentContract;
 use App\Administering\Value\Connected\AdministrationConnectedComponentContractMatrix;
-use App\Rolling\ServiceInterface\Administration\RollingAclAdministrationContractMatrixProviderInterface;
 
-/**
- * Aggregates safe contract matrices from connected components.
- */
+/** Builds metadata-only contract rows without importing foreign contracts. */
 final readonly class AdministrationConnectedComponentContractMatrixProvider implements AdministrationConnectedComponentContractMatrixProviderInterface
 {
-    public function __construct(
-        private AccessAccountAdministrationContractMatrixProviderInterface $accessingContractMatrixProvider,
-        private RollingAclAdministrationContractMatrixProviderInterface $rollingContractMatrixProvider,
-    ) {
+    public function __construct(private AdministrationRuntimeScopeConnectedComponentProjectionService $projection)
+    {
     }
 
     public function matrix(): AdministrationConnectedComponentContractMatrix
     {
         $contracts = [];
-
-        foreach ($this->accessingContractMatrixProvider->matrix()->contracts() as $contract) {
-            $contracts[] = $this->mapContract('Accessing', $contract->toSafeArray());
+        foreach ($this->projection->decisionRows() as $row) {
+            $component = $row->component;
+            $contracts[] = new AdministrationConnectedComponentContract(
+                component: $component,
+                key: $component.'.runtime_scope.evidence',
+                label: $component.' runtime evidence contract',
+                category: 'runtime_scope',
+                status: $row->status,
+                provider: 'composer/runtime_scope_lock',
+                consumer: 'administering',
+                required: 'administering' === $component,
+                sensitive: false,
+                runtimeMode: 'evidence_only',
+                context: $row->toArray(),
+            );
         }
 
-        foreach ($this->rollingContractMatrixProvider->matrix()->contracts() as $contract) {
-            $contracts[] = $this->mapContract('Rolling', $contract->toSafeArray());
-        }
-
-        return new AdministrationConnectedComponentContractMatrix(
-            new \DateTimeImmutable(),
-            $contracts,
-            [
-                'This endpoint is a contract matrix, not an executor.',
-                'Accessing contracts must not duplicate authentication/session ownership in Administering.',
-                'Rolling contracts must not expose raw subject grants or policy internals.',
-                'Administering consumes safe contracts and routes reviewed requests to owning components only.',
-            ],
-        );
+        return new AdministrationConnectedComponentContractMatrix(new \DateTimeImmutable(), $contracts, $this->guards());
     }
 
-    /** @param array<string, mixed> $contract */
-    private function mapContract(string $component, array $contract): AdministrationConnectedComponentContract
+    /** @return list<string> */
+    private function guards(): array
     {
-        $runtimeMode = (string) ($contract['runtimeMode'] ?? $contract['storageMode'] ?? 'unknown');
-
-        return new AdministrationConnectedComponentContract(
-            $component,
-            (string) $contract['key'],
-            (string) $contract['label'],
-            (string) $contract['category'],
-            (string) $contract['status'],
-            (string) ($contract['provider'] ?? $component),
-            (string) ($contract['consumer'] ?? 'Administering'),
-            (bool) ($contract['required'] ?? true),
-            (bool) ($contract['sensitive'] ?? false),
-            $runtimeMode,
-            is_array($contract['context'] ?? null) ? $contract['context'] : [],
-        );
+        return [
+            'Foreign component contracts are treated as strings/evidence, not PHP types.',
+            'Administering remains standalone when APP_RUNTIME_SCOPE is empty.',
+        ];
     }
 }

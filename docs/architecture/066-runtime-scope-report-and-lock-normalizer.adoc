@@ -1,0 +1,52 @@
+= 066 Runtime-Scope Report and Lock Normalizer
+
+== Decision
+
+Administering must report runtime-scope state through one normalized decision surface.
+Commands, providers, controllers, and connected read-model services must not parse runtime-scope lock files directly.
+
+== Evidence inputs
+
+The runtime-scope decision is built only from local evidence:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+No foreign Symfony bundle class, entity class, service interface, or route class is loaded to decide component availability.
+
+== Normalized lock evidence
+
+`AdministrationRuntimeScopeLockNormalizer` is the single lock payload normalizer.
+It converts a runtime lock file into `AdministrationRuntimeScopeLockEvidence`:
+
+* lock path/status/hash
+* schema/scope/strict metadata
+* composer fingerprint metadata
+* generatedAt/generatedBy metadata
+* enabled bundle tokens
+* enabled component tokens
+* disabled component tokens
+* schema/token errors
+* compatibility warnings
+
+The normalizer rejects PHP class-shaped lock evidence and accepts only token-shaped bundle evidence.
+
+== Report semantics
+
+`administering:runtime-scope:report` now reports every component token with the same columns:
+
+* `present` — composer inventory contains the package or it is the local administering component
+* `allowed` — `APP_RUNTIME_SCOPE` includes the component, or `*` is active
+* `locked` — runtime-scope lock enables the component token
+* `enabled` — component is present, allowed, and locked without explicit disable
+* `status` — normalized decision status
+* `reason` — human-readable reason derived from runtime evidence
+
+== Boundary
+
+`AdministrationRuntimeScopeDecisionService` remains the public decision boundary outside RuntimeScope internals.
+`AdministrationRuntimeScopeLockNormalizer` is a low-level internal service used by state/validation/index services only.

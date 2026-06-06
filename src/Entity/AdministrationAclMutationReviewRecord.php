@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Persisted metadata-only record of a Rolling ACL mutation dry-run review.
+ * Persisted metadata-only record of a authorization mutation dry-run review.
  *
  * This record belongs to Administering system storage. It must not contain raw
  * policy internals, secrets, session payloads, passwords, or decrypted values.

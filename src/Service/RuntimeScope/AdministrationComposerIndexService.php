@@ -128,10 +128,6 @@ final readonly class AdministrationComposerIndexService
         $records = $manager->getRepository(AdministrationEnvironmentRuntimeRecord::class)->findBy([], ['id' => 'DESC'], 200);
         $result = [];
         foreach ($records as $record) {
-            if (!$record instanceof AdministrationEnvironmentRuntimeRecord) {
-                continue;
-            }
-
             $key = strtolower($record->getEnvironmentKey().' '.$record->getCategory().' '.$record->getSourceType());
             if (!str_contains($key, 'composer')) {
                 continue;

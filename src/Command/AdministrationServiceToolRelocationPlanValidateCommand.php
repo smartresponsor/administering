@@ -30,7 +30,7 @@ final class AdministrationServiceToolRelocationPlanValidateCommand extends Comma
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to validate, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to validate, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the validation report as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the validation report JSON to a repository-relative path.')
             ->addOption('allow-issues', null, InputOption::VALUE_NONE, 'Return success even when validation issues are found.');

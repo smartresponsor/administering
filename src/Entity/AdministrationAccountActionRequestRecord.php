@@ -8,9 +8,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Administering-side record of a controlled Accessing account action request.
+ * Administering-side record of a controlled account action request.
  *
- * The action is executed by Accessing. Administering stores only request/result
+ * The action is executed by the owning component. Administering stores only request/result
  * metadata for operator traceability and UI visibility.
  */
 #[ORM\Entity]

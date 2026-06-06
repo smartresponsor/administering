@@ -144,6 +144,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleVali
     }
 
     /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $payload
+     * @param list<array<string, string>> $issues
+     */
     private function validatePayload(array $payload, array &$issues): bool
     {
         if ([] === $payload) {
@@ -198,7 +202,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleVali
         return $accepted;
     }
 
-    /** @param list<array<string, string>> $issues */
+    /**
+     * @param list<array<string, string>> $issues
+     */
     private function requireText(string $path, string $needle, array &$issues): void
     {
         $content = (string) file_get_contents($path);

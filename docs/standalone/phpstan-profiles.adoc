@@ -1,0 +1,37 @@
+= Administering PHPStan Profiles
+
+Administering has two PHPStan profiles.
+
+== Standalone profile
+
+Use this when Administering is checked as an isolated component and neighboring host packages are not available in Composer autoload.
+
+[source,powershell]
+----
+composer stan:standalone:export:raw
+----
+
+The standalone profile uses `phpstan.standalone.neon` and excludes integration surfaces that require external packages such as Accessing, Rolling, Managing, and Configuring.
+
+== Integrated profile
+
+Use this when the host ecosystem packages are installed and autoloadable.
+
+[source,powershell]
+----
+composer stan:integrated:export:raw
+----
+
+The integrated profile uses `phpstan.neon` and is allowed to analyze host-connected Administering surfaces.
+
+== Strict mode
+
+The export scripts do not fail Composer by default. They write `phpstan_exit` to the console and persist the full report under `var/reports/phpstan/`.
+
+Use strict scripts when CI must fail on PHPStan errors:
+
+[source,powershell]
+----
+composer stan:standalone:export:fail
+composer stan:integrated:export:fail
+----

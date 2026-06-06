@@ -32,7 +32,7 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
     {
         $this
             ->addArgument('file', InputArgument::REQUIRED, 'Runtime controls export JSON file path.')
-            ->addOption('section', null, InputOption::VALUE_REQUIRED, 'Import only a section/direction key, for example Managing or managing.')
+            ->addOption('section', null, InputOption::VALUE_REQUIRED, 'Import only a section/direction key, for example Connected or connected.')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Validate and preview changes without writing them.')
             ->addOption('allow-missing', null, InputOption::VALUE_NONE, 'Do not fail when an exported toolKey is not present in the current SQLite index.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print import result as JSON.');
@@ -245,6 +245,10 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
     }
 
     /** @param array<string, mixed> $control @param list<string> $invalid */
+    /**
+     * @param array<string, mixed> $control
+     * @param list<string>         $invalid
+     */
     private function readBoolean(array $control, string $field, array &$invalid, string $toolKey): bool
     {
         $value = $control[$field] ?? null;
@@ -258,6 +262,10 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
     }
 
     /** @param array<string, mixed> $control @param list<string> $invalid */
+    /**
+     * @param array<string, mixed> $control
+     * @param list<string>         $invalid
+     */
     private function readInteger(array $control, string $field, array &$invalid, string $toolKey): int
     {
         $value = $control[$field] ?? null;
@@ -271,6 +279,10 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
     }
 
     /** @param array<string, mixed> $control @param list<string> $invalid */
+    /**
+     * @param array<string, mixed> $control
+     * @param list<string>         $invalid
+     */
     private function readNullableLabel(array $control, string $field, array &$invalid, string $toolKey): ?string
     {
         $value = $control[$field] ?? null;

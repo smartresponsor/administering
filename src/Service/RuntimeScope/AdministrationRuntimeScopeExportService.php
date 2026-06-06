@@ -57,8 +57,8 @@ final readonly class AdministrationRuntimeScopeExportService
     }
 
     /**
-     * @param array{components: array<string, array{package: string, bundle: string}>} $catalog
-     * @param array<string, true>                                                      $composerPackages
+     * @param array{components: array<string, array{package: string, bundleToken: string}>} $catalog
+     * @param array<string, true>                                                           $composerPackages
      *
      * @return array<string, mixed>
      */
@@ -91,19 +91,19 @@ final readonly class AdministrationRuntimeScopeExportService
                 continue;
             }
 
-            if ($installed || $forcedEnabled) {
-                if (!$installed && $forcedEnabled) {
-                    if (!$request->skipMissingPackages) {
-                        $missingPackages[] = sprintf('%s (%s)', $component, $package);
-                        continue;
-                    }
+            if ($installed) {
+                $enabledComponents[] = $component;
+                continue;
+            }
 
-                    $skippedComponents[] = $component;
-                    $disabledComponents[] = $component;
+            if ($forcedEnabled) {
+                if (!$request->skipMissingPackages) {
+                    $missingPackages[] = sprintf('%s (%s)', $component, $package);
                     continue;
                 }
 
-                $enabledComponents[] = $component;
+                $skippedComponents[] = $component;
+                $disabledComponents[] = $component;
                 continue;
             }
 
@@ -114,24 +114,24 @@ final readonly class AdministrationRuntimeScopeExportService
             throw new \RuntimeException(sprintf('Forced enabled component package is missing from %s: %s. Re-run with --skip-missing-packages to skip it.', $composerFile, implode(', ', $missingPackages)));
         }
 
-        $enabledBundles = [];
+        $enabledBundleTokens = [];
         foreach ($enabledComponents as $component) {
-            $enabledBundles[] = $components[$component]['bundle'];
+            $enabledBundleTokens[] = $components[$component]['bundleToken'];
         }
 
         return [
             'schema' => 'app.kernel.runtime_scope.v1',
             'scope' => $request->scope,
             'environment' => $request->environment,
-            'source' => 'materialized by administering:runtime-scope:export from composer inventory and Administering-owned bundle catalog',
+            'source' => 'materialized by administering:runtime-scope:export from composer inventory and Administering-owned token catalog',
             'sourceComposerFile' => $composerFile,
             'sourceComposerSha256' => hash_file('sha256', $composerPath) ?: null,
             'sourceComposerPackageCount' => count(array_filter(array_keys($composerPackages), static fn (string $package): bool => 'php' !== $package)),
             'strict' => $request->strict,
             'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             'generatedBy' => 'administering:runtime-scope:export',
-            'enabledComponents' => array_values($enabledComponents),
-            'enabledBundles' => array_values($enabledBundles),
+            'enabledComponents' => $enabledComponents,
+            'enabledBundleTokens' => $enabledBundleTokens,
             'disabledComponents' => array_values(array_unique($disabledComponents)),
             'skippedComponents' => array_values(array_unique($skippedComponents)),
         ];

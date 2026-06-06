@@ -1,0 +1,23 @@
+= Administering PHPStan dry export
+
+Dry export scripts write PHPStan output into `var/reports/phpstan/` and keep console output minimal.
+
+== Commands
+
+[source,powershell]
+----
+composer stan:export
+composer stan:export:raw
+composer stan:export:json
+----
+
+The console prints only generated file paths and PHPStan exit code.
+
+== Output
+
+Generated files:
+
+* `var/reports/phpstan/phpstan-YYYYMMDD-HHMMSS.txt`
+* `var/reports/phpstan/phpstan-YYYYMMDD-HHMMSS.json` when `stan:export:json` is used
+* `var/reports/phpstan/phpstan-YYYYMMDD-HHMMSS.stderr.txt`
+* `var/reports/phpstan/phpstan-YYYYMMDD-HHMMSS.exit.txt`

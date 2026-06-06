@@ -7,10 +7,14 @@ namespace App\Administering\Value\Config;
 final readonly class AdministrationConfigToolDescriptor
 {
     /**
-     * @param list<string>         $editableFields
-     * @param list<string>         $sensitiveFields
+     * @param list<string> $secretNames
+     */
+    /**
      * @param list<string>         $readableFiles
      * @param list<string>         $writableFiles
+     * @param list<string>         $editableFields
+     * @param list<string>         $sensitiveFields
+     * @param list<string>         $secretNames
      * @param array<string, mixed> $metadata
      */
     public function __construct(

@@ -15,7 +15,7 @@ final class AdministrationRuntimeScopeReferenceScanner
     {
         $components = [];
         foreach ($forbiddenComponents as $component) {
-            if (is_string($component) && '' !== trim($component)) {
+            if ('' !== trim($component)) {
                 $components[] = strtolower(trim($component));
             }
         }

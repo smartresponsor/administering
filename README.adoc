@@ -1,0 +1,30 @@
+= Administering W03 Dashboard Storage Patch Kit
+
+== Base
+
+This kit was computed only against the uploaded current slice archive `AdministeringFr.zip`.
+
+== Apply
+
+From the Administering repository root:
+
+[source,powershell]
+----
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\apply-administering-w03-dashboard-storage.ps1 -ProjectRoot .
+----
+
+== Touched files
+
+* `src/Controller/Admin/AdministrationDashboardController.php`
+* `src/ServiceInterface/Admin/AdministrationServiceToolRecordStorageInterface.php`
+* `src/Service/Admin/AdministrationDoctrineServiceToolRecordStorage.php`
+* `config/services.yaml`
+* `docs/architecture/058-dashboard-controller-service-tool-record-storage.adoc`
+
+== Validation performed
+
+* PHP lint on touched PHP files.
+
+== Route risk
+
+No route paths, route names, route methods, EasyAdmin defaults, or CRUD controller mappings were changed.

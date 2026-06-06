@@ -1,0 +1,61 @@
+= Administering Architecture Guard Suite
+
+Administering must stay locally owned by the `App\Administering` namespace and must not load foreign component classes through container discovery, routes, controller namespaces, service aliases, `_instanceof`, runtime-scope evidence, or guard bypasses.
+
+== Guard entrypoint
+
+W12 adds one release-gate entrypoint:
+
+[source,bash]
+----
+composer inspect:architecture
+----
+
+For Windows-only local use the same suite is also available through:
+
+[source,powershell]
+----
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/inspection/administering-architecture-guard-suite.ps1
+----
+
+== Included guards
+
+The suite executes these hard checks:
+
+* `administering-zero-foreign-coupling-guard.php`
+* `administering-runtime-scope-decision-boundary-guard.php`
+* `administering-no-excluded-admin-controller-surface-guard.php`
+
+== Boundary protected by the suite
+
+The suite prevents these regressions:
+
+* `App\Accessing\` in `src/`, `config/`, `tests/`, or `templates/`.
+* `App\Rolling\` in `src/`, `config/`, `tests/`, or `templates/`.
+* `App\Managing\` in `src/`, `config/`, `tests/`, or `templates/`.
+* `App\Configuring\` in `src/`, `config/`, `tests/`, or `templates/`.
+* PHP class-shaped bundle evidence in `config/runtime-scope/bundle_catalog.php`.
+* Legacy `bundle` catalog keys instead of tokenized `bundle_token` keys.
+* Direct runtime-scope internals usage from commands, controllers, providers, or connected services.
+* Reintroduced `src/Controller/Admin/Surface` excluded controller tree.
+
+== Composer scripts
+
+W12 introduces explicit scripts:
+
+[source,json]
+----
+"inspect:zero-foreign": "@php tools/inspection/administering-zero-foreign-coupling-guard.php",
+"inspect:runtime-scope-boundary": "@php tools/inspection/administering-runtime-scope-decision-boundary-guard.php",
+"inspect:no-admin-surface": "@php tools/inspection/administering-no-excluded-admin-controller-surface-guard.php",
+"inspect:architecture": "@php tools/inspection/administering-architecture-guard-suite.php",
+"quality:architecture": [
+  "@inspect:architecture"
+]
+----
+
+`quality:local` now starts with `@quality:architecture`, so the local gate fails before slower checks if architecture regresses.
+
+== W14 addition
+
+The suite also runs the composer package boundary guard. This prevents runtime-scope component packages from becoming root `require` or `require-dev` dependencies of Administering and prevents sibling component path repositories from being hard-wired into `composer.json`.

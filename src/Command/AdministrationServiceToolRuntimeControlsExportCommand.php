@@ -28,7 +28,7 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section/direction key, for example Managing or managing.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section/direction key, for example Connected or connected.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the export payload to a JSON file path.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the full export payload as JSON.');
     }

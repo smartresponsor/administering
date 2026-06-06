@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Administering\Tests\Unit\Security;
+
+use App\Administering\Checker\Security\AdministrationRollingPermissionChecker;
+use App\Administering\Provider\Security\AdministrationBootstrapExternalPermissionDecisionProvider;
+use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
+use App\Administering\Value\AdministrationCurrentUserContext;
+use PHPUnit\Framework\TestCase;
+
+final class AdministrationRollingPermissionCheckerTest extends TestCase
+{
+    public function testBootstrapAdminRoleCanSeeAdministrationShell(): void
+    {
+        $checker = new AdministrationRollingPermissionChecker(
+            new class implements AdministrationCurrentUserContextProviderInterface {
+                public function current(): AdministrationCurrentUserContext
+                {
+                    return new AdministrationCurrentUserContext(
+                        'accessing:account:1',
+                        'admin@example.com',
+                        ['ROLE_ADMIN'],
+                    );
+                }
+            },
+            new AdministrationBootstrapExternalPermissionDecisionProvider(),
+        );
+
+        self::assertTrue($checker->isGranted('administration.dashboard.view'));
+        self::assertTrue($checker->isGranted('administration.operation.view'));
+        self::assertTrue($checker->isGranted('administration.rolling.permission_catalog.view'));
+    }
+
+    public function testMissingCurrentUserIsDenied(): void
+    {
+        $checker = new AdministrationRollingPermissionChecker(
+            new class implements AdministrationCurrentUserContextProviderInterface {
+                public function current(): AdministrationCurrentUserContext
+                {
+                    return new \App\Administering\Value\AdministrationCurrentUserContext(null, [], false);
+                }
+            },
+            new AdministrationBootstrapExternalPermissionDecisionProvider(),
+        );
+
+        self::assertFalse($checker->isGranted('administration.dashboard.view'));
+    }
+}

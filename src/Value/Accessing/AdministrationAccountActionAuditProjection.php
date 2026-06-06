@@ -56,4 +56,18 @@ final readonly class AdministrationAccountActionAuditProjection
     {
         return $this->safeContext;
     }
+
+    /** @return array<string, mixed> */
+    public function toSafeArray(): array
+    {
+        return [
+            'action' => $this->action,
+            'accountReference' => $this->accountReference,
+            'requestedBySubject' => $this->requestedBySubject,
+            'resultStatus' => $this->resultStatus,
+            'safeMessage' => $this->safeMessage,
+            'createdAt' => $this->createdAt->format(\DateTimeInterface::ATOM),
+            'safeContext' => $this->safeContext,
+        ];
+    }
 }

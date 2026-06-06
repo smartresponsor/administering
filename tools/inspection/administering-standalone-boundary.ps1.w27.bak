@@ -1,0 +1,101 @@
+param(
+    [string]$Repo = (Get-Location).Path
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+$repoPath = [System.IO.Path]::GetFullPath($Repo)
+$forbiddenPattern = 'use\s+App\\(Accessing|Rolling|Managing|Configuring)\\'
+$standaloneRoots = @(
+    'src/Auditor',
+    'src/Builder',
+    'src/Catalog',
+    'src/Checker',
+    'src/Command',
+    'src/Entity',
+    'src/Factory',
+    'src/Guard',
+    'src/Operator',
+    'src/Planner',
+    'src/Reader',
+    'src/Recorder',
+    'src/Resolver',
+    'src/Runner',
+    'src/Scanner',
+    'src/Service/RuntimeScope',
+    'src/Submitter',
+    'src/Validator',
+    'src/Value',
+    'src/Voter',
+    'src/Writer',
+    'tests/Unit/Config',
+    'tests/Unit/Security'
+)
+
+$excludedFragments = @(
+    '/src/Catalog/Admin/AdministrationCompositeServiceToolCatalog.php',
+    '/src/Command/AdministrationOwnerConfigurationToolDiscoveryCommand.php',
+    '/src/Command/AdministrationOwnerConfigurationToolExternalPackageManifestCommand.php',
+    '/src/Command/AdministrationOwnerConfigurationToolExternalPackageSpecCommand.php',
+    '/src/Command/AdministrationOwnerConfigurationToolMaterializationPreviewCommand.php',
+    '/src/Command/AdministrationOwnerConfigurationToolTransitionStatusCommand.php',
+    '/src/Command/AdministrationOwnerConfigurationToolValidateCommand.php',
+    '/src/Command/AdministrationRuntimeReadinessCommand.php',
+    '/src/Recorder/Accessing/',
+    '/src/Recorder/Rolling/',
+    '/src/Runner/Operation/AdministrationGovernanceOperationRunner.php',
+    '/src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php',
+    '/src/Validator/Admin/ConfigurationToolDefinitionValidator.php',
+    '/src/Value/Form/Managing/',
+    '/src/Command/Config/',
+    '/src/Controller/Admin/Surface/',
+    '/src/Form/Config/',
+    '/src/Form/Managing/',
+    '/src/Locator/Config/',
+    '/src/Mapper/Config/',
+    '/src/Provider/Accessing/',
+    '/src/Provider/Managing/',
+    '/src/Provider/Rolling/',
+    '/src/Service/Config/',
+    '/src/Service/Managing/',
+    '/src/Service/Rolling/',
+    '/src/ServiceInterface/Accessing/',
+    '/src/ServiceInterface/Config/',
+    '/src/ServiceInterface/Managing/',
+    '/src/ServiceInterface/Rolling/',
+    '/tests/Unit/Rolling/'
+)
+
+$violations = New-Object System.Collections.Generic.List[string]
+foreach ($root in $standaloneRoots) {
+    $absoluteRoot = Join-Path $repoPath $root
+    if (-not (Test-Path -LiteralPath $absoluteRoot)) {
+        continue
+    }
+
+    Get-ChildItem -LiteralPath $absoluteRoot -Recurse -File -Filter '*.php' | ForEach-Object {
+        $path = $_.FullName
+        $normalized = $path.Replace('\\', '/')
+        foreach ($fragment in $excludedFragments) {
+            if ($normalized.Contains($fragment)) {
+                return
+            }
+        }
+
+        $matches = Select-String -LiteralPath $path -Pattern $forbiddenPattern -AllMatches
+        foreach ($match in $matches) {
+            $relative = $path.Substring($repoPath.Length).TrimStart([char]92, [char]47)
+            $violations.Add(("{0}:{1}:{2}" -f $relative, $match.LineNumber, $match.Line.Trim()))
+        }
+    }
+}
+
+if ($violations.Count -gt 0) {
+    $violations | ForEach-Object { Write-Output $_ }
+    Write-Output ("administering_standalone_boundary=failed count={0}" -f $violations.Count)
+    exit 1
+}
+
+Write-Output 'administering_standalone_boundary=passed'
+exit 0

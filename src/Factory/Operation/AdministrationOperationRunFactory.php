@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Factory\Operation;
 
 use App\Administering\Entity\AdministrationOperationRun;
-use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface;
+use App\Administering\ServiceInterface\Security\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 
 final class AdministrationOperationRunFactory implements AdministrationOperationRunFactoryInterface

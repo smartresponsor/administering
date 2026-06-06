@@ -25,7 +25,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageOverlayPlanComman
     {
         $this
             ->addArgument('manifest', InputArgument::REQUIRED, 'Path to owner external package manifest JSON.')
-            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component key/token filter, for example Managing or managing.')
+            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component key/token filter, for example Connected or connected.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print overlay plan as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write overlay plan to a JSON file path.')
             ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Do not fail when the manifest contains no component overlay plans.')
@@ -203,6 +203,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageOverlayPlanComman
     }
 
     /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $payload
+     * @param list<array<string, string>> $issues
+     */
     private function requireLiteral(array $payload, string $key, mixed $expected, array &$issues, ?string $path = null): void
     {
         if (($payload[$key] ?? null) !== $expected) {
@@ -224,7 +228,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageOverlayPlanComman
         return '' !== $path
             && !str_contains($path, '..')
             && !str_starts_with($path, '/')
-            && !preg_match('/^[A-Za-z]:[\\\/]/', $path);
+            && !preg_match('~^[A-Za-z]:[\\\\/]~', $path);
     }
 
     private function fileKind(string $path): string

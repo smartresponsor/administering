@@ -103,10 +103,10 @@ final class AdministrationConfigTool
         $this->formClass = $formClass;
         $this->serviceClass = $serviceClass;
         $this->requiredPermission = $requiredPermission;
-        $this->editableFields = array_values($editableFields);
-        $this->sensitiveFields = array_values($sensitiveFields);
-        $this->readableFiles = array_values($readableFiles);
-        $this->writableFiles = array_values($writableFiles);
+        $this->editableFields = $editableFields;
+        $this->sensitiveFields = $sensitiveFields;
+        $this->readableFiles = $readableFiles;
+        $this->writableFiles = $writableFiles;
         $this->metadata = $metadata;
         $this->secretNames = $secretNames;
         $this->description = $description;
@@ -162,25 +162,25 @@ final class AdministrationConfigTool
     /** @return list<string> */
     public function getEditableFields(): array
     {
-        return $this->editableFields;
+        return array_values($this->editableFields);
     }
 
     /** @return list<string> */
     public function getSensitiveFields(): array
     {
-        return $this->sensitiveFields;
+        return array_values($this->sensitiveFields);
     }
 
     /** @return list<string> */
     public function getReadableFiles(): array
     {
-        return $this->readableFiles;
+        return array_values($this->readableFiles);
     }
 
     /** @return list<string> */
     public function getWritableFiles(): array
     {
-        return $this->writableFiles;
+        return array_values($this->writableFiles);
     }
 
     /** @return array<string, mixed> */

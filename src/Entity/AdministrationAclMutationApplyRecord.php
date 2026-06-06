@@ -8,9 +8,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Persisted metadata-only record of a controlled Rolling ACL apply attempt.
+ * Persisted metadata-only record of a controlled authorization apply attempt.
  *
- * The actual ACL execution remains owned by Rolling. Administering stores only
+ * The actual authorization execution remains owned by the host component. Administering stores only
  * the safe operator trace and result metadata.
  */
 #[ORM\Entity]

@@ -32,8 +32,6 @@ final class AdministrationServiceToolScreenCatalog implements AdministrationServ
     private static function screens(): array
     {
         return [
-            'Accessing' => [
-            ],
             'Connected' => [
                 'AdministrationConnectedComponentCapabilityMatrixProvider' => new AdministrationServiceToolScreen('administration_connected_component_capability_matrix', 'Open capability matrix'),
                 'AdministrationConnectedComponentContractMatrixProvider' => new AdministrationServiceToolScreen('administration_connected_component_contract_matrix', 'Open contract matrix'),
@@ -45,17 +43,7 @@ final class AdministrationServiceToolScreenCatalog implements AdministrationServ
                 'AdministrationConnectedComponentRemediationPlanProvider' => new AdministrationServiceToolScreen('administration_connected_component_remediation', 'Open remediation'),
                 'AdministrationConnectedComponentWorkPlanProvider' => new AdministrationServiceToolScreen('administration_connected_component_work_plan', 'Open work plan'),
             ],
-            'Managing' => [
-                'AdministrationManagingFieldAccessMutationApplyService' => new AdministrationServiceToolScreen('administration_managing_field_access_mutation_apply', 'Open access apply'),
-                'AdministrationManagingFieldAccessMutationReviewService' => new AdministrationServiceToolScreen('administration_managing_field_access_mutations', 'Open access mutations'),
-                'AdministrationManagingFieldViewProfileApplyService' => new AdministrationServiceToolScreen('administration_managing_field_view_profile_apply', 'Open profile apply'),
-                'AdministrationManagingFieldViewProfileReviewService' => new AdministrationServiceToolScreen('administration_managing_field_view_profile_edit', 'Open profile review'),
-                'AdministrationManagingFieldVisibilityInspectionPrepareService' => new AdministrationServiceToolScreen('administration_managing_field_visibility_inspection', 'Open inspection'),
-            ],
             'Operation' => [
-            ],
-            'Rolling' => [
-                'AdministrationRollingAclMutationApplyService' => new AdministrationServiceToolScreen('administration_rolling_acl_mutation_apply', 'Open ACL apply'),
             ],
             'Symfony' => [
             ],

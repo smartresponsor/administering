@@ -1,0 +1,54 @@
+= Administering W04: Connected Component Runtime-Scope Read Model
+
+== Decision
+
+Administering connected-component surfaces must not consume foreign PHP services, interfaces, value objects, entities, or bundles.
+
+Connected-component state is read as local evidence only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json` / `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+== Runtime model
+
+`AdministrationRuntimeScopeConnectedComponentProjectionService` builds read-model rows from `AdministrationRuntimeScopeStateReader` and `AdministrationRuntimeComponentStatusService`.
+
+The connected providers under `App\Administering\Provider\Connected` now convert those local rows into Administering-owned DTOs:
+
+* overview
+* readiness
+* capability matrix
+* contract matrix
+* health report
+* diagnostic report
+* remediation plan
+* work plan
+* execution plan
+
+== Boundary
+
+Allowed:
+
+* foreign component names as normalized strings
+* foreign package names as strings
+* foreign bundle class names as lock/catalog string evidence
+* status derived from composer and lock evidence
+
+Forbidden:
+
+* `use App\Accessing\...`
+* `use App\Rolling\...`
+* `use App\Managing\...`
+* `use App\Configuring\...`
+* constructor arguments typed to foreign services
+* service aliases pointing to foreign services
+* `class_exists()` against foreign component classes during Administering runtime decisions
+
+== Result
+
+Administering can expose connected-component readiness without importing connected components into its container.
+
+When `APP_RUNTIME_SCOPE` is empty, the default runtime remains standalone Administering. When `APP_RUNTIME_SCOPE=*` or an explicit list is used, visibility is still evidence-driven and does not create PHP coupling.

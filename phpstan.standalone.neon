@@ -1,0 +1,35 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    tmpDir: var/cache/phpstan-standalone
+    reportUnmatchedIgnoredErrors: false
+    excludePaths:
+        analyse:
+            - src/Catalog/Admin/AdministrationCompositeServiceToolCatalog.php (?)
+            - src/Command/Config (?)
+            - src/Command/AdministrationOwnerConfigurationToolDiscoveryCommand.php (?)
+            - src/Command/AdministrationOwnerConfigurationToolExternalPackageManifestCommand.php (?)
+            - src/Command/AdministrationOwnerConfigurationToolExternalPackageSpecCommand.php (?)
+            - src/Command/AdministrationOwnerConfigurationToolMaterializationPreviewCommand.php (?)
+            - src/Command/AdministrationOwnerConfigurationToolTransitionStatusCommand.php (?)
+            - src/Command/AdministrationOwnerConfigurationToolValidateCommand.php (?)
+            - src/Command/AdministrationRuntimeReadinessCommand.php (?)
+            - src/Controller/Admin/AdministrationDashboardController.php (?)
+            - src/ValidatorInterface/Admin/AdministrationConfigurationToolDefinitionValidatorInterface.php (?)
+            - src/ValidatorInterface/Admin/ConfigurationToolDefinitionValidatorInterface.php (?)
+            - src/Form/Config (?)
+            - src/Locator/Config (?)
+            - src/Mapper/Config (?)
+            - src/Provider/Connected (?)
+            - src/Provider/Admin/DoctrineAdministrationServiceToolMenuSectionProvider.php (?)
+            - src/Runner/Operation/AdministrationGovernanceOperationRunner.php (?)
+            - src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php (?)
+            - src/Validator/Admin/ConfigurationToolDefinitionValidator.php (?)
+            - src/Service/Config (?)
+            - src/ServiceInterface/Config (?)
+            - tests/Integration (?)
+    ignoreErrors:
+        - '#Property App\\Administering\\Entity\\.*::\$id \(int\|null\) is never assigned int so it can be removed from the property type\.#'
+        - '#Property App\\Administering\\Entity\\AdministrationCredentialDefinition::\$description \(string\|null\) is never assigned string so it can be removed from the property type\.#'

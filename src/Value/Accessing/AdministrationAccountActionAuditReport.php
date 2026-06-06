@@ -9,7 +9,10 @@ namespace App\Administering\Value\Accessing;
  */
 final readonly class AdministrationAccountActionAuditReport
 {
-    /** @param list<AdministrationAccountActionAuditProjection> $items */
+    /**
+     * @param array<string, mixed>                             $filter
+     * @param list<AdministrationAccountActionAuditProjection> $items
+     */
     public function __construct(
         private array $filter,
         private AdministrationAccountActionAuditSummary $summary,

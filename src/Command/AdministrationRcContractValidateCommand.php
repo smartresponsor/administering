@@ -385,7 +385,12 @@ final class AdministrationRcContractValidateCommand extends Command
         return $value;
     }
 
-    /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readComposer(string $path, array &$checks, array &$errors): ?array
     {
         $content = $this->readText($path, $checks, $errors, 'composer');
@@ -406,7 +411,12 @@ final class AdministrationRcContractValidateCommand extends Command
         return is_array($decoded) ? $decoded : null;
     }
 
-    /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readManifest(string $path, array &$checks, array &$errors): ?array
     {
         $exists = is_file($path);
@@ -429,6 +439,10 @@ final class AdministrationRcContractValidateCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function readText(string $path, array &$checks, array &$errors, string $name): ?string
     {
         $exists = is_file($path);
@@ -445,6 +459,10 @@ final class AdministrationRcContractValidateCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function addCheck(array &$checks, array &$errors, string $name, bool $passed, string $details): void
     {
         $checks[] = [

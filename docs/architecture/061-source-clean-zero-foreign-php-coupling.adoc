@@ -1,0 +1,34 @@
+= W06: Source-clean zero foreign PHP coupling
+
+Administering must not bind foreign component PHP classes anywhere in its PHP source, test source, service configuration, or route configuration.
+
+== Rule
+
+Foreign component names may appear only as runtime-scope/component evidence strings, not as PHP class dependencies.
+
+Forbidden in Administering PHP/config source:
+
+* `App\Accessing\...`
+* `App\Rolling\...`
+* `App\Managing\...`
+* `App\Configuring\...`
+
+== Accepted evidence model
+
+Administering decides connected visibility from local evidence only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.*.json`
+* `config/kernel/runtime_scope.*lock.php`
+
+== W06 decision
+
+The old excluded adapter surface was physically removed instead of kept as dead source. Exclusion is not a valid long-term boundary because the source still encoded foreign PHP contracts and value objects.
+
+W06 therefore removes legacy Accessing/Rolling/Managing/Configuring bridge files, stale tests, and stale service-tool screen mappings that referenced deleted bridge tools.
+
+== Consequence
+
+Administering keeps connected-component visibility through the W04/W05 runtime-scope read-model and connected route surface. Any future owner-specific operation must be reintroduced as a local Administering read-model or command that consumes evidence strings only.

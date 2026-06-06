@@ -41,7 +41,7 @@ final readonly class AdministrationEnvironmentRuntimeRecordSyncService implement
                 category: 'runtime',
                 status: 'available',
                 sourceType: $this->sourceType((string) $key),
-                safeContext: ['value' => is_scalar($value) ? (string) $value : get_debug_type($value)],
+                safeContext: ['value' => (string) $value],
             ));
             ++$count;
         }

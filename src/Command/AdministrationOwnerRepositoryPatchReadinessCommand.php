@@ -66,7 +66,7 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             ],
         ];
 
-        $missingArtifactCount = count(array_filter($artifactChecks, static fn (array $item): bool => 'present' !== ($item['status'] ?? null)));
+        $missingArtifactCount = count(array_filter($artifactChecks, static fn (array $item): bool => 'present' !== $item['status']));
         if ($missingArtifactCount > 0 && !(bool) $input->getOption('allow-missing-artifacts')) {
             $io->error('Required transition artifacts are missing. Re-run with --allow-missing-artifacts only for advisory reports.');
         }
@@ -79,7 +79,7 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
         $repositoryReadiness = [];
         foreach ($this->repositorySlices($intake) as $slice) {
             $componentKey = (string) ($slice['componentKey'] ?? 'unknown');
-            $sliceStatus = (string) ($slice['sliceStatus'] ?? 'unknown');
+            $sliceStatus = (string) $slice['sliceStatus'];
             $isHost = 'host_application' === $componentKey;
             $patchMode = $isHost ? 'host_application_configuration_track' : 'owner_repository_overlay_track';
             $ready = 'available' === $sliceStatus && 0 === $missingArtifactCount;
@@ -98,7 +98,7 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             ];
         }
 
-        $readyCount = count(array_filter($repositoryReadiness, static fn (array $item): bool => true === ($item['readyForConcretePatch'] ?? false)));
+        $readyCount = count(array_filter($repositoryReadiness, static fn (array $item): bool => true === $item['readyForConcretePatch']));
         $blockedCount = count($repositoryReadiness) - $readyCount;
         $readyForPatchWaves = 0 === $blockedCount && $readyCount > 0;
         $nextWorkMode = $readyForPatchWaves
@@ -185,6 +185,11 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
     }
 
     /** @return list<array<string, mixed>> */
+    /**
+     * @param array<string, mixed> $intake
+     *
+     * @return list<array<string, mixed>>
+     */
     private function repositorySlices(?array $intake): array
     {
         $slices = $intake['repositorySlices'] ?? [];

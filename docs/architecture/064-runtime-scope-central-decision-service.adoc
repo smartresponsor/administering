@@ -1,0 +1,79 @@
+= 064 Runtime-Scope Central Decision Service
+:toc:
+
+== Purpose
+
+Administering must not couple to foreign component PHP classes, service ids, controller classes, bundles, or contracts.
+It may inspect only runtime evidence owned by the host application:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+W09 centralizes the evidence-to-decision step so connected providers and commands no longer combine those facts independently.
+
+== Canonical decision path
+
+[source,text]
+----
+AdministrationRuntimeScopeStateReader
+  -> reads raw evidence
+
+AdministrationRuntimeComponentStatusService
+  -> derives per-component status from state
+
+AdministrationRuntimeScopeDecisionService
+  -> single public decision entrypoint
+
+AdministrationRuntimeScopeDecision
+  -> immutable read model used by commands/providers/controllers
+----
+
+== Component status vocabulary
+
+[source,text]
+----
+available          component is in APP_RUNTIME_SCOPE and enabled by lock evidence
+package_installed  composer package exists but lock did not enable it
+missing_package    APP_RUNTIME_SCOPE requests a component missing from composer inventory
+disabled_by_lock   runtime-scope lock explicitly disables the component
+out_of_scope       component is visible in evidence but not requested by APP_RUNTIME_SCOPE
+----
+
+== Boundary rule
+
+Outside RuntimeScope internals, code should depend on:
+
+[source,php]
+----
+AdministrationRuntimeScopeDecisionService
+----
+
+and should not directly combine:
+
+[source,php]
+----
+AdministrationRuntimeScopeStateReader
+AdministrationRuntimeComponentStatusService
+----
+
+This prevents drift where commands, connected providers, and dashboards each invent their own decision semantics.
+
+== Guard
+
+W09 adds:
+
+[source,text]
+----
+tools/inspection/administering-runtime-scope-decision-boundary-guard.php
+tools/inspection/administering-runtime-scope-decision-boundary-guard.ps1
+----
+
+The guard rejects direct usage of low-level runtime-scope state/status services from command, controller, provider, and connected-service surfaces.
+
+== Zero-foreign position
+
+This does not reintroduce foreign coupling. The decision service works only with local value objects and local evidence readers. Foreign components remain strings/tokens from composer/runtime-scope evidence, never PHP dependencies.

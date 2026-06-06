@@ -20,7 +20,7 @@ final class AdministrationAclMutationReviewRecordCrudController extends Abstract
 
     protected function entityPermission(): string
     {
-        return 'administration.rolling.acl_mutation.review.view';
+        return 'administration.connected_component.evidence_review.view';
     }
 
     public function configureFields(string $pageName): iterable

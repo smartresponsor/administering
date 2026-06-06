@@ -5,33 +5,25 @@ declare(strict_types=1);
 namespace App\Administering\Value\Connected;
 
 /**
- * Metadata-only readiness report for connected administration components.
+ * Metadata-only readiness report for runtime-scope connected components.
  */
 final readonly class AdministrationConnectedComponentReadinessReport
 {
     /**
-     * @param array<string, mixed> $accessing
-     * @param array<string, mixed> $rolling
-     * @param list<string>         $warnings
+     * @param array<string, array<string, mixed>> $components
+     * @param list<string>                        $warnings
      */
     public function __construct(
         private \DateTimeImmutable $generatedAt,
-        private array $accessing,
-        private array $rolling,
+        private array $components,
         private array $warnings = [],
     ) {
     }
 
-    /** @return array<string, mixed> */
-    public function accessing(): array
+    /** @return array<string, array<string, mixed>> */
+    public function components(): array
     {
-        return $this->accessing;
-    }
-
-    /** @return array<string, mixed> */
-    public function rolling(): array
-    {
-        return $this->rolling;
+        return $this->components;
     }
 
     /** @return list<string> */
@@ -45,8 +37,7 @@ final readonly class AdministrationConnectedComponentReadinessReport
     {
         return [
             'generatedAt' => $this->generatedAt->format(\DateTimeInterface::ATOM),
-            'accessing' => $this->accessing,
-            'rolling' => $this->rolling,
+            'components' => $this->components,
             'warnings' => $this->warnings,
         ];
     }

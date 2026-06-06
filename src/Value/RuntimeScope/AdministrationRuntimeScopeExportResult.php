@@ -14,9 +14,9 @@ final readonly class AdministrationRuntimeScopeExportResult
     ) {
     }
 
-    public function enabledBundleCount(): int
+    public function enabledBundleTokenCount(): int
     {
-        return is_array($this->payload['enabledBundles'] ?? null) ? count($this->payload['enabledBundles']) : 0;
+        return is_array($this->payload['enabledBundleTokens'] ?? null) ? count($this->payload['enabledBundleTokens']) : 0;
     }
 
     public function disabledComponentCount(): int

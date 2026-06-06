@@ -41,7 +41,7 @@ interface AdministrationComponentIntegrationContractInterface
 {
     /**
      * Lowercase snake key identifying this component.
-     * Examples: 'rolling', 'accessing', 'billing', 'cataloging'.
+     * Examples: 'connected', 'billing', 'cataloging'.
      */
     public function componentKey(): string;
 
@@ -52,8 +52,7 @@ interface AdministrationComponentIntegrationContractInterface
      * generic registry and must not be coupled to each component's DTO.
      * Consumers that need a typed contract cast after get():
      *
-     *   /** @var RollingIntegrationContract $contract {@*\/
-     *   $contract = $registry->get('rolling');
+     *   $contract = $registry->get('cataloging');
      */
     public function contract(): object;
 }

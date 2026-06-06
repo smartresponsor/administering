@@ -11,7 +11,7 @@ use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
  * Guards the open/execute boundary for materialized service-tool records.
  *
  * Internal Administering tools and owner-provided configuration tools share the
- * same EasyAdmin surface, but they must prove different provenance metadata
+ * same EasyRuntime Scope source, but they must prove different provenance metadata
  * before Administering renders a form or dispatches a persisted operation run.
  */
 interface AdministrationServiceToolOpenGuardInterface

@@ -25,7 +25,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageApplyScriptComman
     {
         $this
             ->addArgument('overlay-plan', InputArgument::REQUIRED, 'Path to owner external package overlay plan JSON.')
-            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component key/token filter, for example Managing or managing.')
+            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component key/token filter, for example Connected or connected.')
             ->addOption('write-ps1', null, InputOption::VALUE_REQUIRED, 'Write generated non-destructive PowerShell overlay script to this path.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print generation report as JSON.')
             ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Do not fail when the overlay plan contains no component plans.')
@@ -304,6 +304,10 @@ PS1;
     }
 
     /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $payload
+     * @param list<array<string, string>> $issues
+     */
     private function requireLiteral(array $payload, string $key, mixed $expected, array &$issues, ?string $path = null): void
     {
         if (($payload[$key] ?? null) !== $expected) {
@@ -325,7 +329,7 @@ PS1;
         return '' !== $path
             && !str_contains($path, '..')
             && !str_starts_with($path, '/')
-            && !preg_match('/^[A-Za-z]:[\\\/]/', $path);
+            && !preg_match('~^[A-Za-z]:[\\\\/]~', $path);
     }
 
     /** @return array<string, string> */

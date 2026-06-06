@@ -13,11 +13,11 @@ final class AdministrationServiceToolScreenCatalogTest extends TestCase
     {
         $catalog = new AdministrationServiceToolScreenCatalog();
 
-        $screen = $catalog->screenForTool('Managing', 'AdministrationManagingFieldAccessCatalogProvider');
+        $screen = $catalog->screenForTool('Connected', 'AdministrationConnectedComponentOverviewProvider');
 
         self::assertNotNull($screen);
-        self::assertSame('administration_managing_field_access_catalog', $screen->routeName);
-        self::assertSame('Open access catalog', $screen->label);
+        self::assertSame('administration_connected_component_overview', $screen->routeName);
+        self::assertSame('Open overview', $screen->label);
     }
 
     public function testItKeepsUnmappedToolsAsServiceOnly(): void

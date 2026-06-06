@@ -32,7 +32,7 @@ final class AdministrationServiceToolRelocationPatchPlanCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to plan, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to plan, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the patch plan as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the patch plan JSON to a repository-relative path.')
             ->addOption('write-deleted-paths', null, InputOption::VALUE_REQUIRED, 'Write source paths that may be deleted manually after a reviewed relocation patch is applied.')

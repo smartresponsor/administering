@@ -218,6 +218,12 @@ final class AdministrationRcAcceptanceCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readJson(string $path, array &$checks, array &$errors, string $name): ?array
     {
         $exists = is_file($path);
@@ -247,6 +253,12 @@ final class AdministrationRcAcceptanceCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readYaml(string $path, array &$checks, array &$errors, string $name): ?array
     {
         $exists = is_file($path);
@@ -269,6 +281,10 @@ final class AdministrationRcAcceptanceCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function readText(string $path, array &$checks, array &$errors, string $name): ?string
     {
         $exists = is_file($path);
@@ -284,6 +300,10 @@ final class AdministrationRcAcceptanceCommand extends Command
     }
 
     /** @param list<array{name:string,passed:bool,details:string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function addCheck(array &$checks, array &$errors, string $name, bool $passed, string $details): void
     {
         $checks[] = [

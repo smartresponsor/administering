@@ -1,0 +1,33 @@
+= Connected Runtime Route Surface Zero Foreign Coupling
+:toc:
+
+== Decision
+
+Administering must not place foreign component PHP classes in its container or route scanner.
+Connected-component administration pages are exposed only through local Administering controllers and local read-model provider contracts.
+
+== Evidence model
+
+The connected runtime surface is built from local evidence only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.*.json`
+* `config/kernel/runtime_scope.*lock.php`
+* `config/runtime-scope/bundle_catalog.php` string metadata
+
+No provider, controller, menu builder, or route import may type-hint `App\Accessing`, `App\Rolling`, `App\Managing`, or `App\Configuring` classes.
+
+== Route boundary
+
+The clean connected-component JSON endpoints live under:
+
+* `App\Administering\Controller\Admin\Connected`
+
+Legacy foreign-coupled surface controllers and Rolling foreign-entity CRUD controllers are removed from the active tree rather than hidden behind service exclusions.
+
+== Menu boundary
+
+The EasyAdmin menu links to local route names for connected-component read models.
+It must not reference foreign entity CRUD controllers as PHP class constants.

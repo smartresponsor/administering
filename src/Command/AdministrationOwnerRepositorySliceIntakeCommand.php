@@ -27,7 +27,7 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example Managing Accessing Rolling.')
+            ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example connected symfony environment.')
             ->addOption('workspace-root', null, InputOption::VALUE_REQUIRED, 'Workspace root used to check whether sibling repositories are present.', dirname($this->projectDir))
             ->addOption('repository-map-json', null, InputOption::VALUE_REQUIRED, 'Optional JSON object mapping component key to repository folder name.')
             ->addOption('host-application', null, InputOption::VALUE_REQUIRED, 'Optional host/post-application repository folder name to include in the intake.')
@@ -95,7 +95,7 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
             ];
         }
 
-        $missingCount = count(array_filter($repositorySlices, static fn (array $item): bool => 'available' !== ($item['sliceStatus'] ?? null)));
+        $missingCount = count(array_filter($repositorySlices, static fn (array $item): bool => 'available' !== $item['sliceStatus']));
         $readyForOwnerSliceWork = 0 === $missingCount && [] !== $repositorySlices;
         $nextWorkMode = $readyForOwnerSliceWork ? 'start_owner_repository_current_slice_patches' : 'request_missing_owner_repository_current_slices';
 
@@ -216,7 +216,7 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
             return $this->projectDir;
         }
 
-        if (str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\\\\/]/', $path)) {
+        if (str_starts_with($path, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $path)) {
             return $path;
         }
 

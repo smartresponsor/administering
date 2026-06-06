@@ -123,6 +123,13 @@ final class AdministrationRcProofArtifactValidateCommand extends Command
         return $path;
     }
 
+    private function optionalPathOption(mixed $value): ?string
+    {
+        $path = is_string($value) ? trim($value) : '';
+
+        return '' === $path ? null : $path;
+    }
+
     /**
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
@@ -259,6 +266,16 @@ final class AdministrationRcProofArtifactValidateCommand extends Command
     private function hashMatches(string $file, mixed $expectedHash): bool
     {
         return is_string($expectedHash) && is_file($file) && hash_file('sha256', $file) === strtolower($expectedHash);
+    }
+
+    private function writeJsonArtifact(string $file, string $contents): void
+    {
+        $directory = dirname($file);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0775, true);
+        }
+
+        file_put_contents($file, $contents);
     }
 
     /**

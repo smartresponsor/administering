@@ -190,6 +190,12 @@ final class AdministrationRcHandoffBundleCommand extends Command
     }
 
     /** @param list<array{name: string, ok: bool, detail: string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readJson(string $file, array &$checks, array &$errors, string $label): ?array
     {
         if (!is_file($file)) {
@@ -206,6 +212,12 @@ final class AdministrationRcHandoffBundleCommand extends Command
     }
 
     /** @param list<array{name: string, ok: bool, detail: string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     *
+     * @return array<string, mixed>|null
+     */
     private function readYaml(string $file, array &$checks, array &$errors, string $label): ?array
     {
         if (!is_file($file)) {
@@ -228,6 +240,10 @@ final class AdministrationRcHandoffBundleCommand extends Command
     }
 
     /** @param list<array{name: string, ok: bool, detail: string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function readText(string $file, array &$checks, array &$errors, string $label): ?string
     {
         if (!is_file($file)) {
@@ -241,6 +257,11 @@ final class AdministrationRcHandoffBundleCommand extends Command
     }
 
     /** @param list<array{name: string, ok: bool, detail: string}> $checks @param list<string> $errors */
+    /**
+     * @param array<string, mixed>|null                                $payload
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function assertStatus(?array $payload, string $label, string $expectedStatus, string $booleanField, array &$checks, array &$errors): void
     {
         if (null === $payload) {
@@ -255,9 +276,13 @@ final class AdministrationRcHandoffBundleCommand extends Command
     }
 
     /** @param list<array{name: string, ok: bool, detail: string}> $checks @param list<string> $errors */
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
     private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
     {
-        $checks[] = ['name' => $name, 'ok' => $ok, 'detail' => $detail];
+        $checks[] = ['name' => $name, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
             $errors[] = sprintf('%s: %s', $name, $detail);
         }
@@ -265,7 +290,13 @@ final class AdministrationRcHandoffBundleCommand extends Command
 
     private function hashOrNull(string $file): ?string
     {
-        return is_file($file) ? hash_file('sha256', $file) : null;
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $hash = hash_file('sha256', $file);
+
+        return false === $hash ? null : $hash;
     }
 
     private function writeArtifact(string $file, string $content): void

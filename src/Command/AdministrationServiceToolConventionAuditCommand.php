@@ -27,7 +27,7 @@ final class AdministrationServiceToolConventionAuditCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to audit, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to audit, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print violations as JSON.');
     }
 

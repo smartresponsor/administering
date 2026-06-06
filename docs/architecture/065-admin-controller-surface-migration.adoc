@@ -1,0 +1,38 @@
+= W10 Admin Controller Surface Migration
+:toc:
+
+== Decision
+
+Administering must not keep controller classes in an excluded `Controller/Admin/Surface` tree.
+A controller either belongs to an active local route surface or it must be removed.
+
+== Changes
+
+W10 removes the excluded admin surface directory and migrates the remaining local controllers to explicit Symfony-style namespaces:
+
+* `Controller/Admin/Operation` for operation launch/report/detail pages.
+* `Controller/Admin/RuntimeScope` for runtime-scope source index pages.
+* `Controller/Admin/Connected` remains separately imported to avoid duplicate route scanning.
+
+== Runtime Scope source pages
+
+The runtime-scope menu routes are restored through a local controller backed only by Administering services:
+
+* `AdministrationComposerIndexService`
+* `AdministrationAppRuntimeScopeIndexService`
+* `AdministrationRuntimeLockIndexService`
+
+These services read local evidence only and do not import connected component classes.
+
+== Guard
+
+`tools/inspection/administering-no-excluded-admin-controller-surface-guard.php` rejects:
+
+* `src/Controller/Admin/Surface` directory recreation.
+* service or route excludes targeting that directory.
+* PHP namespaces under `App\Administering\Controller\Admin\Surface`.
+
+== Boundary
+
+This wave does not change route paths or permissions.
+It only replaces the stale excluded tree with explicit active local route surfaces.

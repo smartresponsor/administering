@@ -1,0 +1,50 @@
+= 063 Runtime-scope token catalog and zero-foreign guard
+
+Status: accepted
+
+== Decision
+
+Administering must not keep foreign component PHP class names in the runtime-scope catalog.
+
+The catalog is Administering-owned evidence metadata. It stores component tokens and composer package names only:
+
+[source,php]
+----
+'accessing' => [
+    'package' => 'accessing/access',
+    'bundle_token' => 'accessing.bundle',
+]
+----
+
+It must not store foreign Symfony bundle FQCN values such as `App\Accessing\AccessingBundle`.
+
+== Runtime-scope lock shape
+
+Runtime-scope export now materializes token evidence:
+
+[source,php]
+----
+'enabledComponents' => ['accessing'],
+'enabledBundleTokens' => ['accessing.bundle'],
+'disabledComponents' => [],
+----
+
+Administering can inspect this state without autoloading or probing foreign component classes.
+
+== Guard
+
+The guard script is:
+
+[source,powershell]
+----
+tools/inspection/administering-zero-foreign-coupling-guard.ps1
+----
+
+It fails when source/container/route/template/test surfaces contain PHP coupling to these foreign namespaces:
+
+* `App\Accessing\`
+* `App\Rolling\`
+* `App\Managing\`
+* `App\Configuring\`
+
+It also fails if `config/runtime-scope/bundle_catalog.php` reintroduces PHP class-shaped catalog evidence or the legacy `bundle` key.

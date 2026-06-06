@@ -21,7 +21,7 @@ final class AdministrationAclMutationApplyRecordCrudController extends AbstractR
 
     protected function entityPermission(): string
     {
-        return 'administration.rolling.acl_mutation.apply.view';
+        return 'administration.connected_component.evidence_apply.view';
     }
 
     public function configureCrud(Crud $crud): Crud

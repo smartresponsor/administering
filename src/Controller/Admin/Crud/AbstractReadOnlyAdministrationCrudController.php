@@ -15,6 +15,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
  * State-changing administration flows must go through dedicated reviewed surfaces
  * instead of direct EasyAdmin entity mutation.
  */
+/**
+ * @extends AbstractCrudController<object>
+ */
 abstract class AbstractReadOnlyAdministrationCrudController extends AbstractCrudController
 {
     abstract protected function entityPermission(): string;

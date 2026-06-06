@@ -310,7 +310,13 @@ final class AdministrationRcFinalSealValidateCommand extends Command
 
     private function hashOrNull(string $file): ?string
     {
-        return is_file($file) ? hash_file('sha256', $file) : null;
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $hash = hash_file('sha256', $file);
+
+        return false === $hash ? null : $hash;
     }
 
     private function writeJsonArtifact(string $file, string $contents): void

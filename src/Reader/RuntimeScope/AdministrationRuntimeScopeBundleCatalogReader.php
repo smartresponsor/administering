@@ -6,7 +6,7 @@ namespace App\Administering\Reader\RuntimeScope;
 
 final readonly class AdministrationRuntimeScopeBundleCatalogReader
 {
-    /** @return array{components: array<string, array{package: string, bundle: string}>} */
+    /** @return array{components: array<string, array{package: string, bundleToken: string}>} */
     public function catalog(string $catalogPath): array
     {
         if (!is_file($catalogPath)) {
@@ -25,12 +25,19 @@ final readonly class AdministrationRuntimeScopeBundleCatalogReader
             }
 
             $package = $definition['package'] ?? null;
-            $bundle = $definition['bundle'] ?? null;
-            if (!is_string($package) || '' === $package || !is_string($bundle) || '' === $bundle) {
+            $bundleToken = $definition['bundle_token'] ?? null;
+            if (!is_string($package) || '' === trim($package) || !is_string($bundleToken) || '' === trim($bundleToken)) {
                 throw new \RuntimeException(sprintf('Invalid runtime-scope catalog entry for component: %s', $component));
             }
 
-            $components[strtolower($component)] = ['package' => $package, 'bundle' => $bundle];
+            if (str_contains($bundleToken, '\\')) {
+                throw new \RuntimeException(sprintf('Runtime-scope bundle token must not be a PHP class name: %s', $component));
+            }
+
+            $components[strtolower($component)] = [
+                'package' => trim($package),
+                'bundleToken' => strtolower(trim($bundleToken)),
+            ];
         }
 
         ksort($components);

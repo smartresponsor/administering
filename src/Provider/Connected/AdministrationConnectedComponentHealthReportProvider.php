@@ -4,59 +4,53 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Connected;
 
-use App\Accessing\ServiceInterface\Admin\AccessAccountAdministrationHealthReportProviderInterface;
+use App\Administering\Service\Connected\AdministrationRuntimeScopeConnectedComponentProjectionService;
 use App\Administering\ServiceInterface\Connected\AdministrationConnectedComponentHealthReportProviderInterface;
 use App\Administering\Value\Connected\AdministrationConnectedComponentHealthCheck;
 use App\Administering\Value\Connected\AdministrationConnectedComponentHealthReport;
-use App\Rolling\ServiceInterface\Administration\RollingAclHealthReportProviderInterface;
 
-/**
- * Aggregates safe health reports from connected administration components.
- */
+/** Reports health using local runtime evidence only. */
 final readonly class AdministrationConnectedComponentHealthReportProvider implements AdministrationConnectedComponentHealthReportProviderInterface
 {
-    public function __construct(
-        private AccessAccountAdministrationHealthReportProviderInterface $accessingHealthProvider,
-        private RollingAclHealthReportProviderInterface $rollingHealthProvider,
-    ) {
+    public function __construct(private AdministrationRuntimeScopeConnectedComponentProjectionService $projection)
+    {
     }
 
     public function report(): AdministrationConnectedComponentHealthReport
     {
         $checks = [];
-
-        foreach ($this->accessingHealthProvider->report()->checks() as $check) {
-            $checks[] = $this->mapCheck('Accessing', $check->toSafeArray());
+        foreach ($this->projection->decisionRows() as $row) {
+            $checks[] = new AdministrationConnectedComponentHealthCheck(
+                component: $row->component,
+                key: $row->component.'.runtime_scope.health',
+                label: $row->component.' runtime-scope health',
+                category: 'runtime_scope',
+                status: in_array($row->status, ['available', 'package_installed'], true) ? 'ok' : 'warning',
+                severity: in_array($row->status, ['missing_package', 'disabled_by_lock'], true) ? 'high' : 'info',
+                blocking: 'missing_package' === $row->status,
+                context: $row->toArray(),
+            );
         }
 
-        foreach ($this->rollingHealthProvider->report()->checks() as $check) {
-            $checks[] = $this->mapCheck('Rolling', $check->toSafeArray());
+        foreach ($this->projection->sourceErrors() as $index => $error) {
+            $checks[] = new AdministrationConnectedComponentHealthCheck(
+                component: 'administering',
+                key: 'runtime_scope.source_error.'.($index + 1),
+                label: 'Runtime-scope source error',
+                category: 'runtime_scope_source',
+                status: 'warning',
+                severity: 'medium',
+                blocking: false,
+                context: ['message' => $error],
+            );
         }
 
-        return new AdministrationConnectedComponentHealthReport(
-            new \DateTimeImmutable(),
-            $checks,
-            [
-                'This report is metadata-only and is not an executor.',
-                'Accessing health checks must not expose password hashes, TOTP secrets, recovery codes, reset tokens, or raw session payloads.',
-                'Rolling health checks must not expose raw subject grants, raw policy internals, sessions, passwords, or secrets.',
-                'Blocking checks indicate that Administering should keep real mutations behind review or disabled until the owning component is ready.',
-            ],
-        );
+        return new AdministrationConnectedComponentHealthReport(new \DateTimeImmutable(), $checks, $this->guards());
     }
 
-    /** @param array<string, mixed> $check */
-    private function mapCheck(string $component, array $check): AdministrationConnectedComponentHealthCheck
+    /** @return list<string> */
+    private function guards(): array
     {
-        return new AdministrationConnectedComponentHealthCheck(
-            $component,
-            (string) $check['key'],
-            (string) $check['label'],
-            (string) $check['category'],
-            (string) $check['status'],
-            (string) $check['severity'],
-            (bool) ($check['blocking'] ?? false),
-            is_array($check['context'] ?? null) ? $check['context'] : [],
-        );
+        return ['Health is read-only and evidence-only; no foreign container services are required.'];
     }
 }

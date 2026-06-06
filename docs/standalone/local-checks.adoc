@@ -1,0 +1,27 @@
+= Administering Standalone Local Checks
+
+Administering can be checked outside a host Symfony application through the component-local console entrypoint and inspection scripts.
+
+== Entrypoints
+
+[source,powershell]
+----
+php bin/console list
+php bin/console lint:yaml config
+php tools/inspection/AdministeringStandaloneReadinessReport.php
+./tools/inspection/administering-local-check.ps1
+----
+
+== Composer scripts
+
+[source,powershell]
+----
+composer inspect:standalone
+composer quality:local
+----
+
+`quality:local` is intentionally component-local. It checks Composer metadata, PHP syntax, standalone readiness, static analysis, coding style, and tests when the corresponding vendor tools are installed.
+
+== Boundary
+
+This standalone layer is not a host application replacement. It exists to validate the component locally before installing it into a host Symfony app.

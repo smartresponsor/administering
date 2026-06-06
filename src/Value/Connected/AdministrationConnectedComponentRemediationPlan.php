@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Value\Connected;
 
 /**
- * Aggregated metadata-only remediation plan for Accessing/Rolling/Administering readiness.
+ * Aggregated metadata-only remediation plan for runtime-scope connected-component readiness.
  */
 final readonly class AdministrationConnectedComponentRemediationPlan
 {

@@ -232,16 +232,10 @@ final class FilesystemAdministrationConfigurationScanner implements Administrati
 
     private function guessComponentName(string $path): ?string
     {
-        if (false !== stripos($path, 'accessing')) {
-            return 'Accessing';
-        }
-
-        if (false !== stripos($path, 'rolling')) {
-            return 'Rolling';
-        }
-
-        if (false !== stripos($path, 'administering')) {
-            return 'Administering';
+        foreach (['administering', 'connected', 'symfony', 'environment'] as $token) {
+            if (false !== stripos($path, $token)) {
+                return ucfirst($token);
+            }
         }
 
         return null;

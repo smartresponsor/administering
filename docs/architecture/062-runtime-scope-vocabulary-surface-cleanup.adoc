@@ -1,0 +1,34 @@
+= W07 Runtime-Scope Vocabulary Surface Cleanup
+:toc:
+:sectnums:
+
+== Decision
+
+Administering must not expose component-owned identities as hardcoded admin service sections or active PHP surface vocabulary.
+
+Foreign components may appear only as runtime-scope evidence tokens discovered from:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json` and environment-specific composer inventories
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.*.lock.php`
+
+Administering may display those tokens as connected-component evidence, but it must not model them as local controller families, service-section roots, current-user provider namespaces, or permission-checker class names.
+
+== Changes
+
+* Replaced the local `Accessing` current-user provider namespace with a local `Security` provider namespace.
+* Replaced the local `Rolling`-named permission checker with a generic Administering permission checker.
+* Removed stale Accessing/Managing local projection forms, entities, CRUD screens, values, templates, and unused provider interfaces.
+* Removed Accessing/Rolling/Managing from the static service-section and tool-screen catalog vocabulary.
+* Changed connected-component readiness from fixed `accessing`/`rolling` slots to a dynamic `components` map built from runtime-scope evidence.
+* Replaced command examples that suggested component-specific service sections with local sections or runtime-scope component tokens.
+
+== Boundary
+
+The runtime-scope bundle catalog is still evidence metadata. It must not be used with `class_exists()`, `is_subclass_of()`, service aliases, `_instanceof`, controller imports, Doctrine entity references, or any container registration decision that loads a foreign PHP class.
+
+== Result
+
+Administering active source vocabulary is now Symfony/local oriented. Component-specific names are no longer represented as local service-section roots or active surface classes. Runtime-scope evidence remains the only allowed place where connected component tokens are observed.

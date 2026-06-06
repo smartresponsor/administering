@@ -3,131 +3,131 @@
 declare(strict_types=1);
 
 return [
-    'schema' => 'administering.runtime_scope.bundle_catalog.v1',
+    'schema' => 'administering.runtime_scope.bundle_catalog.v2',
     'components' => [
         'accessing' => [
             'package' => 'accessing/access',
-            'bundle' => App\Accessing\AccessingBundle::class,
+            'bundle_token' => 'accessing.bundle',
         ],
         'administering' => [
             'package' => 'administering/admin',
-            'bundle' => App\Administering\AdministeringBundle::class,
+            'bundle_token' => 'administering.bundle',
         ],
         'analysing' => [
             'package' => 'analysing/analytics',
-            'bundle' => App\Analysing\AnalysingBundle::class,
+            'bundle_token' => 'analysing.bundle',
         ],
         'applicating' => [
             'package' => 'applicating/application',
-            'bundle' => App\Applicating\ApplicatingBundle::class,
+            'bundle_token' => 'applicating.bundle',
         ],
         'attaching' => [
             'package' => 'attaching/attachment',
-            'bundle' => App\Attaching\AttachingBundle::class,
+            'bundle_token' => 'attaching.bundle',
         ],
         'billing' => [
             'package' => 'billing/billing',
-            'bundle' => App\Billing\BillingBundle::class,
+            'bundle_token' => 'billing.bundle',
         ],
         'carting' => [
             'package' => 'carting/cart',
-            'bundle' => App\Carting\CartingBundle::class,
+            'bundle_token' => 'carting.bundle',
         ],
         'cataloging' => [
             'package' => 'cataloging/catalog',
-            'bundle' => App\Cataloging\CatalogingBundle::class,
+            'bundle_token' => 'cataloging.bundle',
         ],
         'commissioning' => [
             'package' => 'commissioning/commission',
-            'bundle' => App\Commissioning\CommissioningBundle::class,
+            'bundle_token' => 'commissioning.bundle',
         ],
         'cruding' => [
             'package' => 'cruding/crud',
-            'bundle' => App\Cruding\CrudingBundle::class,
+            'bundle_token' => 'cruding.bundle',
         ],
         'domaining' => [
             'package' => 'domaining/domain',
-            'bundle' => App\Domaining\DomainingBundle::class,
+            'bundle_token' => 'domaining.bundle',
         ],
         'exchanging' => [
             'package' => 'exchanging/exchange',
-            'bundle' => App\Exchanging\ExchangingBundle::class,
+            'bundle_token' => 'exchanging.bundle',
         ],
         'indexing' => [
             'package' => 'indexing/index',
-            'bundle' => App\Indexing\IndexingBundle::class,
+            'bundle_token' => 'indexing.bundle',
         ],
         'interfacing' => [
             'package' => 'interfacing/interface',
-            'bundle' => App\Interfacing\InterfaceBundle::class,
+            'bundle_token' => 'interfacing.bundle',
         ],
         'localizing' => [
             'package' => 'localizing/locale',
-            'bundle' => App\Localizing\LocalizingBundle::class,
+            'bundle_token' => 'localizing.bundle',
         ],
         'managing' => [
-            'package' => 'smart-responsor/managing',
-            'bundle' => App\Managing\ManagingBundle::class,
+            'package' => 'smart-responsor/manag',
+            'bundle_token' => 'managing.bundle',
         ],
         'merchandising' => [
             'package' => 'merchandising/merch',
-            'bundle' => App\Merchandising\MerchandisingBundle::class,
+            'bundle_token' => 'merchandising.bundle',
         ],
         'messaging' => [
             'package' => 'messaging/message',
-            'bundle' => App\Messaging\MessagingBundle::class,
+            'bundle_token' => 'messaging.bundle',
         ],
         'navigating' => [
             'package' => 'navigating/navigation',
-            'bundle' => App\Navigating\NavigationBundle::class,
+            'bundle_token' => 'navigating.bundle',
         ],
         'ordering' => [
             'package' => 'ordering/order',
-            'bundle' => App\Ordering\OrderingBundle::class,
+            'bundle_token' => 'ordering.bundle',
         ],
         'paging' => [
             'package' => 'smart-responsor/paging',
-            'bundle' => App\Paging\PageBundle::class,
+            'bundle_token' => 'paging.bundle',
         ],
         'paying' => [
             'package' => 'paying/payment',
-            'bundle' => App\Paying\PayingBundle::class,
+            'bundle_token' => 'paying.bundle',
         ],
         'projecting' => [
             'package' => 'project/project',
-            'bundle' => App\Projecting\ProjectingBundle::class,
+            'bundle_token' => 'projecting.bundle',
         ],
         'rolling' => [
             'package' => 'rolling/role',
-            'bundle' => App\Rolling\RollingBundle::class,
+            'bundle_token' => 'rolling.bundle',
         ],
         'searching' => [
             'package' => 'searching/search',
-            'bundle' => App\Searching\SearchingBundle::class,
+            'bundle_token' => 'searching.bundle',
         ],
         'shipping' => [
             'package' => 'shipping/shipment',
-            'bundle' => App\Shipping\ShippingBundle::class,
+            'bundle_token' => 'shipping.bundle',
         ],
         'subscripting' => [
             'package' => 'smart-responsor/subscription',
-            'bundle' => App\Subscripting\Bundle\SubscriptionBundle::class,
+            'bundle_token' => 'subscripting.bundle',
         ],
         'tagging' => [
             'package' => 'tagging/tag',
-            'bundle' => App\Tagging\TaggingBundle::class,
+            'bundle_token' => 'tagging.bundle',
         ],
         'taxating' => [
             'package' => 'taxating/taxation',
-            'bundle' => App\Taxating\TaxatingBundle::class,
+            'bundle_token' => 'taxating.bundle',
         ],
         'vendoring' => [
             'package' => 'vendoring/vendor',
-            'bundle' => App\Vendoring\VendoringBundle::class,
+            'bundle_token' => 'vendoring.bundle',
         ],
         'viewing' => [
             'package' => 'viewing/view',
-            'bundle' => App\Viewing\ViewingBundle::class,
+            'bundle_token' => 'viewing.bundle',
         ],
     ],
 ];

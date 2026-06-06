@@ -15,7 +15,7 @@ final readonly class AdministrationRuntimeScopeValidationResult
         public string $environment,
         public string $lockFile,
         public string $composerFile,
-        public int $enabledBundleCount,
+        public int $enabledBundleTokenCount,
         public int $disabledComponentCount,
         public array $errors,
         public array $warnings,
@@ -27,7 +27,7 @@ final readonly class AdministrationRuntimeScopeValidationResult
         return [] === $this->errors;
     }
 
-    /** @return array{validation: string, hostDir: string, environment: string, lockFile: string, composerFile: string, enabledBundleCount: int, disabledComponentCount: int, errors: list<string>, warnings: list<string>} */
+    /** @return array{validation: string, hostDir: string, environment: string, lockFile: string, composerFile: string, enabledBundleTokenCount: int, disabledComponentCount: int, errors: list<string>, warnings: list<string>} */
     public function toArray(): array
     {
         return [
@@ -36,7 +36,7 @@ final readonly class AdministrationRuntimeScopeValidationResult
             'environment' => $this->environment,
             'lockFile' => $this->lockFile,
             'composerFile' => $this->composerFile,
-            'enabledBundleCount' => $this->enabledBundleCount,
+            'enabledBundleTokenCount' => $this->enabledBundleTokenCount,
             'disabledComponentCount' => $this->disabledComponentCount,
             'errors' => $this->errors,
             'warnings' => $this->warnings,

@@ -20,7 +20,7 @@ final class AdministrationAccountActionRequestRecordCrudController extends Abstr
 
     protected function entityPermission(): string
     {
-        return 'administration.accessing.account_action.audit.view';
+        return 'administration.audit.view';
     }
 
     public function configureFields(string $pageName): iterable

@@ -43,24 +43,6 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
     private function knownSections(): array
     {
         return [
-            'Rolling' => [
-                'label' => 'Rolling',
-                'icon' => 'fa fa-user-shield',
-                'crud' => AdministrationServiceToolRecordCrudController::class,
-                'permission' => 'administration.rolling.subject_access_report.view',
-            ],
-            'Accessing' => [
-                'label' => 'Accessing',
-                'icon' => 'fa fa-user-lock',
-                'crud' => AdministrationServiceToolRecordCrudController::class,
-                'permission' => 'administration.accessing.account_action.audit.view',
-            ],
-            'Managing' => [
-                'label' => 'Managing',
-                'icon' => 'fa fa-table-list',
-                'crud' => AdministrationServiceToolRecordCrudController::class,
-                'permission' => 'administration.rolling.permission_catalog.view',
-            ],
             'Symfony' => [
                 'label' => 'Symfony',
                 'icon' => 'fa fa-route',
@@ -101,7 +83,7 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
                 'label' => 'Audit',
                 'icon' => 'fa fa-clock-rotate-left',
                 'crud' => AdministrationServiceToolRecordCrudController::class,
-                'permission' => 'administration.accessing.account_action.audit.view',
+                'permission' => 'administration.audit.view',
             ],
         ];
     }

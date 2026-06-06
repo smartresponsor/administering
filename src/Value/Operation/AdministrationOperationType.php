@@ -18,8 +18,8 @@ final class AdministrationOperationType
     public const SYMFONY_SECRET_REMOVE = 'administration.symfony_secret.remove';
     public const COMPOSER_VALIDATE = 'administration.composer.validate';
     public const GENERATED_PATCH_BUILD = 'administration.generated_patch.build';
-    public const ROLLING_ACL_CATALOG_REFRESH = 'administration.rolling_acl.catalog_refresh';
-    public const ACCESSING_ACCOUNT_ACTION = 'administration.accessing_account.action';
+    public const CONNECTED_COMPONENT_READINESS_REFRESH = 'administration.connected_component.readiness_refresh';
+    public const CONNECTED_COMPONENT_EVIDENCE_RELOAD = 'administration.connected_component.evidence_reload';
     public const SERVICE_SECTION_ANCHORS_SYNC = 'administration.service_section_anchors.sync';
     public const SERVICE_TOOL_LAUNCH = 'administration.service_tool.launch';
 
@@ -30,8 +30,8 @@ final class AdministrationOperationType
             self::CONFIGURATION_SCAN,
             self::CREDENTIAL_PRESENCE_CHECK,
             self::COMPOSER_VALIDATE,
-            self::ROLLING_ACL_CATALOG_REFRESH,
-            self::ACCESSING_ACCOUNT_ACTION,
+            self::CONNECTED_COMPONENT_READINESS_REFRESH,
+            self::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
             self::SERVICE_SECTION_ANCHORS_SYNC,
             self::SERVICE_TOOL_LAUNCH,
         ];
@@ -52,8 +52,8 @@ final class AdministrationOperationType
             self::SYMFONY_SECRET_REMOVE,
             self::COMPOSER_VALIDATE,
             self::GENERATED_PATCH_BUILD,
-            self::ROLLING_ACL_CATALOG_REFRESH,
-            self::ACCESSING_ACCOUNT_ACTION,
+            self::CONNECTED_COMPONENT_READINESS_REFRESH,
+            self::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
             self::SERVICE_SECTION_ANCHORS_SYNC,
             self::SERVICE_TOOL_LAUNCH,
         ];

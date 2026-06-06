@@ -27,7 +27,7 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example Managing Accessing Rolling.')
+            ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example connected symfony environment.')
             ->addOption('host-application', null, InputOption::VALUE_REQUIRED, 'Host/post-application repository key to include as its own configuration track.')
             ->addOption('workspace-root', null, InputOption::VALUE_REQUIRED, 'Expected local workspace root for owner repositories.', 'D:\\PhpstormProjects\\www')
             ->addOption('patch-readiness-json', null, InputOption::VALUE_REQUIRED, 'Owner repository patch readiness JSON path.', 'delivery/patches/administering_owner_repository_patch_readiness.json')
@@ -73,7 +73,7 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
             ],
         ];
 
-        $missingArtifactCount = count(array_filter($artifactReferences, static fn (array $item): bool => 'missing' === ($item['status'] ?? null)));
+        $missingArtifactCount = count(array_filter($artifactReferences, static fn (array $item): bool => 'missing' === $item['status']));
         if ($missingArtifactCount > 0 && !(bool) $input->getOption('allow-missing-artifacts')) {
             $io->error('Required transition artifacts are missing. Re-run with --allow-missing-artifacts only for advisory work orders.');
 
@@ -87,7 +87,7 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
             $componentToken = $this->componentToken($componentKey);
             $expectedRepositoryPath = rtrim($workspaceRoot, '/\\').'\\'.$componentKey;
             $readiness = $readinessByComponent[$componentKey] ?? $readinessByComponent[$componentToken] ?? null;
-            $sliceStatus = is_array($readiness) ? (string) ($readiness['sliceStatus'] ?? 'unknown') : 'not_reported';
+            $sliceStatus = is_array($readiness) ? (string) ($readiness['sliceStatus']) : 'not_reported';
 
             $repositoryWorkOrders[] = [
                 'componentKey' => $componentKey,
@@ -229,6 +229,9 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
     }
 
     /** @param mixed $components @return list<string> */
+    /**
+     * @return list<string>
+     */
     private function normalizeComponents(mixed $components): array
     {
         if (!is_array($components)) {
@@ -251,6 +254,11 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
     }
 
     /** @return array<string, array<string, mixed>> */
+    /**
+     * @param array<string, mixed> $patchReadiness
+     *
+     * @return array<string, array<string, mixed>>
+     */
     private function readinessByComponent(?array $patchReadiness): array
     {
         $items = $patchReadiness['repositoryReadiness'] ?? [];

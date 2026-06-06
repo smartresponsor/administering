@@ -31,7 +31,7 @@ final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand exten
     protected function configure(): void
     {
         $this
-            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component/section key or token, for example Managing or managing.')
+            ->addArgument('component', InputArgument::OPTIONAL, 'Optional component/section key or token, for example Connected or connected.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print pause-gate report as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write pause-gate report JSON to this path.')
             ->addOption('fail-if-not-ready', null, InputOption::VALUE_NONE, 'Fail when Administering should not yet pause internal transition waves.')

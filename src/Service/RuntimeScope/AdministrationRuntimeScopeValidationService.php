@@ -13,128 +13,68 @@ final readonly class AdministrationRuntimeScopeValidationService
     public function __construct(
         private AdministrationRuntimeScopePathResolver $pathResolver,
         private AdministrationRuntimeScopeConfigLeakScanner $configLeakScanner,
+        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
     ) {
     }
 
     public function validate(string $hostDir, string $environment, int $maxAgeSeconds): AdministrationRuntimeScopeValidationResult
     {
         $hostDir = $this->pathResolver->absolutePath($hostDir);
-        $errors = [];
-        $warnings = [];
         $lockFile = $this->pathResolver->lockPath($hostDir, $environment);
         $composerFile = $this->pathResolver->composerFile($environment);
         $composerPath = $hostDir.'/'.$composerFile;
-        $enabledBundleCount = 0;
-        $disabledComponentCount = 0;
+        $lockEvidence = $this->lockNormalizer->normalize($lockFile);
 
-        if (!is_file($lockFile)) {
-            $errors[] = sprintf('Runtime scope lock is missing: %s', $lockFile);
-        }
+        $errors = $lockEvidence->errors;
+        $warnings = $lockEvidence->warnings;
 
         if (!is_file($composerPath)) {
             $errors[] = sprintf('Composer inventory is missing: %s', $composerPath);
+        } else {
+            $this->validateComposerFingerprint($lockEvidence->sourceComposerFile, $lockEvidence->sourceComposerSha256, $composerFile, $composerPath, $errors);
         }
 
-        if ([] === $errors) {
-            try {
-                $payload = require $lockFile;
-                if (!is_array($payload)) {
-                    throw new \RuntimeException('Lock file must return an array.');
-                }
-
-                $this->validatePayloadSchema($payload, $composerFile, $composerPath, $errors);
-                $enabledBundleCount = $this->validateEnabledBundles($payload, $environment, $errors, $warnings);
-                $disabledComponents = $this->disabledComponents($payload);
-                $disabledComponentCount = count($disabledComponents);
-                $this->validateConfigLeaks($hostDir, $disabledComponents, $errors);
-
-                if ($maxAgeSeconds > 0) {
-                    $this->validateGeneratedAt($payload, $maxAgeSeconds, $errors);
-                }
-            } catch (\Throwable $exception) {
-                $errors[] = sprintf('Unable to validate runtime scope lock %s: %s', $lockFile, $exception->getMessage());
-            }
-        }
+        $errors = [...$errors, ...$lockEvidence->ageErrors($maxAgeSeconds)];
+        $this->validateConfigLeaks($hostDir, $lockEvidence->disabledComponents, $errors);
 
         return new AdministrationRuntimeScopeValidationResult(
             $hostDir,
             $environment,
             $lockFile,
             $composerFile,
-            $enabledBundleCount,
-            $disabledComponentCount,
+            count($lockEvidence->enabledBundleTokens),
+            count($lockEvidence->disabledComponents),
             array_values(array_unique($errors)),
             array_values(array_unique($warnings)),
         );
     }
 
-    /** @param array<string, mixed> $payload @param list<string> $errors */
-    private function validatePayloadSchema(array $payload, string $composerFile, string $composerPath, array &$errors): void
-    {
-        if (($payload['schema'] ?? null) !== 'app.kernel.runtime_scope.v1') {
-            $errors[] = 'Runtime scope lock schema mismatch; expected app.kernel.runtime_scope.v1.';
-        }
-
-        if (($payload['sourceComposerFile'] ?? null) !== $composerFile) {
+    /** @param list<string> $errors */
+    private function validateComposerFingerprint(
+        ?string $sourceComposerFile,
+        ?string $sourceComposerSha256,
+        string $composerFile,
+        string $composerPath,
+        array &$errors,
+    ): void {
+        if (null !== $sourceComposerFile && $sourceComposerFile !== $composerFile) {
             $errors[] = sprintf(
                 'Runtime scope sourceComposerFile mismatch: expected %s, got %s.',
                 $composerFile,
-                is_scalar($payload['sourceComposerFile'] ?? null) ? (string) $payload['sourceComposerFile'] : 'null',
+                $sourceComposerFile,
             );
         }
 
         $expectedSha = hash_file('sha256', $composerPath) ?: null;
-        if (is_string($payload['sourceComposerSha256'] ?? null) && $payload['sourceComposerSha256'] !== $expectedSha) {
+        if (null !== $sourceComposerSha256 && $sourceComposerSha256 !== $expectedSha) {
             $errors[] = sprintf('Runtime scope composer fingerprint is stale for %s.', $composerFile);
         }
     }
 
-    /** @param array<string, mixed> $payload @param list<string> $errors @param list<string> $warnings */
-    private function validateEnabledBundles(array $payload, string $environment, array &$errors, array &$warnings): int
-    {
-        $enabledBundles = $payload['enabledBundles'] ?? [];
-        if (!is_array($enabledBundles)) {
-            $errors[] = 'enabledBundles must be an array.';
-            $enabledBundles = [];
-        }
-
-        $strict = is_bool($payload['strict'] ?? null) ? $payload['strict'] : ('prod' === $environment);
-        foreach ($enabledBundles as $bundleClass) {
-            if (!is_string($bundleClass) || '' === $bundleClass) {
-                $errors[] = 'enabledBundles contains an invalid bundle class.';
-                continue;
-            }
-
-            if (!class_exists($bundleClass)) {
-                $message = sprintf('Enabled bundle class is not autoloadable: %s', $bundleClass);
-                if ($strict) {
-                    $errors[] = $message;
-                } else {
-                    $warnings[] = $message;
-                }
-            }
-        }
-
-        return count($enabledBundles);
-    }
-
-    /** @param array<string, mixed> $payload @return list<string> */
-    private function disabledComponents(array $payload): array
-    {
-        $disabledComponents = [];
-        $disabledPayload = $payload['disabledComponents'] ?? [];
-        if (is_array($disabledPayload)) {
-            foreach ($disabledPayload as $component) {
-                if (is_string($component) && '' !== trim($component)) {
-                    $disabledComponents[] = strtolower(trim($component));
-                }
-            }
-        }
-
-        return array_values(array_unique($disabledComponents));
-    }
-
-    /** @param list<string> $disabledComponents @param list<string> $errors */
+    /**
+     * @param list<string> $disabledComponents
+     * @param list<string> $errors
+     */
     private function validateConfigLeaks(string $hostDir, array $disabledComponents, array &$errors): void
     {
         foreach ($this->configLeakScanner->scan($hostDir, $disabledComponents) as $finding) {
@@ -145,29 +85,6 @@ final readonly class AdministrationRuntimeScopeValidationService
                 $finding['line'],
                 $finding['pattern'],
             );
-        }
-    }
-
-    /** @param array<string, mixed> $payload @param list<string> $errors */
-    private function validateGeneratedAt(array $payload, int $maxAgeSeconds, array &$errors): void
-    {
-        $generatedAt = $payload['generatedAt'] ?? null;
-        if (!is_string($generatedAt) || '' === $generatedAt) {
-            $errors[] = 'generatedAt is missing while max-age validation is enabled.';
-
-            return;
-        }
-
-        try {
-            $generatedAtDate = new \DateTimeImmutable($generatedAt);
-        } catch (\Throwable) {
-            $errors[] = sprintf('generatedAt is invalid: %s', $generatedAt);
-
-            return;
-        }
-
-        if ((time() - $generatedAtDate->getTimestamp()) > $maxAgeSeconds) {
-            $errors[] = sprintf('Runtime scope lock is older than %d seconds.', $maxAgeSeconds);
         }
     }
 }

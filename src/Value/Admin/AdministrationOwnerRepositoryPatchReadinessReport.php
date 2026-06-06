@@ -24,7 +24,7 @@ final readonly class AdministrationOwnerRepositoryPatchReadinessReport
 
     public function readyRepositoryCount(): int
     {
-        return count(array_filter($this->repositoryReadiness, static fn (array $item): bool => true === ($item['readyForConcretePatch'] ?? false)));
+        return count(array_filter($this->repositoryReadiness, static fn (array $item): bool => true === $item['readyForConcretePatch']));
     }
 
     public function blockedRepositoryCount(): int
@@ -34,7 +34,7 @@ final readonly class AdministrationOwnerRepositoryPatchReadinessReport
 
     public function missingArtifactCount(): int
     {
-        return count(array_filter($this->artifactChecks, static fn (array $item): bool => 'present' !== ($item['status'] ?? null)));
+        return count(array_filter($this->artifactChecks, static fn (array $item): bool => 'present' !== $item['status']));
     }
 
     /** @return array<string, mixed> */

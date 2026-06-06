@@ -7,9 +7,9 @@ namespace App\Administering\Value\Admin;
 final class AdministrationEasyAdminCrudBoundaryReport
 {
     /**
-     * @param list<array{controller: string, entity?: string, table?: string, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}> $items
-     * @param list<string>                                                                                                                                                       $errors
-     * @param list<string>                                                                                                                                                       $warnings
+     * @param list<array{controller: string, entity: string|null, table: string|null, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}> $items
+     * @param list<string>                                                                                                                                                               $errors
+     * @param list<string>                                                                                                                                                               $warnings
      */
     public function __construct(
         private readonly array $items,
@@ -19,7 +19,7 @@ final class AdministrationEasyAdminCrudBoundaryReport
     }
 
     /**
-     * @return list<array{controller: string, entity?: string, table?: string, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}>
+     * @return list<array{controller: string, entity: string|null, table: string|null, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}>
      */
     public function items(): array
     {
@@ -43,7 +43,7 @@ final class AdministrationEasyAdminCrudBoundaryReport
         return [] !== $this->errors;
     }
 
-    /** @return array{items: list<array{controller: string, entity?: string, table?: string, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}>, errors: list<string>, warnings: list<string>} */
+    /** @return array{items: list<array{controller: string, entity: string|null, table: string|null, nativeCrudTemplate: bool, sqliteSystemTable: bool, symfonyFormSafe: bool, messages: list<string>}>, errors: list<string>, warnings: list<string>} */
     public function toArray(): array
     {
         return [

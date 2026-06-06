@@ -39,8 +39,8 @@ final readonly class AdministrationSymfonyRouteRecordSyncService implements Admi
             $this->entityManager->persist(new AdministrationSymfonyRouteRecord(
                 routeName: (string) $route['route'],
                 path: (string) $route['path'],
-                methods: $this->methods($route['methods'] ?? []),
-                controller: isset($route['controller']) ? (string) $route['controller'] : null,
+                methods: $this->methods($route['methods']),
+                controller: null,
                 statusCode: null,
                 statusClass: 'unchecked',
             ));
@@ -53,6 +53,9 @@ final readonly class AdministrationSymfonyRouteRecordSyncService implements Admi
     }
 
     /** @param mixed $methods @return list<string> */
+    /**
+     * @return list<string>
+     */
     private function methods(mixed $methods): array
     {
         if (!is_array($methods)) {

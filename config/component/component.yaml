@@ -17,8 +17,8 @@ storage:
 # HOW each owner works is declared in the owner's own component.yaml
 # and discovered via AdministrationComponentIntegrationContractRegistry.
 ownership:
-  identity_owner: Accessing
-  authorization_owner: Rolling
+  identity_owner_token: identity
+  authorization_owner_token: authorization
   administration_owner: Administering
 
 credentials:
@@ -31,9 +31,7 @@ credentials:
     env: prod
     required: true
 
-# REMOVED: integrations.rolling  → now in Rolling/config/component/component.yaml
-# REMOVED: integrations.accessing → stub in Administering/src/Contract/Accessing/
-#           pending Accessing's own migration
+# Component-specific integration contracts are discovered through runtime-scope evidence.
 
 administering_wave4:
   operation_entity: App\\Administering\\Entity\\AdministrationOperationRun
@@ -42,6 +40,6 @@ administering_wave4:
 
 administering_wave6:
   operation_runner_contract: App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface
-  permission_catalog_provider_contract: App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface
+  permission_catalog_provider_token: authorization.permission_catalog
   messenger_payload_policy: operation_key_only
   secrets_payload_policy: no_secret_values_in_messenger_or_sqlite

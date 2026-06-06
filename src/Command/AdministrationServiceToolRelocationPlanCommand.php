@@ -27,7 +27,7 @@ final class AdministrationServiceToolRelocationPlanCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to plan, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to plan, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the relocation plan as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the relocation plan JSON to a repository-relative path.');
     }

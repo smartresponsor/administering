@@ -18,10 +18,10 @@ final class AdministrationServiceToolDetailProviderTest extends TestCase
         $toolCatalog = new AdministrationFilesystemServiceToolCatalog($sectionCatalog, new AdministrationServiceToolScreenCatalog());
         $provider = new AdministrationServiceSectionToolDashboardProvider($sectionCatalog, $toolCatalog);
 
-        $detail = $provider->detailForTool('Managing', 'AdministrationManagingFieldAccessCatalogProvider');
+        $detail = $provider->detailForTool('Connected', 'AdministrationConnectedComponentOverviewProvider');
 
         self::assertNotNull($detail);
-        self::assertSame('Managing', $detail->section->key);
-        self::assertSame('administration_managing_field_access_catalog', $detail->tool->primaryRouteName);
+        self::assertSame('Connected', $detail->section->key);
+        self::assertSame('administration_connected_component_overview', $detail->tool->primaryRouteName);
     }
 }

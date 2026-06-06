@@ -27,7 +27,7 @@ final class AdministrationServiceToolIndexReadinessCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the readiness report as JSON.')
             ->addOption('require-executable', null, InputOption::VALUE_NONE, 'Return failure unless all indexed tools are executable.');
     }

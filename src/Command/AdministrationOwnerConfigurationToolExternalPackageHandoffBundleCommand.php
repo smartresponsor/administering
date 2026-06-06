@@ -272,7 +272,9 @@ ADOC;
 ADOC;
     }
 
-    /** @param list<array<string, string>> $issues */
+    /**
+     * @param list<array<string, string>> $issues
+     */
     private function checkOptionalFile(?string $path, string $label, array &$issues): void
     {
         if (null !== $path && !is_file($path)) {
@@ -281,6 +283,10 @@ ADOC;
     }
 
     /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $payload
+     * @param list<array<string, string>> $issues
+     */
     private function requireLiteral(array $payload, string $key, mixed $expected, array &$issues): void
     {
         if (($payload[$key] ?? null) !== $expected) {

@@ -1,0 +1,55 @@
+= Administering APP_RUNTIME_SCOPE Runtime Discovery
+
+Administering is a runtime governance inspector. It must not compile against neighbouring components in standalone code.
+
+== Runtime chain
+
+[source,text]
+----
+APP_ENV
+APP_RUNTIME_SCOPE
+composer.json / composer.prod.json
+composer.lock / composer.prod.lock
+config/bundles.php or materialized runtime-scope lock
+container services
+routes
+class_exists / interface_exists probes
+runtime component status
+----
+
+== APP_RUNTIME_SCOPE semantics
+
+[source,dotenv]
+----
+APP_RUNTIME_SCOPE=
+----
+
+Empty means safe standalone scope: `administering` only.
+
+[source,dotenv]
+----
+APP_RUNTIME_SCOPE=*
+----
+
+Asterisk means all discovered components may be visible if runtime evidence confirms them.
+
+[source,dotenv]
+----
+APP_RUNTIME_SCOPE=administering,accessing,rolling
+----
+
+A comma, pipe, or whitespace separated list is an explicit visibility whitelist.
+
+== Boundary rule
+
+Standalone Administering code must not import these namespaces as PHP types:
+
+[source,text]
+----
+App\Accessing\
+App\Rolling\
+App\Managing\
+App\Configuring\
+----
+
+Foreign class names may be used only as strings for runtime evidence checks. Runtime discovery reads what is already enabled; it does not introduce a bridge, adapter, or manifest layer.

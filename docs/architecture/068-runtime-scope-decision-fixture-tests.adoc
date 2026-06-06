@@ -1,0 +1,53 @@
+= 068 Runtime Scope Decision Fixture Tests
+:toc:
+
+== Purpose
+
+W13 pins the runtime-scope decision contract with unit-level fixture tests.
+
+The Administering component must not infer connected component availability from foreign PHP classes, container aliases, or route/controller scanning.
+Runtime-scope decisions are derived from local evidence only:
+
+* `APP_ENV`
+* `APP_RUNTIME_SCOPE`
+* `composer.json` / `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php` / `config/kernel/runtime_scope.prod.lock.php`
+
+== Pinned contract
+
+The fixture tests pin these report fields for each component token:
+
+* `present`
+* `allowed`
+* `locked`
+* `enabled`
+* `disabled`
+* `status`
+* `reason`
+
+The supported statuses are:
+
+* `available`
+* `package_installed`
+* `missing_package`
+* `disabled_by_lock`
+* `out_of_scope`
+
+== Added tests
+
+The following tests cover the runtime-scope decision layer without booting Symfony and without loading foreign classes:
+
+* `tests/Unit/RuntimeScope/AdministrationRuntimeComponentStatusServiceTest.php`
+* `tests/Unit/RuntimeScope/AdministrationRuntimeScopeDecisionTest.php`
+* `tests/Unit/RuntimeScope/AdministrationRuntimeScopeLockNormalizerTest.php`
+
+== Guard compatibility
+
+The tests intentionally avoid hardcoded foreign FQCN literals.
+
+Foreign class-shaped lock payloads are built dynamically inside test code so the zero-foreign guard still protects source text from `App\Accessing\`, `App\Rolling\`, `App\Managing\`, or `App\Configuring\` literals.
+
+== Boundary
+
+W13 does not change runtime behavior.
+It adds executable fixtures around the W09-W11 decision model and keeps the W12 architecture guard suite green.

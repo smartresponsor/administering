@@ -6,6 +6,7 @@ namespace App\Administering\Command;
 
 use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeExportService;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeOutputSchemaService;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportRequest;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'administering:runtime-scope:export',
-    description: 'Materializes App Kernel runtime-scope lock files from composer.json/composer.prod.json inventory and Administering bundle catalog.',
+    description: 'Materializes App Kernel runtime-scope lock files from composer.json/composer.prod.json inventory and Administering runtime-scope token catalog.',
 )]
 final class AdministrationRuntimeScopeExportCommand extends Command
 {
@@ -24,6 +25,7 @@ final class AdministrationRuntimeScopeExportCommand extends Command
         private readonly string $projectDir,
         private readonly AdministrationRuntimeScopePathResolver $pathResolver,
         private readonly AdministrationRuntimeScopeExportService $exportService,
+        private readonly AdministrationRuntimeScopeOutputSchemaService $outputSchema,
     ) {
         parent::__construct();
     }
@@ -38,8 +40,9 @@ final class AdministrationRuntimeScopeExportCommand extends Command
             ->addOption('enable-component', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Force-enable a known component key when its package exists in the selected composer inventory.')
             ->addOption('disable-component', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Force-disable a known component key.')
             ->addOption('skip-missing-packages', null, InputOption::VALUE_NONE, 'Skip enabled components whose package is not present in selected composer inventory instead of failing.')
-            ->addOption('strict', null, InputOption::VALUE_NEGATABLE, 'Whether Kernel must fail when enabled bundle classes/fingerprints are missing or stale. Defaults to true for prod, false otherwise.', null)
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print the lock payload without writing the file.');
+            ->addOption('strict', null, InputOption::VALUE_NEGATABLE, 'Whether Kernel must fail when enabled bundle tokens/fingerprints are missing or stale. Defaults to true for prod, false otherwise.', null)
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print the lock payload without writing the file.')
+            ->addOption('json', null, InputOption::VALUE_NONE, 'Print the normalized runtime-scope output schema.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -66,6 +69,14 @@ final class AdministrationRuntimeScopeExportCommand extends Command
             return Command::FAILURE;
         }
 
+        $payload = $this->outputSchema->exportPayload($result);
+
+        if ((bool) $input->getOption('json')) {
+            $output->writeln(json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return Command::SUCCESS;
+        }
+
         if ((bool) $input->getOption('dry-run')) {
             $io->section('Runtime-scope export dry-run');
             $io->writeln(sprintf('Target lock: <info>%s</info>', $result->lockPath));
@@ -75,16 +86,18 @@ final class AdministrationRuntimeScopeExportCommand extends Command
         }
 
         $io->success(sprintf(
-            'Runtime scope lock exported: %s (%d enabled bundle classes, %d disabled components).',
+            'Runtime scope lock exported: %s (%d enabled bundle tokens, %d disabled components).',
             $result->lockPath,
-            $result->enabledBundleCount(),
+            $result->enabledBundleTokenCount(),
             $result->disabledComponentCount(),
         ));
 
         return Command::SUCCESS;
     }
 
-    /** @param mixed $values @return list<string> */
+    /**
+     * @return list<string>
+     */
     private function normalizedComponentList(mixed $values): array
     {
         if (!is_array($values)) {

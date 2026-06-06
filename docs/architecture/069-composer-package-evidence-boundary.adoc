@@ -1,0 +1,44 @@
+= 069 Composer Package Evidence Boundary
+
+Administering is a standalone Symfony component. Runtime components are detected from local evidence, not required as PHP or Composer dependencies of Administering itself.
+
+== Rule
+
+Administering may read component package names from:
+
+* `APP_RUNTIME_SCOPE`
+* `composer.json`
+* `composer.prod.json`
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+* `config/runtime-scope/bundle_catalog.php`
+
+Administering must not require runtime-scope packages in its own `composer.json`.
+
+== Before
+
+`composer.json` required `configuring/config` and also declared a sibling path repository for `../Configuring`.
+
+That made Configuring an install-time dependency of Administering, even though Administering only needs to inspect runtime-scope evidence.
+
+== After
+
+`configuring/config` is removed from `require`.
+
+The sibling path repository is removed.
+
+`configuring/config` may remain only as non-installing Composer suggestion metadata and as external host evidence when the host application chooses to install Configuring.
+
+== Guard
+
+The architecture suite now includes:
+
+* `tools/inspection/administering-composer-package-boundary-guard.php`
+* `tools/inspection/administering-composer-package-boundary-guard.ps1`
+
+The guard rejects:
+
+* runtime-scope packages from `config/runtime-scope/bundle_catalog.php` in root `require` or `require-dev`;
+* sibling component path repositories such as `../Configuring`.
+
+This keeps runtime-scope packages as evidence and prevents Composer-level coupling from returning.

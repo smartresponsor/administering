@@ -1,0 +1,53 @@
+= Runtime-scope UI/report alignment
+:toc:
+
+== Decision
+
+Administering exposes runtime-scope state through one normalized decision row contract.
+
+The shared row is represented by:
+
+* `AdministrationRuntimeScopeDecisionRow`
+* `AdministrationRuntimeScopeDecision::decisionRows()`
+* `AdministrationRuntimeScopeDecision::decisionRowsByComponent()`
+* `AdministrationRuntimeScopeDecision::componentRows()` for array-compatible JSON/CLI output
+
+The canonical fields are:
+
+* `component`
+* `present`
+* `allowed`
+* `locked`
+* `enabled`
+* `disabled`
+* `status`
+* `reason`
+* `runtimeScope`
+* `composerPackage`
+* `bundleToken`
+
+== Boundary
+
+Connected-component screens must consume `decisionRows()` from
+`AdministrationRuntimeScopeConnectedComponentProjectionService`.
+
+They must not rebuild their own component status arrays from low-level runtime-scope services.
+They must not call foreign classes, foreign service contracts, or foreign bundles.
+
+== Guard
+
+`tools/inspection/administering-runtime-decision-row-surface-guard.php` blocks connected providers
+from consuming raw `componentRows()` arrays directly.
+
+The guard is part of:
+
+[source,bash]
+----
+composer inspect:architecture
+----
+
+== Rationale
+
+CLI reports and connected JSON endpoints now project the same decision row. This keeps
+`present / allowed / locked / enabled / reason` stable across Administering surfaces and prevents
+screen-specific drift.

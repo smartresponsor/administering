@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin;
 
-use App\Accessing\Entity\AccessAccountEntity;
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
 use App\Administering\Controller\Admin\Crud\AdministrationConfigToolCrudController;
 use App\Administering\Controller\Admin\Crud\AdministrationServiceToolRecordCrudController;
@@ -66,7 +65,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
             throw new \LogicException('The current request is not available while rendering the Administering dashboard.');
         }
 
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -133,7 +132,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     ])]
     public function serviceSectionTools(string $sectionKey): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -155,7 +154,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     ])]
     public function serviceSectionToolDetail(string $sectionKey, string $toolShortName): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -179,7 +178,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     ])]
     public function openServiceTool(string $toolKey, Request $request): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -236,7 +235,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     ])]
     public function serviceToolRuntimeControls(string $toolKey, Request $request): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 

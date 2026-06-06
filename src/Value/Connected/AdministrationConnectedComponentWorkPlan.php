@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Value\Connected;
 
 /**
- * Unified metadata-only work plan for Accessing/Rolling/Administering hardening.
+ * Unified metadata-only work plan for runtime-scope connected-component hardening.
  */
 final readonly class AdministrationConnectedComponentWorkPlan
 {

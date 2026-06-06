@@ -31,7 +31,7 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('toolKey', InputArgument::REQUIRED, 'Tool key, for example managing.field_access_mutation_apply.')
+            ->addArgument('toolKey', InputArgument::REQUIRED, 'Tool key, for example connected.component_readiness_report.')
             ->addOption('enable', null, InputOption::VALUE_NONE, 'Mark the tool as enabled.')
             ->addOption('disable', null, InputOption::VALUE_NONE, 'Mark the tool as disabled.')
             ->addOption('show', null, InputOption::VALUE_NONE, 'Mark the tool as visible in the admin surface.')

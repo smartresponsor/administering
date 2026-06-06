@@ -6,6 +6,9 @@ namespace App\Administering\Value\Config;
 
 final readonly class AdministrationConfigApplicationDescriptor
 {
+    /**
+     * @param array<string, mixed> $metadata
+     */
     public function __construct(
         public string $applicationCode,
         public string $label,

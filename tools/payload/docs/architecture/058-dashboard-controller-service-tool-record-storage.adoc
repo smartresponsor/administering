@@ -1,0 +1,30 @@
+= Administering W03 Dashboard Controller Service Tool Record Storage
+
+== Intent
+
+W03 reduces controller-layer SOLID drift in the EasyAdmin dashboard without changing route registration or route policy.
+
+== Scope
+
+Changed:
+
+* `AdministrationDashboardController`
+* `AdministrationServiceToolRecordStorageInterface`
+* `AdministrationDoctrineServiceToolRecordStorage`
+* `config/services.yaml`
+
+== Boundary decision
+
+The dashboard no longer depends on a concrete `App\Accessing\Entity\AccessAccountEntity` PHP type for the basic authenticated-user check.
+The controller now uses Symfony's standard current-user presence check and keeps authorization in `denyAccessUnlessGranted(...)`.
+
+This keeps Administering less coupled to a concrete Accessing entity class in standalone/runtime-scope contexts.
+
+== Service extraction
+
+Doctrine lookup and flush for `AdministrationServiceToolRecord` moved behind `AdministrationServiceToolRecordStorageInterface`.
+The controller now delegates service-tool record storage instead of pulling Doctrine manager/repository details directly into action methods.
+
+== Route risk
+
+No route paths, names, methods, EasyAdmin defaults, or CRUD controller mappings were changed.

@@ -1,0 +1,55 @@
+= 059 Runtime Scope Zero Foreign Container Coupling
+:toc: macro
+
+== Decision
+
+Administering must not register foreign component PHP classes in its Symfony container.
+
+Foreign components are allowed only as runtime evidence strings read from:
+
+* `APP_ENV`;
+* `APP_RUNTIME_SCOPE`;
+* `composer.json` / `composer.prod.json`;
+* `config/kernel/runtime_scope.lock.php` / `config/kernel/runtime_scope.prod.lock.php`;
+* Administering-owned runtime-scope catalog metadata.
+
+Administering decides visibility and availability from those sources. It must not force the host to have `Accessing`, `Rolling`, `Managing`, `Cataloging`, or `Configuring` PHP symbols during container compilation.
+
+== Forbidden coupling
+
+The following are forbidden in the Administering service container:
+
+* foreign `App\...` service ids;
+* foreign `App\...` aliases;
+* foreign `_instanceof` rules;
+* controller constructors typed to foreign interfaces or DTOs;
+* route-scanned controller classes that require foreign component symbols;
+* `class_exists()` validation of foreign bundle classes during Administering validation.
+
+== Runtime-scope model
+
+The runtime-scope flow is evidence-based:
+
+. read `APP_ENV`;
+. parse `APP_RUNTIME_SCOPE` as empty, explicit whitelist, or `*`;
+. read the matching composer inventory;
+. read the matching runtime-scope lock from `config/kernel/`;
+. compare enabled/disabled components as strings;
+. decide which surfaces are visible.
+
+No foreign bundle or service class is autoloaded to answer the question.
+
+== W03 correction
+
+This wave corrects the previous dashboard-storage direction by making the priority explicit: remove foreign PHP symbols from the active container first.
+
+Applied changes:
+
+* removed foreign `_instanceof` rules from `config/services.yaml`;
+* removed foreign service aliases from `config/services.yaml`;
+* moved the service-tool catalog alias to the Administering filesystem catalog;
+* excluded historical foreign-coupled bridge classes from Administering service discovery;
+* excluded foreign-coupled surface controllers from route scanning;
+* changed runtime-scope bundle catalog values to strings;
+* changed runtime-scope validation from `class_exists()` to string-shape validation;
+* removed the dashboard dependency on `AccessAccountEntity`.

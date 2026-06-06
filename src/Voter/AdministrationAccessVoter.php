@@ -12,9 +12,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 /**
  * Symfony-native gate for Administering actions.
  *
- * The voter keeps EasyAdmin/controllers independent from Rolling internals. Rolling can be
+ * The voter keeps EasyAdmin/controllers independent from external authorization internals. The host can be
  * wired behind AdministrationPermissionCheckerInterface by the host application.
  */
+/** @extends Voter<string, mixed> */
 final class AdministrationAccessVoter extends Voter
 {
     public function __construct(private readonly AdministrationPermissionCheckerInterface $permissionChecker)

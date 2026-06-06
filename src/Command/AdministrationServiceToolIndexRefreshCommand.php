@@ -30,7 +30,7 @@ final class AdministrationServiceToolIndexRefreshCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to audit after sync, for example Managing or Rolling.')
+            ->addArgument('section', InputArgument::OPTIONAL, 'Optional section key to audit after sync, for example Connected or Symfony.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the refresh result as JSON.')
             ->addOption('allow-violations', null, InputOption::VALUE_NONE, 'Return success even when convention violations are found.');
     }

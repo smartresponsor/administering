@@ -1,0 +1,85 @@
+= 072 Runtime-scope command output consolidation
+
+Status: accepted
+
+== Context
+
+Administering runtime-scope commands previously produced related but different JSON shapes:
+
+* `runtime-scope:report` used `component / present / allowed / locked / enabled` rows.
+* `runtime-scope:capability-index` still exposed legacy `componentKey / inRuntimeScope / composerPackageInstalled` rows.
+* `runtime-scope:reference-audit` emitted its own top-level source and component lists.
+* `runtime-scope:export` wrote a Kernel lock payload and had no normalized machine-readable command schema.
+
+This made it possible for CLI reports, connected JSON surfaces, and export tooling to drift.
+
+== Decision
+
+Runtime-scope machine-readable outputs must use the shared schema:
+
+[source,text]
+----
+administering.runtime_scope.output.v1
+----
+
+The common top-level contract is:
+
+[source,json]
+----
+{
+  "schema": "administering.runtime_scope.output.v1",
+  "report": "administration_runtime_scope_*",
+  "source": {},
+  "components": [],
+  "errors": [],
+  "warnings": []
+}
+----
+
+Component rows use the normalized decision contract:
+
+[source,text]
+----
+component / present / allowed / locked / enabled / disabled / status / reason
+----
+
+Legacy output keys are not command payload fields anymore:
+
+[source,text]
+----
+componentKey
+inRuntimeScope
+composerPackageInstalled
+lockEnabled
+lockDisabled
+----
+
+They may remain only inside low-level raw evidence attached to a row.
+
+== Implementation
+
+Added:
+
+* `AdministrationRuntimeScopeOutputSchemaService`
+* `tools/inspection/administering-runtime-output-schema-guard.php`
+* `tools/inspection/administering-runtime-output-schema-guard.ps1`
+* `AdministrationRuntimeScopeOutputSchemaServiceTest`
+
+Updated commands:
+
+* `administering:runtime-scope:report`
+* `administering:runtime-scope:capability-index`
+* `administering:runtime-scope:reference-audit`
+* `administering:runtime-scope:export`
+
+`runtime-scope:export` now supports `--json` and reports the normalized output schema while keeping the Kernel lock payload under `export.lockPayload`.
+
+== Guard
+
+The architecture guard suite now includes `inspect:runtime-output-schema`.
+
+It fails when runtime-scope output commands bypass `AdministrationRuntimeScopeOutputSchemaService` or reintroduce legacy component row keys in command payloads.
+
+== Boundary
+
+The schema service does not inspect foreign classes, services, bundles, or containers. It formats local runtime-scope evidence only.

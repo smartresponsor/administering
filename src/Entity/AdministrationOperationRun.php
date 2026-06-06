@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Tracks long-running administrative operations without storing sensitive payloads.
  *
  * Examples include configuration scans, credential presence checks, composer validation,
- * generated patch builds, and Rolling ACL catalog refreshes.
+ * generated patch builds, and connected-component evidence refreshes.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'administration_operation_run')]

@@ -15,7 +15,7 @@ final class AdministrationRuntimeScopeConfigLeakScanner
     {
         $normalizedComponents = [];
         foreach ($disabledComponents as $component) {
-            if (!is_string($component) || '' === trim($component)) {
+            if ('' === trim($component)) {
                 continue;
             }
             $normalizedComponents[] = strtolower(trim($component));

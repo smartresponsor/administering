@@ -154,7 +154,7 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
                 'command' => $commandName,
                 'status' => $status,
                 'exitCode' => $exitCode,
-                'outputPath' => $definition['outputPath'] ?? null,
+                'outputPath' => $definition['outputPath'],
             ];
 
             $stepOutput = trim($bufferedOutput->fetch());
@@ -215,6 +215,11 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
     }
 
     /** @param array<string, mixed> $arguments @return array<string, mixed> */
+    /**
+     * @param array<string, mixed> $arguments
+     *
+     * @return array<string, mixed>
+     */
     private function withoutFalseOptions(array $arguments): array
     {
         $filtered = [];

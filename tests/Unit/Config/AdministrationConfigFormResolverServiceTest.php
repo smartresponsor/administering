@@ -18,6 +18,7 @@ final class AdministrationConfigFormResolverServiceTest extends TestCase
     public function testRejectsUnregisteredFormClass(): void
     {
         /** @var EntityRepository&MockObject $repository */
+        /** @var EntityRepository<AdministrationConfigTool>&MockObject $repository */
         $repository = $this->createMock(EntityRepository::class);
         $repository->expects(self::once())
             ->method('findOneBy')
@@ -46,6 +47,7 @@ final class AdministrationConfigFormResolverServiceTest extends TestCase
     public function testAcceptsConcreteFormClass(): void
     {
         /** @var EntityRepository&MockObject $repository */
+        /** @var EntityRepository<AdministrationConfigTool>&MockObject $repository */
         $repository = $this->createMock(EntityRepository::class);
         $repository->expects(self::once())
             ->method('findOneBy')

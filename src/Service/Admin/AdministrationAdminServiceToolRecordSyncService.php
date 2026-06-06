@@ -124,10 +124,6 @@ final readonly class AdministrationAdminServiceToolRecordSyncService implements 
         $indexed = [];
 
         foreach ($records as $record) {
-            if (!$record instanceof AdministrationServiceToolRecord) {
-                continue;
-            }
-
             $indexed[$record->getToolKey()] = $record;
         }
 

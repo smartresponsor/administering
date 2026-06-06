@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Reader\RuntimeScope\AdministrationRuntimeScopeStateReader;
 use App\Administering\Scanner\RuntimeScope\AdministrationRuntimeScopeReferenceScanner;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeDecisionService;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeOutputSchemaService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,8 +22,9 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
 {
     public function __construct(
         private readonly string $projectDir,
-        private readonly AdministrationRuntimeScopeStateReader $stateReader,
+        private readonly AdministrationRuntimeScopeDecisionService $decisionService,
         private readonly AdministrationRuntimeScopeReferenceScanner $referenceScanner,
+        private readonly AdministrationRuntimeScopeOutputSchemaService $outputSchema,
     ) {
         parent::__construct();
     }
@@ -39,7 +41,8 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
     {
         $hostDir = (string) $input->getOption('host-dir');
         $environment = (string) $input->getOption('env');
-        $state = $this->stateReader->read($hostDir, $environment);
+        $decision = $this->decisionService->decide($hostDir, $environment);
+        $state = $decision->state;
 
         $enabledComponents = [] !== $state->appRuntimeScope
             ? $state->appRuntimeScope
@@ -51,7 +54,7 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
         )));
 
         $findings = $this->referenceScanner->scan($state->hostDir, $forbiddenComponents);
-        $errors = $state->sourceErrors;
+        $errors = $decision->sourceErrors();
         foreach ($findings as $finding) {
             $errors[] = sprintf(
                 'Component "%s" is outside active runtime scope but is referenced in %s:%d through pattern "%s".',
@@ -63,21 +66,20 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
         }
         $errors = array_values(array_unique($errors));
 
-        $report = [
-            'report' => 'administration_runtime_scope_reference_audit',
-            'hostDir' => $state->hostDir,
-            'environment' => $state->environment,
-            'composerFile' => $state->composerFile,
-            'composerPath' => $state->composerPath,
-            'lockPath' => $state->lockPath,
-            'appRuntimeScope' => $state->appRuntimeScopeRaw,
-            'enabledComponents' => $enabledComponents,
-            'installedComponents' => $state->installedComponents,
-            'disabledComponents' => $state->disabledComponents,
-            'forbiddenComponents' => $forbiddenComponents,
-            'findings' => $findings,
-            'errors' => $errors,
-        ];
+        $report = $this->outputSchema->decisionPayload(
+            'administration_runtime_scope_reference_audit',
+            $decision,
+            [
+                'audit' => [
+                    'enabledComponents' => $enabledComponents,
+                    'installedComponents' => $state->installedComponents,
+                    'disabledComponents' => $state->disabledComponents,
+                    'forbiddenComponents' => $forbiddenComponents,
+                    'findings' => $findings,
+                ],
+            ],
+            $errors,
+        );
 
         if ((bool) $input->getOption('json')) {
             $output->writeln(json_encode($report, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -101,6 +103,19 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
                 ['disabled', implode(', ', $state->disabledComponents)],
                 ['forbidden', implode(', ', $forbiddenComponents)],
             ],
+        );
+
+        $io->table(
+            ['Component', 'Present', 'Allowed', 'Locked', 'Enabled', 'Status', 'Reason'],
+            array_map(static fn (array $row): array => [
+                $row['component'],
+                true === $row['present'] ? 'yes' : 'no',
+                true === $row['allowed'] ? 'yes' : 'no',
+                true === $row['locked'] ? 'yes' : 'no',
+                true === $row['enabled'] ? 'yes' : 'no',
+                $row['status'],
+                $row['reason'],
+            ], $report['components']),
         );
 
         if ([] !== $findings) {

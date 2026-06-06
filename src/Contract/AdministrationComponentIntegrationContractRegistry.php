@@ -21,12 +21,8 @@ namespace App\Administering\Contract;
  *
  *   public function someMethod(): void
  *   {
- *       // Safe: will throw clearly if Rolling is not registered
- *
- *       /** @var RollingIntegrationContract $rolling {@*\/
- *       $rolling = $this->contracts->get('rolling');
- *
- *       $backend = $rolling->managingExternalAccessBackend; // 'rolling'
+ *       // Safe: throws clearly if the requested component contract is not registered.
+ *       $contract = $this->contracts->get('cataloging');
  *   }
  *
  * Adding a new component requires ZERO changes to this class

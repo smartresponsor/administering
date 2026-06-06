@@ -167,7 +167,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
                     $issues[] = $this->issue('error', sprintf('%s.files[%d]', $componentPath, $fileIndex), 'File path must be a non-empty string.');
                     continue;
                 }
-                if (str_contains($file, '..') || str_starts_with($file, '/') || preg_match('/^[A-Za-z]:[\\\/]/', $file)) {
+                if (str_contains($file, '..') || str_starts_with($file, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $file)) {
                     $issues[] = $this->issue('error', sprintf('%s.files[%d]', $componentPath, $fileIndex), 'File path must be repository-relative and must not contain traversal.');
                 }
                 if (isset($allFiles[$file])) {
@@ -204,6 +204,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
     }
 
     /** @param array<string, mixed> $tool @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $tool
+     * @param list<array<string, string>> $issues
+     */
     private function validateToolEntry(array $tool, string $toolPath, ?string $componentKey, ?string $componentToken, array &$issues): void
     {
         $toolKey = $this->stringValue($tool['toolKey'] ?? null);
@@ -233,6 +237,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
     }
 
     /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
+    /**
+     * @param array<string, mixed>        $payload
+     * @param list<array<string, string>> $issues
+     */
     private function requireLiteral(array $payload, string $key, mixed $expected, array &$issues, ?string $path = null): void
     {
         if (($payload[$key] ?? null) !== $expected) {

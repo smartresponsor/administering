@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\RuntimeScope;
 
+use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeVisibility;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeSourceIndex;
 
 final readonly class AdministrationAppRuntimeScopeIndexService
@@ -18,7 +19,7 @@ final readonly class AdministrationAppRuntimeScopeIndexService
             description: 'Operator input read from APP_RUNTIME_SCOPE. This is a desired scope/input source; Kernel still executes the materialized lock files.',
             summaryItems: [
                 ['label' => 'APP_ENV', 'value' => $this->environmentValue()],
-                ['label' => 'APP_RUNTIME_SCOPE', 'value' => $raw ?? 'not set'],
+                ['label' => 'APP_RUNTIME_SCOPE', 'value' => ($raw ?? '') !== '' ? $raw : 'administering (default)'],
                 ['label' => 'Parsed tokens', 'value' => (string) count($tokens)],
             ],
             sections: [
@@ -32,7 +33,7 @@ final readonly class AdministrationAppRuntimeScopeIndexService
                     'kind' => 'key_value',
                     'rows' => [
                         ['key' => 'APP_ENV', 'value' => $this->environmentValue()],
-                        ['key' => 'APP_RUNTIME_SCOPE', 'value' => $raw ?? ''],
+                        ['key' => 'APP_RUNTIME_SCOPE', 'value' => ($raw ?? '') !== '' ? $raw : ''],
                     ],
                 ],
             ],
@@ -43,7 +44,7 @@ final readonly class AdministrationAppRuntimeScopeIndexService
     {
         $value = $_SERVER['APP_RUNTIME_SCOPE'] ?? $_ENV['APP_RUNTIME_SCOPE'] ?? null;
 
-        return is_string($value) && '' !== trim($value) ? trim($value) : null;
+        return is_string($value) ? trim($value) : null;
     }
 
     private function environmentValue(): string
@@ -56,18 +57,8 @@ final readonly class AdministrationAppRuntimeScopeIndexService
     /** @return list<string> */
     private function parseScope(?string $raw): array
     {
-        if (null === $raw) {
-            return [];
-        }
+        $visibility = AdministrationRuntimeScopeVisibility::fromRaw($raw);
 
-        $tokens = preg_split('/[|,\s]+/', $raw) ?: [];
-        $result = [];
-        foreach ($tokens as $token) {
-            if (is_string($token) && '' !== trim($token)) {
-                $result[] = strtolower(trim($token));
-            }
-        }
-
-        return array_values(array_unique($result));
+        return $visibility->allComponentsVisible ? ['*'] : $visibility->componentKeys;
     }
 }
