@@ -96,7 +96,9 @@ final class AdministrationConfigTool
         array $secretNames = [],
         ?string $description = null,
         string $applyStrategy = 'component_yaml',
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->applicationCode = $applicationCode;
         $this->toolCode = $toolCode;
         $this->label = $label;

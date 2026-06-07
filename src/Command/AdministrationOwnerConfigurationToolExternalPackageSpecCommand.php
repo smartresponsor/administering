@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\ConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,10 +62,6 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
             $providers[] = $providerRow;
 
             foreach ($provider->tools() as $definition) {
-                if (!$definition instanceof ConfigurationToolDefinition) {
-                    continue;
-                }
-
                 $violations = $this->validator->validate($provider, $definition);
                 $entry = $this->buildEntry($provider, $definition, $violations);
 
@@ -157,18 +153,18 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
         ConfigurationToolDefinition $definition,
         array $violations,
     ): array {
-        $componentKey = $this->normalizeComponentKey($definition->componentKey);
-        $toolSlug = $definition->toolSlug;
+        $componentKey = $this->normalizeComponentKey($definition->componentKey());
+        $toolSlug = $definition->toolSlug();
 
         return [
-            'componentKey' => $definition->componentKey,
-            'componentToken' => $definition->componentToken,
+            'componentKey' => $definition->componentKey(),
+            'componentToken' => $definition->componentToken(),
             'toolKey' => $definition->toolKey(),
             'toolSlug' => $toolSlug,
             'label' => $definition->label,
             'providerClass' => $provider::class,
             'serviceClass' => $definition->serviceClass,
-            'serviceShortName' => $definition->serviceShortName,
+            'serviceShortName' => $definition->serviceShortName(),
             'formTypeClass' => $definition->formTypeClass,
             'formDataClass' => $definition->formDataClass,
             'executable' => $definition->executable,

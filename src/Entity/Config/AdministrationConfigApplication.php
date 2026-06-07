@@ -41,8 +41,9 @@ final class AdministrationConfigApplication
     #[ORM\Column(name: 'discovered_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $discoveredAt;
 
-    public function __construct(string $applicationCode, string $label, string $rootPath, string $manifestPath, string $checksum)
+    public function __construct(string $applicationCode, string $label, string $rootPath, string $manifestPath, string $checksum, ?int $id = null)
     {
+        $this->id = $id;
         $this->applicationCode = $applicationCode;
         $this->label = $label;
         $this->rootPath = $rootPath;

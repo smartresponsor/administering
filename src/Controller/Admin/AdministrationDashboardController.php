@@ -19,7 +19,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -55,7 +54,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
 
     public function index(): Response
     {
-        $requestStack = $this->container?->get(\Symfony\Component\HttpFoundation\RequestStack::class);
+        $requestStack = $this->container->get(\Symfony\Component\HttpFoundation\RequestStack::class);
         if (!$requestStack instanceof \Symfony\Component\HttpFoundation\RequestStack) {
             throw new \LogicException('The RequestStack service is not available while rendering the Administering dashboard.');
         }
@@ -71,17 +70,17 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $adminContextFactory = $this->container?->get(\EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory::class);
+        $adminContextFactory = $this->container->get(\EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory::class);
         if (!$adminContextFactory instanceof \EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory) {
             throw new \LogicException('EasyAdmin AdminContextFactory is not available while rendering the Administering dashboard.');
         }
 
-        $controllerFactory = $this->container?->get(\EasyCorp\Bundle\EasyAdminBundle\Factory\ControllerFactory::class);
+        $controllerFactory = $this->container->get(\EasyCorp\Bundle\EasyAdminBundle\Factory\ControllerFactory::class);
         if (!$controllerFactory instanceof \EasyCorp\Bundle\EasyAdminBundle\Factory\ControllerFactory) {
             throw new \LogicException('EasyAdmin ControllerFactory is not available while rendering the Administering dashboard.');
         }
 
-        $twig = $this->container?->get(\Twig\Environment::class);
+        $twig = $this->container->get(\Twig\Environment::class);
         if (!$twig instanceof \Twig\Environment) {
             throw new \LogicException('Twig environment is not available while rendering the Administering dashboard.');
         }
@@ -100,10 +99,6 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         $responseParameters = $crudController->index($adminContext);
         if ($responseParameters instanceof Response) {
             return $this->disableCaching($responseParameters);
-        }
-
-        if (!$responseParameters instanceof KeyValueStore) {
-            throw new \LogicException('Unexpected controller result returned by the AdministrationConfigTool CRUD index.');
         }
 
         $templateParameters = $responseParameters->all();
@@ -220,7 +215,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
 
         return $this->disableCaching($this->render('@Administering/easy_admin/service_tool_open.html.twig', [
             'record' => $record,
-            'form' => $form?->createView(),
+            'form' => $form->createView(),
             'submitted' => $submitted,
             'operationRun' => $operationRun,
             'indexUrl' => $this->serviceToolIndexUrl($record->getSectionKey()),

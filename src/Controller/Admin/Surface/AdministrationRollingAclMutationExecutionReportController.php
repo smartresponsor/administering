@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Rolling\ServiceInterface\Administration\RollingAclMutationExecutionReportProviderInterface;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingAclMutationExecutionReportProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationRollingAclMutationExecutionReportController extends AbstractController
 {
-    public function __construct(private readonly RollingAclMutationExecutionReportProviderInterface $reportProvider)
+    public function __construct(private readonly AdministrationRollingAclMutationExecutionReportProviderInterface $reportProvider)
     {
     }
 

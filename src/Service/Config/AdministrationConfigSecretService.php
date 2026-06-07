@@ -64,7 +64,11 @@ final readonly class AdministrationConfigSecretService
         ];
     }
 
-    /** @param list<string> $messages @return list<string> */
+    /**
+     * @param list<string> $messages
+     *
+     * @return list<string>
+     */
     private function redactMessages(array $messages): array
     {
         return array_map(

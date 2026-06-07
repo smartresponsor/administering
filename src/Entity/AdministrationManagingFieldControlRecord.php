@@ -44,8 +44,9 @@ final class AdministrationManagingFieldControlRecord
     private \DateTimeImmutable $checkedAt;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $resourceClass, string $fieldName, string $pageName, string $subjectScope, string $accessStatus, string $visibilityStatus, array $safeContext = [])
+    public function __construct(string $resourceClass, string $fieldName, string $pageName, string $subjectScope, string $accessStatus, string $visibilityStatus, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->resourceClass = $resourceClass;
         $this->fieldName = $fieldName;
         $this->pageName = $pageName;

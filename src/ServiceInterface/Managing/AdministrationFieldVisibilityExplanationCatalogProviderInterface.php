@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationScenario;
-use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationStep;
+use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationScenario;
+use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationStep;
 
 interface AdministrationFieldVisibilityExplanationCatalogProviderInterface
 {

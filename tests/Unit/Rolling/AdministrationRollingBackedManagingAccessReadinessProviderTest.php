@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Managing\Provider\Administration\RollingBackedManagingAccessReadinessProvider;
+use App\Administering\Provider\Managing\AdministrationDryRollingBackedManagingAccessReadinessProvider;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationRollingBackedManagingAccessReadinessProviderTest extends TestCase
 {
     public function testProvidesReadOnlyRollingBackedManagingAccessChecklist(): void
     {
-        $report = (new RollingBackedManagingAccessReadinessProvider())->report();
+        $report = (new AdministrationDryRollingBackedManagingAccessReadinessProvider())->report();
         $safe = $report->toSafeArray();
 
-        self::assertSame('rolling', $safe['mode']);
-        self::assertSame('deny', $safe['failure_effect']);
-        self::assertSame('managing.field.view', $safe['permission_key']);
-        self::assertFalse($safe['safety']['grants_access']);
-        self::assertFalse($safe['safety']['mutates_rolling_acl']);
-        self::assertGreaterThanOrEqual(6, count($safe['items']));
+        self::assertFalse($safe['ready']);
+        self::assertSame('administering_self_contained_dry_runtime', $safe['mode']);
+        self::assertContains('owner_managing_runtime', $safe['missing_capabilities']);
+        self::assertContains('owner_rolling_runtime', $safe['missing_capabilities']);
     }
 }

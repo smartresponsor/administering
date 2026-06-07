@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Recorder\Accessing;
 
-use App\Accessing\Value\Admin\AccessAccountAdministrationRequest;
-use App\Accessing\Value\Admin\AccessAccountAdministrationResult;
 use App\Administering\Entity\AdministrationAccountActionRequestRecord;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
+use App\Administering\Value\Accessing\AdministrationAccountActionRequest;
+use App\Administering\Value\Accessing\AdministrationAccountActionResult;
 use Doctrine\Persistence\ManagerRegistry;
 
 final readonly class DoctrineAdministrationAccountActionRequestRecorder implements AdministrationAccountActionRequestRecorderInterface
@@ -20,8 +20,8 @@ final readonly class DoctrineAdministrationAccountActionRequestRecorder implemen
     }
 
     public function record(
-        AccessAccountAdministrationRequest $request,
-        AccessAccountAdministrationResult $result,
+        AdministrationAccountActionRequest $request,
+        AdministrationAccountActionResult $result,
     ): AdministrationAccountActionRequestRecord {
         $record = new AdministrationAccountActionRequestRecord(
             sprintf('account-action-%s', bin2hex(random_bytes(8))),

@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Administering\Locator\Config;
 
 use App\Administering\Form\Config\AdministrationDynamicConfigToolFormType;
-use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Configuring\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
-use App\Configuring\Value\Config\ConfigToolDescriptor;
-use App\Configuring\Value\Config\ConfigVariable;
-use App\Configuring\Value\Config\ConfigVariableStorage;
+use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Administering\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
+use App\Administering\Value\Config\ConfigToolDescriptor;
+use App\Administering\Value\Config\ConfigVariableStorage;
 
 final readonly class AdministrationConfigToolServiceLocator
 {
@@ -39,10 +38,10 @@ final readonly class AdministrationConfigToolServiceLocator
     /** @return list<ConfigToolDescriptor> */
     public function descriptors(): array
     {
-        return array_values(array_map(
+        return array_map(
             fn (ConfigToolServiceInterface $service): ConfigToolDescriptor => $this->descriptorForService($service),
             $this->toolServices,
-        ));
+        );
     }
 
     /** @return list<ConfigToolDescriptor> */
@@ -54,14 +53,16 @@ final readonly class AdministrationConfigToolServiceLocator
         ));
     }
 
-    /** @param iterable<ConfigToolServiceInterface> $toolServices */
+    /**
+     * @param iterable<ConfigToolServiceInterface> $toolServices
+     *
+     * @return list<ConfigToolServiceInterface>
+     */
     private function materializeToolServices(iterable $toolServices): array
     {
         $services = [];
         foreach ($toolServices as $toolService) {
-            if ($toolService instanceof ConfigToolServiceInterface) {
-                $services[] = $toolService;
-            }
+            $services[] = $toolService;
         }
 
         return $services;
@@ -74,10 +75,7 @@ final readonly class AdministrationConfigToolServiceLocator
             return $descriptor;
         }
 
-        $variables = array_values(array_filter(
-            iterator_to_array($service->managedVariables(), false),
-            static fn (mixed $variable): bool => $variable instanceof ConfigVariable,
-        ));
+        $variables = iterator_to_array($service->variables(), false);
 
         if ([] === $variables) {
             return $descriptor;
@@ -125,5 +123,19 @@ final readonly class AdministrationConfigToolServiceLocator
             secretNames: [] !== $secretNames ? $secretNames : $descriptor->secretNames,
             applyStrategy: $descriptor->applyStrategy,
         );
+    }
+
+    /** @return array<string, list<ConfigToolDescriptor>> */
+    public function descriptorsByApplicationCode(): array
+    {
+        $descriptors = [];
+        foreach ($this->toolServices as $service) {
+            $descriptor = $this->descriptorForService($service);
+            $descriptors[$descriptor->applicationCode][] = $descriptor;
+        }
+
+        ksort($descriptors);
+
+        return $descriptors;
     }
 }

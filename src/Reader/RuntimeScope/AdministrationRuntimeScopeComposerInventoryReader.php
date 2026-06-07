@@ -24,13 +24,9 @@ final readonly class AdministrationRuntimeScopeComposerInventoryReader
         $componentPackages = [];
         $catalogPackages = [];
 
-        foreach ($catalog['components'] ?? [] as $component => $definition) {
-            if (!is_string($component) || !is_array($definition)) {
-                continue;
-            }
-
-            $package = $definition['package'] ?? null;
-            if (!is_string($package) || '' === trim($package)) {
+        foreach ($catalog['components'] as $component => $definition) {
+            $package = $definition['package'];
+            if ('' === trim($package)) {
                 continue;
             }
 

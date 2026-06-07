@@ -22,6 +22,8 @@ final class AdministrationOperationType
     public const CONNECTED_COMPONENT_EVIDENCE_RELOAD = 'administration.connected_component.evidence_reload';
     public const SERVICE_SECTION_ANCHORS_SYNC = 'administration.service_section_anchors.sync';
     public const SERVICE_TOOL_LAUNCH = 'administration.service_tool.launch';
+    public const ROLLING_ACL_CATALOG_REFRESH = 'administration.rolling_acl_catalog.refresh';
+    public const ACCESSING_ACCOUNT_ACTION = 'administration.accessing_account.action';
 
     /** @return list<string> */
     public static function launchable(): array
@@ -34,6 +36,8 @@ final class AdministrationOperationType
             self::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
             self::SERVICE_SECTION_ANCHORS_SYNC,
             self::SERVICE_TOOL_LAUNCH,
+            self::ROLLING_ACL_CATALOG_REFRESH,
+            self::ACCESSING_ACCOUNT_ACTION,
         ];
     }
 
@@ -56,6 +60,8 @@ final class AdministrationOperationType
             self::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
             self::SERVICE_SECTION_ANCHORS_SYNC,
             self::SERVICE_TOOL_LAUNCH,
+            self::ROLLING_ACL_CATALOG_REFRESH,
+            self::ACCESSING_ACCOUNT_ACTION,
         ];
     }
 

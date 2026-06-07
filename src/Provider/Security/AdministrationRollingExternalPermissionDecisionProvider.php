@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Security;
 
 use App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionDecisionServiceInterface;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionDecisionServiceInterface;
 
 /**
  * Delegates Administering permission decisions to Rolling when the component set is connected.
@@ -21,8 +21,8 @@ final class AdministrationRollingExternalPermissionDecisionProvider implements A
     private ?array $permissionIndex = null;
 
     public function __construct(
-        private readonly RollingAdministrationPermissionDecisionServiceInterface $decisionService,
-        private readonly RollingAdministrationPermissionCatalogInterface $permissionCatalog,
+        private readonly AdministrationRollingPermissionDecisionServiceInterface $decisionService,
+        private readonly AdministrationRollingPermissionCatalogInterface $permissionCatalog,
     ) {
     }
 

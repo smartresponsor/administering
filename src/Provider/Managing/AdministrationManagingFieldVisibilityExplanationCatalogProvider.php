@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityExplanationCatalogProviderInterface;
-use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationScenario;
-use App\Managing\Value\Administration\ManagingFieldVisibilityExplanationStep;
+use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationScenario;
+use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationStep;
 
 /**
  * Documents the read-only Administering view of Managing field visibility diagnostics.
@@ -23,7 +23,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY,
                 'deny/pass',
                 'terminal on unavailable',
-                'field_not_available_on_page',
                 'Availability removes fields unavailable for index/detail/new/edit before access or profile checks.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -33,7 +32,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
                 'deny/pass',
                 'terminal on denied',
-                'backend_configured_denied',
                 'A configured deny is an access-axis decision and cannot be overridden by user profiles.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -43,7 +41,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden/pass',
                 'non-terminal',
-                'backend_configured_hidden',
                 'Configured visible/hidden rules shape presentation inside an already allowed access corridor.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -53,7 +50,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
                 'allow/deny/abstain',
                 'terminal on deny',
-                'rolling_field_value_access_denied',
                 'Rolling deny blocks field values; allow only opens access and never forces presentation visibility.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -63,7 +59,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden',
                 'non-terminal',
-                'field_default_hidden',
                 'Metadata defaults provide presentation when no stronger backend presentation rule decided.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -73,7 +68,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden/pass',
                 'non-terminal unless rejected',
-                'user_profile_hidden',
                 'User preference may only affect already allowed and hideable presentation fields.',
             ),
             new ManagingFieldVisibilityExplanationStep(
@@ -83,7 +77,6 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'render/not-render',
                 'final',
-                'final_renderable',
                 'EasyAdmin receives only fields that remain access-allowed and presentation-visible.',
             ),
         ];
@@ -95,42 +88,42 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
             new ManagingFieldVisibilityExplanationScenario(
                 'rolling-deny',
                 'Rolling denies field-value access',
-                ManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
-                'denied / not emitted',
-                ['page_available', 'backend_visibility_rule_not_configured', 'rolling_field_value_access_denied'],
-                'No profile or UI preference can show the field after an access-axis deny.',
+                'Field is denied and not emitted.',
+                'Rolling returned an access-axis deny decision.',
+                'Do not emit the field and surface the Rolling denial as access-axis evidence.',
+                ['availability', 'access'],
             ),
             new ManagingFieldVisibilityExplanationScenario(
                 'user-hidden',
                 'User hides an allowed field',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
-                'hidden / not emitted',
-                ['page_available', 'rolling_field_value_access_allowed', 'field_default_visible', 'user_profile_hidden'],
-                'The user already had field-value access but chose not to render the field.',
+                'Field is hidden and not emitted.',
+                'A user profile hides a field after access has already been allowed.',
+                'Keep access allowed but omit the field from the emitted EasyAdmin field list.',
+                ['access', 'presentation'],
             ),
             new ManagingFieldVisibilityExplanationScenario(
                 'required-form-field',
                 'User tries to hide a required form field',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
-                'visible / emitted',
-                ['page_available', 'field_default_visible', 'user_profile_hide_not_allowed'],
-                'Required or non-hideable fields stay visible on new/edit when a profile asks to hide them.',
+                'Field remains visible and emitted.',
+                'Required form fields cannot be hidden by presentation profile rules.',
+                'Reject the hide request for required or non-hideable form fields.',
+                ['availability', 'presentation'],
             ),
             new ManagingFieldVisibilityExplanationScenario(
                 'backend-hidden-user-visible',
                 'User shows a backend-hidden presentation default',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
-                'visible / emitted when access is allowed',
-                ['page_available', 'backend_configured_hidden', 'rolling_field_value_access_allowed', 'user_profile_visible'],
-                'Hidden is a presentation default, not a deny; the user profile still needs an allowed access corridor.',
+                'Field is visible and emitted when access is allowed.',
+                'A user profile overrides a presentation default inside an allowed corridor.',
+                'Allow the profile to override presentation only after access remains allowed.',
+                ['access', 'presentation'],
             ),
             new ManagingFieldVisibilityExplanationScenario(
                 'page-unavailable',
                 'Field is unavailable on the requested page',
-                ManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY,
-                'denied / not emitted',
-                ['field_not_available_on_page'],
-                'Availability-axis denial happens before access and presentation layers are evaluated.',
+                'Field is denied and not emitted.',
+                'The field is unavailable for the current EasyAdmin page.',
+                'Stop before access and presentation checks because the field is unavailable on the page.',
+                ['availability'],
             ),
         ];
     }

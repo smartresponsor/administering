@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Form\Managing;
 
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldAccessMutationReviewData;
-use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Form\Managing\AdministrationManagingFieldPermissionVocabulary;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -34,8 +34,8 @@ final class AdministrationManagingFieldAccessMutationReviewFormType extends Abst
             ])
             ->add('permissionKey', ChoiceType::class, [
                 'choices' => array_combine(
-                    ManagingFieldPermissionVocabulary::policyKeys(),
-                    ManagingFieldPermissionVocabulary::policyKeys(),
+                    AdministrationManagingFieldPermissionVocabulary::policyKeys(),
+                    AdministrationManagingFieldPermissionVocabulary::policyKeys(),
                 ),
             ])
             ->add('resourceClass', TextType::class, ['label' => 'Resource class'])

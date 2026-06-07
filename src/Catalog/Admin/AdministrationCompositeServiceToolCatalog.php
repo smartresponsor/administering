@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Administering\Catalog\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationServiceTool;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\ConfigurationToolDefinition;
 
 /**
  * Merges Administering-owned legacy tools with owner-provided configuration tools.
@@ -80,12 +80,12 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
     private function fromOwnerDefinition(ConfigurationToolProviderInterface $provider, ConfigurationToolDefinition $definition): AdministrationServiceTool
     {
         return new AdministrationServiceTool(
-            section: $definition->componentKey,
-            directionToken: $definition->componentKey,
-            toolSlug: $definition->toolSlug,
+            section: $definition->componentKey(),
+            directionToken: $definition->componentKey(),
+            toolSlug: $definition->toolSlug(),
             toolKey: $definition->toolKey(),
             serviceClass: $definition->serviceClass,
-            shortName: $definition->serviceShortName,
+            shortName: $definition->serviceShortName(),
             serviceFile: $definition->resolvedServiceFile(),
             label: $definition->label,
             kind: $definition->kind,
@@ -97,15 +97,19 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
             primaryRouteName: $definition->primaryRouteName,
             primaryRouteLabel: $definition->primaryRouteLabel,
             sourceOwnership: 'owner_component',
-            ownerComponentKey: $definition->componentKey,
-            ownerComponentToken: $definition->componentToken,
+            ownerComponentKey: $definition->componentKey(),
+            ownerComponentToken: $definition->componentToken(),
             ownerProviderClass: $provider::class,
             ownerServiceClass: $definition->serviceClass,
-            ownerSourceLabel: $definition->componentKey.' owner provider',
+            ownerSourceLabel: $definition->componentKey().' owner provider',
         );
     }
 
-    /** @param list<AdministrationServiceTool> $tools */
+    /**
+     * @param list<AdministrationServiceTool> $tools
+     *
+     * @return list<AdministrationServiceTool>
+     */
     private function sortBySectionAndKey(array $tools): array
     {
         usort($tools, static function (AdministrationServiceTool $left, AdministrationServiceTool $right): int {

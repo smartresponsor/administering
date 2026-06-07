@@ -8,25 +8,30 @@ use App\Administering\Form\Rolling\AdministrationRollingAclMutationReviewFormTyp
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
 use App\Administering\Value\Form\Rolling\AdministrationRollingAclMutationReviewData;
-use App\Rolling\ServiceInterface\Administration\RollingAclMutationReviewBuilderInterface;
-use App\Rolling\Value\Administration\RollingAclMutationRequest;
-use App\Rolling\Value\Administration\RollingFieldAccessDecisionRequest;
-use App\Rolling\Value\Administration\RollingFieldAccessScopeSet;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Native Symfony surface for safe Rolling ACL mutation dry-run reviews.
+ * Native Symfony surface for safe ACL mutation dry-run reviews.
  *
- * This controller does not execute ACL mutations. It only builds review metadata
- * so an operator can see whether a request is valid before a future apply step.
+ * This controller does not execute ACL mutations and does not depend on Rolling.
+ * It only builds and persists safe Administering-owned review metadata.
  */
 final class AdministrationRollingAclMutationController extends AbstractController
 {
+    private const ALLOWED_MUTATION_TYPES = [
+        'permission.grant',
+        'permission.revoke',
+        'acl.allow',
+        'acl.deny',
+    ];
+
     public function __construct(
-        private readonly RollingAclMutationReviewBuilderInterface $reviewBuilder,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
         private readonly AdministrationAclMutationReviewRecorderInterface $reviewRecorder,
     ) {
@@ -42,8 +47,8 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
         ]);
 
         return $this->render('@Administering/administering/form_page.html.twig', [
-            'page_title' => 'Rolling ACL Mutation Review',
-            'lead' => 'Dry-run review only. Rolling owns authorization and ACL persistence.',
+            'page_title' => 'ACL Mutation Review',
+            'lead' => 'Dry-run review only. Administering records safe metadata; Rolling owns real authorization and ACL persistence.',
             'form' => $form->createView(),
             'result_title' => null,
             'result_json' => null,
@@ -64,34 +69,17 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            return $this->render('@Administering/administering/form_page.html.twig', [
-                'page_title' => 'Rolling ACL Mutation Review',
-                'lead' => 'Dry-run review only. Rolling owns authorization and ACL persistence.',
-                'form' => $form->createView(),
-                'result_title' => null,
-                'result_json' => null,
-                'error_message' => null,
-                'action_links' => [],
-                'back_url' => $this->generateUrl('administration_rolling_acl_mutations'),
-            ]);
+            return $this->renderFormPage($form->createView(), null, null, null);
         }
 
         $data = $form->getData();
-        $currentUser = $this->currentUserContextProvider->current();
-        $mutationRequest = new RollingAclMutationRequest(
-            trim($data->mutationType),
-            trim($data->subjectIdentifier),
-            trim($data->permissionOrRoleKey),
-            $this->scopeKey($data),
-            $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
-            [
-                'source' => 'administering_ui',
-                'surface' => 'rolling_acl_mutation_review',
-            ],
-        );
+        if (!$data instanceof AdministrationRollingAclMutationReviewData) {
+            throw new \LogicException('ACL mutation review form must return AdministrationRollingAclMutationReviewData.');
+        }
 
         try {
-            $review = $this->reviewBuilder->review($mutationRequest);
+            $mutationRequest = $this->mutationRequest($data);
+            $review = $this->buildReview($data, $mutationRequest);
             $record = $this->reviewRecorder->record($mutationRequest, $review);
             $errorMessage = null;
         } catch (\InvalidArgumentException $exception) {
@@ -100,44 +88,119 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
             $errorMessage = $exception->getMessage();
         }
 
-        if (null === $review || null === $record) {
-            return $this->render('@Administering/administering/form_page.html.twig', [
-                'page_title' => 'Rolling ACL Mutation Review',
-                'lead' => 'Dry-run review only. Rolling owns authorization and ACL persistence.',
-                'form' => $this->createForm(AdministrationRollingAclMutationReviewFormType::class, $data, [
+        if (null === $review) {
+            return $this->renderFormPage(
+                $this->createForm(AdministrationRollingAclMutationReviewFormType::class, $data, [
                     'action' => $this->generateUrl('administration_rolling_acl_mutation_review'),
                 ])->createView(),
-                'result_title' => null,
-                'result_json' => null,
-                'error_message' => $errorMessage,
-                'action_links' => [],
-                'back_url' => $this->generateUrl('administration_rolling_acl_mutations'),
-            ]);
+                null,
+                null,
+                $errorMessage,
+            );
         }
 
-        return $this->render('@Administering/administering/form_page.html.twig', [
-            'page_title' => 'Rolling ACL Mutation Review',
-            'lead' => 'Dry-run review only. Rolling owns authorization and ACL persistence.',
-            'form' => $this->createForm(AdministrationRollingAclMutationReviewFormType::class, $data, [
+        return $this->renderFormPage(
+            $this->createForm(AdministrationRollingAclMutationReviewFormType::class, $data, [
                 'action' => $this->generateUrl('administration_rolling_acl_mutation_review'),
             ])->createView(),
-            'result_title' => sprintf('Persisted review record: %s', $record->requestKey()),
-            'result_json' => json_encode($review->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
-            'error_message' => null,
-            'action_links' => [],
-            'back_url' => $this->generateUrl('administration_rolling_acl_mutations'),
-        ]);
+            sprintf('Persisted review record: %s', $record->requestKey()),
+            json_encode($review->toSafeArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+            null,
+        );
+    }
+
+    private function mutationRequest(AdministrationRollingAclMutationReviewData $data): AdministrationRollingAclMutationRequest
+    {
+        $currentUser = $this->currentUserContextProvider->current();
+
+        return new AdministrationRollingAclMutationRequest(
+            trim($data->mutationType),
+            trim($data->subjectIdentifier),
+            trim($data->permissionOrRoleKey),
+            $this->scopeKey($data),
+            $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
+            [
+                'source' => 'administering_ui',
+                'surface' => 'acl_mutation_review',
+                'component_key' => trim($data->componentKey),
+                'resource_class' => trim($data->resourceClass),
+                'page_name' => trim($data->pageName),
+                'field_name' => trim($data->fieldName),
+            ],
+        );
+    }
+
+    private function buildReview(
+        AdministrationRollingAclMutationReviewData $data,
+        AdministrationRollingAclMutationRequest $request,
+    ): AdministrationRollingAclMutationReview {
+        $violations = [];
+        $warnings = [];
+
+        if (!in_array($request->mutationType(), self::ALLOWED_MUTATION_TYPES, true)) {
+            $violations[] = sprintf('Unsupported mutation type: %s', $request->mutationType());
+        }
+
+        foreach ([
+            'subject identifier' => $request->subjectIdentifier(),
+            'permission or role key' => $request->permissionOrRoleKey(),
+            'component key' => $data->componentKey,
+            'resource class' => $data->resourceClass,
+            'page name' => $data->pageName,
+            'field name' => $data->fieldName,
+        ] as $label => $value) {
+            if ('' === trim((string) $value)) {
+                $violations[] = sprintf('Missing %s.', $label);
+            }
+        }
+
+        if (!str_contains(trim($data->resourceClass), '\\')) {
+            $warnings[] = 'Resource class does not look like a fully qualified PHP class name.';
+        }
+
+        return new AdministrationRollingAclMutationReview(
+            $request->mutationType(),
+            $request->subjectIdentifier(),
+            $request->permissionOrRoleKey(),
+            $request->scopeKey(),
+            [] === $violations,
+            [
+                'Collected operator ACL mutation request.',
+                'Computed Administering-owned scope key.',
+                'Persisted safe review metadata without calling optional Rolling services.',
+            ],
+            $warnings,
+            $violations,
+            $request->safeContext(),
+        );
     }
 
     private function scopeKey(AdministrationRollingAclMutationReviewData $data): string
     {
-        return RollingFieldAccessScopeSet::fromRequest(new RollingFieldAccessDecisionRequest(
-            permissionKey: trim($data->permissionOrRoleKey),
-            componentKey: trim($data->componentKey),
-            resourceClass: trim($data->resourceClass),
-            fieldName: trim($data->fieldName),
-            pageName: trim($data->pageName),
-            operation: 'view',
-        ))->mostSpecificScope();
+        return implode(':', array_filter([
+            trim($data->componentKey),
+            str_replace('\\', '.', trim($data->resourceClass)),
+            trim($data->pageName),
+            trim($data->fieldName),
+            'view',
+        ], static fn (string $part): bool => '' !== $part));
+    }
+
+    private function renderFormPage(
+        FormView $formView,
+        ?string $resultTitle,
+        ?string $resultJson,
+        ?string $errorMessage,
+    ): Response {
+        return $this->render('@Administering/administering/form_page.html.twig', [
+            'page_title' => 'ACL Mutation Review',
+            'lead' => 'Dry-run review only. Administering records safe metadata; Rolling owns real authorization and ACL persistence.',
+            'form' => $formView,
+            'result_title' => $resultTitle,
+            'result_json' => $resultJson,
+            'error_message' => $errorMessage,
+            'action_links' => [],
+            'back_url' => $this->generateUrl('administration_rolling_acl_mutations'),
+        ]);
     }
 }

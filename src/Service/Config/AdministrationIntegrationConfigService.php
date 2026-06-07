@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Form\Config\AdministrationIntegrationConfigFormType;
+use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Administering\Value\Config\ConfigToolDescriptor;
 use App\Administering\Value\Form\Config\AdministrationIntegrationConfigData;
-use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Configuring\Value\Config\ConfigToolDescriptor;
 use Symfony\Component\Yaml\Yaml;
 
 final readonly class AdministrationIntegrationConfigService implements ConfigToolServiceInterface

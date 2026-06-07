@@ -10,7 +10,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\Value\AdministrationCurrentUserContext;
 use PHPUnit\Framework\TestCase;
 
-final class AdministrationRollingPermissionCheckerTest extends TestCase
+final class RollingAdministrationPermissionCheckerTest extends TestCase
 {
     public function testBootstrapAdminRoleCanSeeAdministrationShell(): void
     {

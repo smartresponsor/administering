@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessCatalogProviderInterface;
-use App\Managing\Value\Administration\ManagingFieldAccessCatalogItem;
-use App\Managing\Value\Administration\ManagingFieldAccessMatrixRow;
-use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface;
-use App\Rolling\Value\Administration\RollingAdministrationPermissionDescriptor;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface;
+use App\Administering\Value\Managing\ManagingFieldAccessCatalogItem;
+use App\Administering\Value\Managing\ManagingFieldAccessMatrixRow;
+use App\Administering\Value\Managing\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Rolling\AdministrationRollingPermissionDescriptor;
 
 /**
  * Builds the read-only Administering view of Managing field-access capability metadata.
  */
 final readonly class AdministrationManagingFieldAccessCatalogProvider implements AdministrationFieldAccessCatalogProviderInterface
 {
-    public function __construct(private RollingAdministrationPermissionCatalogInterface $permissionCatalog)
+    public function __construct(private AdministrationRollingPermissionCatalogInterface $permissionCatalog)
     {
     }
 
@@ -37,7 +37,7 @@ final readonly class AdministrationManagingFieldAccessCatalogProvider implements
                 controlPlaneGroup: $this->controlPlaneGroup($permissionKey),
                 scopes: $descriptor?->scopes() ?? ['component', 'resource', 'field'],
                 sensitive: $descriptor?->sensitive() ?? str_contains($permissionKey, '.configure') || str_contains($permissionKey, '.assign'),
-                registeredInRolling: $descriptor instanceof RollingAdministrationPermissionDescriptor,
+                registeredInRolling: $descriptor instanceof AdministrationRollingPermissionDescriptor,
             );
         }
 

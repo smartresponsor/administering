@@ -7,12 +7,12 @@ namespace App\Administering\Tests\Unit\Rolling;
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
 use App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationReviewServiceInterface as OwnerReviewServiceInterface;
-use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput as OwnerReviewInput;
-use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewResult as OwnerReviewResult;
-use App\Managing\Value\Administration\ManagingFieldAccessPolicyDescriptor;
-use App\Managing\Value\Administration\ManagingFieldAccessTarget;
-use App\Rolling\Value\Administration\RollingAclMutationReview;
+use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Managing\ManagingFieldAccessTarget;
+use App\Administering\Value\Managing\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldAccessMutationReviewServiceTest extends TestCase
@@ -21,7 +21,7 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
     {
         $capture = new \stdClass();
         $service = $this->service($capture);
-        $result = $service->review(new OwnerReviewInput(
+        $result = $service->review(new ManagingFieldAccessMutationReviewInput(
             new ManagingFieldAccessPolicyDescriptor(
                 new ManagingFieldAccessTarget(
                     'Managing',
@@ -29,7 +29,7 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
                     'internalCost',
                     'detail',
                 ),
-                \App\Managing\Value\Administration\ManagingFieldPermissionVocabulary::FIELD_VIEW,
+                ManagingFieldPermissionVocabulary::FIELD_VIEW,
                 ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE,
                 'security.admin',
                 'allow',
@@ -46,7 +46,7 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
     {
         $capture = new \stdClass();
         $service = $this->service($capture);
-        $service->review(new OwnerReviewInput(
+        $service->review(new ManagingFieldAccessMutationReviewInput(
             new ManagingFieldAccessPolicyDescriptor(
                 new ManagingFieldAccessTarget(
                     'Managing',
@@ -54,7 +54,7 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
                     'internalCost',
                     'detail',
                 ),
-                \App\Managing\Value\Administration\ManagingFieldPermissionVocabulary::FIELD_VIEW,
+                ManagingFieldPermissionVocabulary::FIELD_VIEW,
                 ManagingFieldAccessPolicyDescriptor::SUBJECT_USER,
                 '42',
                 'deny',
@@ -68,42 +68,16 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
 
     private function service(\stdClass $capture): AdministrationManagingFieldAccessMutationReviewService
     {
-        $ownerService = new class($capture) implements OwnerReviewServiceInterface {
-            public function __construct(private \stdClass $capture)
-            {
-            }
-
-            public function review(OwnerReviewInput $input): OwnerReviewResult
-            {
-                $descriptor = $input->descriptor;
-                $this->capture->mutationType = 'role' === $descriptor->subjectType
-                    ? ('allow' === $descriptor->effect ? 'permission.grant' : 'permission.revoke')
-                    : ('allow' === $descriptor->effect ? 'acl.allow' : 'acl.deny');
-                $this->capture->subjectIdentifier = 'role' === $descriptor->subjectType
-                    ? trim($descriptor->subjectIdentifier)
-                    : 'user:'.trim($descriptor->subjectIdentifier);
-
-                $review = new RollingAclMutationReview(
-                    $this->capture->mutationType,
-                    $this->capture->subjectIdentifier,
-                    $descriptor->permissionKey,
-                    'component:managing',
-                    true,
-                );
-
-                $this->capture->review = $review;
-
-                return new OwnerReviewResult($descriptor, $review);
-            }
-        };
-
         $reviewRecorder = new class($capture) implements AdministrationAclMutationReviewRecorderInterface {
             public function __construct(private \stdClass $capture)
             {
             }
 
-            public function record(\App\Rolling\Value\Administration\RollingAclMutationRequest $request, RollingAclMutationReview $review): AdministrationAclMutationReviewRecord
+            public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecord
             {
+                $this->capture->mutationType = $request->mutationType();
+                $this->capture->subjectIdentifier = $request->subjectIdentifier();
+
                 return new AdministrationAclMutationReviewRecord(
                     'review-key',
                     $request->mutationType(),
@@ -117,6 +91,6 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
             }
         };
 
-        return new AdministrationManagingFieldAccessMutationReviewService($ownerService, $reviewRecorder);
+        return new AdministrationManagingFieldAccessMutationReviewService($reviewRecorder);
     }
 }

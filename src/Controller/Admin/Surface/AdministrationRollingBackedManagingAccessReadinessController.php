@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationRollingBackedManagingAccessReadinessController extends AbstractController
 {
     public function __construct(
-        private readonly \App\Managing\ServiceInterface\Administration\RollingBackedManagingAccessReadinessProviderInterface $readinessProvider,
+        private readonly \App\Administering\ServiceInterface\Managing\AdministrationRollingBackedManagingAccessReadinessProviderInterface $readinessProvider,
     ) {
     }
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Validator\Admin;
 
+use App\Administering\ServiceInterface\Config\ConfigVariableToolServiceInterface;
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Configuring\ServiceInterface\Config\ConfigVariableToolServiceInterface;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\ConfigurationToolDefinition;
 
 /**
  * Validates producer-side configuration tool definitions before materialization.
@@ -23,8 +23,8 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
         ConfigurationToolDefinition $definition,
     ): array {
         $violations = [];
-        $componentKey = $definition->componentKey;
-        $componentToken = $definition->componentToken;
+        $componentKey = $definition->componentKey();
+        $componentToken = $definition->componentToken();
         $toolKey = $definition->toolKey();
 
         if ('' === trim($componentKey)) {
@@ -43,24 +43,24 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('error', $definition, 'componentToken', 'Definition component token must match provider component token.', $provider->componentToken(), $componentToken);
         }
 
-        if ('' === trim($definition->toolSlug) || 1 !== preg_match('/^[A-Z][A-Za-z0-9]*$/', $definition->toolSlug)) {
-            $violations[] = $this->violation('error', $definition, 'toolSlug', 'Tool slug must be non-empty PascalCase.', 'PascalCase', $definition->toolSlug);
+        if ('' === trim($definition->toolSlug()) || 1 !== preg_match('/^[A-Z][A-Za-z0-9]*$/', $definition->toolSlug())) {
+            $violations[] = $this->violation('error', $definition, 'toolSlug', 'Tool slug must be non-empty PascalCase.', 'PascalCase', $definition->toolSlug());
         }
 
-        if ('' === trim($definition->serviceClass) || !str_ends_with($definition->serviceClass, '\\'.$definition->serviceShortName)) {
-            $violations[] = $this->violation('error', $definition, 'serviceClass', 'Service class must end with the declared service short name.', '*\\'.$definition->serviceShortName, $definition->serviceClass);
+        if ('' === trim($definition->serviceClass) || !str_ends_with($definition->serviceClass, '\\'.$definition->serviceShortName())) {
+            $violations[] = $this->violation('error', $definition, 'serviceClass', 'Service class must end with the declared service short name.', '*\\'.$definition->serviceShortName(), $definition->serviceClass);
         }
 
-        if (!$definition->isProducerSidePrefixed()) {
-            $violations[] = $this->violation('error', $definition, 'serviceShortName', 'Producer tool service must use producer-side Configuration prefix and Service suffix.', $definition->expectedServicePrefix().'*Service', $definition->serviceShortName);
+        if (!$definition->isOwnerSidePrefixed()) {
+            $violations[] = $this->violation('error', $definition, 'serviceShortName', 'Producer tool service must use producer-side Configuration prefix and Service suffix.', $definition->expectedServicePrefix().'*Service', $definition->serviceShortName());
         }
 
-        $expectedFormSuffix = $definition->expectedServicePrefix().$definition->toolSlug.'FormType';
+        $expectedFormSuffix = $definition->expectedServicePrefix().$definition->toolSlug().'FormType';
         if (null !== $definition->formTypeClass && !str_ends_with($definition->formTypeClass, '\\'.$expectedFormSuffix)) {
             $violations[] = $this->violation('warning', $definition, 'formTypeClass', 'Producer form type should follow producer-side Configuration prefix convention.', '*\\'.$expectedFormSuffix, $definition->formTypeClass);
         }
 
-        $expectedDataSuffix = $definition->expectedServicePrefix().$definition->toolSlug.'Data';
+        $expectedDataSuffix = $definition->expectedServicePrefix().$definition->toolSlug().'Data';
         if (null !== $definition->formDataClass && !str_ends_with($definition->formDataClass, '\\'.$expectedDataSuffix)) {
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Producer form data should follow producer-side Configuration prefix convention.', '*\\'.$expectedDataSuffix, $definition->formDataClass);
         }
@@ -74,8 +74,8 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Legacy executable producer tool should expose a form data class for stable form payload semantics.');
         }
 
-        if ($toolKey !== strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug)) {
-            $violations[] = $this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug), $toolKey);
+        if ($toolKey !== strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug())) {
+            $violations[] = $this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug()), $toolKey);
         }
 
         return $violations;
@@ -91,8 +91,8 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
     ): AdministrationOwnerConfigurationToolViolation {
         return new AdministrationOwnerConfigurationToolViolation(
             severity: $severity,
-            componentKey: $definition->componentKey,
-            componentToken: $definition->componentToken,
+            componentKey: $definition->componentKey(),
+            componentToken: $definition->componentToken(),
             toolKey: $definition->toolKey(),
             field: $field,
             message: $message,

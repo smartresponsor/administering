@@ -38,8 +38,9 @@ final class AdministrationAccessingAccountRecord
     private \DateTimeImmutable $synchronizedAt;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $accountReference, string $displayLabel, string $status, string $provider, array $safeContext = [])
+    public function __construct(string $accountReference, string $displayLabel, string $status, string $provider, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->accountReference = $accountReference;
         $this->displayLabel = $displayLabel;
         $this->status = $status;

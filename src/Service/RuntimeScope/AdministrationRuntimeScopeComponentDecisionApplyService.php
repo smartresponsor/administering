@@ -164,7 +164,11 @@ final readonly class AdministrationRuntimeScopeComponentDecisionApplyService
         )));
     }
 
-    /** @param list<string> $bundleTokens */
+    /**
+     * @param list<string> $bundleTokens
+     *
+     * @return list<string>
+     */
     private function componentsFromBundleTokens(array $bundleTokens): array
     {
         return $this->uniqueSorted(array_map(
@@ -173,7 +177,11 @@ final readonly class AdministrationRuntimeScopeComponentDecisionApplyService
         ));
     }
 
-    /** @param list<string> $values */
+    /**
+     * @param list<string> $values
+     *
+     * @return list<string>
+     */
     private function uniqueSorted(array $values): array
     {
         $values = array_values(array_unique(array_filter($values, static fn (string $value): bool => '' !== $value)));

@@ -24,7 +24,7 @@ final class SymfonyAdministrationCurrentUserContextProvider implements Administr
         }
 
         $subjectIdentifier = 'symfony:user:'.$user->getUserIdentifier();
-        if (str_starts_with($user::class, 'App\\Accessing\\') && method_exists($user, 'getId')) {
+        if (str_starts_with($user::class, 'App\\Administering\\') && method_exists($user, 'getId')) {
             $id = $user->getId();
             if (null !== $id) {
                 $subjectIdentifier = 'accessing:account:'.(string) $id;

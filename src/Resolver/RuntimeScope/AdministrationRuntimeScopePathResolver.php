@@ -31,6 +31,11 @@ final readonly class AdministrationRuntimeScopePathResolver
         return rtrim($hostDir, '/\\').'/config/kernel/'.$fileName;
     }
 
+    public function bundleCatalogPath(): string
+    {
+        return $this->defaultCatalogFile();
+    }
+
     public function defaultCatalogFile(): string
     {
         return dirname(__DIR__, 3).'/config/runtime-scope/bundle_catalog.php';

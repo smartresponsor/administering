@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Config;
 
-use App\Configuring\Value\Config\ConfigToolDescriptor;
+use App\Administering\Value\Config\ConfigToolDescriptor;
 
 final readonly class AdministrationConfigApplyService
 {
@@ -18,6 +18,8 @@ final readonly class AdministrationConfigApplyService
      * @param array<string, array{fieldType:string, secret:bool, current:?string, pending:?string, masked:?string, status:string}> $values
      * @param array<string, mixed>                                                                                                 $changedFields
      * @param array<string, mixed>                                                                                                 $maskedSecrets
+     *
+     * @return array{status:string, messages:list<string>, masked_changes:array<string, mixed>, file_changes:list<array<string, mixed>>, secret_changes:list<array<string, mixed>>}
      */
     public function save(
         ConfigToolDescriptor $descriptor,
@@ -44,6 +46,8 @@ final readonly class AdministrationConfigApplyService
      * @param array<string, mixed>                                                                                                 $maskedSecrets
      * @param list<array<string, mixed>>                                                                                           $fileChanges
      * @param list<array<string, mixed>>                                                                                           $secretChanges
+     *
+     * @return array{status:string, messages:list<string>, masked_changes:array<string, mixed>, file_changes:list<array<string, mixed>>, secret_changes:list<array<string, mixed>>}
      */
     public function apply(
         ConfigToolDescriptor $descriptor,

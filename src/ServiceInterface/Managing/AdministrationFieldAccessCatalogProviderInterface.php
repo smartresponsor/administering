@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Managing\Value\Administration\ManagingFieldAccessCatalogItem;
-use App\Managing\Value\Administration\ManagingFieldAccessMatrixRow;
+use App\Administering\Value\Managing\ManagingFieldAccessCatalogItem;
+use App\Administering\Value\Managing\ManagingFieldAccessMatrixRow;
 
 /**
  * Provides read-only control-plane metadata for Managing field access administration.

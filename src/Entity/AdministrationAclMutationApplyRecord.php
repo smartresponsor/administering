@@ -70,7 +70,9 @@ final class AdministrationAclMutationApplyRecord
         bool $succeeded,
         string $safeMessage,
         array $safeResultPayload = [],
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->requestKey = $requestKey;
         $this->mutationType = $mutationType;
         $this->subjectIdentifier = $subjectIdentifier;

@@ -41,8 +41,9 @@ final class AdministrationSymfonyRouteRecord
     private \DateTimeImmutable $checkedAt;
 
     /** @param list<string> $methods */
-    public function __construct(string $routeName, string $path, array $methods = [], ?string $controller = null, ?int $statusCode = null, string $statusClass = 'unchecked')
+    public function __construct(string $routeName, string $path, array $methods = [], ?string $controller = null, ?int $statusCode = null, string $statusClass = 'unchecked', ?int $id = null)
     {
+        $this->id = $id;
         $this->routeName = $routeName;
         $this->path = $path;
         $this->methods = $methods;

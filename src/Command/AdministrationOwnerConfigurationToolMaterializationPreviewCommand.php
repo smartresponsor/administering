@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolMaterializationReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -61,10 +60,6 @@ final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand ex
             ];
 
             foreach ($provider->tools() as $definition) {
-                if (!$definition instanceof ConfigurationToolDefinition) {
-                    continue;
-                }
-
                 $violations = $this->validator->validate($provider, $definition);
                 $row = $definition->toArray();
                 $row['providerClass'] = $provider::class;

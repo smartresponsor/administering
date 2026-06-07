@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Command\Config;
 
 use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
-use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Configuring\Value\Config\ConfigToolDescriptor;
+use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,16 +31,15 @@ final class AdministrationConfigValidateCommand extends Command
         $errors = [];
 
         foreach ($descriptors as $descriptor) {
-            if (!$descriptor instanceof ConfigToolDescriptor) {
-                continue;
+            $formClass = $descriptor->formClass;
+            $serviceClass = $descriptor->serviceClass;
+
+            if (null === $formClass || !class_exists($formClass) || !is_subclass_of($formClass, AbstractType::class)) {
+                $errors[] = sprintf('%s/%s: invalid form class %s', $descriptor->applicationCode, $descriptor->toolCode, $formClass ?? '<missing>');
             }
 
-            if (!class_exists($descriptor->formClass) || !is_subclass_of($descriptor->formClass, AbstractType::class)) {
-                $errors[] = sprintf('%s/%s: invalid form class %s', $descriptor->applicationCode, $descriptor->toolCode, $descriptor->formClass);
-            }
-
-            if (!class_exists($descriptor->serviceClass) || !is_subclass_of($descriptor->serviceClass, ConfigToolServiceInterface::class)) {
-                $errors[] = sprintf('%s/%s: missing service class %s', $descriptor->applicationCode, $descriptor->toolCode, $descriptor->serviceClass);
+            if (null === $serviceClass || !class_exists($serviceClass) || !is_subclass_of($serviceClass, ConfigToolServiceInterface::class)) {
+                $errors[] = sprintf('%s/%s: missing service class %s', $descriptor->applicationCode, $descriptor->toolCode, $serviceClass ?? '<missing>');
             }
 
             foreach ($descriptor->writableFiles as $file) {
@@ -53,8 +51,8 @@ final class AdministrationConfigValidateCommand extends Command
             }
 
             foreach ($descriptor->secretNames as $fieldKey => $secretName) {
-                if (!is_string($fieldKey) || !is_string($secretName) || !preg_match('/^[A-Z0-9_]+$/', $secretName)) {
-                    $errors[] = sprintf('%s/%s: invalid secret mapping %s => %s', $descriptor->applicationCode, $descriptor->toolCode, (string) $fieldKey, (string) $secretName);
+                if (!preg_match('/^[A-Z0-9_]+$/', $secretName)) {
+                    $errors[] = sprintf('%s/%s: invalid secret mapping %s => %s', $descriptor->applicationCode, $descriptor->toolCode, $fieldKey, $secretName);
                 }
             }
         }

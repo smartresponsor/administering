@@ -1,0 +1,25 @@
+= Administering Doctrine Symfony 8.1 Config
+
+Administering keeps Doctrine configuration compatible with the current DoctrineBundle configuration tree used by Symfony 8.1.
+
+The base dry-runtime Doctrine config must not place `auto_generate_proxy_classes` under an entity manager. DoctrineBundle no longer accepts that option under `doctrine.orm.entity_managers.default`.
+
+Administering therefore keeps the dry-runtime Doctrine configuration minimal:
+
+[source,yaml]
+----
+doctrine:
+  dbal:
+    url: '%env(default:administering_standalone_database_url:DATABASE_URL)%'
+  orm:
+    auto_mapping: true
+    mappings:
+      Administering:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Administering\Entity'
+        alias: Administering
+----
+
+Proxy generation is left to DoctrineBundle defaults for the installed version and runtime environment.

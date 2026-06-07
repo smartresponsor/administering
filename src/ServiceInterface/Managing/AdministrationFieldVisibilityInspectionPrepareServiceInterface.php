@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
-use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareResult;
+use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareResult;
 
 interface AdministrationFieldVisibilityInspectionPrepareServiceInterface
 {

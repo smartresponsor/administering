@@ -48,7 +48,7 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
             $dev = $devRows[$componentKey] ?? null;
             $prod = $prodRows[$componentKey] ?? null;
 
-            $status = $current?->status ?? $dev?->status ?? $prod?->status ?? 'unknown';
+            $status = null !== $current ? $current->status : ($dev->status ?? ($prod->status ?? 'unknown'));
             $readiness = in_array($status, ['available', 'reportable', 'auditable'], true) ? 'ready' : 'review';
 
             $this->entityManager->persist(new AdministrationConnectedComponentRecord(
@@ -122,8 +122,8 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
 
         return sprintf(
             'Dev: %s; Prod: %s',
-            $dev?->status ?? 'unknown',
-            $prod?->status ?? 'unknown',
+            null !== $dev ? $dev->status : 'unknown',
+            null !== $prod ? $prod->status : 'unknown',
         );
     }
 }

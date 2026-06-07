@@ -1,0 +1,8 @@
+= Administering runtime readiness Rolling cleanup
+
+The `administering:runtime:readiness` command belongs to the base Administering dry-runtime.
+It must compile without the optional Rolling component installed.
+
+The command therefore must not typehint or import `App\Rolling\*` classes.
+Runtime readiness uses an Administering-owned local permission catalog for baseline checks.
+Host applications can still wire real external permission decisions through Administering ports.

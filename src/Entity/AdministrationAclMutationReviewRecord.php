@@ -63,7 +63,9 @@ final class AdministrationAclMutationReviewRecord
         string $requestedBySubject,
         bool $valid,
         array $safeReviewPayload = [],
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->requestKey = $requestKey;
         $this->mutationType = $mutationType;
         $this->subjectIdentifier = $subjectIdentifier;

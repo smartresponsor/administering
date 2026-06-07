@@ -56,7 +56,9 @@ final class AdministrationConfigApplyLog
         array $changedFields = [],
         array $maskedSecrets = [],
         ?string $errorMessage = null,
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->applicationCode = $applicationCode;
         $this->toolCode = $toolCode;
         $this->actorIdentifier = $actorIdentifier;

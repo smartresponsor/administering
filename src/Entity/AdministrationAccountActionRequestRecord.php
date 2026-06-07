@@ -63,7 +63,9 @@ final class AdministrationAccountActionRequestRecord
         string $safeReason,
         string $safeResultMessage,
         array $safeContext = [],
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->requestKey = $requestKey;
         $this->action = $action;
         $this->accountReference = $accountReference;

@@ -61,8 +61,6 @@ final class AdministrationRuntimeScopeSourceIndexController extends AbstractCont
 
     private function hostDir(Request $request): string
     {
-        $hostDir = $request->query->get('hostDir', '');
-
-        return is_string($hostDir) ? $hostDir : '';
+        return (string) $request->query->get('hostDir', '');
     }
 }

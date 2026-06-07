@@ -6,13 +6,12 @@ namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationReviewServiceInterface;
-use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput;
-use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewResult;
-use App\Managing\Value\Administration\ManagingFieldAccessPolicyDescriptor;
-use App\Rolling\Value\Administration\RollingAclMutationRequest;
-use App\Rolling\Value\Administration\RollingFieldAccessDecisionRequest;
-use App\Rolling\Value\Administration\RollingFieldAccessScopeSet;
+use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewResult;
+use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
+use App\Administering\Value\Rolling\AdministrationRollingFieldAccessDecisionRequest;
+use App\Administering\Value\Rolling\AdministrationRollingFieldAccessScopeSet;
 
 /**
  * Thin Administering adapter for the owner-side Managing field access review service.
@@ -20,16 +19,15 @@ use App\Rolling\Value\Administration\RollingFieldAccessScopeSet;
 final readonly class AdministrationManagingFieldAccessMutationReviewService implements AdministrationFieldAccessMutationReviewServiceInterface
 {
     public function __construct(
-        private ManagingFieldAccessMutationReviewServiceInterface $reviewService,
         private AdministrationAclMutationReviewRecorderInterface $reviewRecorder,
     ) {
     }
 
     public function review(ManagingFieldAccessMutationReviewInput $input): ManagingFieldAccessMutationReviewResult
     {
-        $ownerResult = $this->reviewService->review($input);
-        $review = $ownerResult->review;
-        $record = $this->reviewRecorder->record($this->toRollingMutationRequest($input), $review);
+        $request = $this->toRollingMutationRequest($input);
+        $review = $this->buildReview($input, $request);
+        $record = $this->reviewRecorder->record($request, $review);
 
         return new ManagingFieldAccessMutationReviewResult(
             $input->descriptor,
@@ -38,10 +36,47 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
         );
     }
 
-    private function toRollingMutationRequest(ManagingFieldAccessMutationReviewInput $input): RollingAclMutationRequest
+    private function buildReview(
+        ManagingFieldAccessMutationReviewInput $input,
+        AdministrationRollingAclMutationRequest $request,
+    ): \App\Administering\Value\Rolling\AdministrationRollingAclMutationReview {
+        $descriptor = $input->descriptor;
+        $violations = [];
+        foreach ([
+            'permission key' => $descriptor->permissionKey,
+            'subject type' => $descriptor->subjectType,
+            'subject identifier' => $descriptor->subjectIdentifier,
+            'resource class' => $descriptor->target->resourceClass,
+            'field name' => $descriptor->target->fieldName,
+            'page name' => $descriptor->target->pageName,
+            'operation' => $descriptor->target->operation,
+        ] as $label => $value) {
+            if ('' === trim((string) $value)) {
+                $violations[] = sprintf('Missing %s.', $label);
+            }
+        }
+
+        return new \App\Administering\Value\Rolling\AdministrationRollingAclMutationReview(
+            $request->mutationType(),
+            $request->subjectIdentifier(),
+            $request->permissionOrRoleKey(),
+            $request->scopeKey(),
+            [] === $violations,
+            [
+                'Collected Managing field-access mutation request.',
+                'Computed Administering-owned Rolling-compatible scope key.',
+                'Persisted safe review metadata without calling Managing or Rolling services.',
+            ],
+            [],
+            $violations,
+            $request->safeContext(),
+        );
+    }
+
+    private function toRollingMutationRequest(ManagingFieldAccessMutationReviewInput $input): AdministrationRollingAclMutationRequest
     {
         $descriptor = $input->descriptor;
-        $scope = RollingFieldAccessScopeSet::fromRequest(new RollingFieldAccessDecisionRequest(
+        $scope = AdministrationRollingFieldAccessScopeSet::fromRequest(new AdministrationRollingFieldAccessDecisionRequest(
             permissionKey: $descriptor->permissionKey,
             componentKey: $descriptor->target->componentKey,
             resourceClass: $descriptor->target->resourceClass,
@@ -52,7 +87,7 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
             attributes: $descriptor->target->attributes,
         ))->mostSpecificScope();
 
-        return new RollingAclMutationRequest(
+        return new AdministrationRollingAclMutationRequest(
             $this->mutationType($descriptor),
             $this->subjectIdentifier($descriptor),
             $descriptor->permissionKey,

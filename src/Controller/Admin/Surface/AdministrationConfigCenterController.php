@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Accessing\Entity\AccessAccountEntity;
 use App\Administering\Entity\Config\AdministrationConfigTool;
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
 use App\Administering\Service\Config\AdministrationConfigFormResolverService;
@@ -13,6 +12,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,7 +36,7 @@ final class AdministrationConfigCenterController extends AbstractController
     ])]
     public function index(): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -63,7 +63,7 @@ final class AdministrationConfigCenterController extends AbstractController
     ])]
     public function edit(string $applicationCode, string $toolCode, Request $request): Response
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
         }
 
@@ -93,7 +93,12 @@ final class AdministrationConfigCenterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $actor = $this->currentUserContextProvider->current()?->subjectIdentifier() ?? 'system';
             $payload = $form->getData();
-            if ($form->get('apply')->isClicked()) {
+            if (!is_object($payload)) {
+                throw new \LogicException('Configuration tool form data must be an object before save/apply.');
+            }
+
+            $applyButton = $form->get('apply');
+            if ($applyButton instanceof ClickableInterface && $applyButton->isClicked()) {
                 $result = $toolService->apply($payload, ['actor' => $actor]);
                 $resultTitle = 'Apply result';
             } else {
@@ -127,6 +132,7 @@ final class AdministrationConfigCenterController extends AbstractController
         ]));
     }
 
+    /** @param array<string, mixed> $result */
     private function renderResultHtml(array $result): string
     {
         $messages = array_map(
@@ -143,6 +149,8 @@ final class AdministrationConfigCenterController extends AbstractController
     }
 
     /**
+     * @param class-string<object> $entityClass
+     *
      * @return list<object>
      */
     private function fetch(string $entityClass): array

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Mapper\Config;
 
-use App\Configuring\Value\Config\ConfigVariable;
+use App\Administering\Value\Config\ConfigVariable;
 
 final readonly class AdministrationConfigVariableFormMapper
 {
@@ -13,7 +13,7 @@ final readonly class AdministrationConfigVariableFormMapper
         $suffix = strtolower((string) preg_replace('/[^A-Za-z0-9_]+/', '_', $variable->key));
         $suffix = trim($suffix, '_');
 
-        return 'v_'.substr(hash('sha256', $variable->storage->value.'|'.$variable->key), 0, 12).('' !== $suffix ? '_'.$suffix : '');
+        return 'v_'.substr(hash('sha256', $variable->storage.'|'.$variable->key), 0, 12).('' !== $suffix ? '_'.$suffix : '');
     }
 
     /**

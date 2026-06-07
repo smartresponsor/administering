@@ -48,8 +48,9 @@ final class AdministrationConfigValue
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $updatedAt;
 
-    public function __construct(string $applicationCode, string $toolCode, string $fieldKey, string $fieldType, bool $secret = false)
+    public function __construct(string $applicationCode, string $toolCode, string $fieldKey, string $fieldType, bool $secret = false, ?int $id = null)
     {
+        $this->id = $id;
         $this->applicationCode = $applicationCode;
         $this->toolCode = $toolCode;
         $this->fieldKey = $fieldKey;

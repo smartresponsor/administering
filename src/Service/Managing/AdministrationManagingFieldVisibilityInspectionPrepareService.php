@@ -5,25 +5,41 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
-use App\Managing\ServiceInterface\Administration\ManagingFieldVisibilityInspectionPrepareServiceInterface as OwnerPrepareServiceInterface;
-use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
-use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareResult;
+use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareResult;
 
 /**
- * Prepares a concrete Managing field visibility inspection request from Administering.
- *
- * This service does not call Managing runtime directly. It emits a normalized payload that a host
- * integration or operator can submit to the Managing inspector/console command.
+ * Prepares read-only Managing field visibility inspection payloads without Managing runtime calls.
  */
 final readonly class AdministrationManagingFieldVisibilityInspectionPrepareService implements AdministrationFieldVisibilityInspectionPrepareServiceInterface
 {
-    public function __construct(
-        private OwnerPrepareServiceInterface $prepareService,
-    ) {
-    }
-
     public function prepare(ManagingFieldVisibilityInspectionPrepareRequest $request): ManagingFieldVisibilityInspectionPrepareResult
     {
-        return $this->prepareService->prepare($request);
+        $violations = [];
+        foreach (['resource class' => $request->resourceClass, 'field name' => $request->fieldName, 'page name' => $request->pageName] as $label => $value) {
+            if ('' === trim($value)) {
+                $violations[] = sprintf('Missing %s.', $label);
+            }
+        }
+
+        return new ManagingFieldVisibilityInspectionPrepareResult(
+            [] === $violations,
+            [] === $violations ? 'prepared' : 'rejected',
+            [] === $violations ? 'Managing visibility inspection payload prepared for owner runtime.' : implode(' ', $violations),
+            [
+                'resource_class' => $request->resourceClass,
+                'field_name' => $request->fieldName,
+                'page_name' => $request->pageName,
+                'subject_identifier' => $request->subjectIdentifier,
+                'status_candidates' => $request->statusCandidates,
+                'publication_flag_candidates' => $request->publicationFlagCandidates,
+                'publication_date_candidates' => $request->publicationDateCandidates,
+            ],
+            [
+                'requested_by_subject' => $request->requestedBySubject,
+                'reason' => $request->reason,
+                'mode' => 'administering_self_contained_dry_runtime',
+            ],
+        );
     }
 }

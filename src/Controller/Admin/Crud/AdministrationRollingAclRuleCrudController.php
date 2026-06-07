@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Rolling\Entity\Acl\RollingAclRule;
+use App\Administering\Entity\Rolling\RollingAclRule;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -131,6 +131,7 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         yield ArrayField::new('conditions')->hideOnIndex();
     }
 
+    /** @param AdminContext<RollingAclRule> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
@@ -143,6 +144,7 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" enabled.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
+    /** @param AdminContext<RollingAclRule> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
@@ -155,6 +157,7 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" disabled.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
+    /** @param AdminContext<RollingAclRule> $context */
     #[AdminRoute(path: '/{entityId}/allow', name: 'allow', options: ['methods' => ['GET', 'POST']])]
     public function allow(AdminContext $context): Response
     {
@@ -167,6 +170,7 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" set to allow.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
+    /** @param AdminContext<RollingAclRule> $context */
     #[AdminRoute(path: '/{entityId}/deny', name: 'deny', options: ['methods' => ['GET', 'POST']])]
     public function deny(AdminContext $context): Response
     {
@@ -179,6 +183,10 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" set to deny.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
+    /**
+     * @param AdminContext<RollingAclRule>   $context
+     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -195,6 +203,10 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         );
     }
 
+    /**
+     * @param AdminContext<RollingAclRule>   $context
+     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -211,6 +223,10 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         );
     }
 
+    /**
+     * @param AdminContext<RollingAclRule>   $context
+     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/allow', name: 'batch_allow', options: ['methods' => ['POST']])]
     public function batchAllow(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -227,6 +243,10 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         );
     }
 
+    /**
+     * @param AdminContext<RollingAclRule>   $context
+     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/deny', name: 'batch_deny', options: ['methods' => ['POST']])]
     public function batchDeny(AdminContext $context, BatchActionDto $batchActionDto): Response
     {

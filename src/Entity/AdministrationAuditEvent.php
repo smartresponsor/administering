@@ -32,8 +32,9 @@ final class AdministrationAuditEvent
     private \DateTimeImmutable $createdAt;
 
     /** @param array<string, mixed> $context */
-    public function __construct(string $action, string $subjectIdentifier, array $context = [])
+    public function __construct(string $action, string $subjectIdentifier, array $context = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->action = $action;
         $this->subjectIdentifier = $subjectIdentifier;
         $this->context = $context;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageManifestReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\ConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -65,10 +65,6 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
             $manifest = $componentManifests[$componentToken] ?? $this->emptyComponentManifest($componentKey, $componentToken, $provider::class);
 
             foreach ($provider->tools() as $definition) {
-                if (!$definition instanceof ConfigurationToolDefinition) {
-                    continue;
-                }
-
                 $violations = $this->validator->validate($provider, $definition);
                 $toolEntry = $this->buildToolEntry($componentKey, $componentToken, $provider::class, $definition, $violations);
 
@@ -185,9 +181,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
      */
     private function buildToolEntry(string $componentKey, string $componentToken, string $providerClass, ConfigurationToolDefinition $definition, array $violations): array
     {
-        $servicePath = sprintf('%s/src/Service/Configuration/%sConfiguration%sService.php', $componentKey, $componentKey, $definition->toolSlug);
-        $formTypePath = null === $definition->formTypeClass ? null : sprintf('%s/src/Form/Configuration/%sConfiguration%sFormType.php', $componentKey, $componentKey, $definition->toolSlug);
-        $formDataPath = null === $definition->formDataClass ? null : sprintf('%s/src/Value/Form/Configuration/%sConfiguration%sData.php', $componentKey, $componentKey, $definition->toolSlug);
+        $servicePath = sprintf('%s/src/Service/Configuration/%sConfiguration%sService.php', $componentKey, $componentKey, $definition->toolSlug());
+        $formTypePath = null === $definition->formTypeClass ? null : sprintf('%s/src/Form/Configuration/%sConfiguration%sFormType.php', $componentKey, $componentKey, $definition->toolSlug());
+        $formDataPath = null === $definition->formDataClass ? null : sprintf('%s/src/Value/Form/Configuration/%sConfiguration%sData.php', $componentKey, $componentKey, $definition->toolSlug());
         $files = [$servicePath];
         if (null !== $formTypePath) {
             $files[] = $formTypePath;
@@ -197,14 +193,14 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         }
 
         return [
-            'componentKey' => $definition->componentKey,
-            'componentToken' => $definition->componentToken,
+            'componentKey' => $definition->componentKey(),
+            'componentToken' => $definition->componentToken(),
             'toolKey' => $definition->toolKey(),
-            'toolSlug' => $definition->toolSlug,
+            'toolSlug' => $definition->toolSlug(),
             'label' => $definition->label,
             'providerClass' => $providerClass,
             'serviceClass' => $definition->serviceClass,
-            'serviceShortName' => $definition->serviceShortName,
+            'serviceShortName' => $definition->serviceShortName(),
             'formTypeClass' => $definition->formTypeClass,
             'formDataClass' => $definition->formDataClass,
             'executable' => $definition->executable,
@@ -222,7 +218,12 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         ];
     }
 
-    /** @param list<string> $existing @param list<string> $incoming @return list<string> */
+    /**
+     * @param list<string> $existing
+     * @param list<string> $incoming
+     *
+     * @return list<string>
+     */
     private function mergeFiles(array $existing, array $incoming): array
     {
         $merged = $existing;

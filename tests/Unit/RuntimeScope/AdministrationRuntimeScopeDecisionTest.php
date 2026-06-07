@@ -87,7 +87,8 @@ final class AdministrationRuntimeScopeDecisionTest extends TestCase
         self::assertTrue($rows['viewing']->enabled);
         self::assertFalse($rows['viewing']->disabled);
 
-        self::assertSame($rows['viewing']->toArray(), $decision->componentRows()[0]);
+        $componentRows = $this->rowsByComponent($decision->componentRows());
+        self::assertSame($rows['viewing']->toArray(), $componentRows['viewing']);
         self::assertSame('viewing.bundle', $rows['viewing']->evidenceContext()['bundleToken']);
     }
 

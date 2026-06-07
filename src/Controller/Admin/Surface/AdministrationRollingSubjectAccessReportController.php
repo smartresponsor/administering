@@ -6,8 +6,8 @@ namespace App\Administering\Controller\Admin\Surface;
 
 use App\Administering\Form\Rolling\AdministrationRollingSubjectAccessReportLookupFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingSubjectAccessReportProviderInterface;
 use App\Administering\Value\Form\Rolling\AdministrationRollingSubjectAccessReportLookupData;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationSubjectAccessReportProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationRollingSubjectAccessReportController extends AbstractController
 {
     public function __construct(
-        private readonly RollingAdministrationSubjectAccessReportProviderInterface $reportProvider,
+        private readonly AdministrationRollingSubjectAccessReportProviderInterface $reportProvider,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
     ) {
     }
@@ -103,7 +103,11 @@ final class AdministrationRollingSubjectAccessReportController extends AbstractC
         ]);
     }
 
-    /** @param list<array<string, mixed>> $rows */
+    /**
+     * @param list<array<string, mixed>> $rows
+     *
+     * @return list<string>
+     */
     private function tableHeaders(array $rows): array
     {
         if ([] === $rows) {
@@ -120,7 +124,11 @@ final class AdministrationRollingSubjectAccessReportController extends AbstractC
         return array_keys($keys);
     }
 
-    /** @param list<array<string, mixed>> $rows */
+    /**
+     * @param list<array<string, mixed>> $rows
+     *
+     * @return list<array<string, string>>
+     */
     private function normalizeRows(array $rows): array
     {
         return array_map(function (array $row): array {

@@ -40,11 +40,13 @@ class AdministrationCredentialDefinition
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
 
-    public function __construct(string $componentName, string $credentialKey, string $environmentName = 'prod')
+    public function __construct(string $componentName, string $credentialKey, string $environmentName = 'prod', ?string $description = null, ?int $id = null)
     {
+        $this->id = $id;
         $this->componentName = $componentName;
         $this->credentialKey = $credentialKey;
         $this->environmentName = $environmentName;
+        $this->description = $description;
     }
 
     public function id(): ?int

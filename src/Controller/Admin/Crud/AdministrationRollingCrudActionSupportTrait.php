@@ -21,6 +21,14 @@ trait AdministrationRollingCrudActionSupportTrait
         return $manager;
     }
 
+    /**
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity> $context
+     * @param class-string<TEntity> $expectedClass
+     *
+     * @return TEntity
+     */
     protected function rollingManagedEntity(AdminContext $context, string $expectedClass): object
     {
         $entity = $context->getEntity()->getInstance();
@@ -31,6 +39,11 @@ trait AdministrationRollingCrudActionSupportTrait
         return $entity;
     }
 
+    /**
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity> $context
+     */
     protected function rollingRedirectToIndex(AdminContext $context): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         return $this->redirect($this->container->get(AdminUrlGenerator::class)
@@ -39,6 +52,12 @@ trait AdministrationRollingCrudActionSupportTrait
             ->generateUrl());
     }
 
+    /**
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity> $context
+     * @param TEntity               $entity
+     */
     protected function rollingPersistAndRedirect(AdminContext $context, object $entity, string $flashMessage): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $manager = $this->rollingEntityManager($entity::class);
@@ -50,6 +69,12 @@ trait AdministrationRollingCrudActionSupportTrait
         return $this->rollingRedirectToIndex($context);
     }
 
+    /**
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity> $context
+     * @param TEntity               $entity
+     */
     protected function rollingRemoveAndRedirect(AdminContext $context, object $entity, string $flashMessage): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $manager = $this->rollingEntityManager($entity::class);
@@ -62,7 +87,12 @@ trait AdministrationRollingCrudActionSupportTrait
     }
 
     /**
-     * @param class-string $expectedClass
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity>   $context
+     * @param BatchActionDto<TEntity> $batchActionDto
+     * @param class-string<TEntity>   $expectedClass
+     * @param callable(TEntity): void $mutator
      */
     protected function rollingBatchMutate(AdminContext $context, BatchActionDto $batchActionDto, string $expectedClass, callable $mutator, string $flashMessagePattern): \Symfony\Component\HttpFoundation\RedirectResponse
     {
@@ -91,7 +121,11 @@ trait AdministrationRollingCrudActionSupportTrait
     }
 
     /**
-     * @param class-string $expectedClass
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity>   $context
+     * @param BatchActionDto<TEntity> $batchActionDto
+     * @param class-string<TEntity>   $expectedClass
      */
     protected function rollingBatchRemove(AdminContext $context, BatchActionDto $batchActionDto, string $expectedClass, string $flashMessagePattern): \Symfony\Component\HttpFoundation\RedirectResponse
     {

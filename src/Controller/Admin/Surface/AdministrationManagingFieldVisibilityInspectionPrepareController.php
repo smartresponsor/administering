@@ -9,7 +9,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldVisibilityInspectionPrepareData;
-use App\Managing\Value\Administration\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

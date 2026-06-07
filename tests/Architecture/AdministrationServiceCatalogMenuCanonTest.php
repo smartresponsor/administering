@@ -36,9 +36,9 @@ final class AdministrationServiceCatalogMenuCanonTest extends TestCase
             $sections[$section->key] = $section;
         }
 
-        self::assertArrayHasKey('Administering', $sections);
-        self::assertSame('src/Service/Administering', $sections['Administering']->serviceDirectory);
-        self::assertSame('AdministrationServiceSectionRecordCrudController', basename(str_replace('\\', '/', $sections['Administering']->primaryCrudControllerClass)));
+        self::assertArrayHasKey('Admin', $sections);
+        self::assertSame('src/Service/Admin', $sections['Admin']->serviceDirectory);
+        self::assertSame('AdministrationServiceSectionRecordCrudController', basename(str_replace('\\', '/', $sections['Admin']->primaryCrudControllerClass)));
     }
 
     public function testEveryServiceSectionUsesOwnPrimaryCrudAnchor(): void
@@ -71,9 +71,9 @@ final class AdministrationServiceCatalogMenuCanonTest extends TestCase
     {
         $builderSource = file_get_contents(dirname(__DIR__, 2).'/src/Builder/Admin/AdministrationMainMenuBuilder.php') ?: '';
 
-        self::assertStringContainsString('MenuItem::linkToCrud', $builderSource);
-        self::assertStringContainsString('->setAction(Crud::PAGE_INDEX)', $builderSource);
+        self::assertStringContainsString('MenuItem::linkToRoute', $builderSource);
+        self::assertStringContainsString('administration_service_section_tools', $builderSource);
         self::assertStringNotContainsString('MenuItem::linkTo($section->primaryCrudControllerClass', $builderSource);
-        self::assertStringNotContainsString('MenuItem::linkToRoute', $builderSource);
+        self::assertStringNotContainsString('MenuItem::linkToCrud', $builderSource);
     }
 }

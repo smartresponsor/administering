@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Rolling\Entity\Acl\RollingRoleHierarchy;
+use App\Administering\Entity\Rolling\RollingRoleHierarchy;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -98,6 +98,7 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         yield BooleanField::new('enabled')->hideOnForm();
     }
 
+    /** @param AdminContext<RollingRoleHierarchy> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
@@ -110,6 +111,7 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         return $this->rollingPersistAndRedirect($context, $hierarchy, sprintf('Hierarchy edge "%s" -> "%s" enabled.', $hierarchy->parentRoleKey(), $hierarchy->childRoleKey()));
     }
 
+    /** @param AdminContext<RollingRoleHierarchy> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
@@ -122,6 +124,10 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         return $this->rollingPersistAndRedirect($context, $hierarchy, sprintf('Hierarchy edge "%s" -> "%s" disabled.', $hierarchy->parentRoleKey(), $hierarchy->childRoleKey()));
     }
 
+    /**
+     * @param AdminContext<RollingRoleHierarchy>   $context
+     * @param BatchActionDto<RollingRoleHierarchy> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -138,6 +144,10 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         );
     }
 
+    /**
+     * @param AdminContext<RollingRoleHierarchy>   $context
+     * @param BatchActionDto<RollingRoleHierarchy> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {

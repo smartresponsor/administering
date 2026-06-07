@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Administering\Builder\Admin;
 
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
-use App\Administering\Entity\AdministrationServiceToolRecord;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
 /**
@@ -24,13 +22,15 @@ final readonly class AdministrationMainMenuBuilder implements AdministrationMain
         yield MenuItem::linkToDashboard('Home', 'fa fa-home')
             ->setPermission('administration.dashboard.view');
 
-        yield MenuItem::linkToCrud('Tools', 'fa fa-toolbox', AdministrationServiceToolRecord::class)
+        yield MenuItem::linkToRoute('Tools', 'fa fa-toolbox', 'administration_service_section_tools', [
+            'sectionKey' => 'configuration',
+        ])
             ->setPermission('administration.dashboard.view');
 
         yield MenuItem::linkToRoute('Commands', 'fa fa-terminal', 'administration_command_index')
             ->setPermission('administration.dashboard.view');
 
-        yield MenuItem::linkToCrud('Enabled Components', 'fa fa-toggle-on', AdministrationConnectedComponentRecord::class)
+        yield MenuItem::linkToRoute('Enabled Components', 'fa fa-toggle-on', 'administration_runtime_scope_index')
             ->setPermission('administration.connected_component.overview.view');
     }
 }

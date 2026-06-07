@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Rolling\Entity\Acl\RollingRolePermission;
+use App\Administering\Entity\Rolling\RollingRolePermission;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -95,6 +95,7 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         ]);
     }
 
+    /** @param AdminContext<RollingRolePermission> $context */
     #[AdminRoute(path: '/{entityId}/allow', name: 'allow', options: ['methods' => ['GET', 'POST']])]
     public function allow(AdminContext $context): Response
     {
@@ -107,6 +108,7 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         return $this->rollingPersistAndRedirect($context, $grant, sprintf('Role permission "%s / %s" set to allow.', $grant->getRoleKey(), $grant->getPermissionKey()));
     }
 
+    /** @param AdminContext<RollingRolePermission> $context */
     #[AdminRoute(path: '/{entityId}/deny', name: 'deny', options: ['methods' => ['GET', 'POST']])]
     public function deny(AdminContext $context): Response
     {
@@ -119,6 +121,10 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         return $this->rollingPersistAndRedirect($context, $grant, sprintf('Role permission "%s / %s" set to deny.', $grant->getRoleKey(), $grant->getPermissionKey()));
     }
 
+    /**
+     * @param AdminContext<RollingRolePermission>   $context
+     * @param BatchActionDto<RollingRolePermission> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/allow', name: 'batch_allow', options: ['methods' => ['POST']])]
     public function batchAllow(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -135,6 +141,10 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         );
     }
 
+    /**
+     * @param AdminContext<RollingRolePermission>   $context
+     * @param BatchActionDto<RollingRolePermission> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/deny', name: 'batch_deny', options: ['methods' => ['POST']])]
     public function batchDeny(AdminContext $context, BatchActionDto $batchActionDto): Response
     {

@@ -9,7 +9,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileApplyServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldViewProfileApplyData;
-use App\Managing\Value\Administration\ManagingFieldViewProfileApplyRequest;
+use App\Administering\Value\Managing\ManagingFieldViewProfileApplyRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

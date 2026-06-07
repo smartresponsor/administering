@@ -6,7 +6,7 @@ namespace App\Administering\Provider\Rolling;
 
 use App\Administering\Entity\AdministrationAclMutationApplyRecord;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyReportProviderInterface;
-use App\Managing\Value\Administration\ManagingAclMutationApplySummary;
+use App\Administering\Value\Managing\ManagingAclMutationApplySummary;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

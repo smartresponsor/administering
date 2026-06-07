@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileApplyService;
-use App\Managing\Service\Administration\ManagingFieldViewProfileApplyService;
-use App\Managing\Value\Administration\ManagingFieldViewProfileApplyRequest;
+use App\Administering\Value\Managing\ManagingFieldViewProfileApplyRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestCase
 {
     public function testPreparesManagingApplyPayload(): void
     {
-        $service = new AdministrationManagingFieldViewProfileApplyService(new ManagingFieldViewProfileApplyService());
+        $service = new AdministrationManagingFieldViewProfileApplyService();
         $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
             normalizedProfilePayload: [
                 'subjects' => [
@@ -36,27 +35,27 @@ final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestC
             requestedBySubject: 'administering:operator',
         ));
 
-        self::assertTrue($result->accepted);
-        self::assertSame('field_view_profile_apply_payload_prepared', $result->reason);
-        self::assertSame('administering:operator', $result->managingApplyPayload['actor_identifier']);
-        self::assertSame('App\\Managing\\HandlerInterface\\Crud\\ManageCrudFieldUserProfileApplyHandlerInterface', $result->toSafeArray()['managing_apply_contract']);
-        self::assertFalse($result->toSafeArray()['safety']['grants_access']);
+        self::assertTrue($result->valid);
+        self::assertSame('prepared', $result->status);
+        self::assertSame('administering:operator', $result->safeContext['requested_by_subject']);
+        self::assertSame('administering_self_contained_dry_runtime', $result->safeContext['mode']);
     }
 
-    public function testRejectsUntrustedSurface(): void
+    public function testRejectsEmptyPayload(): void
     {
-        $service = new AdministrationManagingFieldViewProfileApplyService(new ManagingFieldViewProfileApplyService());
+        $service = new AdministrationManagingFieldViewProfileApplyService();
         $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
-            normalizedProfilePayload: ['subjects' => ['user:42' => ['defaults' => ['index' => ['hidden' => ['createdAt']]]]]],
+            normalizedProfilePayload: [],
             reviewContext: [
-                'surface' => 'random_surface',
+                'surface' => 'managing_field_view_profile_review',
                 'subject_key' => 'user:42',
                 'profile_permission' => 'managing.field.profile.user_update',
                 'page_name' => 'index',
             ],
+            requestedBySubject: 'administering:operator',
         ));
 
-        self::assertFalse($result->accepted);
-        self::assertSame('field_view_profile_apply_untrusted_surface', $result->reason);
+        self::assertFalse($result->valid);
+        self::assertSame('rejected', $result->status);
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
-use App\Configuring\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
-use App\Configuring\Value\Config\ConfigVariable;
+use App\Administering\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
+use App\Administering\Value\Config\ConfigVariable;
 
 final readonly class AdministrationConfigManagedVariableResolverService
 {
@@ -22,10 +22,7 @@ final readonly class AdministrationConfigManagedVariableResolverService
             return [];
         }
 
-        return array_values(array_filter(
-            iterator_to_array($toolService->managedVariables(), false),
-            static fn (mixed $variable): bool => $variable instanceof ConfigVariable,
-        ));
+        return iterator_to_array($toolService->variables(), false);
     }
 
     public function hasManagedVariables(string $applicationCode, string $toolCode): bool

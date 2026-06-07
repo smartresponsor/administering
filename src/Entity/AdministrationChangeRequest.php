@@ -43,8 +43,9 @@ class AdministrationChangeRequest
     /**
      * @param array<string, mixed> $payload
      */
-    public function __construct(string $requestKey, string $changeType, string $targetReference, array $payload = [])
+    public function __construct(string $requestKey, string $changeType, string $targetReference, array $payload = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->requestKey = $requestKey;
         $this->changeType = $changeType;
         $this->targetReference = $targetReference;

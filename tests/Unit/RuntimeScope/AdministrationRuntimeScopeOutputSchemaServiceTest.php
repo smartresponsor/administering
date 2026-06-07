@@ -49,12 +49,17 @@ final class AdministrationRuntimeScopeOutputSchemaServiceTest extends TestCase
         self::assertArrayHasKey('components', $payload);
         self::assertArrayHasKey('errors', $payload);
         self::assertArrayHasKey('warnings', $payload);
-        self::assertSame('viewing', $payload['components'][0]['component']);
-        self::assertArrayNotHasKey('componentKey', $payload['components'][0]);
-        self::assertTrue($payload['components'][0]['present']);
-        self::assertTrue($payload['components'][0]['allowed']);
-        self::assertTrue($payload['components'][0]['locked']);
-        self::assertTrue($payload['components'][0]['enabled']);
+        $components = [];
+        foreach ($payload['components'] as $component) {
+            $components[$component['component']] = $component;
+        }
+
+        self::assertArrayHasKey('viewing', $components);
+        self::assertArrayNotHasKey('componentKey', $components['viewing']);
+        self::assertTrue($components['viewing']['present']);
+        self::assertTrue($components['viewing']['allowed']);
+        self::assertTrue($components['viewing']['locked']);
+        self::assertTrue($components['viewing']['enabled']);
     }
 
     public function testExportPayloadUsesSameTopLevelOutputSchema(): void

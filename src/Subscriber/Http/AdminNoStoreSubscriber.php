@@ -35,7 +35,7 @@ final readonly class AdminNoStoreSubscriber implements EventSubscriberInterface
         $pathInfo = $request->getPathInfo();
         $routeName = (string) $request->attributes->get('_route', '');
 
-        if (!str_starts_with($pathInfo, '/admin') && !str_starts_with($routeName, 'administration_')) {
+        if (!str_starts_with($pathInfo, '/ea') && !str_starts_with($routeName, 'administration_')) {
             return;
         }
 

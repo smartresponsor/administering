@@ -1,0 +1,10 @@
+= Administering Rolling ACL Mutation Surface Cleanup
+
+Administering dry-runtime must compile without optional sibling Rolling classes.
+
+The ACL mutation review surface records safe Administering metadata only. It must
+not type-hint `App\Rolling\...` services or values in the base component.
+
+The real Rolling component remains the owner of authorization and ACL persistence.
+Administering stores a local review projection for operator visibility and future
+handoff/apply flows.

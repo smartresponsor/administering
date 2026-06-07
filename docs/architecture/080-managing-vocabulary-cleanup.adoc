@@ -1,0 +1,11 @@
+= Managing Vocabulary Cleanup
+
+Administering dry-runtime must remain self-contained when optional sibling components are not installed.
+
+The Managing field-access form data previously used `App\Managing\Value\Administration\ManagingFieldPermissionVocabulary` as a default property constant. During Symfony container reflection this required the optional Managing component and broke the Administering dry-runtime container.
+
+Administering now owns a minimal local vocabulary for form defaults and choices:
+
+* `App\Administering\Value\Form\Managing\AdministrationManagingFieldPermissionVocabulary`
+
+This preserves the same permission-key strings while avoiding a hard dependency on `App\Managing` during base service scanning.

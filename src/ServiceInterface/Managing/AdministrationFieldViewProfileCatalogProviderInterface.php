@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Managing\Value\Administration\ManagingFieldViewProfileCatalogItem;
-use App\Managing\Value\Administration\ManagingFieldViewProfilePriorityRow;
-use App\Managing\Value\Administration\ManagingFieldViewProfileRuleShape;
+use App\Administering\Value\Managing\ManagingFieldViewProfileCatalogItem;
+use App\Administering\Value\Managing\ManagingFieldViewProfilePriorityRow;
+use App\Administering\Value\Managing\ManagingFieldViewProfileRuleShape;
 
 /**
  * Provides read-only control-plane metadata for Managing field view profiles.

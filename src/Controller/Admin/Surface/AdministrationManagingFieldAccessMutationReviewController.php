@@ -8,9 +8,9 @@ use App\Administering\Form\Managing\AdministrationManagingFieldAccessMutationRev
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldAccessMutationReviewData;
-use App\Managing\Value\Administration\ManagingFieldAccessMutationReviewInput;
-use App\Managing\Value\Administration\ManagingFieldAccessPolicyDescriptor;
-use App\Managing\Value\Administration\ManagingFieldAccessTarget;
+use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Managing\ManagingFieldAccessTarget;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -41,8 +41,9 @@ final class AdministrationOperationEvent
     private \DateTimeImmutable $createdAt;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $operationKey, string $status, string $safeMessage, array $safeContext = [])
+    public function __construct(string $operationKey, string $status, string $safeMessage, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->operationKey = $operationKey;
         $this->status = $status;
         $this->safeMessage = $safeMessage;

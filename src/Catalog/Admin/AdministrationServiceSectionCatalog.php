@@ -67,8 +67,8 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
                 'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.operation.view',
             ],
-            'Configuration' => [
-                'label' => 'Configuration',
+            'Config' => [
+                'label' => 'Config',
                 'icon' => 'fa fa-file-code',
                 'crud' => AdministrationServiceToolRecordCrudController::class,
                 'permission' => 'administration.config.view',
@@ -116,7 +116,7 @@ final class AdministrationServiceSectionCatalog implements AdministrationService
 
         $directories = array_values(array_filter(
             scandir($root) ?: [],
-            static fn (string $entry): bool => !str_starts_with($entry, '.') && is_dir($root.'/'.$entry) && 'Config' !== $entry,
+            static fn (string $entry): bool => !str_starts_with($entry, '.') && is_dir($root.'/'.$entry),
         ));
         sort($directories);
 

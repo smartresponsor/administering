@@ -9,7 +9,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileReviewServiceInterface;
 use App\Administering\Support\Form\AdministrationFormInputParser;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldViewProfileReviewData;
-use App\Managing\Value\Administration\ManagingFieldViewProfileEditRequest;
+use App\Administering\Value\Managing\ManagingFieldViewProfileEditRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,16 +73,32 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
+            $subjectIdentifier = trim($data->subjectIdentifier);
+            $pageName = trim($data->pageName);
+            $resourceClass = trim($data->resourceClass);
+            $profileKey = implode(':', array_filter([
+                trim($data->subjectType),
+                '' !== $subjectIdentifier ? $subjectIdentifier : null,
+                '' !== $resourceClass ? $resourceClass : null,
+                '' !== $pageName ? $pageName : null,
+            ], static fn (?string $part): bool => null !== $part && '' !== $part));
+
+            $requestedProfilePayload = [
+                'subjectType' => trim($data->subjectType),
+                'subjectIdentifier' => $subjectIdentifier,
+                'pageName' => $pageName,
+                'visibleFields' => AdministrationFormInputParser::parseDelimitedList($data->visibleFields),
+                'hiddenFields' => AdministrationFormInputParser::parseDelimitedList($data->hiddenFields),
+                'resourceClass' => '' !== $resourceClass ? $resourceClass : null,
+                'mode' => trim($data->mode),
+            ];
+
             $result = $this->reviewService->review(new ManagingFieldViewProfileEditRequest(
-                subjectType: trim($data->subjectType),
-                subjectIdentifier: trim($data->subjectIdentifier),
-                pageName: trim($data->pageName),
-                visibleFields: AdministrationFormInputParser::parseDelimitedList($data->visibleFields),
-                hiddenFields: AdministrationFormInputParser::parseDelimitedList($data->hiddenFields),
-                resourceClass: trim($data->resourceClass) ?: null,
-                reason: trim((string) $data->reason) ?: null,
-                mode: trim($data->mode),
+                profileKey: '' !== $profileKey ? $profileKey : 'default',
+                currentProfilePayload: [],
+                requestedProfilePayload: $requestedProfilePayload,
                 requestedBySubject: $currentUser?->subjectIdentifier() ?? 'administering:anonymous',
+                reason: trim((string) $data->reason) ?: null,
             ));
             $errorMessage = null;
         } catch (\InvalidArgumentException $exception) {

@@ -37,8 +37,9 @@ final class AdministrationConfigSnapshot
     private \DateTimeImmutable $scannedAt;
 
     /** @param array<string, mixed> $normalizedEntries */
-    public function __construct(string $sourceType, string $sourcePath, string $checksum, array $normalizedEntries = [], ?string $componentName = null)
+    public function __construct(string $sourceType, string $sourcePath, string $checksum, array $normalizedEntries = [], ?string $componentName = null, ?int $id = null)
     {
+        $this->id = $id;
         $this->sourceType = $sourceType;
         $this->sourcePath = $sourcePath;
         $this->checksum = $checksum;

@@ -24,7 +24,8 @@ final readonly class AdministrationConfigFileWriterService
             return ['status' => 'failed', 'path' => $relativePath, 'backup_path' => null, 'message' => 'Path is not whitelisted for configuration writes.'];
         }
 
-        $absolutePath = rtrim($rootPath, '/\\').'/'.$relativePath;
+        $effectiveRootPath = '' !== trim($rootPath) ? $rootPath : $this->projectDir;
+        $absolutePath = rtrim($effectiveRootPath, '/\\').'/'.$relativePath;
         if (!is_file($absolutePath)) {
             return ['status' => 'failed', 'path' => $relativePath, 'backup_path' => null, 'message' => 'Configuration file does not exist.'];
         }

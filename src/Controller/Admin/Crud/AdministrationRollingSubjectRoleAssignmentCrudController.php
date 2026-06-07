@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Rolling\Entity\Acl\RollingSubjectRoleAssignment;
+use App\Administering\Entity\Rolling\RollingSubjectRoleAssignment;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -75,6 +75,7 @@ final class AdministrationRollingSubjectRoleAssignmentCrudController extends Abs
         yield DateTimeField::new('assignedAt')->hideOnForm();
     }
 
+    /** @param AdminContext<RollingSubjectRoleAssignment> $context */
     #[AdminRoute(path: '/{entityId}/revoke', name: 'revoke', options: ['methods' => ['GET', 'POST']])]
     public function revoke(AdminContext $context): Response
     {
@@ -90,6 +91,10 @@ final class AdministrationRollingSubjectRoleAssignmentCrudController extends Abs
         );
     }
 
+    /**
+     * @param AdminContext<RollingSubjectRoleAssignment>   $context
+     * @param BatchActionDto<RollingSubjectRoleAssignment> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/revoke', name: 'batch_revoke', options: ['methods' => ['POST']])]
     public function batchRevoke(AdminContext $context, BatchActionDto $batchActionDto): Response
     {

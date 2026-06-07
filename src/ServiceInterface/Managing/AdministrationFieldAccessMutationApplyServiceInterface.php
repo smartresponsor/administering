@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Managing\Value\Administration\ManagingAclMutationApplyResult;
+use App\Administering\Value\Managing\ManagingAclMutationApplyResult;
 
 interface AdministrationFieldAccessMutationApplyServiceInterface
 {

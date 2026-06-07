@@ -1,0 +1,13 @@
+= Administering Accessing Surface Cleanup
+
+Administering must compile in dry-runtime without the optional Accessing component installed.
+
+The Accessing account-action surface is Administering-owned in base runtime:
+
+* descriptors are local Administering value objects;
+* request/result records are local Administering value objects;
+* the UI records requests for Accessing-owned execution instead of invoking Accessing directly;
+* projection providers return safe empty projections when Accessing is not installed;
+* base controllers do not import Accessing entities for authentication checks.
+
+Host-level Accessing execution can be reintroduced later through an explicit bridge that is not required by base dry-runtime autowiring.

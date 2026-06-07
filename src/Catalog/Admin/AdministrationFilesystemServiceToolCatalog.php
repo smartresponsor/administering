@@ -96,14 +96,24 @@ final readonly class AdministrationFilesystemServiceToolCatalog implements Admin
 
     private function toolSlug(string $section, string $shortName): ?string
     {
-        $prefix = 'Administration'.$section;
-        $suffix = 'Service';
-
-        if (!str_starts_with($shortName, $prefix) || !str_ends_with($shortName, $suffix)) {
-            return null;
+        $sectionPrefix = 'Administration'.$section;
+        if (str_starts_with($shortName, $sectionPrefix) && str_ends_with($shortName, 'Service')) {
+            return $this->nonEmptySlug(substr($shortName, strlen($sectionPrefix), -strlen('Service')));
         }
 
-        $slug = substr($shortName, strlen($prefix), -strlen($suffix));
+        if (str_starts_with($shortName, 'Administration') && str_ends_with($shortName, 'Service')) {
+            return $this->nonEmptySlug(substr($shortName, strlen('Administration'), -strlen('Service')));
+        }
+
+        if (str_starts_with($shortName, 'Administration')) {
+            return $this->nonEmptySlug(substr($shortName, strlen('Administration')));
+        }
+
+        return null;
+    }
+
+    private function nonEmptySlug(string $slug): ?string
+    {
         if ('' === $slug || !ctype_upper($slug[0])) {
             return null;
         }

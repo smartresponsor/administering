@@ -41,8 +41,9 @@ final class AdministrationServiceSectionRecord
     private \DateTimeImmutable $synchronizedAt;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $sectionKey, string $label, string $serviceDirectory, string $status, int $toolCount, array $safeContext = [])
+    public function __construct(string $sectionKey, string $label, string $serviceDirectory, string $status, int $toolCount, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->sectionKey = $sectionKey;
         $this->label = $label;
         $this->serviceDirectory = $serviceDirectory;

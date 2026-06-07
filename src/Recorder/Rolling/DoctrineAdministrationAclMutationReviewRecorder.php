@@ -7,8 +7,8 @@ namespace App\Administering\Recorder\Rolling;
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Rolling\Value\Administration\RollingAclMutationRequest;
-use App\Rolling\Value\Administration\RollingAclMutationReview;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 use Doctrine\Persistence\ManagerRegistry;
 
 final readonly class DoctrineAdministrationAclMutationReviewRecorder implements AdministrationAclMutationReviewRecorderInterface
@@ -19,7 +19,7 @@ final readonly class DoctrineAdministrationAclMutationReviewRecorder implements 
     ) {
     }
 
-    public function record(RollingAclMutationRequest $request, RollingAclMutationReview $review): AdministrationAclMutationReviewRecord
+    public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecord
     {
         $record = new AdministrationAclMutationReviewRecord(
             sprintf('acl-review-%s', bin2hex(random_bytes(8))),

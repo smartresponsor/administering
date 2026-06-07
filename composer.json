@@ -61,7 +61,7 @@
     "scripts": {
         "inspect:runtime-scope-component-decision": "@php tools/inspection/administering-runtime-scope-component-decision-guard.php",
         "lint:composer": "composer validate --strict",
-        "lint:yaml": "@php bin/console lint:yaml config",
+        "lint:yaml": "@php bin/console lint:yaml config --parse-tags",
         "lint:container": "@php bin/console lint:container",
         "stan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",

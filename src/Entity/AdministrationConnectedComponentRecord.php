@@ -35,8 +35,9 @@ final class AdministrationConnectedComponentRecord
     private \DateTimeImmutable $synchronizedAt;
 
     /** @param array<string, mixed> $safeSummary */
-    public function __construct(string $componentName, string $status, string $readinessStatus, array $safeSummary = [])
+    public function __construct(string $componentName, string $status, string $readinessStatus, array $safeSummary = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->componentName = $componentName;
         $this->status = $status;
         $this->readinessStatus = $readinessStatus;

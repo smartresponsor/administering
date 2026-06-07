@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Command;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolTransitionStatusReport;
 use App\Administering\Value\Admin\AdministrationServiceTool;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

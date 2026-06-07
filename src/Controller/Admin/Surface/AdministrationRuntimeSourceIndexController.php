@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Surface;
 
-use App\Accessing\Entity\AccessAccountEntity;
 use App\Administering\Provider\Admin\AdministrationRuntimeSourceNavigationProvider;
 use App\Administering\Service\RuntimeScope\AdministrationAppRuntimeScopeIndexService;
 use App\Administering\Service\RuntimeScope\AdministrationComposerIndexService;
@@ -70,7 +69,7 @@ final class AdministrationRuntimeSourceIndexController extends AbstractControlle
 
     private function assertAdministrationAccess(): void
     {
-        if (!$this->getUser() instanceof AccessAccountEntity) {
+        if (null === $this->getUser()) {
             throw $this->createAccessDeniedException('Authentication is required for Administration runtime source indexes.');
         }
 

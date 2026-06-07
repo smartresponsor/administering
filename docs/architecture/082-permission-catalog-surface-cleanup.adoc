@@ -1,0 +1,14 @@
+= Administering Permission Catalog Surface Cleanup
+
+Administering must compile in its dry-runtime without optional sibling packages.
+
+The permission catalog surface is owned by Administering and must not require `App\Rolling\*` service interfaces in the base container.
+
+The controller now renders a local read-only permission descriptor snapshot. Rolling-specific runtime execution remains outside the base Administering dry-runtime contract.
+
+== Canon
+
+* `AdministrationPermissionCatalogController` is self-contained.
+* The controller does not inject `RollingAdministrationPermissionCatalogInterface`.
+* The Administering base container can compile without the Rolling package.
+* The surface remains read-only and displays Administering permission gate descriptors.

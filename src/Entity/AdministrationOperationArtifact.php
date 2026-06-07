@@ -55,7 +55,9 @@ final class AdministrationOperationArtifact
         string $relativePath,
         string $checksum,
         array $safeContext = [],
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->operationKey = $operationKey;
         $this->artifactType = $artifactType;
         $this->safeLabel = $safeLabel;

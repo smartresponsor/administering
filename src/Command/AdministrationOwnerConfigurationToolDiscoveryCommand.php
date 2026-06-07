@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -57,10 +56,6 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
             $providers[] = $providerRow;
 
             foreach ($provider->tools() as $definition) {
-                if (!$definition instanceof ConfigurationToolDefinition) {
-                    continue;
-                }
-
                 $row = $definition->toArray() + [
                     'providerComponentKey' => $provider->componentKey(),
                     'providerComponentToken' => $provider->componentToken(),

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\ServiceInterface\Rolling;
 
 use App\Administering\Entity\AdministrationAclMutationApplyRecord;
-use App\Managing\Value\Administration\ManagingAclMutationApplySummary;
+use App\Administering\Value\Managing\ManagingAclMutationApplySummary;
 
 /**
  * Provides metadata-only reports for Rolling ACL apply attempts persisted by Administering.

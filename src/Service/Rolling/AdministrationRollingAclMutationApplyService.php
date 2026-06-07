@@ -11,10 +11,9 @@ use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInt
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
+use App\Administering\Value\Managing\ManagingAclMutationApplyResult;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
-use App\Managing\Value\Administration\ManagingAclMutationApplyResult;
-use App\Rolling\ServiceInterface\Administration\RollingAclMutationApplyServiceInterface as RollingAclMutationApplyServiceContract;
-use App\Rolling\Value\Administration\RollingAclMutationReview;
+use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,7 +26,6 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
         private ManagerRegistry $managerRegistry,
         private AdministrationAuditRecorderInterface $auditRecorder,
         private AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
-        private RollingAclMutationApplyServiceContract $rollingAclMutationApplyService,
     ) {
     }
 
@@ -75,7 +73,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             return $result;
         }
 
-        $review = new RollingAclMutationReview(
+        $review = new AdministrationRollingAclMutationReview(
             $record->mutationType(),
             $record->subjectIdentifier(),
             $record->permissionOrRoleKey(),
@@ -87,19 +85,14 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             $this->safeContext($record->safeReviewPayload()['safe_context'] ?? []),
         );
 
-        $rollingResult = $this->rollingAclMutationApplyService->applyReviewedMutation(
+        $result = ManagingAclMutationApplyResult::skipped(
             $record->requestKey(),
-            $review,
-            $requestedBySubject,
-        );
-
-        $result = ManagingAclMutationApplyResult::fromRollingResult(
-            $record->requestKey(),
-            $rollingResult->succeeded(),
-            $rollingResult->status(),
-            $rollingResult->safeMessage(),
-            $rollingResult->safeContext() + [
+            'Rolling ACL mutation apply is dry-run only inside Administering standalone runtime.',
+            [
                 'review_valid' => $review->valid(),
+                'requested_by_subject' => $requestedBySubject,
+                'reason' => 'owner_rolling_runtime_not_connected',
+                'mode' => 'administering_self_contained_dry_runtime',
             ],
         );
 

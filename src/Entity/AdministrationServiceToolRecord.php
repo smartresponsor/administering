@@ -135,7 +135,9 @@ final class AdministrationServiceToolRecord
         int $position,
         string $checksum,
         array $safeContext = [],
+        ?int $id = null,
     ) {
+        $this->id = $id;
         $this->sectionKey = $sectionKey;
         $this->directionToken = $directionToken;
         $this->toolSlug = $toolSlug;

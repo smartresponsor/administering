@@ -10,9 +10,9 @@ use App\Administering\ServiceInterface\Configuration\AdministrationConfiguration
 use App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationServiceSectionAnchorSyncOperationServiceInterface;
+use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface;
 use Symfony\Component\Process\Process;
 
 /**
@@ -22,7 +22,7 @@ final class AdministrationGovernanceOperationRunner implements AdministrationOpe
 {
     public function __construct(
         private readonly AdministrationConfigurationScannerInterface $configurationScanner,
-        private readonly RollingAdministrationPermissionCatalogInterface $permissionCatalog,
+        private readonly AdministrationRollingPermissionCatalogInterface $permissionCatalog,
         private readonly AdministrationAccountProjectionProviderInterface $accountProjectionProvider,
         private readonly AdministrationOperationArtifactWriterInterface $artifactWriter,
         private readonly AdministrationServiceSectionAnchorSyncOperationServiceInterface $anchorSyncOperationService,

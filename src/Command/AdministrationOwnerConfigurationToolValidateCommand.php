@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface;
-use App\Configuring\Value\Tool\ConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -60,10 +59,6 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
             ];
 
             foreach ($provider->tools() as $definition) {
-                if (!$definition instanceof ConfigurationToolDefinition) {
-                    continue;
-                }
-
                 $tools[] = $definition->toArray() + ['providerClass' => $provider::class];
 
                 foreach ($this->validator->validate($provider, $definition) as $violation) {
@@ -143,6 +138,7 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
         return $this->exitCode($providers, $errorCount, $warningCount, (bool) $input->getOption('allow-warnings'), (bool) $input->getOption('allow-empty'));
     }
 
+    /** @param list<array{componentKey:string, componentToken:string, providerClass:class-string}> $providers */
     private function exitCode(array $providers, int $errorCount, int $warningCount, bool $allowWarnings, bool $allowEmpty): int
     {
         if ([] === $providers && !$allowEmpty) {

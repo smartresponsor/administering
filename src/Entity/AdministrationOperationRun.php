@@ -53,8 +53,9 @@ class AdministrationOperationRun
     private ?\DateTimeImmutable $finishedAt = null;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $operationKey, string $operationType, string $subjectIdentifier, ?string $targetReference = null, array $safeContext = [])
+    public function __construct(string $operationKey, string $operationType, string $subjectIdentifier, ?string $targetReference = null, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->operationKey = $operationKey;
         $this->operationType = $operationType;
         $this->subjectIdentifier = $subjectIdentifier;

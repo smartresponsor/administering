@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileCatalogProviderInterface;
-use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
-use App\Managing\Value\Administration\ManagingFieldViewProfileCatalogItem;
-use App\Managing\Value\Administration\ManagingFieldViewProfilePriorityRow;
-use App\Managing\Value\Administration\ManagingFieldViewProfileRuleShape;
+use App\Administering\Value\Managing\ManagingFieldViewProfileCatalogItem;
+use App\Administering\Value\Managing\ManagingFieldViewProfilePriorityRow;
+use App\Administering\Value\Managing\ManagingFieldViewProfileRuleShape;
 
 /**
  * Builds read-only Administering metadata for Managing field view profile administration.
@@ -23,7 +22,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 'System default field presentation',
                 'Managing',
                 'Managing config / Administering future storage',
-                'Cannot override hard deny or Rolling deny',
+                false,
                 ['visible', 'hidden'],
                 'Baseline presentation defaults applied after access has been allowed.',
             ),
@@ -32,7 +31,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 'Role default view profile',
                 'Administering',
                 'System SQLite control-plane storage',
-                ManagingFieldPermissionVocabulary::PROFILE_ROLE_UPDATE,
+                true,
                 ['visible', 'hidden', 'assign'],
                 'Admin-assigned role default can shape presentation but cannot grant field access.',
             ),
@@ -41,7 +40,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 'Group default view profile',
                 'Administering',
                 'System SQLite control-plane storage',
-                ManagingFieldPermissionVocabulary::PROFILE_GROUP_UPDATE,
+                true,
                 ['visible', 'hidden', 'assign'],
                 'Admin-assigned group default is evaluated inside the already allowed access corridor.',
             ),
@@ -50,7 +49,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 'User assigned default view profile',
                 'Administering',
                 'System SQLite control-plane storage',
-                ManagingFieldPermissionVocabulary::PROFILE_USER_UPDATE,
+                true,
                 ['visible', 'hidden', 'assign', 'reset'],
                 'Administrator can inspect or reset a user profile without changing field access policy.',
             ),
@@ -59,7 +58,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 'User personal view profile',
                 'Managing',
                 'Managing execution seam / future system storage',
-                ManagingFieldPermissionVocabulary::PROFILE_SELF_UPDATE,
+                true,
                 ['visible', 'hidden', 'reset-self'],
                 'User can only hide or show fields already allowed by system, Rolling, and admin policy.',
             ),
@@ -84,36 +83,41 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
             new ManagingFieldViewProfileRuleShape(
                 'subjects',
                 'subjects.{subjectIdentifier}',
+                'map',
+                true,
                 ['defaults', 'resources'],
-                'selects the subject-specific profile',
                 'Subject identifiers may be exact, such as user:42, or wildcard * for shared defaults.',
             ),
             new ManagingFieldViewProfileRuleShape(
                 'defaults',
                 'subjects.{subject}.defaults.{page}',
+                'list',
+                false,
                 ['visible', 'hidden'],
-                'applies page-wide defaults',
                 'Page may be index, detail, new, edit, all, or *.',
             ),
             new ManagingFieldViewProfileRuleShape(
                 'resources',
                 'subjects.{subject}.resources.{resourceClass}.{page}',
+                'list',
+                false,
                 ['visible', 'hidden'],
-                'applies resource/page overrides',
                 'Resource-specific page rules win over subject defaults.',
             ),
             new ManagingFieldViewProfileRuleShape(
                 'visible',
                 'visible: [fieldName]',
+                'list',
+                false,
                 ['field names'],
-                'requests presentation visible',
                 'Visible never grants access; denied fields still remain unavailable.',
             ),
             new ManagingFieldViewProfileRuleShape(
                 'hidden',
                 'hidden: [fieldName]',
+                'list',
+                false,
                 ['field names'],
-                'requests presentation hidden',
                 'Required or non-hideable form fields must remain visible on new/edit.',
             ),
         ];

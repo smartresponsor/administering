@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Form\Config\AdministrationCredentialConfigFormType;
+use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Administering\Value\Config\ConfigToolDescriptor;
 use App\Administering\Value\Form\Config\AdministrationCredentialConfigData;
-use App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Configuring\Value\Config\ConfigToolDescriptor;
 
 final readonly class AdministrationCredentialConfigService implements ConfigToolServiceInterface
 {

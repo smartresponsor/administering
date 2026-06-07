@@ -8,18 +8,16 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
+use App\Administering\Value\Managing\ManagingAclMutationApplyResult;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
-use App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationApplyServiceInterface;
-use App\Managing\Value\Administration\ManagingAclMutationApplyResult;
 
 /**
- * Thin Administering adapter for the owner-side Managing field access apply service.
+ * Self-contained dry-runtime apply surface for reviewed Managing field-access mutations.
  */
 final readonly class AdministrationManagingFieldAccessMutationApplyService implements AdministrationFieldAccessMutationApplyServiceInterface, AdministrationServiceToolHandlerInterface
 {
     public function __construct(
         private AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
-        private ManagingFieldAccessMutationApplyServiceInterface $applyService,
     ) {
     }
 
@@ -42,15 +40,11 @@ final readonly class AdministrationManagingFieldAccessMutationApplyService imple
 
     public function applyReviewedFieldAccessMutation(string $requestKey, string $requestedBySubject): ManagingAclMutationApplyResult
     {
-        $result = $this->applyService->applyReviewedFieldAccessMutation($requestKey, $requestedBySubject);
-
-        return ManagingAclMutationApplyResult::fromRollingResult(
-            $result->requestKey(),
-            $result->succeeded(),
-            $result->status(),
-            $result->safeMessage(),
-            $result->safeContext(),
-        );
+        return ManagingAclMutationApplyResult::skipped($requestKey, 'Managing field-access apply is dry-run only inside Administering standalone runtime.', [
+            'requested_by_subject' => $requestedBySubject,
+            'reason' => 'owner_managing_runtime_not_connected',
+            'mode' => 'administering_self_contained_dry_runtime',
+        ]);
     }
 
     private function requestedBySubject(): string

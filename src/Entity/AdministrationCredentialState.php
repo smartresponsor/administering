@@ -43,8 +43,9 @@ class AdministrationCredentialState
     #[ORM\Column(name: 'checked_at', type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $checkedAt = null;
 
-    public function __construct(string $credentialKey, string $environmentName = 'prod')
+    public function __construct(string $credentialKey, string $environmentName = 'prod', ?int $id = null)
     {
+        $this->id = $id;
         $this->credentialKey = $credentialKey;
         $this->environmentName = $environmentName;
     }

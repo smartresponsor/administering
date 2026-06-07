@@ -5,25 +5,35 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileReviewServiceInterface;
-use App\Managing\ServiceInterface\Administration\ManagingFieldViewProfileReviewServiceInterface as OwnerReviewServiceInterface;
-use App\Managing\Value\Administration\ManagingFieldViewProfileEditRequest;
-use App\Managing\Value\Administration\ManagingFieldViewProfileReviewResult;
+use App\Administering\Value\Managing\ManagingFieldViewProfileEditRequest;
+use App\Administering\Value\Managing\ManagingFieldViewProfileReviewResult;
 
 /**
- * Builds safe review payloads for Managing field view profile edits.
- *
- * The service intentionally does not persist or apply the profile. It only normalizes the payload that a later
- * controlled workflow can store in system configuration/storage.
+ * Builds safe review payloads for Managing field view profile edits without requiring Managing runtime.
  */
 final readonly class AdministrationManagingFieldViewProfileReviewService implements AdministrationFieldViewProfileReviewServiceInterface
 {
-    public function __construct(
-        private OwnerReviewServiceInterface $reviewService,
-    ) {
-    }
-
     public function review(ManagingFieldViewProfileEditRequest $request): ManagingFieldViewProfileReviewResult
     {
-        return $this->reviewService->review($request);
+        $violations = [];
+        if ('' === trim($request->profileKey)) {
+            $violations[] = 'Missing profile key.';
+        }
+
+        $changeType = $request->currentProfilePayload === $request->requestedProfilePayload ? 'no_change' : 'profile_payload_update';
+
+        return new ManagingFieldViewProfileReviewResult(
+            $request->profileKey,
+            $changeType,
+            [] === $violations,
+            $request->requestedProfilePayload,
+            [
+                'requested_by_subject' => $request->requestedBySubject,
+                'reason' => $request->reason,
+                'mode' => 'administering_self_contained_dry_runtime',
+            ],
+            [],
+            $violations,
+        );
     }
 }

@@ -38,8 +38,9 @@ final class AdministrationEnvironmentRuntimeRecord
     private \DateTimeImmutable $checkedAt;
 
     /** @param array<string, mixed> $safeContext */
-    public function __construct(string $environmentKey, string $category, string $status, string $sourceType, array $safeContext = [])
+    public function __construct(string $environmentKey, string $category, string $status, string $sourceType, array $safeContext = [], ?int $id = null)
     {
+        $this->id = $id;
         $this->environmentKey = $environmentKey;
         $this->category = $category;
         $this->status = $status;

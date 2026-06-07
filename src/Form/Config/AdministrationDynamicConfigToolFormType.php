@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Form\Config;
 
 use App\Administering\Mapper\Config\AdministrationConfigVariableFormMapper;
-use App\Configuring\Value\Config\ConfigVariable;
-use App\Configuring\Value\Config\ConfigVariableType;
+use App\Administering\Value\Config\ConfigVariable;
+use App\Administering\Value\Config\ConfigVariableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -68,7 +68,7 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
     private function fieldOptions(ConfigVariable $variable): array
     {
         $options = [
-            'label' => $variable->label ?? $variable->key,
+            'label' => $variable->label,
             'required' => $variable->required,
             'help' => $this->help($variable),
         ];
@@ -80,26 +80,40 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
         if (ConfigVariableType::SECRET_REF === $variable->type) {
             $options['required'] = false;
             $options['always_empty'] = false;
-            $options['help'] = trim(($options['help'] ?? '').' Leave blank to keep the current secret reference.');
+            $options['help'] = trim((string) $options['help'].' Leave blank to keep the current secret reference.');
         }
 
-        $enumChoices = $variable->constraints['choices'] ?? $variable->metadata['choices'] ?? null;
-        if (ConfigVariableType::ENUM === $variable->type && is_array($enumChoices)) {
-            $choices = [];
-            foreach ($enumChoices as $choice) {
-                if (is_string($choice) || is_int($choice)) {
-                    $choices[(string) $choice] = (string) $choice;
-                }
+        if (ConfigVariableType::ENUM === $variable->type) {
+            $choices = $this->choices($variable);
+            if ([] !== $choices) {
+                $options['choices'] = $choices;
             }
-            $options['choices'] = $choices;
         }
 
         return $options;
     }
 
-    private function help(ConfigVariable $variable): ?string
+    /** @return array<string, string> */
+    private function choices(ConfigVariable $variable): array
     {
-        $parts = [$variable->storage->value];
+        $rawChoices = $variable->constraints['choices'] ?? $variable->metadata['choices'] ?? [];
+        if (!is_array($rawChoices)) {
+            return [];
+        }
+
+        $choices = [];
+        foreach ($rawChoices as $choice) {
+            if (is_string($choice) || is_int($choice)) {
+                $choices[(string) $choice] = (string) $choice;
+            }
+        }
+
+        return $choices;
+    }
+
+    private function help(ConfigVariable $variable): string
+    {
+        $parts = [$variable->storage];
         if (null !== $variable->targetFile && '' !== $variable->targetFile) {
             $parts[] = $variable->targetFile;
         }

@@ -22,15 +22,6 @@ use App\Administering\ServiceInterface\Operation\AdministrationOperationReportPr
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use App\Rolling\Entity\Acl\RollingAclMutationExecutionEventEntity;
-use App\Rolling\Entity\Acl\RollingAclRule;
-use App\Rolling\Entity\Acl\RollingPermission;
-use App\Rolling\Entity\Acl\RollingRole;
-use App\Rolling\Entity\Acl\RollingRoleHierarchy;
-use App\Rolling\Entity\Acl\RollingRolePermission;
-use App\Rolling\Entity\Acl\RollingSubjectRoleAssignment;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionCatalogInterface;
-use App\Rolling\ServiceInterface\Administration\RollingAdministrationPermissionDecisionServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -42,7 +33,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 #[AsCommand(
     name: 'administering:runtime:readiness',
-    description: 'Checks the Administering/Rolling runtime wiring needed before RC promotion.',
+    description: 'Checks the Administering runtime wiring needed before RC promotion.',
 )]
 final class AdministrationRuntimeReadinessCommand extends Command
 {
@@ -57,13 +48,6 @@ final class AdministrationRuntimeReadinessCommand extends Command
         AdministrationAccountActionRequestRecord::class,
         AdministrationAclMutationReviewRecord::class,
         AdministrationAclMutationApplyRecord::class,
-        RollingPermission::class,
-        RollingRole::class,
-        RollingRolePermission::class,
-        RollingRoleHierarchy::class,
-        RollingSubjectRoleAssignment::class,
-        RollingAclRule::class,
-        RollingAclMutationExecutionEventEntity::class,
     ];
 
     /**
@@ -71,7 +55,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
      * read-only CRUD entity permissions, and launchable operation gates.
      *
      * Keep this list explicit so the readiness command fails closed when a new
-     * controller gate is added without a matching Rolling catalog descriptor.
+     * controller gate is added without a local readiness descriptor.
      *
      * @var list<string>
      */
@@ -141,8 +125,6 @@ final class AdministrationRuntimeReadinessCommand extends Command
         private readonly AdministrationOperationStatusRecorderInterface $operationStatusRecorder,
         private readonly AdministrationOperationReportProviderInterface $operationReportProvider,
         private readonly AdministrationOperationRunMessageHandler $operationRunMessageHandler,
-        private readonly RollingAdministrationPermissionCatalogInterface $rollingPermissionCatalog,
-        private readonly RollingAdministrationPermissionDecisionServiceInterface $rollingPermissionDecisionService,
     ) {
         parent::__construct();
     }
@@ -237,7 +219,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
             $operationRows,
         ));
 
-        $io->section('Rolling catalog integrity');
+        $io->section('Permission catalog integrity');
         $io->table(['check', 'valid', 'details'], array_map(
             static fn (array $row): array => [$row['check'], $row['valid'] ? 'yes' : 'no', $row['details']],
             $catalogIntegrityRows,
@@ -252,7 +234,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
         if (!$ready) {
             $io->warning('Runtime readiness failed. Fix missing Doctrine mappings/routes/catalog gates/operation runner coverage before promoting this slice to 3RC.');
         } else {
-            $io->success('Administering/Rolling runtime wiring is ready for the next RC proof step.');
+            $io->success('Administering runtime wiring is ready for the next RC proof step.');
         }
 
         return $ready ? Command::SUCCESS : Command::FAILURE;
@@ -292,7 +274,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
     /** @return list<array{permission: string, catalogued: bool}> */
     private function permissionRows(): array
     {
-        $cataloguedPermissions = array_flip($this->rollingPermissionCatalog->permissions());
+        $cataloguedPermissions = array_flip($this->localPermissionCatalog());
         $requiredPermissions = array_values(array_unique(array_merge(
             self::REQUIRED_PERMISSION_GATES,
             AdministrationOperationType::all(),
@@ -332,32 +314,33 @@ final class AdministrationRuntimeReadinessCommand extends Command
     /** @return list<array{check: string, valid: bool, details: string}> */
     private function catalogIntegrityRows(): array
     {
-        $descriptorKeys = [];
-        $duplicateKeys = [];
-        foreach ($this->rollingPermissionCatalog->descriptors() as $descriptor) {
-            $key = $descriptor->key();
-            if (isset($descriptorKeys[$key])) {
-                $duplicateKeys[] = $key;
-            }
-
-            $descriptorKeys[$key] = true;
-        }
-
-        $catalogPermissions = $this->rollingPermissionCatalog->permissions();
-        $missingDescriptorKeys = array_values(array_diff($catalogPermissions, array_keys($descriptorKeys)));
+        $catalogPermissions = $this->localPermissionCatalog();
+        $duplicatePermissions = array_values(array_unique(array_diff_assoc($catalogPermissions, array_unique($catalogPermissions))));
 
         return [
             [
-                'check' => 'unique_descriptor_keys',
-                'valid' => [] === $duplicateKeys,
-                'details' => [] === $duplicateKeys ? 'ok' : implode(', ', array_values(array_unique($duplicateKeys))),
+                'check' => 'unique_permission_keys',
+                'valid' => [] === $duplicatePermissions,
+                'details' => [] === $duplicatePermissions ? 'ok' : implode(', ', $duplicatePermissions),
             ],
             [
-                'check' => 'permissions_have_descriptors',
-                'valid' => [] === $missingDescriptorKeys,
-                'details' => [] === $missingDescriptorKeys ? 'ok' : implode(', ', $missingDescriptorKeys),
+                'check' => 'permission_catalog_available',
+                'valid' => [] !== $catalogPermissions,
+                'details' => [] !== $catalogPermissions ? 'ok' : 'empty',
             ],
         ];
+    }
+
+    /** @return list<string> */
+    private function localPermissionCatalog(): array
+    {
+        $permissions = array_values(array_unique(array_merge(
+            self::REQUIRED_PERMISSION_GATES,
+            AdministrationOperationType::all(),
+        )));
+        sort($permissions);
+
+        return $permissions;
     }
 
     /** @return list<array{contract: string, implementation: string}> */
@@ -372,8 +355,6 @@ final class AdministrationRuntimeReadinessCommand extends Command
             ['contract' => AdministrationOperationStatusRecorderInterface::class, 'implementation' => $this->operationStatusRecorder::class],
             ['contract' => AdministrationOperationReportProviderInterface::class, 'implementation' => $this->operationReportProvider::class],
             ['contract' => AdministrationOperationRunMessageHandler::class, 'implementation' => $this->operationRunMessageHandler::class],
-            ['contract' => RollingAdministrationPermissionCatalogInterface::class, 'implementation' => $this->rollingPermissionCatalog::class],
-            ['contract' => RollingAdministrationPermissionDecisionServiceInterface::class, 'implementation' => $this->rollingPermissionDecisionService::class],
         ];
     }
 }

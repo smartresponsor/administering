@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Rolling\Entity\Acl\RollingRole;
+use App\Administering\Entity\Rolling\RollingRole;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -92,6 +92,7 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         yield BooleanField::new('enabled')->hideOnForm();
     }
 
+    /** @param AdminContext<RollingRole> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
@@ -104,6 +105,7 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         return $this->rollingPersistAndRedirect($context, $role, sprintf('Role "%s" enabled.', $role->getRoleKey()));
     }
 
+    /** @param AdminContext<RollingRole> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
@@ -116,6 +118,10 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         return $this->rollingPersistAndRedirect($context, $role, sprintf('Role "%s" disabled.', $role->getRoleKey()));
     }
 
+    /**
+     * @param AdminContext<RollingRole>   $context
+     * @param BatchActionDto<RollingRole> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {
@@ -132,6 +138,10 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         );
     }
 
+    /**
+     * @param AdminContext<RollingRole>   $context
+     * @param BatchActionDto<RollingRole> $batchActionDto
+     */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
     {

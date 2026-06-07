@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Accessing;
 
-use App\Accessing\Value\Admin\AccessAccountAdministrationRequest;
-use App\Accessing\Value\Admin\AccessAccountAdministrationResult;
 use App\Administering\Entity\AdministrationAccountActionRequestRecord;
+use App\Administering\Value\Accessing\AdministrationAccountActionRequest;
+use App\Administering\Value\Accessing\AdministrationAccountActionResult;
 
 interface AdministrationAccountActionRequestRecorderInterface
 {
     public function record(
-        AccessAccountAdministrationRequest $request,
-        AccessAccountAdministrationResult $result,
+        AdministrationAccountActionRequest $request,
+        AdministrationAccountActionResult $result,
     ): AdministrationAccountActionRequestRecord;
 }
