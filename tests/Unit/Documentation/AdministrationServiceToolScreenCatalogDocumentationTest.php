@@ -15,7 +15,7 @@ final class AdministrationServiceToolScreenCatalogDocumentationTest extends Test
         self::assertIsString($contents);
         self::assertStringContainsString('AdministrationServiceToolScreenCatalog', $contents);
         self::assertStringContainsString('AdministrationFilesystemServiceToolCatalog', $contents);
-        self::assertStringContainsString('must not contain route-name knowledge', $contents);
+        self::assertStringContainsString('must not contain route-nameEntity knowledge', $contents);
         self::assertStringContainsString('Unmapped tools remain visible as service-only tools', $contents);
     }
 }

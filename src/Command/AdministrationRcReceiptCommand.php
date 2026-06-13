@@ -164,9 +164,9 @@ final class AdministrationRcReceiptCommand extends Command
             'Source artifact hashes:',
         ];
 
-        foreach ($sourceArtifacts as $name => $value) {
-            if (str_ends_with((string) $name, '_sha256')) {
-                $lines[] = sprintf('- %s: %s', (string) $name, is_scalar($value) && '' !== (string) $value ? (string) $value : '(missing)');
+        foreach ($sourceArtifacts as $nameEntity => $value) {
+            if (str_ends_with((string) $nameEntity, '_sha256')) {
+                $lines[] = sprintf('- %s: %s', (string) $nameEntity, is_scalar($value) && '' !== (string) $value ? (string) $value : '(missing)');
             }
         }
 
@@ -276,16 +276,16 @@ final class AdministrationRcReceiptCommand extends Command
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];
 
         if (!$ok) {
-            $errors[] = sprintf('%s failed: %s', $name, $detail);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $detail);
         }
     }
 }

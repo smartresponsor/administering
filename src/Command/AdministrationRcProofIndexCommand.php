@@ -136,12 +136,12 @@ final class AdministrationRcProofIndexCommand extends Command
         return $path;
     }
 
-    private function stringOption(mixed $value, string $name): string
+    private function stringOption(mixed $value, string $nameEntity): string
     {
         $string = is_string($value) ? trim($value) : '';
 
         if ('' === $string) {
-            throw new \InvalidArgumentException(sprintf('Expected a non-empty %s option.', $name));
+            throw new \InvalidArgumentException(sprintf('Expected a non-empty %s option.', $nameEntity));
         }
 
         return $string;

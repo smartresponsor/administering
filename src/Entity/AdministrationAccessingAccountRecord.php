@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationAccessingAccountRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationAccessingAccountRecordRepository::class)]
 #[ORM\Table(name: 'administration_accessing_account_record')]
 #[ORM\Index(name: 'idx_administration_accessing_account_status', columns: ['status'])]
 #[ORM\Index(name: 'idx_administration_accessing_account_reference', columns: ['account_reference'])]

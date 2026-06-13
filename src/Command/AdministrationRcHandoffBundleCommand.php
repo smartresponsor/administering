@@ -101,8 +101,8 @@ final class AdministrationRcHandoffBundleCommand extends Command
         ];
 
         $artifacts = [];
-        foreach ($artifactFiles as $name => $file) {
-            $artifacts[$name] = [
+        foreach ($artifactFiles as $nameEntity => $file) {
+            $artifacts[$nameEntity] = [
                 'path' => $file,
                 'sha256' => $this->hashOrNull($file),
                 'bytes' => is_file($file) ? filesize($file) : null,
@@ -280,11 +280,11 @@ final class AdministrationRcHandoffBundleCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
-        $checks[] = ['name' => $name, 'passed' => $ok, 'details' => $detail];
+        $checks[] = ['nameEntity' => $nameEntity, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
-            $errors[] = sprintf('%s: %s', $name, $detail);
+            $errors[] = sprintf('%s: %s', $nameEntity, $detail);
         }
     }
 
@@ -324,11 +324,11 @@ final class AdministrationRcHandoffBundleCommand extends Command
         ];
 
         $artifacts = is_array($bundle['artifacts'] ?? null) ? $bundle['artifacts'] : [];
-        foreach ($artifacts as $name => $artifact) {
+        foreach ($artifacts as $nameEntity => $artifact) {
             if (!is_array($artifact)) {
                 continue;
             }
-            $lines[] = sprintf('- %s: %s sha256=%s bytes=%s', $name, (string) ($artifact['path'] ?? ''), (string) ($artifact['sha256'] ?? 'missing'), (string) ($artifact['bytes'] ?? 'missing'));
+            $lines[] = sprintf('- %s: %s sha256=%s bytes=%s', $nameEntity, (string) ($artifact['path'] ?? ''), (string) ($artifact['sha256'] ?? 'missing'), (string) ($artifact['bytes'] ?? 'missing'));
         }
 
         $errors = is_array($bundle['errors'] ?? null) ? $bundle['errors'] : [];

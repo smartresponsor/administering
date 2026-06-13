@@ -16,7 +16,7 @@ final readonly class AdministrationManagingFieldVisibilityInspectionPrepareServi
     public function prepare(ManagingFieldVisibilityInspectionPrepareRequest $request): ManagingFieldVisibilityInspectionPrepareResult
     {
         $violations = [];
-        foreach (['resource class' => $request->resourceClass, 'field name' => $request->fieldName, 'page name' => $request->pageName] as $label => $value) {
+        foreach (['resource class' => $request->resourceClass, 'field nameEntity' => $request->fieldName, 'page nameEntity' => $request->pageName] as $label => $value) {
             if ('' === trim($value)) {
                 $violations[] = sprintf('Missing %s.', $label);
             }

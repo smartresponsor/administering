@@ -112,17 +112,17 @@ final class AdministrationRcTerminalStatusValidateCommand extends Command
             $artifacts = $terminalStatus['artifacts'] ?? null;
             $this->addCheck($checks, $errors, 'terminal_status_artifacts_map', is_array($artifacts), 'artifacts map exists');
             if (is_array($artifacts)) {
-                foreach ($currentHashes as $name => $currentHash) {
-                    if ('terminal_status_sha256' === $name || 'terminal_status_summary_sha256' === $name) {
+                foreach ($currentHashes as $nameEntity => $currentHash) {
+                    if ('terminal_status_sha256' === $nameEntity || 'terminal_status_summary_sha256' === $nameEntity) {
                         continue;
                     }
 
                     $this->addCheck(
                         $checks,
                         $errors,
-                        sprintf('terminal_status_%s_current', $name),
-                        is_string($currentHash) && $currentHash === ($artifacts[$name] ?? null),
-                        sprintf('%s matches current file', $name),
+                        sprintf('terminal_status_%s_current', $nameEntity),
+                        is_string($currentHash) && $currentHash === ($artifacts[$nameEntity] ?? null),
+                        sprintf('%s matches current file', $nameEntity),
                     );
                 }
             }
@@ -186,7 +186,7 @@ final class AdministrationRcTerminalStatusValidateCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -325,16 +325,16 @@ final class AdministrationRcTerminalStatusValidateCommand extends Command
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail = ''): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail = ''): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];
 
         if (!$ok) {
-            $errors[] = sprintf('%s failed: %s', $name, $detail);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $detail);
         }
     }
 

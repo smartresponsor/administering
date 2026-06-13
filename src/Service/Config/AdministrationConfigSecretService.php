@@ -14,7 +14,7 @@ final readonly class AdministrationConfigSecretService
 
     /**
      * @param array<string, string|null> $replacementValues  field key => plain replacement value
-     * @param array<string, string>      $secretNamesByField field key => secret name
+     * @param array<string, string>      $secretNamesByField field key => secret nameEntity
      *
      * @return array{status:string, messages:list<string>, masked_changes:array<string, string>}
      */
@@ -35,7 +35,7 @@ final readonly class AdministrationConfigSecretService
             if (!preg_match('/^[A-Z0-9_]+$/', $secretName)) {
                 return [
                     'status' => 'failed',
-                    'messages' => [sprintf('Secret name "%s" is invalid.', $secretName)],
+                    'messages' => [sprintf('Secret nameEntity "%s" is invalid.', $secretName)],
                     'masked_changes' => [],
                 ];
             }

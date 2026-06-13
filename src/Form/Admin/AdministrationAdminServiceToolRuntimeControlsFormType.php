@@ -48,7 +48,7 @@ final class AdministrationAdminServiceToolRuntimeControlsFormType extends Abstra
             ->add('clearLabelOverride', CheckboxType::class, [
                 'label' => 'Clear display label override',
                 'required' => false,
-                'help' => 'Use the generated label from the service class name again.',
+                'help' => 'Use the generated label from the service class AdministrationAdminServiceToolRuntimeControlsFormType again.',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save runtime controls',

@@ -7,7 +7,7 @@ namespace App\Administering\Value\Form\Config;
 final class AdministrationIntegrationConfigData
 {
     public string $uiLabel = 'Admin';
-    public string $routePrefix = '/ea';
+    public string $routePrefix = '/admin';
     public string $externalAccessBackend = 'authorization';
     public string $externalAccessFailureEffect = 'deny';
     public string $externalAccessPermissionKey = 'authorization.field.view';

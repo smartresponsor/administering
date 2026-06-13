@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationOperationRunRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Examples include configuration scans, credential presence checks, composer validation,
  * generated patch builds, and connected-component evidence refreshes.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationOperationRunRepository::class)]
 #[ORM\Table(name: 'administration_operation_run')]
 #[ORM\Index(name: 'idx_administration_operation_run_type_status', columns: ['operation_type', 'status'])]
 #[ORM\Index(name: 'idx_administration_operation_run_subject', columns: ['subject_identifier'])]

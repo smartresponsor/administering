@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationAuditEventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationAuditEventRepository::class)]
 #[ORM\Table(name: 'administration_audit_event')]
 #[ORM\Index(name: 'idx_administration_audit_event_action', columns: ['action'])]
 #[ORM\Index(name: 'idx_administration_audit_event_subject', columns: ['subject_identifier'])]

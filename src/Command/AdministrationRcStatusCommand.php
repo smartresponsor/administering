@@ -279,7 +279,7 @@ final class AdministrationRcStatusCommand extends Command
         );
 
         $io->table(['Artifact', 'Status'], array_map(
-            static fn (string $name, mixed $status): array => [$name, is_scalar($status) ? (string) $status : '(missing)'],
+            static fn (string $nameEntity, mixed $status): array => [$nameEntity, is_scalar($status) ? (string) $status : '(missing)'],
             array_keys($report['artifact_status']),
             array_values($report['artifact_status']),
         ));
@@ -315,8 +315,8 @@ final class AdministrationRcStatusCommand extends Command
 
         $artifactStatus = $report['artifact_status'] ?? [];
         if (is_array($artifactStatus)) {
-            foreach ($artifactStatus as $name => $status) {
-                $lines[] = sprintf('- %s: %s', (string) $name, is_scalar($status) ? (string) $status : '(missing)');
+            foreach ($artifactStatus as $nameEntity => $status) {
+                $lines[] = sprintf('- %s: %s', (string) $nameEntity, is_scalar($status) ? (string) $status : '(missing)');
             }
         }
 
@@ -324,9 +324,9 @@ final class AdministrationRcStatusCommand extends Command
         $lines[] = 'Artifact hashes:';
         $artifacts = $report['artifacts'] ?? [];
         if (is_array($artifacts)) {
-            foreach ($artifacts as $name => $value) {
-                if (str_ends_with((string) $name, '_sha256')) {
-                    $lines[] = sprintf('- %s: %s', (string) $name, is_scalar($value) && '' !== (string) $value ? (string) $value : '(missing)');
+            foreach ($artifacts as $nameEntity => $value) {
+                if (str_ends_with((string) $nameEntity, '_sha256')) {
+                    $lines[] = sprintf('- %s: %s', (string) $nameEntity, is_scalar($value) && '' !== (string) $value ? (string) $value : '(missing)');
                 }
             }
         }
@@ -483,16 +483,16 @@ final class AdministrationRcStatusCommand extends Command
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];
 
         if (!$ok) {
-            $errors[] = sprintf('%s failed: %s', $name, $detail);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $detail);
         }
     }
 }

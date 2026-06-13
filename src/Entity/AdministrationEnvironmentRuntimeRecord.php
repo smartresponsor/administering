@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationEnvironmentRuntimeRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationEnvironmentRuntimeRecordRepository::class)]
 #[ORM\Table(name: 'administration_environment_runtime_record')]
 #[ORM\Index(name: 'idx_administration_environment_category', columns: ['category'])]
 #[ORM\Index(name: 'idx_administration_environment_key', columns: ['environment_key'])]

@@ -39,8 +39,8 @@ final class AdministrationManagingFieldAccessMutationReviewFormType extends Abst
                 ),
             ])
             ->add('resourceClass', TextType::class, ['label' => 'Resource class'])
-            ->add('fieldName', TextType::class, ['label' => 'Field name'])
-            ->add('pageName', TextType::class, ['label' => 'Page name'])
+            ->add('fieldName', TextType::class, ['label' => 'Field nameEntity'])
+            ->add('pageName', TextType::class, ['label' => 'Page nameEntity'])
             ->add('operation', TextType::class, ['label' => 'Operation'])
             ->add('reason', TextType::class, ['required' => false, 'label' => 'Reason'])
             ->add('submit', SubmitType::class, ['label' => 'Review field access mutation']);

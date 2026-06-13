@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationCredentialDefinitionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Credential values are never stored in this entity. Values belong to Symfony Secrets,
  * environment variables, or a future approved vault.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationCredentialDefinitionRepository::class)]
 #[ORM\Table(name: 'administration_credential_definition')]
 #[ORM\UniqueConstraint(name: 'uniq_administration_credential_definition_key_env', columns: ['credential_key', 'environment_name'])]
 class AdministrationCredentialDefinition

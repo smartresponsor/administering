@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationAclMutationReviewRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * This record belongs to Administering system storage. It must not contain raw
  * policy internals, secrets, session payloads, passwords, or decrypted values.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationAclMutationReviewRecordRepository::class)]
 #[ORM\Table(name: 'administration_acl_mutation_review_record')]
 #[ORM\Index(name: 'idx_administration_acl_review_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_acl_review_subject', columns: ['subject_identifier'])]

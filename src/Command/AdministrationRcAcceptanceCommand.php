@@ -224,17 +224,17 @@ final class AdministrationRcAcceptanceCommand extends Command
      *
      * @return array<string, mixed>|null
      */
-    private function readJson(string $path, array &$checks, array &$errors, string $name): ?array
+    private function readJson(string $path, array &$checks, array &$errors, string $nameEntity): ?array
     {
         $exists = is_file($path);
-        $this->addCheck($checks, $errors, $name.'_file_exists', $exists, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_exists', $exists, $path);
         if (!$exists) {
             return null;
         }
 
         $content = file_get_contents($path);
         if (false === $content) {
-            $this->addCheck($checks, $errors, $name.'_file_readable', false, $path);
+            $this->addCheck($checks, $errors, $nameEntity.'_file_readable', false, $path);
 
             return null;
         }
@@ -242,12 +242,12 @@ final class AdministrationRcAcceptanceCommand extends Command
         try {
             $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            $this->addCheck($checks, $errors, $name.'_json_parse', false, $exception->getMessage());
+            $this->addCheck($checks, $errors, $nameEntity.'_json_parse', false, $exception->getMessage());
 
             return null;
         }
 
-        $this->addCheck($checks, $errors, $name.'_json_parse', is_array($decoded), $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_json_parse', is_array($decoded), $path);
 
         return is_array($decoded) ? $decoded : null;
     }
@@ -259,10 +259,10 @@ final class AdministrationRcAcceptanceCommand extends Command
      *
      * @return array<string, mixed>|null
      */
-    private function readYaml(string $path, array &$checks, array &$errors, string $name): ?array
+    private function readYaml(string $path, array &$checks, array &$errors, string $nameEntity): ?array
     {
         $exists = is_file($path);
-        $this->addCheck($checks, $errors, $name.'_file_exists', $exists, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_exists', $exists, $path);
         if (!$exists) {
             return null;
         }
@@ -270,12 +270,12 @@ final class AdministrationRcAcceptanceCommand extends Command
         try {
             $decoded = Yaml::parseFile($path);
         } catch (\Throwable $exception) {
-            $this->addCheck($checks, $errors, $name.'_yaml_parse', false, $exception->getMessage());
+            $this->addCheck($checks, $errors, $nameEntity.'_yaml_parse', false, $exception->getMessage());
 
             return null;
         }
 
-        $this->addCheck($checks, $errors, $name.'_yaml_parse', is_array($decoded), $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_yaml_parse', is_array($decoded), $path);
 
         return is_array($decoded) ? $decoded : null;
     }
@@ -285,16 +285,16 @@ final class AdministrationRcAcceptanceCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function readText(string $path, array &$checks, array &$errors, string $name): ?string
+    private function readText(string $path, array &$checks, array &$errors, string $nameEntity): ?string
     {
         $exists = is_file($path);
-        $this->addCheck($checks, $errors, $name.'_file_exists', $exists, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_exists', $exists, $path);
         if (!$exists) {
             return null;
         }
 
         $content = file_get_contents($path);
-        $this->addCheck($checks, $errors, $name.'_file_readable', false !== $content, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_readable', false !== $content, $path);
 
         return false === $content ? null : $content;
     }
@@ -304,16 +304,16 @@ final class AdministrationRcAcceptanceCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $passed, string $details): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $details): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'passed' => $passed,
             'details' => $details,
         ];
 
         if (!$passed) {
-            $errors[] = sprintf('%s failed: %s', $name, $details);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $details);
         }
     }
 
@@ -363,11 +363,11 @@ final class AdministrationRcAcceptanceCommand extends Command
 
         $artifacts = $result['artifacts'] ?? [];
         if (is_array($artifacts)) {
-            foreach ($artifacts as $name => $artifact) {
+            foreach ($artifacts as $nameEntity => $artifact) {
                 if (!is_array($artifact)) {
                     continue;
                 }
-                $lines[] = sprintf('- %s: %s [%s]', (string) $name, (string) ($artifact['path'] ?? ''), (string) ($artifact['sha256'] ?? 'missing'));
+                $lines[] = sprintf('- %s: %s [%s]', (string) $nameEntity, (string) ($artifact['path'] ?? ''), (string) ($artifact['sha256'] ?? 'missing'));
             }
         }
 

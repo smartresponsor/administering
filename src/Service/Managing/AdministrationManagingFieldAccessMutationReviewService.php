@@ -47,8 +47,8 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
             'subject type' => $descriptor->subjectType,
             'subject identifier' => $descriptor->subjectIdentifier,
             'resource class' => $descriptor->target->resourceClass,
-            'field name' => $descriptor->target->fieldName,
-            'page name' => $descriptor->target->pageName,
+            'field nameEntity' => $descriptor->target->fieldName,
+            'page nameEntity' => $descriptor->target->pageName,
             'operation' => $descriptor->target->operation,
         ] as $label => $value) {
             if ('' === trim((string) $value)) {

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationServiceToolRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationServiceToolRecordRepository::class)]
 #[ORM\Table(name: 'administration_service_tool_record')]
 #[ORM\Index(name: 'idx_administration_service_tool_section', columns: ['section_key'])]
-#[ORM\Index(name: 'idx_administration_service_tool_key', columns: ['tool_key'])]
+#[ORM\UniqueConstraint(name: 'uniq_administration_service_tool_tool_key', columns: ['tool_key'])]
 #[ORM\Index(name: 'idx_administration_service_tool_class', columns: ['service_class'])]
 #[ORM\Index(name: 'idx_administration_service_tool_status', columns: ['status'])]
 #[ORM\Index(name: 'idx_administration_service_tool_source_ownership', columns: ['source_ownership'])]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationCredentialStateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Plain or decrypted secret values are forbidden here. Store only presence, status,
  * masked state, fingerprints, and audit-safe metadata.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationCredentialStateRepository::class)]
 #[ORM\Table(name: 'administration_credential_state')]
 #[ORM\UniqueConstraint(name: 'uniq_administration_credential_state_key_env', columns: ['credential_key', 'environment_name'])]
 class AdministrationCredentialState

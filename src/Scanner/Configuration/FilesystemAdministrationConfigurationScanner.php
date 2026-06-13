@@ -73,7 +73,7 @@ final class FilesystemAdministrationConfigurationScanner implements Administrati
         }
 
         $finder = new Finder();
-        $finder->files()->in($directories)->name(['*.yaml', '*.yml'])->ignoreUnreadableDirs();
+        $finder->files()->in($directories)->nameEntity(['*.yaml', '*.yml'])->ignoreUnreadableDirs();
 
         $files = [];
         foreach ($finder as $file) {
@@ -127,7 +127,7 @@ final class FilesystemAdministrationConfigurationScanner implements Administrati
         }
 
         $entries = [];
-        foreach (['name', 'type', 'license', 'minimum-stability'] as $key) {
+        foreach (['nameEntity', 'type', 'license', 'minimum-stability'] as $key) {
             if (array_key_exists($key, $decoded)) {
                 $entries[] = new AdministrationConfigurationEntry(
                     'composer.'.$key,

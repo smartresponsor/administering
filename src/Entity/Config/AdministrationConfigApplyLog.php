@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Config;
 
+use App\Administering\Repository\Config\AdministrationConfigApplyLogRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConfigApplyLogRepository::class)]
 #[ORM\Table(name: 'administration_config_apply_log')]
 #[ORM\Index(name: 'idx_administration_config_apply_log_tool', columns: ['application_code', 'tool_code'])]
 #[ORM\Index(name: 'idx_administration_config_apply_log_status', columns: ['status'])]

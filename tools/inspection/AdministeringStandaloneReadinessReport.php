@@ -8,16 +8,16 @@ $failures = [];
 $warnings = [];
 $checks = [];
 
-$add = static function (string $name, bool $passed, string $detail = '') use (&$checks, &$failures): void {
-    $checks[] = [$name, $passed, $detail];
+$add = static function (string $nameEntity, bool $passed, string $detail = '') use (&$checks, &$failures): void {
+    $checks[] = [$nameEntity, $passed, $detail];
     if (!$passed) {
-        $failures[] = $name.($detail !== '' ? ' - '.$detail : '');
+        $failures[] = $nameEntity.($detail !== '' ? ' - '.$detail : '');
     }
 };
 
-$warn = static function (string $name, bool $condition, string $detail = '') use (&$warnings): void {
+$warn = static function (string $nameEntity, bool $condition, string $detail = '') use (&$warnings): void {
     if ($condition) {
-        $warnings[] = $name.($detail !== '' ? ' - '.$detail : '');
+        $warnings[] = $nameEntity.($detail !== '' ? ' - '.$detail : '');
     }
 };
 
@@ -86,8 +86,8 @@ $warn('stale Config tests may still exist', (bool) glob($root.'/tests/Unit/Confi
 $failed = [] !== $failures;
 echo "Administering standalone readiness report\n";
 echo "========================================\n";
-foreach ($checks as [$name, $passed, $detail]) {
-    echo ($passed ? '[OK]   ' : '[FAIL] ').$name;
+foreach ($checks as [$nameEntity, $passed, $detail]) {
+    echo ($passed ? '[OK]   ' : '[FAIL] ').$nameEntity;
     if (!$passed && $detail !== '') {
         echo ' :: '.$detail;
     }

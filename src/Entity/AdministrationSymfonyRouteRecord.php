@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationSymfonyRouteRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationSymfonyRouteRecordRepository::class)]
 #[ORM\Table(name: 'administration_symfony_route_record')]
 #[ORM\Index(name: 'idx_administration_symfony_route_name', columns: ['route_name'])]
 #[ORM\Index(name: 'idx_administration_symfony_route_status', columns: ['status_class'])]

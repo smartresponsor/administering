@@ -121,7 +121,7 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         if ([] !== $proof['checks']) {
             $io->section('Checks');
             foreach ($proof['checks'] as $check) {
-                $io->writeln(sprintf('- %s: %s', $check['name'], $check['ok'] ? 'ok' : 'failed'));
+                $io->writeln(sprintf('- %s: %s', $check['nameEntity'], $check['ok'] ? 'ok' : 'failed'));
             }
         }
 
@@ -188,16 +188,16 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         $proof['events'] = count($events);
         $proof['artifacts'] = count($artifacts);
         $proof['checks'] = [
-            ['name' => 'message_payload_only_operation_key', 'ok' => ['operationKey'] === $messageFields],
-            ['name' => 'run_status_terminal', 'ok' => in_array($report->status(), ['succeeded', 'skipped', 'failed'], true)],
-            ['name' => 'events_written', 'ok' => count($events) >= 2],
-            ['name' => 'artifact_written', 'ok' => count($artifacts) >= 1],
-            ['name' => 'same_operation_key', 'ok' => $this->sameOperationKey($report)],
+            ['nameEntity' => 'message_payload_only_operation_key', 'ok' => ['operationKey'] === $messageFields],
+            ['nameEntity' => 'run_status_terminal', 'ok' => in_array($report->status(), ['succeeded', 'skipped', 'failed'], true)],
+            ['nameEntity' => 'events_written', 'ok' => count($events) >= 2],
+            ['nameEntity' => 'artifact_written', 'ok' => count($artifacts) >= 1],
+            ['nameEntity' => 'same_operation_key', 'ok' => $this->sameOperationKey($report)],
         ];
 
         foreach ($proof['checks'] as $check) {
             if (false === $check['ok']) {
-                $proof['errors'][] = sprintf('Messenger boundary check failed: %s.', $check['name']);
+                $proof['errors'][] = sprintf('Messenger boundary check failed: %s.', $check['nameEntity']);
             }
         }
 

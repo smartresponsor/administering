@@ -12,37 +12,37 @@ if (false === $repo) {
 $php = PHP_BINARY;
 $checks = [
     [
-        'name' => 'zero foreign coupling',
+        'nameEntity' => 'zero foreign coupling',
         'script' => __DIR__.'/administering-zero-foreign-coupling-guard.php',
         'args' => [$repo],
     ],
     [
-        'name' => 'runtime-scope decision boundary',
+        'nameEntity' => 'runtime-scope decision boundary',
         'script' => __DIR__.'/administering-runtime-scope-decision-boundary-guard.php',
         'args' => [],
     ],
     [
-        'name' => 'no excluded admin controller surface',
+        'nameEntity' => 'no excluded admin controller surface',
         'script' => __DIR__.'/administering-no-excluded-admin-controller-surface-guard.php',
         'args' => [$repo],
     ],
     [
-        'name' => 'composer package boundary',
+        'nameEntity' => 'composer package boundary',
         'script' => __DIR__.'/administering-composer-package-boundary-guard.php',
         'args' => [$repo],
     ],
     [
-        'name' => 'composer inventory evidence',
+        'nameEntity' => 'composer inventory evidence',
         'script' => __DIR__.'/administering-composer-inventory-evidence-guard.php',
         'args' => [$repo],
     ],
     [
-        'name' => 'runtime decision row surface',
+        'nameEntity' => 'runtime decision row surface',
         'script' => __DIR__.'/administering-runtime-decision-row-surface-guard.php',
         'args' => [$repo],
     ],
     [
-        'name' => 'runtime output schema',
+        'nameEntity' => 'runtime output schema',
         'script' => __DIR__.'/administering-runtime-output-schema-guard.php',
         'args' => [$repo],
     ],
@@ -59,20 +59,20 @@ foreach ($checks as $check) {
 
     if (0 !== $exitCode) {
         $failed[] = [
-            'name' => $check['name'],
+            'nameEntity' => $check['nameEntity'],
             'exitCode' => $exitCode,
             'output' => $output,
         ];
         continue;
     }
 
-    fwrite(STDOUT, sprintf('[OK] %s%s', $check['name'], PHP_EOL));
+    fwrite(STDOUT, sprintf('[OK] %s%s', $check['nameEntity'], PHP_EOL));
 }
 
 if ([] !== $failed) {
     fwrite(STDERR, "Administering architecture guard suite failed:\n");
     foreach ($failed as $failure) {
-        fwrite(STDERR, sprintf(' - %s exited with %d%s', $failure['name'], $failure['exitCode'], PHP_EOL));
+        fwrite(STDERR, sprintf(' - %s exited with %d%s', $failure['nameEntity'], $failure['exitCode'], PHP_EOL));
         foreach ($failure['output'] as $line) {
             fwrite(STDERR, '   '.$line.PHP_EOL);
         }

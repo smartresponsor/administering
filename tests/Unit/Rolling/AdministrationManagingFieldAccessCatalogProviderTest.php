@@ -57,8 +57,8 @@ final class AdministrationManagingFieldAccessCatalogProviderTest extends TestCas
 
         $rows = $provider->matrixRows();
 
-        self::assertSame('System/component hard deny', $rows[0]->name);
-        self::assertSame('User personal view profile', $rows[3]->name);
+        self::assertSame('System/component hard deny', $rows[0]->nameEntity);
+        self::assertSame('User personal view profile', $rows[3]->nameEntity);
         self::assertLessThan($rows[3]->priority, $rows[1]->priority);
     }
 }

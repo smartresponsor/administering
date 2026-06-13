@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationConnectedComponentRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConnectedComponentRecordRepository::class)]
 #[ORM\Table(name: 'administration_connected_component_record')]
 #[ORM\Index(name: 'idx_administration_connected_component_name', columns: ['component_name'])]
 #[ORM\Index(name: 'idx_administration_connected_component_status', columns: ['status'])]

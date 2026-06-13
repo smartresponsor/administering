@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Config;
 
+use App\Administering\Repository\Config\AdministrationConfigToolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConfigToolRepository::class)]
 #[ORM\Table(name: 'administration_config_tool')]
 #[ORM\Index(name: 'idx_administration_config_tool_application', columns: ['application_code'])]
 #[ORM\Index(name: 'idx_administration_config_tool_code', columns: ['tool_code'])]

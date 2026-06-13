@@ -291,16 +291,16 @@ final class AdministrationRcHandoffIndexCommand extends Command
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];
 
         if (!$ok) {
-            $errors[] = $name.': '.$detail;
+            $errors[] = $nameEntity.': '.$detail;
         }
     }
 
@@ -353,8 +353,8 @@ final class AdministrationRcHandoffIndexCommand extends Command
             'Hashes:',
         ];
 
-        foreach ($hashes as $name => $hash) {
-            $lines[] = sprintf('- %s: %s', $name, $hash ?? '(missing)');
+        foreach ($hashes as $nameEntity => $hash) {
+            $lines[] = sprintf('- %s: %s', $nameEntity, $hash ?? '(missing)');
         }
 
         $lines[] = '';

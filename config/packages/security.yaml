@@ -9,5 +9,4 @@ security:
     main:
       lazy: true
       provider: administering_standalone_memory_provider
-  access_control:
-    - { path: ^/ea, roles: ROLE_ADMIN }
+  access_control: []

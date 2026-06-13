@@ -14,7 +14,7 @@ use App\Administering\Value\Operation\AdministrationOperationType;
 /**
  * Builds the canonical tool catalog from src/Service/<Direction> implementation files.
  *
- * A file is indexed only when its namespace and short name prove that it is a
+ * A file is indexed only when its namespace and short nameEntity prove that it is a
  * menu/openable service tool: Administration{Direction}{ToolSlug}Service.
  */
 final readonly class AdministrationFilesystemServiceToolCatalog implements AdministrationServiceToolCatalogInterface

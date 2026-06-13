@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationOperationArtifactRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * files. They must never contain plain secrets, raw .env values, decrypted
  * credentials, session payloads, password hashes, or 2FA internals.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationOperationArtifactRepository::class)]
 #[ORM\Table(name: 'administration_operation_artifact')]
 #[ORM\Index(name: 'idx_administration_operation_artifact_run', columns: ['operation_key'])]
 #[ORM\Index(name: 'idx_administration_operation_artifact_type', columns: ['artifact_type'])]

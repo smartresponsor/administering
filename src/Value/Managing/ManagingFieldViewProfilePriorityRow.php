@@ -8,7 +8,7 @@ final readonly class ManagingFieldViewProfilePriorityRow
 {
     public function __construct(
         public int $priority,
-        public string $name,
+        public string $nameEntity,
         public string $owner,
         public string $decision,
         public string $effect,

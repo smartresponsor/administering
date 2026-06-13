@@ -18,6 +18,8 @@ services:
     exclude:
       - '../src/DependencyInjection/'
       - '../src/Entity/'
+      - '../src/Form/'
+      - '../src/Service/Http/'
       - '../src/AdministeringBundle.php'
 
   App\Administering\Controller\:

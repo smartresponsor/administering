@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationOperationEventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Operation events must never contain secrets, raw .env values, decrypted credentials,
  * source file dumps, session payloads, or password/2FA internals.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationOperationEventRepository::class)]
 #[ORM\Table(name: 'administration_operation_event')]
 #[ORM\Index(name: 'idx_administration_operation_event_run', columns: ['operation_key'])]
 #[ORM\Index(name: 'idx_administration_operation_event_status', columns: ['status'])]

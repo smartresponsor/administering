@@ -19,10 +19,10 @@ final readonly class AdministrationSymfonyRouteCatalogProvider implements Admini
     public function routes(): array
     {
         $rows = [];
-        foreach ($this->router->getRouteCollection()->all() as $name => $route) {
+        foreach ($this->router->getRouteCollection()->all() as $nameEntity => $route) {
             $methods = $route->getMethods();
             $rows[] = [
-                'route' => $name,
+                'route' => $nameEntity,
                 'path' => $route->getPath(),
                 'methods' => [] !== $methods ? array_values($methods) : ['ANY'],
             ];

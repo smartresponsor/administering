@@ -31,7 +31,7 @@ final readonly class AdministrationRuntimeScopeBundleCatalogReader
             }
 
             if (str_contains($bundleToken, '\\')) {
-                throw new \RuntimeException(sprintf('Runtime-scope bundle token must not be a PHP class name: %s', $component));
+                throw new \RuntimeException(sprintf('Runtime-scope bundle token must not be a PHP class AdministrationRuntimeScopeBundleCatalogReader: %s', $component));
             }
 
             $components[strtolower($component)] = [

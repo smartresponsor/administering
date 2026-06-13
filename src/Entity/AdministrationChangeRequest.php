@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationChangeRequestRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Git-owned files, composer changes, generated patches, and secret actions should be
  * routed through change requests instead of silent direct writes.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationChangeRequestRepository::class)]
 #[ORM\Table(name: 'administration_change_request')]
 class AdministrationChangeRequest
 {

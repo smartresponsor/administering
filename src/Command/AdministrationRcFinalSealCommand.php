@@ -137,7 +137,7 @@ final class AdministrationRcFinalSealCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -346,16 +346,16 @@ final class AdministrationRcFinalSealCommand extends Command
      * @param list<array{name: string, ok: bool, detail: string}> $checks
      * @param list<string>                                        $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];
 
         if (!$ok) {
-            $errors[] = sprintf('%s failed: %s', $name, $detail);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $detail);
         }
     }
 }

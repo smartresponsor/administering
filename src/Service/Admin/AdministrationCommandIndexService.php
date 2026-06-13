@@ -27,7 +27,7 @@ final readonly class AdministrationCommandIndexService
             }
         }
 
-        usort($rows, static fn (array $left, array $right): int => strcmp((string) $left['name'], (string) $right['name']));
+        usort($rows, static fn (array $left, array $right): int => strcmp((string) $left['nameEntity'], (string) $right['nameEntity']));
 
         return new AdministrationRuntimeSourceIndex(
             title: 'Commands',
@@ -63,7 +63,7 @@ final readonly class AdministrationCommandIndexService
         $shortName = basename($file, '.php');
 
         return [
-            'name' => $this->extractAttributeValue($source, 'name') ?: $this->fallbackCommandName($shortName),
+            'nameEntity' => $this->extractAttributeValue($source, 'nameEntity') ?: $this->fallbackCommandName($shortName),
             'description' => $this->extractAttributeValue($source, 'description'),
             'class' => $shortName,
             'file' => 'src/Command/'.ltrim(str_replace('\\', '/', substr($file, strlen(rtrim($commandDir, '/\\')))), '/'),

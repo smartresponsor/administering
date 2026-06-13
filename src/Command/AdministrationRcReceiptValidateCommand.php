@@ -204,9 +204,9 @@ final class AdministrationRcReceiptValidateCommand extends Command
      *
      * @return array<string, mixed>|null
      */
-    private function readYaml(string $path, array &$checks, array &$errors, string $name): ?array
+    private function readYaml(string $path, array &$checks, array &$errors, string $nameEntity): ?array
     {
-        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $name), is_file($path), $path);
+        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $nameEntity), is_file($path), $path);
         if (!is_file($path)) {
             return null;
         }
@@ -214,12 +214,12 @@ final class AdministrationRcReceiptValidateCommand extends Command
         try {
             $value = Yaml::parseFile($path);
         } catch (\Throwable $exception) {
-            $this->addCheck($checks, $errors, sprintf('%s_yaml_parseable', $name), false, $exception->getMessage());
+            $this->addCheck($checks, $errors, sprintf('%s_yaml_parseable', $nameEntity), false, $exception->getMessage());
 
             return null;
         }
 
-        $this->addCheck($checks, $errors, sprintf('%s_yaml_parseable', $name), is_array($value), 'YAML root is a map');
+        $this->addCheck($checks, $errors, sprintf('%s_yaml_parseable', $nameEntity), is_array($value), 'YAML root is a map');
 
         return is_array($value) ? $value : null;
     }
@@ -231,9 +231,9 @@ final class AdministrationRcReceiptValidateCommand extends Command
      *
      * @return array<string, mixed>|null
      */
-    private function readJson(string $path, array &$checks, array &$errors, string $name): ?array
+    private function readJson(string $path, array &$checks, array &$errors, string $nameEntity): ?array
     {
-        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $name), is_file($path), $path);
+        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $nameEntity), is_file($path), $path);
         if (!is_file($path)) {
             return null;
         }
@@ -241,12 +241,12 @@ final class AdministrationRcReceiptValidateCommand extends Command
         try {
             $value = json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $exception) {
-            $this->addCheck($checks, $errors, sprintf('%s_json_parseable', $name), false, $exception->getMessage());
+            $this->addCheck($checks, $errors, sprintf('%s_json_parseable', $nameEntity), false, $exception->getMessage());
 
             return null;
         }
 
-        $this->addCheck($checks, $errors, sprintf('%s_json_parseable', $name), is_array($value), 'JSON root is an object');
+        $this->addCheck($checks, $errors, sprintf('%s_json_parseable', $nameEntity), is_array($value), 'JSON root is an object');
 
         return is_array($value) ? $value : null;
     }
@@ -256,15 +256,15 @@ final class AdministrationRcReceiptValidateCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function readText(string $path, array &$checks, array &$errors, string $name): ?string
+    private function readText(string $path, array &$checks, array &$errors, string $nameEntity): ?string
     {
-        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $name), is_file($path), $path);
+        $this->addCheck($checks, $errors, sprintf('%s_file_exists', $nameEntity), is_file($path), $path);
         if (!is_file($path)) {
             return null;
         }
 
         $content = file_get_contents($path);
-        $this->addCheck($checks, $errors, sprintf('%s_readable', $name), false !== $content, 'text file readable');
+        $this->addCheck($checks, $errors, sprintf('%s_readable', $nameEntity), false !== $content, 'text file readable');
 
         return false === $content ? null : (string) $content;
     }
@@ -274,16 +274,16 @@ final class AdministrationRcReceiptValidateCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $passed, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $detail): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'passed' => $passed,
             'details' => $detail,
         ];
 
         if (!$passed) {
-            $errors[] = sprintf('%s failed: %s', $name, $detail);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $detail);
         }
     }
 

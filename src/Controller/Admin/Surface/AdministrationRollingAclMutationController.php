@@ -146,8 +146,8 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
             'permission or role key' => $request->permissionOrRoleKey(),
             'component key' => $data->componentKey,
             'resource class' => $data->resourceClass,
-            'page name' => $data->pageName,
-            'field name' => $data->fieldName,
+            'page nameEntity' => $data->pageName,
+            'field nameEntity' => $data->fieldName,
         ] as $label => $value) {
             if ('' === trim((string) $value)) {
                 $violations[] = sprintf('Missing %s.', $label);
@@ -155,7 +155,7 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
         }
 
         if (!str_contains(trim($data->resourceClass), '\\')) {
-            $warnings[] = 'Resource class does not look like a fully qualified PHP class name.';
+            $warnings[] = 'Resource class does not look like a fully qualified PHP class AdministrationRollingAclMutationController.';
         }
 
         return new AdministrationRollingAclMutationReview(

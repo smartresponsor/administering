@@ -61,10 +61,10 @@ final class AdministrationRuntimeScopeComponentDecisionController extends Abstra
             'action_links' => [
                 [
                     'label' => 'Back to Enabled Components',
-                    'url' => '/ea/administration-connected-component-record',
+                    'url' => '/admin/administration-connected-component-record',
                 ],
             ],
-            'back_url' => '/ea/administration-connected-component-record',
+            'back_url' => '/admin/administration-connected-component-record',
         ]);
     }
 

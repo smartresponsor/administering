@@ -32,9 +32,9 @@ final class AdministrationManagingFieldViewProfileCatalogProviderTest extends Te
         $provider = new AdministrationManagingFieldViewProfileCatalogProvider();
         $rows = $provider->priorityRows();
 
-        self::assertSame('System/component hard deny', $rows[0]->name);
-        self::assertSame('Effective security decision', $rows[1]->name);
-        self::assertSame('User personal view profile', $rows[4]->name);
+        self::assertSame('System/component hard deny', $rows[0]->nameEntity);
+        self::assertSame('Effective security decision', $rows[1]->nameEntity);
+        self::assertSame('User personal view profile', $rows[4]->nameEntity);
         self::assertLessThan($rows[4]->priority, $rows[1]->priority);
         self::assertSame('allowed presentation', $rows[4]->effect);
     }

@@ -224,7 +224,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
         if (null !== $componentKey && null !== $toolSlug && null !== $serviceShortName) {
             $expected = sprintf('%sConfiguration%sService', $componentKey, $toolSlug);
             if ($expected !== $serviceShortName) {
-                $issues[] = $this->issue('error', $toolPath.'.serviceShortName', sprintf('Expected owner-side service short name %s.', $expected));
+                $issues[] = $this->issue('error', $toolPath.'.serviceShortName', sprintf('Expected owner-side service short nameEntity %s.', $expected));
             }
         }
         if (null === $servicePath || null === $componentKey || !str_starts_with($servicePath, $componentKey.'/src/Service/Configuration/')) {

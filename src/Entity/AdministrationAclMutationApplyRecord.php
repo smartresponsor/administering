@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationAclMutationApplyRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * The actual authorization execution remains owned by the host component. Administering stores only
  * the safe operator trace and result metadata.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationAclMutationApplyRecordRepository::class)]
 #[ORM\Table(name: 'administration_acl_mutation_apply_record')]
 #[ORM\Index(name: 'idx_administration_acl_apply_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_acl_apply_status', columns: ['status'])]

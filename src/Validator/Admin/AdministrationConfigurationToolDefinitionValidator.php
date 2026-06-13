@@ -48,7 +48,7 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
         }
 
         if ('' === trim($definition->serviceClass) || !str_ends_with($definition->serviceClass, '\\'.$definition->serviceShortName())) {
-            $violations[] = $this->violation('error', $definition, 'serviceClass', 'Service class must end with the declared service short name.', '*\\'.$definition->serviceShortName(), $definition->serviceClass);
+            $violations[] = $this->violation('error', $definition, 'serviceClass', 'Service class must end with the declared service short nameEntity.', '*\\'.$definition->serviceShortName(), $definition->serviceClass);
         }
 
         if (!$definition->isOwnerSidePrefixed()) {

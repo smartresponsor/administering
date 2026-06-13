@@ -443,17 +443,17 @@ final class AdministrationRcContractValidateCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function readText(string $path, array &$checks, array &$errors, string $name): ?string
+    private function readText(string $path, array &$checks, array &$errors, string $nameEntity): ?string
     {
         $exists = is_file($path);
-        $this->addCheck($checks, $errors, $name.'_file_exists', $exists, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_exists', $exists, $path);
         if (!$exists) {
             return null;
         }
 
         $content = file_get_contents($path);
         $readable = false !== $content;
-        $this->addCheck($checks, $errors, $name.'_file_readable', $readable, $path);
+        $this->addCheck($checks, $errors, $nameEntity.'_file_readable', $readable, $path);
 
         return is_string($content) ? $content : null;
     }
@@ -463,16 +463,16 @@ final class AdministrationRcContractValidateCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $passed, string $details): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $details): void
     {
         $checks[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'passed' => $passed,
             'details' => $details,
         ];
 
         if (!$passed) {
-            $errors[] = sprintf('%s failed: %s', $name, $details);
+            $errors[] = sprintf('%s failed: %s', $nameEntity, $details);
         }
     }
 
@@ -519,8 +519,8 @@ final class AdministrationRcContractValidateCommand extends Command
 
     private function checkName(string $value): string
     {
-        $name = strtolower(preg_replace('/[^A-Za-z0-9]+/', '_', $value) ?? $value);
+        $nameEntity = strtolower(preg_replace('/[^A-Za-z0-9]+/', '_', $value) ?? $value);
 
-        return trim($name, '_');
+        return trim($nameEntity, '_');
     }
 }

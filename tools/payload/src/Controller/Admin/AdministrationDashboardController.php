@@ -311,3 +311,4 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         return $response;
     }
 }
+

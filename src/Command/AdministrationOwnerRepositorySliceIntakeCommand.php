@@ -29,8 +29,8 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
         $this
             ->addArgument('components', InputArgument::IS_ARRAY, 'Owner component keys to request as current slices, for example connected symfony environment.')
             ->addOption('workspace-root', null, InputOption::VALUE_REQUIRED, 'Workspace root used to check whether sibling repositories are present.', dirname($this->projectDir))
-            ->addOption('repository-map-json', null, InputOption::VALUE_REQUIRED, 'Optional JSON object mapping component key to repository folder name.')
-            ->addOption('host-application', null, InputOption::VALUE_REQUIRED, 'Optional host/post-application repository folder name to include in the intake.')
+            ->addOption('repository-map-json', null, InputOption::VALUE_REQUIRED, 'Optional JSON object mapping component key to repository folder nameEntity.')
+            ->addOption('host-application', null, InputOption::VALUE_REQUIRED, 'Optional host/post-application repository folder nameEntity to include in the intake.')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print intake report as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write intake report JSON to this path.')
             ->addOption('fail-if-missing', null, InputOption::VALUE_NONE, 'Fail if any requested repository current slice is missing.')

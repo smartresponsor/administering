@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationServiceSectionRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationServiceSectionRecordRepository::class)]
 #[ORM\Table(name: 'administration_service_section_record')]
 #[ORM\Index(name: 'idx_administration_service_section_key', columns: ['section_key'])]
 #[ORM\Index(name: 'idx_administration_service_section_status', columns: ['status'])]

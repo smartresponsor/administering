@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationConfigSnapshotRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConfigSnapshotRepository::class)]
 #[ORM\Table(name: 'administration_config_snapshot')]
 #[ORM\Index(name: 'idx_administration_config_snapshot_source', columns: ['source_type', 'source_path'])]
 final class AdministrationConfigSnapshot

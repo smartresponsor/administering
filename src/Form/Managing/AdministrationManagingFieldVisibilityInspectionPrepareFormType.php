@@ -19,7 +19,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareFormType exten
     {
         $builder
             ->add('resourceClass', TextType::class, ['label' => 'Resource class'])
-            ->add('fieldName', TextType::class, ['label' => 'Field name'])
+            ->add('fieldName', TextType::class, ['label' => 'Field nameEntity'])
             ->add('pageName', ChoiceType::class, [
                 'choices' => [
                     'Index' => 'index',

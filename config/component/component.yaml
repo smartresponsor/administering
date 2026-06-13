@@ -3,7 +3,7 @@ namespace: App\Administering
 package: administering/admin
 business_stem: Administration
 ui_label: Admin
-route_prefix: /ea
+route_prefix: /admin
 config_root: administering
 database_prefix: administration_
 

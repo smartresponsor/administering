@@ -32,7 +32,7 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
             ->addOption('workspace-root', null, InputOption::VALUE_REQUIRED, 'Expected local workspace root for owner repositories.', 'D:\\PhpstormProjects\\www')
             ->addOption('patch-readiness-json', null, InputOption::VALUE_REQUIRED, 'Owner repository patch readiness JSON path.', 'delivery/patches/administering_owner_repository_patch_readiness.json')
             ->addOption('transition-freeze-json', null, InputOption::VALUE_REQUIRED, 'Transition freeze JSON path.', 'delivery/patches/administering_owner_configuration_tool_transition_freeze.json')
-            ->addOption('external-kit-name', null, InputOption::VALUE_REQUIRED, 'Expected external migration kit/archive label.', 'administering_owner_side_transition_freeze_external_neighbors.zip')
+            ->addOption('external-kit-nameEntity', null, InputOption::VALUE_REQUIRED, 'Expected external migration kit/archive label.', 'administering_owner_side_transition_freeze_external_neighbors.zip')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print work order as JSON.')
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write work order JSON to this path.')
             ->addOption('allow-missing-artifacts', null, InputOption::VALUE_NONE, 'Allow missing readiness/freeze artifacts for advisory work orders.')
@@ -47,7 +47,7 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
         $workspaceRoot = (string) $input->getOption('workspace-root');
         $patchReadinessPath = $this->projectPath((string) $input->getOption('patch-readiness-json'));
         $transitionFreezePath = $this->projectPath((string) $input->getOption('transition-freeze-json'));
-        $externalKitName = (string) $input->getOption('external-kit-name');
+        $externalKitName = (string) $input->getOption('external-kit-nameEntity');
 
         if ([] === $components && (bool) $input->getOption('fail-if-no-components')) {
             $io->error('No owner components were provided for work order generation.');
@@ -57,17 +57,17 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
 
         $artifactReferences = [
             [
-                'name' => 'owner repository patch readiness report',
+                'nameEntity' => 'owner repository patch readiness report',
                 'path' => $patchReadinessPath,
                 'status' => is_file($patchReadinessPath) ? 'present' : 'missing',
             ],
             [
-                'name' => 'transition freeze report',
+                'nameEntity' => 'transition freeze report',
                 'path' => $transitionFreezePath,
                 'status' => is_file($transitionFreezePath) ? 'present' : 'missing',
             ],
             [
-                'name' => 'external neighbors migration kit',
+                'nameEntity' => 'external neighbors migration kit',
                 'path' => $externalKitName,
                 'status' => 'expected',
             ],

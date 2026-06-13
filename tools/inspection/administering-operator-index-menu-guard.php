@@ -51,3 +51,4 @@ if (!str_contains($commandIndexService, 'src/Command/*.php')) {
 }
 
 fwrite(STDOUT, "Administering operator index menu guard passed.\n");
+

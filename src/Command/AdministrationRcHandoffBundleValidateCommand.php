@@ -107,11 +107,11 @@ final class AdministrationRcHandoffBundleValidateCommand extends Command
             $artifacts = $handoffBundle['artifacts'] ?? null;
             $this->addCheck($checks, $errors, 'handoff_bundle_artifacts_map', is_array($artifacts), 'artifacts map exists');
             if (is_array($artifacts)) {
-                foreach ($currentHashes as $name => $hash) {
-                    $artifact = $artifacts[$name] ?? null;
-                    $this->addCheck($checks, $errors, 'handoff_bundle_'.$name.'_artifact', is_array($artifact), sprintf('artifacts.%s exists', $name));
+                foreach ($currentHashes as $nameEntity => $hash) {
+                    $artifact = $artifacts[$nameEntity] ?? null;
+                    $this->addCheck($checks, $errors, 'handoff_bundle_'.$nameEntity.'_artifact', is_array($artifact), sprintf('artifacts.%s exists', $nameEntity));
                     if (is_array($artifact)) {
-                        $this->addCheck($checks, $errors, 'handoff_bundle_'.$name.'_sha256_current', $hash === ($artifact['sha256'] ?? null), sprintf('%s sha256 matches current file', $name));
+                        $this->addCheck($checks, $errors, 'handoff_bundle_'.$nameEntity.'_sha256_current', $hash === ($artifact['sha256'] ?? null), sprintf('%s sha256 matches current file', $nameEntity));
                     }
                 }
             }
@@ -274,11 +274,11 @@ final class AdministrationRcHandoffBundleValidateCommand extends Command
      * @param list<array{name: string, passed: bool, details: string}> $checks
      * @param list<string>                                             $errors
      */
-    private function addCheck(array &$checks, array &$errors, string $name, bool $ok, string $detail): void
+    private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
-        $checks[] = ['name' => $name, 'passed' => $ok, 'details' => $detail];
+        $checks[] = ['nameEntity' => $nameEntity, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
-            $errors[] = sprintf('%s: %s', $name, $detail);
+            $errors[] = sprintf('%s: %s', $nameEntity, $detail);
         }
     }
 

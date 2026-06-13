@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationAccountActionRequestRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * The action is executed by the owning component. Administering stores only request/result
  * metadata for operator traceability and UI visibility.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationAccountActionRequestRecordRepository::class)]
 #[ORM\Table(name: 'administration_account_action_request_record')]
 #[ORM\Index(name: 'idx_administration_account_action_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_account_action_account', columns: ['account_reference'])]

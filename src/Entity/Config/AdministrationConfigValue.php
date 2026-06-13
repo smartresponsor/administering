@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Config;
 
+use App\Administering\Repository\Config\AdministrationConfigValueRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConfigValueRepository::class)]
 #[ORM\Table(name: 'administration_config_value')]
 #[ORM\Index(name: 'idx_administration_config_value_tool', columns: ['application_code', 'tool_code'])]
 #[ORM\UniqueConstraint(name: 'uniq_administration_config_value_field', columns: ['application_code', 'tool_code', 'field_key'])]

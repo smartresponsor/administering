@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity;
 
+use App\Administering\Repository\AdministrationManagingFieldControlRecordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationManagingFieldControlRecordRepository::class)]
 #[ORM\Table(name: 'administration_managing_field_control_record')]
 #[ORM\Index(name: 'idx_administration_managing_field_resource', columns: ['resource_class'])]
 #[ORM\Index(name: 'idx_administration_managing_field_status', columns: ['access_status', 'visibility_status'])]

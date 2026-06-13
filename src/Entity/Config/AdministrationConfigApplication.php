@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Config;
 
+use App\Administering\Repository\Config\AdministrationConfigApplicationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AdministrationConfigApplicationRepository::class)]
 #[ORM\Table(name: 'administration_config_application')]
 #[ORM\UniqueConstraint(name: 'uniq_administration_config_application_code', columns: ['application_code'])]
 final class AdministrationConfigApplication

@@ -55,7 +55,7 @@ final readonly class AdministrationAdminSurfaceMirrorScanner
         );
 
         foreach ($this->extractRoutes($controllerSource) as $route) {
-            $routeName = $route['name'];
+            $routeName = $route['nameEntity'];
             $actionSource = $this->extractActionSource($controllerSource, $route['method']);
             $hasServiceCall = (bool) preg_match('/[A-Za-z0-9_]+IndexService->index\(/', $actionSource);
             $hasMenuMirror = in_array($routeName, $expectedRoutes, true);
@@ -120,7 +120,7 @@ final readonly class AdministrationAdminSurfaceMirrorScanner
 
             $routes[] = [
                 'path' => $match[1],
-                'name' => $match[2],
+                'nameEntity' => $match[2],
                 'method' => $match[3],
             ];
         }
