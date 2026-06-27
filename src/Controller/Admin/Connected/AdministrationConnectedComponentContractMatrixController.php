@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationConnectedComponentContractMatrixController extends AbstractController
 {
-    #[Route('/ea/administering/component/contract/matrix.json', name: 'administration_connected_component_contract_matrix', methods: ['GET'])]
+    #[Route('/ea/administration/component/contract/matrix.json', name: 'administration_connected_component_contract_matrix', methods: ['GET'])]
     public function __invoke(AdministrationConnectedComponentContractMatrixProviderInterface $provider): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.connected_component.contract_matrix.view', 'administering:connected');

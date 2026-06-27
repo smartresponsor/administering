@@ -16,7 +16,7 @@ final class AdministrationCommandIndexController extends AbstractController
     {
     }
 
-    #[Route('/ea/administering/command/index', name: 'administration_command_index', methods: ['GET'])]
+    #[Route('/ea/administration/command/index', name: 'administration_command_index', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.dashboard.view', 'administering:commands');

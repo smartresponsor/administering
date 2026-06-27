@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationConnectedComponentHealthReportController extends AbstractController
 {
-    #[Route('/ea/administering/component/health/report.json', name: 'administration_connected_component_health', methods: ['GET'])]
+    #[Route('/ea/administration/component/health/report.json', name: 'administration_connected_component_health', methods: ['GET'])]
     public function __invoke(AdministrationConnectedComponentHealthReportProviderInterface $provider): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.connected_component.health.view', 'administering:connected');

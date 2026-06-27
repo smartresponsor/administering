@@ -22,7 +22,7 @@ final class AdministrationRuntimeScopeComponentDecisionController extends Abstra
     ) {
     }
 
-    #[Route('/ea/administering/component/{componentKey}/decision', name: 'administration_runtime_scope_component_decision', methods: ['GET', 'POST'])]
+    #[Route('/ea/administration/component/{componentKey}/decision', name: 'administration_runtime_scope_component_decision', methods: ['GET', 'POST'])]
     public function __invoke(string $componentKey, Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.connected_component.overview.view', 'administering:enabled-components');
@@ -61,10 +61,10 @@ final class AdministrationRuntimeScopeComponentDecisionController extends Abstra
             'action_links' => [
                 [
                     'label' => 'Back to Enabled Components',
-                    'url' => '/ea/administering',
+                    'url' => '/ea/administration',
                 ],
             ],
-            'back_url' => '/ea/administering',
+            'back_url' => '/ea/administration',
         ]);
     }
 

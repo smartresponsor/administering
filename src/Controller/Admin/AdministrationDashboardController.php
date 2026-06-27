@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[AdminDashboard(routePath: '/ea/administering', routeName: 'administration_admin_index')]
+#[AdminDashboard(routePath: '/ea/administration', routeName: 'administration_admin_index')]
 final class AdministrationDashboardController extends AbstractDashboardController
 {
     public function __construct(
@@ -119,7 +119,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         return $this->disableCaching(new Response($twig->render($templatePath, $templateParameters), $httpCode));
     }
 
-    #[Route('/ea/administering/section/{sectionKey}/tool', name: 'administration_service_section_tools', methods: ['GET'], defaults: [
+    #[Route('/ea/administration/section/{sectionKey}/tool', name: 'administration_service_section_tools', methods: ['GET'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
         EA::DASHBOARD_CONTROLLER_FQCN => self::class,
         EA::CRUD_CONTROLLER_FQCN => null,
@@ -141,7 +141,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         return $this->disableCaching($this->redirect($this->serviceToolIndexUrl($sectionKey)));
     }
 
-    #[Route('/ea/administering/section/{sectionKey}/tool/{toolShortName}', name: 'administration_service_section_tool_detail', methods: ['GET'], defaults: [
+    #[Route('/ea/administration/section/{sectionKey}/tool/{toolShortName}', name: 'administration_service_section_tool_detail', methods: ['GET'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
         EA::DASHBOARD_CONTROLLER_FQCN => self::class,
         EA::CRUD_CONTROLLER_FQCN => null,
@@ -165,7 +165,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         ]));
     }
 
-    #[Route('/ea/administering/tool/{toolKey}/open', name: 'administration_service_tool_open', methods: ['GET', 'POST'], defaults: [
+    #[Route('/ea/administration/tool/{toolKey}/open', name: 'administration_service_tool_open', methods: ['GET', 'POST'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
         EA::DASHBOARD_CONTROLLER_FQCN => self::class,
         EA::CRUD_CONTROLLER_FQCN => null,
@@ -222,7 +222,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         ]));
     }
 
-    #[Route('/ea/administering/tool/{toolKey}/control', name: 'administration_service_tool_runtime_controls', methods: ['GET', 'POST'], defaults: [
+    #[Route('/ea/administration/tool/{toolKey}/control', name: 'administration_service_tool_runtime_controls', methods: ['GET', 'POST'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
         EA::DASHBOARD_CONTROLLER_FQCN => self::class,
         EA::CRUD_CONTROLLER_FQCN => null,
