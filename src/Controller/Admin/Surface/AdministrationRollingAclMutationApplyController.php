@@ -25,7 +25,7 @@ final class AdministrationRollingAclMutationApplyController extends AbstractCont
     ) {
     }
 
-    #[Route('/admin/rolling/acl-mutations/apply', name: 'administration_rolling_acl_mutation_apply', methods: ['GET', 'POST'])]
+    #[Route('/ea/role/mutation/apply', name: 'administration_rolling_acl_mutation_apply', methods: ['GET', 'POST'])]
     public function apply(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');

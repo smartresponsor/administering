@@ -20,7 +20,7 @@ final class AdministrationAccessingAccountActionAuditController extends Abstract
     {
     }
 
-    #[Route('/admin/accessing/account-action-audit', name: 'administration_accessing_account_action_audit', methods: ['GET'])]
+    #[Route('/ea/accessing/account-action-audit', name: 'administration_accessing_account_action_audit', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.accessing.account_action.audit.view', 'administering:accessing');
@@ -33,7 +33,7 @@ final class AdministrationAccessingAccountActionAuditController extends Abstract
         ]);
     }
 
-    #[Route('/admin/accessing/account-action-audit/report.json', name: 'administration_accessing_account_action_audit_report', methods: ['GET'])]
+    #[Route('/ea/accessing/account-action-audit/report.json', name: 'administration_accessing_account_action_audit_report', methods: ['GET'])]
     public function report(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.accessing.account_action.audit.view', 'administering:accessing');

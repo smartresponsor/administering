@@ -26,7 +26,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
     ) {
     }
 
-    #[Route('/admin/managing/field-view-profiles/apply', name: 'administration_managing_field_view_profile_apply', methods: ['GET'])]
+    #[Route('/ea/managing/field-view-profiles/apply', name: 'administration_managing_field_view_profile_apply', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');
@@ -47,7 +47,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
         ]);
     }
 
-    #[Route('/admin/managing/field-view-profiles/apply/prepare', name: 'administration_managing_field_view_profile_apply_prepare', methods: ['POST'])]
+    #[Route('/ea/managing/field-view-profiles/apply/prepare', name: 'administration_managing_field_view_profile_apply_prepare', methods: ['POST'])]
     public function prepare(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');

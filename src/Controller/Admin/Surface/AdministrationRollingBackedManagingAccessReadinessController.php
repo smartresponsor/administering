@@ -18,7 +18,7 @@ final class AdministrationRollingBackedManagingAccessReadinessController extends
     ) {
     }
 
-    #[Route('/admin/managing/rolling-field-access-readiness', name: 'administration_managing_rolling_field_access_readiness', methods: ['GET'])]
+    #[Route('/ea/managing/rolling-field-access-readiness', name: 'administration_managing_rolling_field_access_readiness', methods: ['GET'])]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-rolling-field-access-readiness');

@@ -18,7 +18,7 @@ final class AdministrationOperationReportController extends AbstractController
     {
     }
 
-    #[Route('/admin/operations/run/{operationKey}/report.json', name: 'administering_operation_report_json', methods: ['GET'])]
+    #[Route('/ea/operation/run/{operationKey}/report.json', name: 'administering_operation_report_json', methods: ['GET'])]
     public function __invoke(string $operationKey): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.operation.view', 'administering:operation');

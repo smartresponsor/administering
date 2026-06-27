@@ -25,7 +25,7 @@ final class AdministrationManagingFieldAccessMutationApplyController extends Abs
     ) {
     }
 
-    #[Route('/admin/managing/field-access-mutations/apply', name: 'administration_managing_field_access_mutation_apply', methods: ['GET', 'POST'])]
+    #[Route('/ea/managing/field-access-mutations/apply', name: 'administration_managing_field_access_mutation_apply', methods: ['GET', 'POST'])]
     public function apply(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply.view', 'administering:managing-field-access');

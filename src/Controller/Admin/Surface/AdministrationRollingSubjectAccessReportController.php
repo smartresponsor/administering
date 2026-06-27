@@ -25,7 +25,7 @@ final class AdministrationRollingSubjectAccessReportController extends AbstractC
     ) {
     }
 
-    #[Route('/admin/rolling/subject-access', name: 'administration_rolling_subject_access_report', methods: ['GET'])]
+    #[Route('/ea/role/subject/report', name: 'administration_rolling_subject_access_report', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.subject_access_report.view', 'administering:rolling');

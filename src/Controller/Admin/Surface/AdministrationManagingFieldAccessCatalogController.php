@@ -18,7 +18,7 @@ final class AdministrationManagingFieldAccessCatalogController extends AbstractC
     {
     }
 
-    #[Route('/admin/managing/field-access-catalog', name: 'administration_managing_field_access_catalog')]
+    #[Route('/ea/managing/field-access-catalog', name: 'administration_managing_field_access_catalog')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-access');

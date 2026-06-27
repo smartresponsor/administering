@@ -23,7 +23,7 @@ final class AdministrationRuntimeSourceIndexController extends AbstractControlle
     ) {
     }
 
-    #[Route('/admin/runtime/scope/composer/index', name: 'administration_composer_index', methods: ['GET'], defaults: [
+    #[Route('/ea/runtime/scope/composer/index', name: 'administration_composer_index', methods: ['GET'], defaults: [
         '_easyadmin_route' => true,
     ])]
     public function composerIndex(Request $request): Response
@@ -33,7 +33,7 @@ final class AdministrationRuntimeSourceIndexController extends AbstractControlle
         return $this->renderIndex($this->composerIndexService->index($this->hostDir($request)));
     }
 
-    #[Route('/admin/runtime/scope/app/index', name: 'administration_runtime_scope_index', methods: ['GET'], defaults: [
+    #[Route('/ea/runtime/scope/app/index', name: 'administration_runtime_scope_index', methods: ['GET'], defaults: [
         '_easyadmin_route' => true,
     ])]
     public function runtimeScopeIndex(): Response
@@ -43,7 +43,7 @@ final class AdministrationRuntimeSourceIndexController extends AbstractControlle
         return $this->renderIndex($this->appRuntimeScopeIndexService->index());
     }
 
-    #[Route('/admin/runtime/scope/lock/index', name: 'administration_runtime_lock_index', methods: ['GET'], defaults: [
+    #[Route('/ea/runtime/scope/lock/index', name: 'administration_runtime_lock_index', methods: ['GET'], defaults: [
         '_easyadmin_route' => true,
     ])]
     public function runtimeLockIndex(Request $request): Response

@@ -18,7 +18,7 @@ final class AdministrationManagingFieldViewProfileCatalogController extends Abst
     {
     }
 
-    #[Route('/admin/managing/field-view-profiles', name: 'administration_managing_field_view_profiles')]
+    #[Route('/ea/managing/field-view-profiles', name: 'administration_managing_field_view_profiles')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profiles');

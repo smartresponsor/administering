@@ -26,7 +26,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
     ) {
     }
 
-    #[Route('/admin/managing/field-view-profiles/edit', name: 'administration_managing_field_view_profile_edit', methods: ['GET'])]
+    #[Route('/ea/managing/field-view-profiles/edit', name: 'administration_managing_field_view_profile_edit', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile');
@@ -47,7 +47,7 @@ final class AdministrationManagingFieldViewProfileReviewController extends Abstr
         ]);
     }
 
-    #[Route('/admin/managing/field-view-profiles/review', name: 'administration_managing_field_view_profile_review', methods: ['POST'])]
+    #[Route('/ea/managing/field-view-profiles/review', name: 'administration_managing_field_view_profile_review', methods: ['POST'])]
     public function review(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile');

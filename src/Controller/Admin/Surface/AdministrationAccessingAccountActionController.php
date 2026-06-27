@@ -32,7 +32,7 @@ final class AdministrationAccessingAccountActionController extends AbstractContr
     ) {
     }
 
-    #[Route('/admin/accessing/account-actions', name: 'administration_accessing_account_actions', methods: ['GET'])]
+    #[Route('/ea/accessing/account-actions', name: 'administration_accessing_account_actions', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.accessing.account_action.view', 'administering:accessing');
@@ -42,7 +42,7 @@ final class AdministrationAccessingAccountActionController extends AbstractContr
         ]);
     }
 
-    #[Route('/admin/accessing/account-actions/execute', name: 'administration_accessing_account_action_execute', methods: ['POST'])]
+    #[Route('/ea/accessing/account-actions/execute', name: 'administration_accessing_account_action_execute', methods: ['POST'])]
     public function execute(Request $request): Response
     {
         $descriptor = $this->descriptorFromRequest($request);

@@ -18,7 +18,7 @@ final class AdministrationManagingFieldViewProfilePriorityController extends Abs
     {
     }
 
-    #[Route('/admin/managing/field-view-profile-priority', name: 'administration_managing_field_view_profile_priority')]
+    #[Route('/ea/managing/field-view-profile-priority', name: 'administration_managing_field_view_profile_priority')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-priority');

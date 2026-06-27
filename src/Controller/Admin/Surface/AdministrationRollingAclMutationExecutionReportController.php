@@ -19,7 +19,7 @@ final class AdministrationRollingAclMutationExecutionReportController extends Ab
     {
     }
 
-    #[Route('/admin/rolling/acl-mutations/execution-report.json', name: 'administration_rolling_acl_mutation_execution_report', methods: ['GET'])]
+    #[Route('/ea/role/execution/report.json', name: 'administration_rolling_acl_mutation_execution_report', methods: ['GET'])]
     public function report(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl.execution_report.view', 'administering:rolling');

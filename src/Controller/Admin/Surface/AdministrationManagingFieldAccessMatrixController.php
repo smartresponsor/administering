@@ -18,7 +18,7 @@ final class AdministrationManagingFieldAccessMatrixController extends AbstractCo
     {
     }
 
-    #[Route('/admin/managing/field-access-matrix', name: 'administration_managing_field_access_matrix')]
+    #[Route('/ea/managing/field-access-matrix', name: 'administration_managing_field_access_matrix')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-access');

@@ -18,7 +18,7 @@ final class AdministrationRollingAclMutationApplyReportController extends Abstra
     {
     }
 
-    #[Route('/admin/rolling/acl-mutations/apply/report.json', name: 'administration_rolling_acl_mutation_apply_report', methods: ['GET'])]
+    #[Route('/ea/role/mutation/apply/report.json', name: 'administration_rolling_acl_mutation_apply_report', methods: ['GET'])]
     public function report(): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply.view', 'administering:rolling');

@@ -37,7 +37,7 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
     ) {
     }
 
-    #[Route('/admin/rolling/acl-mutations', name: 'administration_rolling_acl_mutations', methods: ['GET'])]
+    #[Route('/ea/role/mutation', name: 'administration_rolling_acl_mutations', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review.view', 'administering:rolling');
@@ -58,7 +58,7 @@ final class AdministrationRollingAclMutationController extends AbstractControlle
         ]);
     }
 
-    #[Route('/admin/rolling/acl-mutations/review', name: 'administration_rolling_acl_mutation_review', methods: ['POST'])]
+    #[Route('/ea/role/mutation/review', name: 'administration_rolling_acl_mutation_review', methods: ['POST'])]
     public function review(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review', 'administering:rolling');

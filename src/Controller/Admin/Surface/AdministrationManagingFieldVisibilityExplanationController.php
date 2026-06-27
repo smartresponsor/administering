@@ -18,7 +18,7 @@ final class AdministrationManagingFieldVisibilityExplanationController extends A
     {
     }
 
-    #[Route('/admin/managing/field-visibility-explanation', name: 'administration_managing_field_visibility_explanation')]
+    #[Route('/ea/managing/field-visibility-explanation', name: 'administration_managing_field_visibility_explanation')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted(

@@ -18,7 +18,7 @@ final class AdministrationAccessingAccountController extends AbstractController
     {
     }
 
-    #[Route('/admin/accessing/accounts', name: 'administration_accessing_accounts')]
+    #[Route('/ea/accessing/accounts', name: 'administration_accessing_accounts')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.accessing.account.view', 'administering:accessing');

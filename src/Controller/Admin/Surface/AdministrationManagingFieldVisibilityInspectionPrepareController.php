@@ -26,7 +26,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
     ) {
     }
 
-    #[Route('/admin/managing/field-visibility-inspection', name: 'administration_managing_field_visibility_inspection', methods: ['GET'])]
+    #[Route('/ea/managing/field-visibility-inspection', name: 'administration_managing_field_visibility_inspection', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');
@@ -47,7 +47,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
         ]);
     }
 
-    #[Route('/admin/managing/field-visibility-inspection/prepare', name: 'administration_managing_field_visibility_inspection_prepare', methods: ['POST'])]
+    #[Route('/ea/managing/field-visibility-inspection/prepare', name: 'administration_managing_field_visibility_inspection_prepare', methods: ['POST'])]
     public function prepare(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');

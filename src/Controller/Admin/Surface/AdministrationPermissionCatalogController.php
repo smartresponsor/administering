@@ -42,7 +42,7 @@ final class AdministrationPermissionCatalogController extends AbstractController
         ['key' => 'administration.connected_component.diagnostics.view', 'label' => 'View component diagnostics', 'category' => 'component', 'scopes' => ['administering'], 'sensitive' => false],
     ];
 
-    #[Route('/admin/rolling/permission-catalog', name: 'administration_rolling_permission_catalog')]
+    #[Route('/ea/role/permission/catalog', name: 'administration_rolling_permission_catalog')]
     public function __invoke(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:rolling');

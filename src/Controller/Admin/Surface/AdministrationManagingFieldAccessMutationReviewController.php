@@ -27,7 +27,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
     ) {
     }
 
-    #[Route('/admin/managing/field-access-mutations', name: 'administration_managing_field_access_mutations', methods: ['GET'])]
+    #[Route('/ea/managing/field-access-mutations', name: 'administration_managing_field_access_mutations', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review.view', 'administering:managing-field-access');
@@ -48,7 +48,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
         ]);
     }
 
-    #[Route('/admin/managing/field-access-mutations/review', name: 'administration_managing_field_access_mutation_review', methods: ['POST'])]
+    #[Route('/ea/managing/field-access-mutations/review', name: 'administration_managing_field_access_mutation_review', methods: ['POST'])]
     public function review(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review', 'administering:managing-field-access');
