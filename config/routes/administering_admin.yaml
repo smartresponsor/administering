@@ -13,4 +13,9 @@ administering_admin_attribute:
   type: attribute
   exclude:
     - '../../src/Controller/Admin/Connected/'
+    - '../../src/Controller/Admin/Surface/AdministrationConnectedComponent*Controller.php'
+    - '../../src/Controller/Admin/Surface/AdministrationOperationLaunchController.php'
+    - '../../src/Controller/Admin/Surface/AdministrationOperationReportController.php'
+    - '../../src/Controller/Admin/Surface/AdministrationOperationRunDetailController.php'
+    - '../../src/Controller/Admin/Surface/AdministrationRuntimeSourceIndexController.php'
 
