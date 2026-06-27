@@ -148,6 +148,7 @@
         "runtime-scope:capability-index": "@php bin/console administering:runtime-scope:capability-index --json",
         "inspect:standalone-env": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/inspection/administering-standalone-env.ps1",
         "inspect:composer-package-boundary": "@php tools/inspection/administering-composer-package-boundary-guard.php",
+        "inspect:ea-route-root-token": "@php tools/inspection/administering-ea-route-root-token-guard.php",
         "inspect:composer-inventory-evidence": "@php tools/inspection/administering-composer-inventory-evidence-guard.php",
         "inspect:runtime-decision-row-surface": "@php tools/inspection/administering-runtime-decision-row-surface-guard.php",
         "inspect:runtime-output-schema": "@php tools/inspection/administering-runtime-output-schema-guard.php",

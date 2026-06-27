@@ -32,6 +32,11 @@ $checks = [
         'args' => [$repo],
     ],
     [
+        'nameEntity' => 'EasyAdmin route root token',
+        'script' => __DIR__.'/administering-ea-route-root-token-guard.php',
+        'args' => [$repo],
+    ],
+    [
         'nameEntity' => 'composer inventory evidence',
         'script' => __DIR__.'/administering-composer-inventory-evidence-guard.php',
         'args' => [$repo],
