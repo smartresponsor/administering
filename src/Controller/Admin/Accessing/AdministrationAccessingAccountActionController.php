@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Controller\Admin\Surface;
+namespace App\Administering\Controller\Admin\Accessing;
 
 use App\Administering\Form\Accessing\AdministrationAccessingAccountActionFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountActionRequestRecorderInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Controller\Admin\Surface;
+namespace App\Administering\Controller\Admin\Config;
 
 use App\Administering\Entity\Config\AdministrationConfigTool;
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;

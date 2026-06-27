@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Controller\Admin\Surface;
+namespace App\Administering\Controller\Admin\Managing;
 
 use App\Administering\Form\Managing\AdministrationManagingFieldViewProfileReviewFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;

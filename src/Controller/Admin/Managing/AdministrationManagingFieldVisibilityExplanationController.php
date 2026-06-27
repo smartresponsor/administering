@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Controller\Admin\Surface;
+namespace App\Administering\Controller\Admin\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityExplanationCatalogProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

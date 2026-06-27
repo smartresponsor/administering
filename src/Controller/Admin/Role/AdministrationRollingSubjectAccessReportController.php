@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Controller\Admin\Surface;
+namespace App\Administering\Controller\Admin\Role;
 
 use App\Administering\Form\Rolling\AdministrationRollingSubjectAccessReportLookupFormType;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
