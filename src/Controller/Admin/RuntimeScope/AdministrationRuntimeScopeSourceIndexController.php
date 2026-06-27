@@ -27,7 +27,7 @@ final class AdministrationRuntimeScopeSourceIndexController extends AbstractCont
     ) {
     }
 
-    #[Route('/admin/runtime-scope/composer/index', name: 'administration_composer_index', methods: ['GET'])]
+    #[Route('/ea/runtime/scope/composer/index', name: 'administration_composer_index', methods: ['GET'])]
     public function composer(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.dashboard.view', 'administering:runtime_scope');
@@ -35,7 +35,7 @@ final class AdministrationRuntimeScopeSourceIndexController extends AbstractCont
         return $this->renderIndex($this->composerIndexService->index($this->hostDir($request)));
     }
 
-    #[Route('/admin/runtime-scope/app-runtime-scope/index', name: 'administration_runtime_scope_index', methods: ['GET'])]
+    #[Route('/ea/runtime/scope/application/index', name: 'administration_runtime_scope_index', methods: ['GET'])]
     public function runtimeScope(): Response
     {
         $this->denyAccessUnlessGranted('administration.dashboard.view', 'administering:runtime_scope');
@@ -43,7 +43,7 @@ final class AdministrationRuntimeScopeSourceIndexController extends AbstractCont
         return $this->renderIndex($this->appRuntimeScopeIndexService->index());
     }
 
-    #[Route('/admin/runtime-scope/lock/index', name: 'administration_runtime_lock_index', methods: ['GET'])]
+    #[Route('/ea/runtime/scope/lock/index', name: 'administration_runtime_lock_index', methods: ['GET'])]
     public function runtimeLock(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.dashboard.view', 'administering:runtime_scope');

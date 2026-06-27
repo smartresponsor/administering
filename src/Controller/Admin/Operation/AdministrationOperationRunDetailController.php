@@ -19,7 +19,7 @@ final class AdministrationOperationRunDetailController extends AbstractControlle
     {
     }
 
-    #[Route('/admin/operations/run/{operationKey}', name: 'administering_operation_run_detail', methods: ['GET'])]
+    #[Route('/ea/operation/run/{operationKey}', name: 'administering_operation_run_detail', methods: ['GET'])]
     public function __invoke(string $operationKey): Response
     {
         $this->denyAccessUnlessGranted('administration.operation.view', 'administering:operation');

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationConnectedComponentWorkPlanController extends AbstractController
 {
-    #[Route('/admin/connected-components/work-plan.json', name: 'administration_connected_component_work_plan', methods: ['GET'])]
+    #[Route('/ea/component/work/plan.json', name: 'administration_connected_component_work_plan', methods: ['GET'])]
     public function __invoke(AdministrationConnectedComponentWorkPlanProviderInterface $provider): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.connected_component.work_plan.view', 'administering:connected');

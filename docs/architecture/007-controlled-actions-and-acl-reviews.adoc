@@ -27,7 +27,7 @@ Forbidden payloads remain forbidden:
 
 == Rolling ACL mutation dry-run review
 
-`/admin/rolling/acl-mutations` creates a dry-run review request for Rolling ACL mutation planning.
+`/ea/role/mutation` creates a dry-run review request for Rolling ACL mutation planning.
 
 The controller does not apply mutations. It asks Rolling for a safe `RollingAclMutationReview` built from the mutation planner.
 
