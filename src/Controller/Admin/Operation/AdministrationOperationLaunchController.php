@@ -30,7 +30,7 @@ final class AdministrationOperationLaunchController extends AbstractController
     ) {
     }
 
-    #[Route('/ea/operation', name: 'administration_operations', methods: ['GET'])]
+    #[Route('/ea/administering/operation', name: 'administration_operations', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.operation.view', 'administering:operation');
@@ -42,7 +42,7 @@ final class AdministrationOperationLaunchController extends AbstractController
         ]);
     }
 
-    #[Route('/ea/operation/{operationType}/start', name: 'administration_operation_start', methods: ['POST'])]
+    #[Route('/ea/administering/operation/{operationType}/start', name: 'administration_operation_start', methods: ['POST'])]
     public function start(string $operationType, Request $request): Response
     {
         if (!AdministrationOperationType::isLaunchable($operationType)) {

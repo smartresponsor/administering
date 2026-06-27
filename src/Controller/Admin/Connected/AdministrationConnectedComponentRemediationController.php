@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationConnectedComponentRemediationController extends AbstractController
 {
-    #[Route('/ea/component/remediation.json', name: 'administration_connected_component_remediation', methods: ['GET'])]
+    #[Route('/ea/administering/component/remediation.json', name: 'administration_connected_component_remediation', methods: ['GET'])]
     public function __invoke(AdministrationConnectedComponentRemediationPlanProviderInterface $provider): JsonResponse
     {
         $this->denyAccessUnlessGranted('administration.connected_component.remediation.view', 'administering:connected');
