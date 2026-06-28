@@ -15,10 +15,8 @@ final readonly class AdministrationRuntimeComponentStatusService
      */
     public function statuses(AdministrationRuntimeScopeState $state): array
     {
-        $visibility = AdministrationRuntimeScopeVisibility::fromRaw($state->appRuntimeScopeRaw);
         $componentKeys = array_values(array_unique(array_filter(array_merge(
             ['administering'],
-            $visibility->allComponentsVisible ? [] : $visibility->componentKeys,
             $state->installedComponents,
             $state->enabledComponents,
             $state->disabledComponents,
@@ -27,7 +25,7 @@ final readonly class AdministrationRuntimeComponentStatusService
 
         $statuses = [];
         foreach ($componentKeys as $componentKey) {
-            $statuses[] = $this->statusFor($componentKey, $visibility, $state);
+            $statuses[] = $this->statusFor($componentKey, $state);
         }
 
         return $statuses;
@@ -35,16 +33,14 @@ final readonly class AdministrationRuntimeComponentStatusService
 
     private function statusFor(
         string $componentKey,
-        AdministrationRuntimeScopeVisibility $visibility,
         AdministrationRuntimeScopeState $state,
     ): AdministrationRuntimeComponentStatus {
-        $inRuntimeScope = $visibility->includes($componentKey);
         $packageInstalled = in_array($componentKey, $state->installedComponents, true) || 'administering' === $componentKey;
+        $allowedByComposerBoundary = $packageInstalled;
         $lockEnabled = in_array($componentKey, $state->enabledComponents, true) || 'administering' === $componentKey;
         $lockDisabled = in_array($componentKey, $state->disabledComponents, true);
 
         $status = match (true) {
-            !$inRuntimeScope => 'out_of_scope',
             $lockDisabled => 'disabled_by_lock',
             !$packageInstalled => 'missing_package',
             $lockEnabled => 'available',
@@ -53,13 +49,13 @@ final readonly class AdministrationRuntimeComponentStatusService
 
         return new AdministrationRuntimeComponentStatus(
             componentKey: $componentKey,
-            inRuntimeScope: $inRuntimeScope,
+            inRuntimeScope: $allowedByComposerBoundary,
             composerPackageInstalled: $packageInstalled,
             lockEnabled: $lockEnabled,
             lockDisabled: $lockDisabled,
             status: $status,
             evidence: [
-                'runtimeScope' => $visibility->label(),
+                'runtimeScope' => 'lock-first',
                 'composerPackage' => $this->packageForComponent($componentKey, $state),
                 'bundleToken' => $this->bundleTokenForComponent($componentKey, $state),
             ],

@@ -117,11 +117,11 @@ final readonly class AdministrationRuntimeScopeDecisionRow
     private static function messageForStatus(string $status): string
     {
         return match ($status) {
-            'available' => 'Component is inside APP_RUNTIME_SCOPE and enabled by runtime lock evidence.',
-            'package_installed' => 'Composer package is present, but runtime lock did not enable the component.',
-            'missing_package' => 'Component is requested by APP_RUNTIME_SCOPE but composer inventory does not contain its package.',
+            'available' => 'Component is inside Composer capability boundary and enabled by runtime lock evidence.',
+            'package_installed' => 'Composer package is present inside the capability boundary, but runtime lock did not enable the component.',
+            'missing_package' => 'Runtime lock references a component whose package is not present in composer inventory.',
             'disabled_by_lock' => 'Component is explicitly disabled by runtime-scope lock evidence.',
-            'out_of_scope' => 'Component is not requested by APP_RUNTIME_SCOPE.',
+            'out_of_scope' => 'Component is outside the Composer capability boundary.',
             default => 'Component status is derived from runtime evidence.',
         };
     }
