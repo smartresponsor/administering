@@ -10,8 +10,9 @@ use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeDecision;
 /**
  * Central runtime-scope decision service.
  *
- * This is the only service that should combine APP_ENV, APP_RUNTIME_SCOPE,
- * composer inventory, and runtime-scope lock evidence into component decisions.
+ * This service combines Composer capability-boundary evidence and runtime-scope
+ * lock evidence into component decisions. APP_RUNTIME_SCOPE is legacy display
+ * vocabulary only and must not act as runtime decision authority.
  */
 final readonly class AdministrationRuntimeScopeDecisionService
 {

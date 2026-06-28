@@ -15,8 +15,8 @@ final readonly class AdministrationAppRuntimeScopeIndexService
         $tokens = $this->parseScope($raw);
 
         return new AdministrationRuntimeSourceIndex(
-            title: 'APP_RUNTIME_SCOPE',
-            description: 'Operator input read from APP_RUNTIME_SCOPE. This is a desired scope/input source; Kernel still executes the materialized lock files.',
+            title: 'Legacy APP_RUNTIME_SCOPE',
+            description: 'Legacy environment value retained for migration visibility only. Runtime decisions are read from materialized lock files.',
             summaryItems: [
                 ['label' => 'APP_ENV', 'value' => $this->environmentValue()],
                 ['label' => 'APP_RUNTIME_SCOPE', 'value' => ($raw ?? '') !== '' ? $raw : 'administering (default)'],

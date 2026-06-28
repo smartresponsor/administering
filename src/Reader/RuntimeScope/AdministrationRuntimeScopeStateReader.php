@@ -7,7 +7,6 @@ namespace App\Administering\Reader\RuntimeScope;
 use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockNormalizer;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeState;
-use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeVisibility;
 
 final readonly class AdministrationRuntimeScopeStateReader
 {
@@ -51,9 +50,6 @@ final readonly class AdministrationRuntimeScopeStateReader
             }
         }
 
-        $appRuntimeScopeRaw = $this->runtimeScopeFromEnvironment();
-        $appRuntimeScope = $this->parseRuntimeScope($appRuntimeScopeRaw);
-
         $lockEvidence = $this->lockNormalizer->normalize($lockPath);
         $sourceErrors = [...$sourceErrors, ...$lockEvidence->errors];
 
@@ -73,8 +69,8 @@ final readonly class AdministrationRuntimeScopeStateReader
             composerPath: $composerPath,
             composerPackages: $composerPackages,
             composerComponentPackages: $composerComponentPackages,
-            appRuntimeScopeRaw: $appRuntimeScopeRaw,
-            appRuntimeScope: $appRuntimeScope,
+            appRuntimeScopeRaw: null,
+            appRuntimeScope: [],
             lockPath: $lockPath,
             lockPresent: $lockEvidence->present && $lockEvidence->isValid(),
             enabledBundleTokens: $lockEvidence->enabledBundleTokens,
@@ -83,20 +79,5 @@ final readonly class AdministrationRuntimeScopeStateReader
             installedComponents: $installedComponents,
             sourceErrors: $sourceErrors,
         );
-    }
-
-    private function runtimeScopeFromEnvironment(): ?string
-    {
-        $value = $_SERVER['APP_RUNTIME_SCOPE'] ?? $_ENV['APP_RUNTIME_SCOPE'] ?? null;
-
-        return is_string($value) ? trim($value) : null;
-    }
-
-    /** @return list<string> */
-    private function parseRuntimeScope(?string $runtimeScope): array
-    {
-        $visibility = AdministrationRuntimeScopeVisibility::fromRaw($runtimeScope);
-
-        return $visibility->allComponentsVisible ? ['*'] : $visibility->componentKeys;
     }
 }
