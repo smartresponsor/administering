@@ -10,6 +10,7 @@ use App\Administering\Reader\RuntimeScope\AdministrationRuntimeScopeComposerInve
 use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportRequest;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeExportResult;
+use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeLockEvidence;
 
 final readonly class AdministrationRuntimeScopeExportService
 {
@@ -18,6 +19,7 @@ final readonly class AdministrationRuntimeScopeExportService
         private AdministrationRuntimeScopeBundleCatalogReader $catalogReader,
         private AdministrationRuntimeScopeComposerInventoryReader $composerInventoryReader,
         private AdministrationRuntimeScopePhpLockSourceFactory $sourceFactory,
+        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
     ) {
     }
 
@@ -27,6 +29,7 @@ final readonly class AdministrationRuntimeScopeExportService
         $catalogFile = $this->pathResolver->absolutePath($request->catalogFile);
         $composerFile = $this->pathResolver->composerFile($request->environment);
         $composerPath = $hostDir.'/'.$composerFile;
+        $lockPath = $this->pathResolver->lockPath($hostDir, $request->environment);
 
         if (!is_file($composerPath)) {
             throw new \RuntimeException(sprintf('Composer inventory is missing: %s', $composerPath));
@@ -34,14 +37,15 @@ final readonly class AdministrationRuntimeScopeExportService
 
         $catalog = $this->catalogReader->catalog($catalogFile);
         $composerPackages = $this->composerInventoryReader->packages($composerPath);
+        $existingLock = $this->lockNormalizer->normalize($lockPath);
         $payload = $this->buildPayload(
             $catalog,
             $composerPackages,
             $composerPath,
             $composerFile,
             $request,
+            $existingLock,
         );
-        $lockPath = $this->pathResolver->lockPath($hostDir, $request->environment);
         $source = $this->sourceFactory->source($payload);
 
         if (!$request->dryRun) {
@@ -68,6 +72,7 @@ final readonly class AdministrationRuntimeScopeExportService
         string $composerPath,
         string $composerFile,
         AdministrationRuntimeScopeExportRequest $request,
+        AdministrationRuntimeScopeLockEvidence $existingLock,
     ): array {
         $components = $catalog['components'];
         $unknownOverrides = array_values(array_diff(array_merge($request->forceEnable, $request->forceDisable), array_keys($components)));
@@ -91,12 +96,15 @@ final readonly class AdministrationRuntimeScopeExportService
                 continue;
             }
 
-            if ($installed) {
+            $lockedEnabled = in_array($component, $existingLock->enabledComponents, true);
+            $desiredEnabled = $forcedEnabled || (!$forcedDisabled && $lockedEnabled);
+
+            if ($desiredEnabled && $installed) {
                 $enabledComponents[] = $component;
                 continue;
             }
 
-            if ($forcedEnabled) {
+            if ($desiredEnabled) {
                 if (!$request->skipMissingPackages) {
                     $missingPackages[] = sprintf('%s (%s)', $component, $package);
                     continue;
@@ -123,7 +131,7 @@ final readonly class AdministrationRuntimeScopeExportService
             'schema' => 'app.kernel.runtime_scope.v1',
             'scope' => $request->scope,
             'environment' => $request->environment,
-            'source' => 'materialized by administering:runtime-scope:export from composer inventory and Administering-owned token catalog',
+            'source' => 'materialized by administering:runtime-scope:export from operator runtime decision validated against composer inventory and Administering-owned token catalog',
             'sourceComposerFile' => $composerFile,
             'sourceComposerSha256' => hash_file('sha256', $composerPath) ?: null,
             'sourceComposerPackageCount' => count(array_filter(array_keys($composerPackages), static fn (string $package): bool => 'php' !== $package)),
