@@ -12,8 +12,8 @@ if (false === $repo) {
 $php = PHP_BINARY;
 $checks = [
     [
-        'nameEntity' => 'zero foreign coupling',
-        'script' => __DIR__.'/administering-zero-foreign-coupling-guard.php',
+        'nameEntity' => 'owner component coupling',
+        'script' => __DIR__.'/administering-owner-component-coupling-guard.php',
         'args' => [$repo],
     ],
     [

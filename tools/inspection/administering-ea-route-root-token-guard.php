@@ -83,7 +83,7 @@ foreach ($pathsToScan as $pathToScan) {
             continue;
         }
 
-        preg_match_all('#/ea(?:/[A-Za-z0-9._{}-]+)*#', $content, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all('#(?<![A-Za-z0-9_])/ea(?=/|[^A-Za-z0-9_])(?:/[A-Za-z0-9._{}-]+)*#', $content, $matches, PREG_OFFSET_CAPTURE);
         foreach ($matches[0] as [$uri, $offset]) {
             $segments = explode('/', trim($uri, '/'));
             $rootToken = $segments[1] ?? null;

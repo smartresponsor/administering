@@ -1,10 +1,10 @@
 component: Administering
 namespace: App\Administering
-package: administering/admin
+package: administering/administration
 business_stem: Administration
-ui_label: Admin
-route_prefix: /ea
-config_root: administering
+ui_label: Administering
+route_prefix: /ea/administration
+config_root: administration
 database_prefix: administration_
 
 storage:

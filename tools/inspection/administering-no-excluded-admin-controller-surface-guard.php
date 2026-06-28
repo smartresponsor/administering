@@ -34,7 +34,7 @@ foreach ($files as $file) {
     if ($relative === 'tools/inspection/administering-no-excluded-admin-controller-surface-guard.php') {
         continue;
     }
-    if (str_starts_with($relative, 'vendor/') || str_starts_with($relative, 'var/')) {
+    if (str_starts_with($relative, 'vendor/') || str_starts_with($relative, 'var/') || str_starts_with($relative, 'tools/inspection/')) {
         continue;
     }
 

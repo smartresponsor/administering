@@ -1,0 +1,45 @@
+= Runtime Composer and Lock Authority
+
+Administering has one canonical runtime-composition responsibility: it turns
+host Composer inventory into reviewed runtime lock files.
+
+== Authority chain
+
+The authority chain is deliberately short:
+
+. Host Composer inventory is the source evidence for installed SmartResponsor
+  components and Symfony bundles.
+. Administering reads that inventory and presents runtime decisions to the
+  operator.
+. Administering materializes accepted decisions into host lock files.
+. The host Kernel reads only the lock files during boot.
+
+The host Kernel must not call Administering services during boot. Administering
+may generate, validate, and mutate the lock files, but the boot path remains a
+plain PHP file read.
+
+== Lock files
+
+The host App owns the materialized lock files:
+
+* `config/kernel/runtime_scope.lock.php`
+* `config/kernel/runtime_scope.prod.lock.php`
+
+The lock files carry runtime decisions such as:
+
+* enabled bundle class strings;
+* enabled scope tokens;
+* enabled entity tokens;
+* disabled component tokens;
+* source Composer file evidence.
+
+`APP_RUNTIME_SCOPE` and `APP_RUNTIME_ENTITY` are not the primary source of
+runtime truth in this model. They may remain only as legacy/fallback vocabulary
+until every host consumer reads the materialized lock files.
+
+== Coupling rule
+
+Administering must not import owner component namespaces such as
+`App\Vendoring`, `App\Billing`, `App\Cataloging`, or `App\Rolling`.
+
+Administering may handle owner component class names only as string evidence
