@@ -56,6 +56,9 @@ services:
   App\Administering\Service\Config\AdministrationConfigFileWriterService:
     arguments:
       $projectDir: '%kernel.project_dir%'
+  App\Administering\Service\Config\AdministrationIntegrationConfigService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
   App\Administering\Service\Admin\AdministrationCommandIndexService:
     arguments:
       $projectDir: '%kernel.project_dir%'
