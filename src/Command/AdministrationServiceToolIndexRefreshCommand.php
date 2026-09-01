@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
+use App\Administering\AuditorInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
 use App\Administering\Service\Admin\AdministrationAdminServiceToolRecordSyncService;
-use App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Planner\Admin;
 
+use App\Administering\AuditorInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
 use App\Administering\PlannerInterface\Admin\AdministrationServiceToolRelocationPlannerInterface;
-use App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolConventionViolation;
 use App\Administering\Value\Admin\AdministrationServiceToolRelocationPlanEntry;
 

@@ -23,7 +23,7 @@ parameters:
             - src/Locator/Config (?)
             - src/Mapper/Config (?)
             - src/Provider/Connected (?)
-            - src/Provider/Admin/DoctrineAdministrationServiceToolMenuSectionProvider.php (?)
+            - src/Provider/Admin/AdministrationDoctrineServiceToolMenuSectionProvider.php (?)
             - src/Runner/Operation/AdministrationGovernanceOperationRunner.php (?)
             - src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php (?)
             - src/Validator/Admin/ConfigurationToolDefinitionValidator.php (?)

@@ -8,7 +8,7 @@ use App\Administering\Entity\AdministrationConnectedComponentRecord;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeDecisionService;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
-use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
+use App\Administering\Trait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeDecisionRow;
 use Doctrine\ORM\EntityManagerInterface;

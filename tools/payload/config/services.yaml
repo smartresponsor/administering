@@ -99,7 +99,7 @@ services:
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolExecutorInterface: '@App\Administering\Executor\Admin\AdministrationServiceToolExecutor'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface: '@App\Administering\Guard\Admin\AdministrationServiceToolOpenGuard'
   App\Administering\ServiceInterface\Admin\AdministrationServiceToolRecordStorageInterface: '@App\Administering\Service\Admin\AdministrationDoctrineServiceToolRecordStorage'
-  App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface: '@App\Administering\Auditor\Admin\AdministrationServiceToolConventionAuditor'
+  App\Administering\AuditorInterface\Admin\AdministrationServiceToolConventionAuditorInterface: '@App\Administering\Auditor\Admin\AdministrationServiceToolConventionAuditor'
   App\Administering\PlannerInterface\Admin\AdministrationServiceToolRelocationPlannerInterface: '@App\Administering\Planner\Admin\AdministrationServiceToolRelocationPlanner'
   App\Administering\ValidatorInterface\Admin\AdministrationServiceToolRelocationPlanValidatorInterface: '@App\Administering\Validator\Admin\AdministrationServiceToolRelocationPlanValidator'
   App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface: '@App\Administering\Validator\Admin\AdministrationConfigurationToolDefinitionValidator'
