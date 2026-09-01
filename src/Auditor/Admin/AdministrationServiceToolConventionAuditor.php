@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Auditor\Admin;
 
-use App\Administering\ServiceInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
+use App\Administering\AuditorInterface\Admin\AdministrationServiceToolConventionAuditorInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolConventionViolation;
 
 /**

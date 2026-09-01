@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\ServiceTrait\Admin;
+namespace App\Administering\Trait\Admin;
 
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;

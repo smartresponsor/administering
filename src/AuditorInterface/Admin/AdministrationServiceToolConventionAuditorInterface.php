@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\ServiceInterface\Admin;
+namespace App\Administering\AuditorInterface\Admin;
 
 use App\Administering\Value\Admin\AdministrationServiceToolConventionViolation;
 
