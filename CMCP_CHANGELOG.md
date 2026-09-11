@@ -83,3 +83,40 @@ Growth workstream (post-RC; does not block this repair):
 Что имеем? A current GitHub baseline, explicit canon mapping, dependency contour, and one factual RC-critical defect with bounded ownership.
 
 Что осталось? Implement fail-closed guard behavior, add regression coverage, verify through available gates/CI, close justified tails, integrate coherently, and perform final acceptance.
+
+### Iteration 2 — MATERIAL_IMPLEMENTATION
+
+Status: implemented.
+
+- `administering-owner-component-coupling-guard.php` now emits a failure header, actionable file/line/pattern diagnostics and exits `1` when forbidden owner-component PHP coupling is found; clean scans emit an explicit pass diagnostic and exit `0`.
+- Added `administering-owner-component-coupling-guard-regression-check.php` with isolated temporary violating and clean fixtures.
+- Added the regression check to `administering-architecture-guard-suite.php` before the live repository coupling scan, preventing the architecture suite from silently accepting a broken guard implementation.
+- No foreign component repository was modified.
+
+Что имеем? The selected architecture boundary is now fail-closed and has executable regression evidence.
+
+Что осталось? Verify syntax and behavior, inspect actual diff and gate wiring, correct any verification findings, then close documentation/integration tails.
+
+### Iteration 3 — VERIFICATION_AND_FIX
+
+Status: verified within the available runtime; one diagnostic refinement applied.
+
+Verification evidence:
+- PHP runtime available for isolated verification: PHP `8.4.23`.
+- `php -l tools/inspection/administering-owner-component-coupling-guard.php`: pass on the materialized changed source.
+- `php -l tools/inspection/administering-owner-component-coupling-guard-regression-check.php`: pass.
+- `php tools/inspection/administering-owner-component-coupling-guard-regression-check.php`: pass; violating fixture is rejected and clean fixture is accepted.
+- Repository wiring inspection confirms `inspect:architecture` runs `administering-architecture-guard-suite.php`, `quality:architecture` wraps it, and `quality:local` starts with `@quality:architecture`.
+- GitHub code search found no direct `App\Cruding\`, `App\Objecting\`, `App\Viewing\`, or `App\Interfacing\` PHP coupling in the current target index.
+- GitHub returned no workflow runs and no commit status contexts for the branch commit; absence of CI is recorded as unavailable evidence, not as a green gate.
+
+Verification fix:
+- Changed the owner-coupling scan to stop after the first matching forbidden pattern on a source line, avoiding duplicate diagnostics where a specific `use App\...` pattern and the general `App\...` pattern both match.
+- Re-ran PHP syntax and the regression check after the refinement: pass.
+
+Known unavailable gates:
+- Full `composer quality`, PHPUnit suite, PHPStan, Symfony container/YAML and workstation Gating cannot be truthfully executed because the active execution environment does not contain the target worktree with installed dependencies/vendor or the Windows sibling topology.
+
+Что имеем? The material change is syntactically valid, regression-tested on PHP 8.4, correctly wired into the repository architecture gate, and refined after inspection.
+
+Что осталось? Iteration 4 documentation/integration closure, PR/check inspection, then Iteration 5 post-integration acceptance. Canon022/023/024 packaging debt remains separately blocked on a lock-consistent shared-workspace Composer execution.
