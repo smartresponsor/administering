@@ -22,40 +22,46 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/inspection/administeri
 
 The suite executes these hard checks:
 
-* `administering-zero-foreign-coupling-guard.php`
+* `administering-owner-component-coupling-guard-regression-check.php`
+* `administering-owner-component-coupling-guard.php`
 * `administering-runtime-scope-decision-boundary-guard.php`
 * `administering-no-excluded-admin-controller-surface-guard.php`
+* `administering-composer-package-boundary-guard.php`
+* `administering-ea-route-root-token-guard.php`
+* `administering-composer-inventory-evidence-guard.php`
+* `administering-runtime-decision-row-surface-guard.php`
+* `administering-runtime-output-schema-guard.php`
+
+The owner-component coupling regression check is deliberately executed before the live repository scan. It proves that a fixture containing a forbidden foreign owner namespace exits non-zero with an actionable diagnostic and that a clean fixture exits zero. This prevents a syntactically valid but behaviorally inert guard from being reported as green by the suite.
 
 == Boundary protected by the suite
 
 The suite prevents these regressions:
 
-* `App\Accessing\` in `src/`, `config/`, `tests/`, or `templates/`.
-* `App\Rolling\` in `src/`, `config/`, `tests/`, or `templates/`.
-* `App\Managing\` in `src/`, `config/`, `tests/`, or `templates/`.
-* `App\Configuring\` in `src/`, `config/`, `tests/`, or `templates/`.
-* PHP class-shaped bundle evidence in `config/runtime-scope/bundle_catalog.php`.
-* Legacy `bundle` catalog keys instead of tokenized `bundle_token` keys.
-* Direct runtime-scope internals usage from commands, controllers, providers, or connected services.
-* Reintroduced `src/Controller/Admin/Surface` excluded controller tree.
+* direct foreign owner-component PHP namespace coupling in `src/`, `config/`, `tests/`, or `templates/`;
+* PHP class-shaped bundle evidence in `config/runtime-scope/bundle_catalog.php`;
+* legacy `bundle` catalog keys instead of tokenized `bundle_token` keys;
+* direct runtime-scope internals usage from commands, controllers, providers, or connected services;
+* reintroduced `src/Controller/Admin/Surface` excluded controller tree;
+* invalid EasyAdmin route-root ownership;
+* Composer inventory and runtime decision/output-schema regressions covered by the suite's dedicated guards.
 
 == Composer scripts
 
-W12 introduces explicit scripts:
+The architecture entrypoint remains:
 
 [source,json]
 ----
-"inspect:zero-foreign": "@php tools/inspection/administering-zero-foreign-coupling-guard.php",
-"inspect:runtime-scope-boundary": "@php tools/inspection/administering-runtime-scope-decision-boundary-guard.php",
-"inspect:no-admin-surface": "@php tools/inspection/administering-no-excluded-admin-controller-surface-guard.php",
 "inspect:architecture": "@php tools/inspection/administering-architecture-guard-suite.php",
 "quality:architecture": [
   "@inspect:architecture"
 ]
 ----
 
-`quality:local` now starts with `@quality:architecture`, so the local gate fails before slower checks if architecture regresses.
+`quality:local` starts with `@quality:architecture`, so the local gate fails before slower checks if architecture regresses.
 
-== W14 addition
+== Composer package boundary note
 
-The suite also runs the composer package boundary guard. This prevents runtime-scope component packages from becoming root `require` or `require-dev` dependencies of Administering and prevents sibling component path repositories from being hard-wired into `composer.json`.
+The suite also runs the composer package boundary guard. Its current repository-specific runtime-inventory policy is documented separately in `069-composer-package-evidence-boundary.adoc`.
+
+The platform Canonization dependency baseline is a separate normative input. Any mismatch between the repository-specific package-boundary policy and the current Canonization dependency rules must be resolved explicitly in a lock-consistent dependency migration; the architecture guard suite must not silently choose one policy over the other.
