@@ -12,6 +12,11 @@ if (false === $repo) {
 $php = PHP_BINARY;
 $checks = [
     [
+        'nameEntity' => 'owner component coupling regression',
+        'script' => __DIR__.'/administering-owner-component-coupling-guard-regression-check.php',
+        'args' => [],
+    ],
+    [
         'nameEntity' => 'owner component coupling',
         'script' => __DIR__.'/administering-owner-component-coupling-guard.php',
         'args' => [$repo],
