@@ -27,10 +27,10 @@ Target:
 - `tools/inspection/administering-owner-component-coupling-guard.php`
 
 Mandatory dependency contour (read-only):
-- Objecting: `composer.json` (`objecting/object`)
-- Cruding: `composer.json` (`cruding/crud`)
-- Viewing: `composer.json` (`viewing/view`)
-- Interfacing: `composer.json` (`interfacing/interface`)
+- Objecting: `AGENTS.md`, `composer.json` (`objecting/object`)
+- Cruding: `AGENTS.md`, `composer.json` (`cruding/crud`)
+- Viewing: `AGENTS.md`, `composer.json` (`viewing/view`)
+- Interfacing: `AGENTS.md`, `composer.json` (`interfacing/interface`)
 
 Canonization/Gating (read-only):
 - `Canon011NoSilentFailureRule.md`
@@ -39,6 +39,7 @@ Canonization/Gating (read-only):
 - `Canon022StandaloneApplicationDependencyBaselineRule.md`
 - `Canon023DevelopmentComposerSymlinkRule.md`
 - `Canon024ProductionComposerBundleRule.md`
+- Gating `AGENTS.md`
 - Gating `Canon011NoSilentFailureRule.php`
 
 #### Target-to-canon mapping
@@ -120,3 +121,22 @@ Known unavailable gates:
 Что имеем? The material change is syntactically valid, regression-tested on PHP 8.4, correctly wired into the repository architecture gate, and refined after inspection.
 
 Что осталось? Iteration 4 documentation/integration closure, PR/check inspection, then Iteration 5 post-integration acceptance. Canon022/023/024 packaging debt remains separately blocked on a lock-consistent shared-workspace Composer execution.
+
+### Iteration 4 — DEBT_CLOSURE_AND_INTEGRATION
+
+Status: bounded change ready for integration.
+
+- Updated `docs/architecture/067-architecture-guard-suite.adoc` to match the actual suite composition and document the fail-closed regression invariant.
+- Explicitly documented the current conflict between repository-specific Composer package-boundary policy and the newer Canonization dependency baseline instead of silently selecting one side.
+- Completed read-only mandatory contour review for Objecting, Cruding, Viewing, Interfacing, Canonization and Gating relevant to this change.
+- Opened PR #3, `Make owner component coupling guard fail closed`, from `engine/administering-72efa9-rc` to `master`.
+- PR mergeability re-check: mergeable `true`; no conflict is reported.
+- Branch status/workflow contexts remain absent, so there is no remote CI evidence to wait on or to misrepresent as passed.
+
+Integration decision:
+- The guard repair itself is bounded, locally verified on PHP 8.4, and conflict-free.
+- Canon022/023/024 package/dependency remediation is not safely mergeable as a hand-edited manifest change because `composer.lock`, local path symlink topology, and production package generation require the actual shared Composer workspace. It remains an explicit runtime blocker outside this bounded guard repair.
+
+Что имеем? RC-critical guard defect fixed, regression protected, documentation synchronized, PR mergeable and no in-scope guard tail remains.
+
+Что осталось? Merge the verified PR and perform Iteration 5 against post-merge `master`; separately, the Canon022/023/024 packaging migration still requires an execution environment with the real shared Composer workspace.
