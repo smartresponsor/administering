@@ -47,10 +47,25 @@ foreach ($scanRoots as $scanRoot) {
         foreach ($lines as $lineNumber => $line) {
             foreach ($forbidden as $pattern) {
                 if (str_contains($line, $pattern)) {
-                    $findings[] = sprintf('%s:%d contains forbidden owner-component PHP coupling pattern %s', $relativePath, $lineNumber + 1, $pattern);
+                    $findings[] = sprintf(
+                        '%s:%d contains forbidden owner-component PHP coupling pattern %s',
+                        $relativePath,
+                        $lineNumber + 1,
+                        $pattern,
+                    );
                 }
             }
         }
     }
 }
 
+if ([] !== $findings) {
+    fwrite(STDERR, "Administering owner component coupling guard failed:\n");
+    foreach (array_values(array_unique($findings)) as $finding) {
+        fwrite(STDERR, ' - '.$finding.PHP_EOL);
+    }
+    exit(1);
+}
+
+fwrite(STDOUT, "Administering owner component coupling guard passed.\n");
+exit(0);
