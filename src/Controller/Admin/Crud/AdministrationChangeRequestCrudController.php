@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationChangeRequest;
+use App\Administering\Entity\AdministrationChangeRequestEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -14,7 +14,7 @@ final class AdministrationChangeRequestCrudController extends AbstractReadOnlyAd
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationChangeRequest::class;
+        return AdministrationChangeRequestEntity::class;
     }
 
     protected function entityPermission(): string

@@ -15,14 +15,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: AdministrationChangeRequestRepository::class)]
 #[ORM\Table(name: 'administration_change_request')]
-class AdministrationChangeRequest
+#[ORM\UniqueConstraint(name: 'uniq_administration_change_request_request_key', columns: ['request_key'])]
+class AdministrationChangeRequestEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'request_key', type: 'string', length: 160, unique: true)]
+    #[ORM\Column(name: 'request_key', type: 'string', length: 160)]
     private string $requestKey;
 
     #[ORM\Column(name: 'change_type', type: 'string', length: 80)]
