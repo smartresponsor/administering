@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_connected_component_record')]
 #[ORM\Index(name: 'idx_administration_connected_component_name', columns: ['component_name'])]
 #[ORM\Index(name: 'idx_administration_connected_component_status', columns: ['status'])]
-final class AdministrationConnectedComponentRecord
+final class AdministrationConnectedComponentRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

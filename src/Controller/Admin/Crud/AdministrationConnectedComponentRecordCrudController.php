@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
+use App\Administering\Entity\AdministrationConnectedComponentRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,7 +19,7 @@ final class AdministrationConnectedComponentRecordCrudController extends Abstrac
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationConnectedComponentRecord::class;
+        return AdministrationConnectedComponentRecordEntity::class;
     }
 
     protected function entityPermission(): string
@@ -38,7 +38,7 @@ final class AdministrationConnectedComponentRecordCrudController extends Abstrac
     public function configureActions(Actions $actions): Actions
     {
         $changeDecision = Action::new('changeRuntimeScopeDecision', 'Change decision')
-            ->linkToRoute('administration_runtime_scope_component_decision', static fn (AdministrationConnectedComponentRecord $record): array => [
+            ->linkToRoute('administration_runtime_scope_component_decision', static fn (AdministrationConnectedComponentRecordEntity $record): array => [
                 'componentKey' => $record->getComponentName(),
             ]);
 
