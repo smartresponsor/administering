@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_environment_runtime_record')]
 #[ORM\Index(name: 'idx_administration_environment_category', columns: ['category'])]
 #[ORM\Index(name: 'idx_administration_environment_key', columns: ['environment_key'])]
-final class AdministrationEnvironmentRuntimeRecord
+final class AdministrationEnvironmentRuntimeRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
