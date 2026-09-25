@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Writer\Operation;
 
-use App\Administering\Entity\AdministrationOperationArtifact;
+use App\Administering\Entity\AdministrationOperationArtifactEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -17,14 +17,14 @@ final class AdministrationFilesystemOperationArtifactWriter implements Administr
     private Filesystem $filesystem;
 
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly string $projectDir,
     ) {
         $this->filesystem = new Filesystem();
     }
 
     /** @param array<string, mixed> $safePayload */
-    public function writeJsonArtifact(string $operationKey, string $artifactType, string $safeLabel, array $safePayload): AdministrationOperationArtifact
+    public function writeJsonArtifact(string $operationKey, string $artifactType, string $safeLabel, array $safePayload): AdministrationOperationArtifactEntity
     {
         $persistedOperationKey = mb_substr($operationKey, 0, 180);
         $operationDirectory = $this->safeSegment($operationKey);
@@ -37,7 +37,7 @@ final class AdministrationFilesystemOperationArtifactWriter implements Administr
         $encoded = json_encode($this->redactPayload($safePayload), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         $this->filesystem->dumpFile($absolutePath, $encoded."\n");
 
-        $artifact = new AdministrationOperationArtifact(
+        $artifact = new AdministrationOperationArtifactEntity(
             $persistedOperationKey,
             $artifactType,
             $this->redact($safeLabel),
@@ -46,11 +46,7 @@ final class AdministrationFilesystemOperationArtifactWriter implements Administr
             ['format' => 'json', 'path_operation_segment' => $operationDirectory],
         );
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationArtifact::class);
-        if (null !== $manager) {
-            $manager->persist($artifact);
-            $manager->flush();
-        }
+        $this->persistenceRepository->persistIfManaged($artifact);
 
         return $artifact;
     }

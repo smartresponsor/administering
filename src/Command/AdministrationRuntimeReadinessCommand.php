@@ -11,7 +11,7 @@ use App\Administering\Entity\AdministrationAclMutationReviewRecord;
 use App\Administering\Entity\AdministrationAuditEventEntity;
 use App\Administering\Entity\AdministrationConfigSnapshotEntity;
 use App\Administering\Entity\AdministrationCredentialStateEntity;
-use App\Administering\Entity\AdministrationOperationArtifact;
+use App\Administering\Entity\AdministrationOperationArtifactEntity;
 use App\Administering\Entity\AdministrationOperationEvent;
 use App\Administering\Entity\AdministrationOperationRun;
 use App\Administering\MessageHandler\AdministrationOperationRunMessageHandler;
@@ -41,7 +41,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
     private const ENTITY_CLASSES = [
         AdministrationOperationRun::class,
         AdministrationOperationEvent::class,
-        AdministrationOperationArtifact::class,
+        AdministrationOperationArtifactEntity::class,
         AdministrationAuditEventEntity::class,
         AdministrationConfigSnapshotEntity::class,
         AdministrationCredentialStateEntity::class,

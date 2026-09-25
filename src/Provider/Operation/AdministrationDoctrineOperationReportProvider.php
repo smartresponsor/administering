@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Operation;
 
-use App\Administering\Entity\AdministrationOperationArtifact;
+use App\Administering\Entity\AdministrationOperationArtifactEntity;
 use App\Administering\Entity\AdministrationOperationEvent;
 use App\Administering\Entity\AdministrationOperationRun;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
@@ -33,7 +33,7 @@ final class AdministrationDoctrineOperationReportProvider implements Administrat
             ->findBy(['operationKey' => $operationKey], ['id' => 'ASC']);
 
         $artifacts = $manager
-            ->getRepository(AdministrationOperationArtifact::class)
+            ->getRepository(AdministrationOperationArtifactEntity::class)
             ->findBy(['operationKey' => $operationKey], ['id' => 'ASC']);
 
         return new AdministrationOperationReport(
@@ -46,7 +46,7 @@ final class AdministrationDoctrineOperationReportProvider implements Administrat
                 'safe_context' => $event->getSafeContext(),
                 'created_at' => $event->getCreatedAt()->format(\DateTimeInterface::ATOM),
             ], $events),
-            array_map(static fn (AdministrationOperationArtifact $artifact): array => [
+            array_map(static fn (AdministrationOperationArtifactEntity $artifact): array => [
                 'artifact_type' => $artifact->getArtifactType(),
                 'safe_label' => $artifact->getSafeLabel(),
                 'relative_path' => $artifact->getRelativePath(),

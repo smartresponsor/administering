@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_operation_artifact')]
 #[ORM\Index(name: 'idx_administration_operation_artifact_run', columns: ['operation_key'])]
 #[ORM\Index(name: 'idx_administration_operation_artifact_type', columns: ['artifact_type'])]
-final class AdministrationOperationArtifact
+final class AdministrationOperationArtifactEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
