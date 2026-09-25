@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Rolling;
 
-class RollingAclRule
+class AdministrationRollingAclRuleEntity
 {
     private bool $enabled = false;
     private string $effect = 'deny';

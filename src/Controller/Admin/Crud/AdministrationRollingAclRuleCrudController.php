@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Rolling\RollingAclRule;
+use App\Administering\Entity\Rolling\AdministrationRollingAclRuleEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -24,7 +24,7 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
 
     public static function getEntityFqcn(): string
     {
-        return RollingAclRule::class;
+        return AdministrationRollingAclRuleEntity::class;
     }
 
     protected function entityPermission(): string
@@ -48,25 +48,25 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
             ->linkToCrudAction('enable')
             ->renderAsForm()
             ->asSuccessAction()
-            ->displayIf(static fn (RollingAclRule $rule): bool => !$rule->isEnabled());
+            ->displayIf(static fn (AdministrationRollingAclRuleEntity $rule): bool => !$rule->isEnabled());
 
         $disable = Action::new('disable', 'Disable', 'fa fa-toggle-off')
             ->linkToCrudAction('disable')
             ->renderAsForm()
             ->asWarningAction()
-            ->displayIf(static fn (RollingAclRule $rule): bool => $rule->isEnabled());
+            ->displayIf(static fn (AdministrationRollingAclRuleEntity $rule): bool => $rule->isEnabled());
 
         $allow = Action::new('allow', 'Allow', 'fa fa-check')
             ->linkToCrudAction('allow')
             ->renderAsForm()
             ->asSuccessAction()
-            ->displayIf(static fn (RollingAclRule $rule): bool => 'allow' !== $rule->getEffect());
+            ->displayIf(static fn (AdministrationRollingAclRuleEntity $rule): bool => 'allow' !== $rule->getEffect());
 
         $deny = Action::new('deny', 'Deny', 'fa fa-ban')
             ->linkToCrudAction('deny')
             ->renderAsForm()
             ->asDangerAction()
-            ->displayIf(static fn (RollingAclRule $rule): bool => 'deny' !== $rule->getEffect());
+            ->displayIf(static fn (AdministrationRollingAclRuleEntity $rule): bool => 'deny' !== $rule->getEffect());
 
         $batchEnable = Action::new('batchEnable', 'Enable selected', 'fa fa-toggle-on')
             ->createAsBatchAction()
@@ -131,61 +131,61 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         yield ArrayField::new('conditions')->hideOnIndex();
     }
 
-    /** @param AdminContext<RollingAclRule> $context */
+    /** @param AdminContext<AdministrationRollingAclRuleEntity> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingAclRule $rule */
-        $rule = $this->rollingManagedEntity($context, RollingAclRule::class);
+        /** @var AdministrationRollingAclRuleEntity $rule */
+        $rule = $this->rollingManagedEntity($context, AdministrationRollingAclRuleEntity::class);
         $rule->setEnabled(true);
 
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" enabled.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
-    /** @param AdminContext<RollingAclRule> $context */
+    /** @param AdminContext<AdministrationRollingAclRuleEntity> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingAclRule $rule */
-        $rule = $this->rollingManagedEntity($context, RollingAclRule::class);
+        /** @var AdministrationRollingAclRuleEntity $rule */
+        $rule = $this->rollingManagedEntity($context, AdministrationRollingAclRuleEntity::class);
         $rule->setEnabled(false);
 
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" disabled.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
-    /** @param AdminContext<RollingAclRule> $context */
+    /** @param AdminContext<AdministrationRollingAclRuleEntity> $context */
     #[AdminRoute(path: '/{entityId}/allow', name: 'allow', options: ['methods' => ['GET', 'POST']])]
     public function allow(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingAclRule $rule */
-        $rule = $this->rollingManagedEntity($context, RollingAclRule::class);
+        /** @var AdministrationRollingAclRuleEntity $rule */
+        $rule = $this->rollingManagedEntity($context, AdministrationRollingAclRuleEntity::class);
         $rule->setEffect('allow');
 
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" set to allow.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
-    /** @param AdminContext<RollingAclRule> $context */
+    /** @param AdminContext<AdministrationRollingAclRuleEntity> $context */
     #[AdminRoute(path: '/{entityId}/deny', name: 'deny', options: ['methods' => ['GET', 'POST']])]
     public function deny(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingAclRule $rule */
-        $rule = $this->rollingManagedEntity($context, RollingAclRule::class);
+        /** @var AdministrationRollingAclRuleEntity $rule */
+        $rule = $this->rollingManagedEntity($context, AdministrationRollingAclRuleEntity::class);
         $rule->setEffect('deny');
 
         return $this->rollingPersistAndRedirect($context, $rule, sprintf('ACL rule "%s / %s" set to deny.', $rule->getSubjectIdentifier(), $rule->getPermissionKey()));
     }
 
     /**
-     * @param AdminContext<RollingAclRule>   $context
-     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     * @param AdminContext<AdministrationRollingAclRuleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingAclRuleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -195,8 +195,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingAclRule::class,
-            static function (RollingAclRule $rule): void {
+            AdministrationRollingAclRuleEntity::class,
+            static function (AdministrationRollingAclRuleEntity $rule): void {
                 $rule->setEnabled(true);
             },
             '%d selected ACL rules enabled.',
@@ -204,8 +204,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
     }
 
     /**
-     * @param AdminContext<RollingAclRule>   $context
-     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     * @param AdminContext<AdministrationRollingAclRuleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingAclRuleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -215,8 +215,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingAclRule::class,
-            static function (RollingAclRule $rule): void {
+            AdministrationRollingAclRuleEntity::class,
+            static function (AdministrationRollingAclRuleEntity $rule): void {
                 $rule->setEnabled(false);
             },
             '%d selected ACL rules disabled.',
@@ -224,8 +224,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
     }
 
     /**
-     * @param AdminContext<RollingAclRule>   $context
-     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     * @param AdminContext<AdministrationRollingAclRuleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingAclRuleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/allow', name: 'batch_allow', options: ['methods' => ['POST']])]
     public function batchAllow(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -235,8 +235,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingAclRule::class,
-            static function (RollingAclRule $rule): void {
+            AdministrationRollingAclRuleEntity::class,
+            static function (AdministrationRollingAclRuleEntity $rule): void {
                 $rule->setEffect('allow');
             },
             '%d selected ACL rules set to allow.',
@@ -244,8 +244,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
     }
 
     /**
-     * @param AdminContext<RollingAclRule>   $context
-     * @param BatchActionDto<RollingAclRule> $batchActionDto
+     * @param AdminContext<AdministrationRollingAclRuleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingAclRuleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/deny', name: 'batch_deny', options: ['methods' => ['POST']])]
     public function batchDeny(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -255,8 +255,8 @@ final class AdministrationRollingAclRuleCrudController extends AbstractAdministr
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingAclRule::class,
-            static function (RollingAclRule $rule): void {
+            AdministrationRollingAclRuleEntity::class,
+            static function (AdministrationRollingAclRuleEntity $rule): void {
                 $rule->setEffect('deny');
             },
             '%d selected ACL rules set to deny.',
