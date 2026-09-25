@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Config;
 
-use App\Administering\Entity\Config\AdministrationConfigValue;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Administering\Entity\Config\AdministrationConfigValueEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 
 final readonly class AdministrationConfigStateService
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
+    public function __construct(private AdministrationPersistenceRepository $persistenceRepository)
     {
     }
 
@@ -19,18 +18,15 @@ final readonly class AdministrationConfigStateService
      */
     public function replaceToolValues(string $applicationCode, string $toolCode, array $values): void
     {
-        $manager = $this->entityManager();
-        $manager->createQueryBuilder()
-            ->delete(AdministrationConfigValue::class, 'value')
-            ->andWhere('value.applicationCode = :applicationCode')
-            ->andWhere('value.toolCode = :toolCode')
-            ->setParameter('applicationCode', $applicationCode)
-            ->setParameter('toolCode', $toolCode)
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationConfigValueEntity::class, [
+            'applicationCode' => $applicationCode,
+            'toolCode' => $toolCode,
+        ]);
+
+        $records = [];
 
         foreach ($values as $fieldKey => $value) {
-            $record = new AdministrationConfigValue(
+            $record = new AdministrationConfigValueEntity(
                 $applicationCode,
                 $toolCode,
                 $fieldKey,
@@ -38,21 +34,26 @@ final readonly class AdministrationConfigStateService
                 $value['secret'],
             );
             $record->markCurrent($value['current'], $value['pending'], $value['masked'], $value['status']);
-            $manager->persist($record);
+            $records[] = $record;
         }
 
-        $manager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationConfigValueEntity::class);
     }
 
-    /** @return list<AdministrationConfigValue> */
+    /** @return list<AdministrationConfigValueEntity> */
     public function valuesForTool(string $applicationCode, string $toolCode): array
     {
-        $manager = $this->entityManager();
+        /** @var list<AdministrationConfigValueEntity> $values */
+        $values = $this->persistenceRepository->findBy(
+            AdministrationConfigValueEntity::class,
+            [
+                'applicationCode' => $applicationCode,
+                'toolCode' => $toolCode,
+            ],
+            ['fieldKey' => 'ASC'],
+        );
 
-        return $manager->getRepository(AdministrationConfigValue::class)->findBy([
-            'applicationCode' => $applicationCode,
-            'toolCode' => $toolCode,
-        ], ['fieldKey' => 'ASC']);
+        return $values;
     }
 
     public function hydratePendingValues(string $applicationCode, string $toolCode, object $data): object
@@ -70,16 +71,6 @@ final readonly class AdministrationConfigStateService
         }
 
         return $data;
-    }
-
-    private function entityManager(): EntityManagerInterface
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationConfigValue::class);
-        if (!$manager instanceof EntityManagerInterface) {
-            throw new \LogicException('No Doctrine entity manager is configured for Administering config state records.');
-        }
-
-        return $manager;
     }
 
     private function camelize(string $value): string
