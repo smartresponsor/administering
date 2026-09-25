@@ -16,7 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AdministrationRollingSubjectRoleAssignmentCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingSubjectRoleAssignmentCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 

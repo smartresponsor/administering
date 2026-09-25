@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -18,8 +19,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 /**
  * @extends AbstractCrudController<object>
  */
-abstract class AbstractReadOnlyAdministrationCrudController extends AbstractCrudController
+abstract class AdministrationAbstractReadOnlyCrudController extends AbstractCrudController
 {
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            AdministrationPersistenceRepository::class => AdministrationPersistenceRepository::class,
+        ]);
+    }
+
     abstract protected function entityPermission(): string;
 
     public function configureCrud(Crud $crud): Crud

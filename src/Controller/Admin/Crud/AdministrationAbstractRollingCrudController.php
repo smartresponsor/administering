@@ -9,7 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\ActionGroup;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 
-abstract class AbstractAdministrationRollingCrudController extends AbstractReadOnlyAdministrationCrudController
+abstract class AdministrationAbstractRollingCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public function configureCrud(Crud $crud): Crud
     {

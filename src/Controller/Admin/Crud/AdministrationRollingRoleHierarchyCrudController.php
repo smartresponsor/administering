@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  * than direct EasyAdmin entity edits. This screen closes the visibility gap for
  * the default administration hierarchy and any synchronized role edge state.
  */
-final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingRoleHierarchyCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 
