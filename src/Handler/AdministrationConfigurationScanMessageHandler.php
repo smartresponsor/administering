@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\MessageHandler;
+namespace App\Administering\Handler;
 
 use App\Administering\Message\AdministrationConfigurationScanMessage;
 use App\Administering\ServiceInterface\Configuration\AdministrationConfigurationScannerInterface;
