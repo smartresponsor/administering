@@ -42,9 +42,9 @@ final class AdministrationConfigCenterController extends AbstractController
         $this->denyAccessUnlessGranted('administration.config.view');
 
         return $this->disableCaching($this->render('@Administering/administering/config_center_index.html.twig', [
-            'applications' => $this->fetch('App\Administering\Entity\Config\AdministrationConfigApplication'),
+            'applications' => $this->fetch('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
             'tools' => $this->fetch(AdministrationConfigTool::class),
-            'applicationCount' => $this->count('App\Administering\Entity\Config\AdministrationConfigApplication'),
+            'applicationCount' => $this->count('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
             'toolCount' => $this->count(AdministrationConfigTool::class),
             'secretToolCount' => $this->secretToolCount(),
             'applicationIndexUrl' => $this->generateUrl('administration_admin_index_administration_config_application_index'),

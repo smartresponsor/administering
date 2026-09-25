@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdministrationConfigApplicationRepository::class)]
 #[ORM\Table(name: 'administration_config_application')]
 #[ORM\UniqueConstraint(name: 'uniq_administration_config_application_code', columns: ['application_code'])]
-final class AdministrationConfigApplication
+final class AdministrationConfigApplicationEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
