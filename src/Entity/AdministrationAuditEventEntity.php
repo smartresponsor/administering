@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_audit_event')]
 #[ORM\Index(name: 'idx_administration_audit_event_action', columns: ['action'])]
 #[ORM\Index(name: 'idx_administration_audit_event_subject', columns: ['subject_identifier'])]
-final class AdministrationAuditEvent
+final class AdministrationAuditEventEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

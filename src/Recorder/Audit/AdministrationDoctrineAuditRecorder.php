@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Recorder\Audit;
 
-use App\Administering\Entity\AdministrationAuditEvent;
+use App\Administering\Entity\AdministrationAuditEventEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Persists safe Administering operator events into the system Entity Manager.
@@ -17,27 +17,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 final readonly class AdministrationDoctrineAuditRecorder implements AdministrationAuditRecorderInterface
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
+    public function __construct(private AdministrationPersistenceRepository $persistenceRepository)
     {
     }
 
     /** @param array<string, mixed> $context */
     public function record(string $action, string $subjectIdentifier, array $context = []): void
     {
-        $manager = $this->manager();
-        $manager->persist(new AdministrationAuditEvent($action, $subjectIdentifier, $this->safeContext($context)));
-        $manager->flush();
-    }
-
-    private function manager(): \Doctrine\Persistence\ObjectManager
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationAuditEvent::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering audit events. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        return $manager;
+        $this->persistenceRepository->persist(new AdministrationAuditEventEntity($action, $subjectIdentifier, $this->safeContext($context)));
     }
 
     /**

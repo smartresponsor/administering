@@ -8,7 +8,7 @@ use App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerI
 use App\Administering\Entity\AdministrationAccountActionRequestRecord;
 use App\Administering\Entity\AdministrationAclMutationApplyRecord;
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
-use App\Administering\Entity\AdministrationAuditEvent;
+use App\Administering\Entity\AdministrationAuditEventEntity;
 use App\Administering\Entity\AdministrationConfigSnapshot;
 use App\Administering\Entity\AdministrationCredentialState;
 use App\Administering\Entity\AdministrationOperationArtifact;
@@ -42,7 +42,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
         AdministrationOperationRun::class,
         AdministrationOperationEvent::class,
         AdministrationOperationArtifact::class,
-        AdministrationAuditEvent::class,
+        AdministrationAuditEventEntity::class,
         AdministrationConfigSnapshot::class,
         AdministrationCredentialState::class,
         AdministrationAccountActionRequestRecord::class,
