@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationConfigSnapshot;
+use App\Administering\Entity\AdministrationConfigSnapshotEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -14,7 +14,7 @@ final class AdministrationConfigSnapshotCrudController extends AbstractReadOnlyA
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationConfigSnapshot::class;
+        return AdministrationConfigSnapshotEntity::class;
     }
 
     protected function entityPermission(): string

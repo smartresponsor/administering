@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdministrationConfigSnapshotRepository::class)]
 #[ORM\Table(name: 'administration_config_snapshot')]
 #[ORM\Index(name: 'idx_administration_config_snapshot_source', columns: ['source_type', 'source_path'])]
-final class AdministrationConfigSnapshot
+final class AdministrationConfigSnapshotEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
