@@ -6,7 +6,7 @@ Administering has one canonical runtime-composition responsibility: it validates
 
 The authority chain is deliberately short:
 
-. Host Composer inventory is the source evidence for installed SmartResponsor components and Symfony bundles.
+. Host Composer inventory is the source evidence for installed platform components and Symfony bundles.
 . Composer inventory defines the available capability boundary, not the enabled runtime set.
 . The operator decides which available components are enabled or disabled for a given runtime environment.
 . Administering validates the operator decision against Composer inventory.
