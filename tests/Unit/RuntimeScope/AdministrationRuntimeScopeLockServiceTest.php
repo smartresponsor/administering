@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\RuntimeScope;
 
-use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockNormalizer;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockService;
 use PHPUnit\Framework\TestCase;
 
-final class AdministrationRuntimeScopeLockNormalizerTest extends TestCase
+final class AdministrationRuntimeScopeLockServiceTest extends TestCase
 {
     public function testItNormalizesBundleTokensToEnabledComponents(): void
     {
@@ -24,7 +24,7 @@ final class AdministrationRuntimeScopeLockNormalizerTest extends TestCase
             'generatedBy' => 'administering-test',
         ]);
 
-        $evidence = (new AdministrationRuntimeScopeLockNormalizer())->normalize($path);
+        $evidence = (new AdministrationRuntimeScopeLockService())->normalize($path);
 
         self::assertTrue($evidence->present);
         self::assertSame('present', $evidence->status);
@@ -43,7 +43,7 @@ final class AdministrationRuntimeScopeLockNormalizerTest extends TestCase
             'disabledComponents' => [],
         ]);
 
-        $evidence = (new AdministrationRuntimeScopeLockNormalizer())->normalize($path);
+        $evidence = (new AdministrationRuntimeScopeLockService())->normalize($path);
 
         self::assertTrue($evidence->present);
         self::assertSame('invalid', $evidence->status);
@@ -61,7 +61,7 @@ final class AdministrationRuntimeScopeLockNormalizerTest extends TestCase
             'disabledComponents' => [$this->foreignClassName('Rolling', 'RollingBundle')],
         ]);
 
-        $evidence = (new AdministrationRuntimeScopeLockNormalizer())->normalize($path);
+        $evidence = (new AdministrationRuntimeScopeLockService())->normalize($path);
 
         self::assertSame('invalid', $evidence->status);
         self::assertContains('disabledComponents must not contain PHP class names: '.$this->foreignClassName('Rolling', 'RollingBundle'), $evidence->errors);
