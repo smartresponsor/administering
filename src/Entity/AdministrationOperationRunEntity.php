@@ -16,16 +16,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: AdministrationOperationRunRepository::class)]
 #[ORM\Table(name: 'administration_operation_run')]
+#[ORM\UniqueConstraint(name: 'uniq_administration_operation_run_operation_key', columns: ['operation_key'])]
 #[ORM\Index(name: 'idx_administration_operation_run_type_status', columns: ['operation_type', 'status'])]
 #[ORM\Index(name: 'idx_administration_operation_run_subject', columns: ['subject_identifier'])]
-class AdministrationOperationRun
+class AdministrationOperationRunEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'operation_key', type: 'string', length: 180, unique: true)]
+    #[ORM\Column(name: 'operation_key', type: 'string', length: 180)]
     private string $operationKey;
 
     #[ORM\Column(name: 'operation_type', type: 'string', length: 80)]

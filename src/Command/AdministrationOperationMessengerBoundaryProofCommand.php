@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Handler\AdministrationOperationRunMessageHandler;
 use App\Administering\Message\AdministrationOperationRunMessage;
-use App\Administering\MessageHandler\AdministrationOperationRunMessageHandler;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 use App\Administering\Value\Operation\AdministrationOperationReport;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +40,7 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         private readonly AdministrationOperationRunnerInterface $operationRunner,
         private readonly AdministrationOperationRunMessageHandler $messageHandler,
         private readonly AdministrationOperationReportProviderInterface $reportProvider,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
     ) {
         parent::__construct();
     }
@@ -147,17 +147,10 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         }
     }
 
-    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRun
+    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRunEntity
     {
         $operationRun = $this->operationRunFactory->createForCurrentUser($plan);
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        $manager->persist($operationRun);
-        $manager->flush();
+        $this->persistenceRepository->persist($operationRun);
 
         return $operationRun;
     }

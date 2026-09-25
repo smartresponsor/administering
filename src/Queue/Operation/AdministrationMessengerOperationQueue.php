@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Queue\Operation;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
 use App\Administering\Message\AdministrationOperationRunMessage;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface;
 use App\Administering\Value\Operation\AdministrationOperationDispatchResult;
@@ -16,7 +16,7 @@ final class AdministrationMessengerOperationQueue implements AdministrationOpera
     {
     }
 
-    public function dispatch(AdministrationOperationRun $operationRun): AdministrationOperationDispatchResult
+    public function dispatch(AdministrationOperationRunEntity $operationRun): AdministrationOperationDispatchResult
     {
         $this->messageBus->dispatch(new AdministrationOperationRunMessage($operationRun->operationKey()));
 

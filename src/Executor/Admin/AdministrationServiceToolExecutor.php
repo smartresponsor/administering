@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Executor\Admin;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolExecutorInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
-use Doctrine\Persistence\ManagerRegistry;
-use Psr\Container\ContainerInterface;
 
 /**
  * Dispatches persisted service-tool launches to concrete tool handlers.
@@ -22,9 +21,10 @@ use Psr\Container\ContainerInterface;
  */
 final readonly class AdministrationServiceToolExecutor implements AdministrationServiceToolExecutorInterface
 {
+    /** @param iterable<AdministrationServiceToolHandlerInterface> $toolHandlers */
     public function __construct(
-        private ManagerRegistry $managerRegistry,
-        private ContainerInterface $toolHandlers,
+        private AdministrationPersistenceRepository $persistenceRepository,
+        private iterable $toolHandlers,
         private AdministrationServiceToolOpenGuardInterface $toolOpenGuard,
     ) {
     }
@@ -57,7 +57,8 @@ final readonly class AdministrationServiceToolExecutor implements Administration
             );
         }
 
-        if (!$this->toolHandlers->has($invocation->serviceClass)) {
+        $handler = $this->handlerFor($invocation->serviceClass);
+        if (null === $handler) {
             return AdministrationOperationExecutionResult::skipped(
                 'Service tool was indexed and submitted, but no executable tool handler is registered for its service class.',
                 [
@@ -71,36 +72,25 @@ final readonly class AdministrationServiceToolExecutor implements Administration
             );
         }
 
-        $handler = $this->toolHandlers->get($invocation->serviceClass);
-        if (!$handler instanceof AdministrationServiceToolHandlerInterface) {
-            return AdministrationOperationExecutionResult::failed(
-                'Registered service tool handler does not implement the required execution contract.',
-                [
-                    'operation_key' => $operationKey,
-                    'tool_key' => $invocation->toolKey,
-                    'service_class' => $invocation->serviceClass,
-                    'required_contract' => AdministrationServiceToolHandlerInterface::class,
-                    'actual_type' => get_debug_type($handler),
-                ],
-            );
-        }
-
         return $handler->handleAdministrationServiceTool($invocation);
     }
 
-    private function operationRun(string $operationKey): AdministrationOperationRun
+    private function handlerFor(string $serviceClass): ?AdministrationServiceToolHandlerInterface
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs. Configure the system SQLite entity manager for App\\Administering entities.');
+        foreach ($this->toolHandlers as $handler) {
+            if ($handler::class === $serviceClass) {
+                return $handler;
+            }
         }
 
-        $operationRun = $manager
-            ->getRepository(AdministrationOperationRun::class)
-            ->findOneBy(['operationKey' => $operationKey]);
+        return null;
+    }
 
-        if (!$operationRun instanceof AdministrationOperationRun) {
+    private function operationRun(string $operationKey): AdministrationOperationRunEntity
+    {
+        $operationRun = $this->persistenceRepository->findOneBy(AdministrationOperationRunEntity::class, ['operationKey' => $operationKey]);
+
+        if (!$operationRun instanceof AdministrationOperationRunEntity) {
             throw new \RuntimeException(sprintf('Administering operation run "%s" was not found in system storage.', $operationKey));
         }
 

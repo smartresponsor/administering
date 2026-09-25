@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Operation;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
 use App\Administering\Form\Operation\AdministrationOperationLaunchFormType;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationSubmitterInterface;
 use App\Administering\Value\Form\Operation\AdministrationOperationLaunchData;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +24,7 @@ final class AdministrationOperationLaunchController extends AbstractController
 {
     public function __construct(
         private readonly AdministrationOperationSubmitterInterface $operationSubmitter,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly \Symfony\Component\Form\FormFactoryInterface $formFactory,
     ) {
     }
@@ -38,7 +37,7 @@ final class AdministrationOperationLaunchController extends AbstractController
         return $this->render('@Administering/easy_admin/operation_launch.html.twig', [
             'operations' => $this->launchableOperationRows(),
             'recentRuns' => $this->recentRuns(),
-            'operationStorageConfigured' => null !== $this->operationRunManager(),
+            'operationStorageConfigured' => $this->persistenceRepository->hasManagerFor(AdministrationOperationRunEntity::class),
         ]);
     }
 
@@ -58,7 +57,7 @@ final class AdministrationOperationLaunchController extends AbstractController
             return $this->render('@Administering/easy_admin/operation_launch.html.twig', [
                 'operations' => $this->launchableOperationRows($operationType, $form),
                 'recentRuns' => $this->recentRuns(),
-                'operationStorageConfigured' => null !== $this->operationRunManager(),
+                'operationStorageConfigured' => $this->persistenceRepository->hasManagerFor(AdministrationOperationRunEntity::class),
             ]);
         }
 
@@ -94,20 +93,14 @@ final class AdministrationOperationLaunchController extends AbstractController
         return $rows;
     }
 
-    /** @return list<AdministrationOperationRun> */
+    /** @return list<AdministrationOperationRunEntity> */
     private function recentRuns(): array
     {
-        $manager = $this->operationRunManager();
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor(AdministrationOperationRunEntity::class)) {
             return [];
         }
 
-        return $manager->getRepository(AdministrationOperationRun::class)->findBy([], ['id' => 'DESC'], 20);
-    }
-
-    private function operationRunManager(): ?ObjectManager
-    {
-        return $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
+        return $this->persistenceRepository->findBy(AdministrationOperationRunEntity::class, [], ['id' => 'DESC'], 20);
     }
 
     private function createLaunchForm(string $operationType): FormInterface

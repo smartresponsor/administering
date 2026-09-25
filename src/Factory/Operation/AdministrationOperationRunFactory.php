@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Factory\Operation;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface;
 use App\Administering\ServiceInterface\Security\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
@@ -15,12 +15,12 @@ final class AdministrationOperationRunFactory implements AdministrationOperation
     {
     }
 
-    public function createForCurrentUser(AdministrationOperationPlan $plan): AdministrationOperationRun
+    public function createForCurrentUser(AdministrationOperationPlan $plan): AdministrationOperationRunEntity
     {
         $current = $this->currentUserContextProvider->current();
         $subjectIdentifier = null === $current ? 'anonymous' : $current->subjectIdentifier();
 
-        return new AdministrationOperationRun(
+        return new AdministrationOperationRunEntity(
             $this->newOperationKey($plan->operationType()),
             $plan->operationType(),
             $subjectIdentifier,

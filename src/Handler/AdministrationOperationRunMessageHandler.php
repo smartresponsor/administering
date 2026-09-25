@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\MessageHandler;
+namespace App\Administering\Handler;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
 use App\Administering\Message\AdministrationOperationRunMessage;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Worker boundary for persisted Administering operations.
@@ -21,7 +21,7 @@ final class AdministrationOperationRunMessageHandler
     public function __construct(
         private readonly AdministrationOperationRunnerInterface $operationRunner,
         private readonly AdministrationOperationStatusRecorderInterface $statusRecorder,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -43,17 +43,9 @@ final class AdministrationOperationRunMessageHandler
 
     private function operationTypeForKey(string $operationKey): string
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
+        $operationRun = $this->persistenceRepository->findOneBy(AdministrationOperationRunEntity::class, ['operationKey' => $operationKey]);
 
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        $operationRun = $manager
-            ->getRepository(AdministrationOperationRun::class)
-            ->findOneBy(['operationKey' => $operationKey]);
-
-        if (!$operationRun instanceof AdministrationOperationRun) {
+        if (!$operationRun instanceof AdministrationOperationRunEntity) {
             throw new \RuntimeException(sprintf('Administering operation run "%s" was not found in system storage.', $operationKey));
         }
 

@@ -13,16 +13,16 @@ use App\Administering\Entity\AdministrationConfigSnapshotEntity;
 use App\Administering\Entity\AdministrationCredentialStateEntity;
 use App\Administering\Entity\AdministrationOperationArtifactEntity;
 use App\Administering\Entity\AdministrationOperationEventEntity;
-use App\Administering\Entity\AdministrationOperationRun;
-use App\Administering\MessageHandler\AdministrationOperationRunMessageHandler;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Handler\AdministrationOperationRunMessageHandler;
 use App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationQueueInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,7 +39,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
 {
     /** @var list<class-string> */
     private const ENTITY_CLASSES = [
-        AdministrationOperationRun::class,
+        AdministrationOperationRunEntity::class,
         AdministrationOperationEventEntity::class,
         AdministrationOperationArtifactEntity::class,
         AdministrationAuditEventEntity::class,
@@ -115,7 +115,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
     ];
 
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly RouterInterface $router,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
         private readonly AdministrationPermissionCheckerInterface $permissionChecker,
@@ -245,11 +245,11 @@ final class AdministrationRuntimeReadinessCommand extends Command
     {
         $rows = [];
         foreach (self::ENTITY_CLASSES as $entityClass) {
-            $manager = $this->managerRegistry->getManagerForClass($entityClass);
+            $managerClass = $this->persistenceRepository->managerClassFor($entityClass);
             $rows[] = [
                 'entity' => $entityClass,
-                'configured' => null !== $manager,
-                'manager' => null !== $manager ? $manager::class : null,
+                'configured' => null !== $managerClass,
+                'manager' => $managerClass,
             ];
         }
 
