@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_symfony_route_record')]
 #[ORM\Index(name: 'idx_administration_symfony_route_name', columns: ['route_name'])]
 #[ORM\Index(name: 'idx_administration_symfony_route_status', columns: ['status_class'])]
-final class AdministrationSymfonyRouteRecord
+final class AdministrationSymfonyRouteRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

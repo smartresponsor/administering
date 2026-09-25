@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Symfony;
 
-use App\Administering\Entity\AdministrationSymfonyRouteRecord;
+use App\Administering\Entity\AdministrationSymfonyRouteRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Symfony\AdministrationSymfonyRouteCatalogProviderInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Symfony section primary CRUD anchor from route metadata.
@@ -21,7 +21,7 @@ final readonly class AdministrationSymfonyRouteRecordSyncService implements Admi
 
     public function __construct(
         private AdministrationSymfonyRouteCatalogProviderInterface $routeCatalogProvider,
-        private EntityManagerInterface $entityManager,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -34,20 +34,21 @@ final readonly class AdministrationSymfonyRouteRecordSyncService implements Admi
     {
         $this->replaceRecords();
         $count = 0;
+        $records = [];
 
         foreach ($this->routeCatalogProvider->routes() as $route) {
-            $this->entityManager->persist(new AdministrationSymfonyRouteRecord(
+            $records[] = new AdministrationSymfonyRouteRecordEntity(
                 routeName: (string) $route['route'],
                 path: (string) $route['path'],
                 methods: $this->methods($route['methods']),
                 controller: null,
                 statusCode: null,
                 statusClass: 'unchecked',
-            ));
+            );
             ++$count;
         }
 
-        $this->entityManager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationSymfonyRouteRecordEntity::class);
 
         return new AdministrationServiceSectionAnchorSyncResult($this->sectionKey(), $count);
     }
@@ -69,9 +70,6 @@ final readonly class AdministrationSymfonyRouteRecordSyncService implements Admi
 
     private function replaceRecords(): void
     {
-        $this->entityManager->createQueryBuilder()
-            ->delete(AdministrationSymfonyRouteRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationSymfonyRouteRecordEntity::class, []);
     }
 }
