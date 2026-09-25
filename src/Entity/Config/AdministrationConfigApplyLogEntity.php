@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_config_apply_log')]
 #[ORM\Index(name: 'idx_administration_config_apply_log_tool', columns: ['application_code', 'tool_code'])]
 #[ORM\Index(name: 'idx_administration_config_apply_log_status', columns: ['status'])]
-final class AdministrationConfigApplyLog
+final class AdministrationConfigApplyLogEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
