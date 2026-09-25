@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_administration_config_tool_application', columns: ['application_code'])]
 #[ORM\Index(name: 'idx_administration_config_tool_code', columns: ['tool_code'])]
 #[ORM\UniqueConstraint(name: 'uniq_administration_config_tool_application_tool', columns: ['application_code', 'tool_code'])]
-final class AdministrationConfigTool
+final class AdministrationConfigToolEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

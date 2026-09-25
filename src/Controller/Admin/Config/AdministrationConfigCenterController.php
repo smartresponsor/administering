@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Config;
 
-use App\Administering\Entity\Config\AdministrationConfigTool;
+use App\Administering\Entity\Config\AdministrationConfigToolEntity;
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
-use App\Administering\Service\Config\AdministrationConfigFormResolverService;
+use App\Administering\Service\Config\AdministrationConfigFormService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,7 +22,7 @@ final class AdministrationConfigCenterController extends AbstractController
     public function __construct(
         private readonly ManagerRegistry $managerRegistry,
         private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
-        private readonly AdministrationConfigFormResolverService $formResolverService,
+        private readonly AdministrationConfigFormService $formResolverService,
         private readonly AdministrationConfigStateService $stateService,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
     ) {
@@ -43,9 +43,9 @@ final class AdministrationConfigCenterController extends AbstractController
 
         return $this->disableCaching($this->render('@Administering/administering/config_center_index.html.twig', [
             'applications' => $this->fetch('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
-            'tools' => $this->fetch(AdministrationConfigTool::class),
+            'tools' => $this->fetch(AdministrationConfigToolEntity::class),
             'applicationCount' => $this->count('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
-            'toolCount' => $this->count(AdministrationConfigTool::class),
+            'toolCount' => $this->count(AdministrationConfigToolEntity::class),
             'secretToolCount' => $this->secretToolCount(),
             'applicationIndexUrl' => $this->generateUrl('administration_admin_index_administration_config_application_index'),
             'toolIndexUrl' => $this->generateUrl('administration_admin_index_administration_config_tool_index'),
@@ -66,7 +66,7 @@ final class AdministrationConfigCenterController extends AbstractController
         }
 
         $tool = $this->tool($applicationCode, $toolCode);
-        if (!$tool instanceof AdministrationConfigTool) {
+        if (!$tool instanceof AdministrationConfigToolEntity) {
             throw $this->createNotFoundException(sprintf('Unknown configuration tool "%s/%s".', $applicationCode, $toolCode));
         }
 
@@ -169,24 +169,24 @@ final class AdministrationConfigCenterController extends AbstractController
     private function secretToolCount(): int
     {
         return count(array_filter(
-            $this->fetch(AdministrationConfigTool::class),
-            static fn (AdministrationConfigTool $tool): bool => [] !== $tool->getSecretNames(),
+            $this->fetch(AdministrationConfigToolEntity::class),
+            static fn (AdministrationConfigToolEntity $tool): bool => [] !== $tool->getSecretNames(),
         ));
     }
 
-    private function tool(string $applicationCode, string $toolCode): ?AdministrationConfigTool
+    private function tool(string $applicationCode, string $toolCode): ?AdministrationConfigToolEntity
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationConfigTool::class);
+        $manager = $this->managerRegistry->getManagerForClass(AdministrationConfigToolEntity::class);
         if (null === $manager) {
             return null;
         }
 
-        $tool = $manager->getRepository(AdministrationConfigTool::class)->findOneBy([
+        $tool = $manager->getRepository(AdministrationConfigToolEntity::class)->findOneBy([
             'applicationCode' => $applicationCode,
             'toolCode' => $toolCode,
         ]);
 
-        return $tool instanceof AdministrationConfigTool ? $tool : null;
+        return $tool instanceof AdministrationConfigToolEntity ? $tool : null;
     }
 
     private function disableCaching(Response $response): Response
