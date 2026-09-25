@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Recorder\Operation;
 
-use App\Administering\Entity\AdministrationOperationEvent;
+use App\Administering\Entity\AdministrationOperationEventEntity;
 use App\Administering\Entity\AdministrationOperationRun;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
@@ -73,7 +73,7 @@ final class AdministrationDoctrineOperationStatusRecorder implements Administrat
             return;
         }
 
-        $manager->persist(new AdministrationOperationEvent($operationKey, $status, $this->redact($safeMessage), $safeContext));
+        $manager->persist(new AdministrationOperationEventEntity($operationKey, $status, $this->redact($safeMessage), $safeContext));
         $manager->flush();
     }
 

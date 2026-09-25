@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Operation;
 
 use App\Administering\Entity\AdministrationOperationArtifactEntity;
-use App\Administering\Entity\AdministrationOperationEvent;
+use App\Administering\Entity\AdministrationOperationEventEntity;
 use App\Administering\Entity\AdministrationOperationRun;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
 use App\Administering\Value\Operation\AdministrationOperationReport;
@@ -29,7 +29,7 @@ final class AdministrationDoctrineOperationReportProvider implements Administrat
             ->findOneBy(['operationKey' => $operationKey]);
 
         $events = $manager
-            ->getRepository(AdministrationOperationEvent::class)
+            ->getRepository(AdministrationOperationEventEntity::class)
             ->findBy(['operationKey' => $operationKey], ['id' => 'ASC']);
 
         $artifacts = $manager
@@ -40,7 +40,7 @@ final class AdministrationDoctrineOperationReportProvider implements Administrat
             $operationKey,
             $run instanceof AdministrationOperationRun ? $run->getStatus() : 'unknown',
             $run instanceof AdministrationOperationRun ? $run->getOperationType() : 'Unknown operation',
-            array_map(static fn (AdministrationOperationEvent $event): array => [
+            array_map(static fn (AdministrationOperationEventEntity $event): array => [
                 'status' => $event->getStatus(),
                 'safe_message' => $event->getSafeMessage(),
                 'safe_context' => $event->getSafeContext(),

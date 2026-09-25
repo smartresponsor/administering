@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_operation_event')]
 #[ORM\Index(name: 'idx_administration_operation_event_run', columns: ['operation_key'])]
 #[ORM\Index(name: 'idx_administration_operation_event_status', columns: ['status'])]
-final class AdministrationOperationEvent
+final class AdministrationOperationEventEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

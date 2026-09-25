@@ -12,7 +12,7 @@ use App\Administering\Entity\AdministrationAuditEventEntity;
 use App\Administering\Entity\AdministrationConfigSnapshotEntity;
 use App\Administering\Entity\AdministrationCredentialStateEntity;
 use App\Administering\Entity\AdministrationOperationArtifactEntity;
-use App\Administering\Entity\AdministrationOperationEvent;
+use App\Administering\Entity\AdministrationOperationEventEntity;
 use App\Administering\Entity\AdministrationOperationRun;
 use App\Administering\MessageHandler\AdministrationOperationRunMessageHandler;
 use App\Administering\ProviderInterface\Security\AdministrationExternalPermissionDecisionProviderInterface;
@@ -40,7 +40,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
     /** @var list<class-string> */
     private const ENTITY_CLASSES = [
         AdministrationOperationRun::class,
-        AdministrationOperationEvent::class,
+        AdministrationOperationEventEntity::class,
         AdministrationOperationArtifactEntity::class,
         AdministrationAuditEventEntity::class,
         AdministrationConfigSnapshotEntity::class,
