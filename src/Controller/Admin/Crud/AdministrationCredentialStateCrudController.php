@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationCredentialState;
+use App\Administering\Entity\AdministrationCredentialStateEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -14,7 +14,7 @@ final class AdministrationCredentialStateCrudController extends AbstractReadOnly
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationCredentialState::class;
+        return AdministrationCredentialStateEntity::class;
     }
 
     protected function entityPermission(): string

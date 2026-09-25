@@ -10,7 +10,7 @@ use App\Administering\Entity\AdministrationAclMutationApplyRecord;
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
 use App\Administering\Entity\AdministrationAuditEventEntity;
 use App\Administering\Entity\AdministrationConfigSnapshotEntity;
-use App\Administering\Entity\AdministrationCredentialState;
+use App\Administering\Entity\AdministrationCredentialStateEntity;
 use App\Administering\Entity\AdministrationOperationArtifact;
 use App\Administering\Entity\AdministrationOperationEvent;
 use App\Administering\Entity\AdministrationOperationRun;
@@ -44,7 +44,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
         AdministrationOperationArtifact::class,
         AdministrationAuditEventEntity::class,
         AdministrationConfigSnapshotEntity::class,
-        AdministrationCredentialState::class,
+        AdministrationCredentialStateEntity::class,
         AdministrationAccountActionRequestRecord::class,
         AdministrationAclMutationReviewRecord::class,
         AdministrationAclMutationApplyRecord::class,
