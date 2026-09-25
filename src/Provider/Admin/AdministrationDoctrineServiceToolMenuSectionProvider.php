@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface;
-use App\Administering\Entity\AdministrationServiceSectionRecord;
+use App\Administering\Entity\AdministrationServiceSectionRecordEntity;
 use App\Administering\Entity\AdministrationServiceToolRecord;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface;
 use App\Administering\Value\Admin\AdministrationServiceSection;
@@ -102,13 +102,13 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
         return $sections;
     }
 
-    /** @return array<string, AdministrationServiceSectionRecord> */
+    /** @return array<string, AdministrationServiceSectionRecordEntity> */
     private function sectionRecordsByKey(EntityManagerInterface $manager): array
     {
-        /** @var list<AdministrationServiceSectionRecord> $records */
+        /** @var list<AdministrationServiceSectionRecordEntity> $records */
         $records = $manager->createQueryBuilder()
             ->select('record')
-            ->from(AdministrationServiceSectionRecord::class, 'record')
+            ->from(AdministrationServiceSectionRecordEntity::class, 'record')
             ->orderBy('record.sectionKey', 'ASC')
             ->getQuery()
             ->getResult();
@@ -193,7 +193,7 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
     private function entityManager(): EntityManagerInterface
     {
         $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class)
-            ?? $this->managerRegistry->getManagerForClass(AdministrationServiceSectionRecord::class);
+            ?? $this->managerRegistry->getManagerForClass(AdministrationServiceSectionRecordEntity::class);
 
         if (!$manager instanceof EntityManagerInterface) {
             throw new \LogicException('No Doctrine entity manager is configured for Administering service-tool menu records.');

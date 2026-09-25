@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationServiceSectionRecord;
+use App\Administering\Entity\AdministrationServiceSectionRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -15,7 +15,7 @@ final class AdministrationServiceSectionRecordCrudController extends AbstractRea
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationServiceSectionRecord::class;
+        return AdministrationServiceSectionRecordEntity::class;
     }
 
     protected function entityPermission(): string
