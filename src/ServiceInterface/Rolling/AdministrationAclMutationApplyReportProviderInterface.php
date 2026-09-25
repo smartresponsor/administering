@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationApplyRecord;
+use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use App\Administering\Value\Managing\ManagingAclMutationApplySummary;
 
 /**
@@ -12,7 +12,7 @@ use App\Administering\Value\Managing\ManagingAclMutationApplySummary;
  */
 interface AdministrationAclMutationApplyReportProviderInterface
 {
-    /** @return list<AdministrationAclMutationApplyRecord> */
+    /** @return list<AdministrationAclMutationApplyRecordEntity> */
     public function recent(int $limit = 50): array;
 
     public function summary(int $limit = 200): ManagingAclMutationApplySummary;

@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_acl_mutation_apply_record')]
 #[ORM\Index(name: 'idx_administration_acl_apply_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_acl_apply_status', columns: ['status'])]
-final class AdministrationAclMutationApplyRecord
+final class AdministrationAclMutationApplyRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

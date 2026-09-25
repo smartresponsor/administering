@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationApplyRecord;
+use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
@@ -141,7 +141,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
         string $requestedBySubject,
         ManagingAclMutationApplyResult $result,
     ): void {
-        $applyRecord = new AdministrationAclMutationApplyRecord(
+        $applyRecord = new AdministrationAclMutationApplyRecordEntity(
             $record->requestKey(),
             $record->mutationType(),
             $record->subjectIdentifier(),

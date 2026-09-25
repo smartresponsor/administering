@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationApplyRecord;
+use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyReportProviderInterface;
 use App\Administering\Value\Managing\ManagingAclMutationApplySummary;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,13 +18,13 @@ final readonly class AdministrationDoctrineAclMutationApplyReportProvider implem
     {
     }
 
-    /** @return list<AdministrationAclMutationApplyRecord> */
+    /** @return list<AdministrationAclMutationApplyRecordEntity> */
     public function recent(int $limit = 50): array
     {
         $safeLimit = max(1, min(200, $limit));
 
         return $this->manager()
-            ->getRepository(AdministrationAclMutationApplyRecord::class)
+            ->getRepository(AdministrationAclMutationApplyRecordEntity::class)
             ->findBy([], ['id' => 'DESC'], $safeLimit);
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationAclMutationApplyRecord;
+use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -16,7 +16,7 @@ final class AdministrationAclMutationApplyRecordCrudController extends AbstractR
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationAclMutationApplyRecord::class;
+        return AdministrationAclMutationApplyRecordEntity::class;
     }
 
     protected function entityPermission(): string
