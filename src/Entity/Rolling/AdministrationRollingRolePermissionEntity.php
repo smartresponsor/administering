@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Rolling;
 
-class RollingRolePermission
+class AdministrationRollingRolePermissionEntity
 {
     private string $effect = 'deny';
     private string $permissionKey = '';
