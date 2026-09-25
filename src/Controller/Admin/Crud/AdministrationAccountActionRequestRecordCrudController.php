@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationAccountActionRequestRecord;
+use App\Administering\Entity\AdministrationAccountActionRequestRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -15,7 +15,7 @@ final class AdministrationAccountActionRequestRecordCrudController extends Abstr
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationAccountActionRequestRecord::class;
+        return AdministrationAccountActionRequestRecordEntity::class;
     }
 
     protected function entityPermission(): string

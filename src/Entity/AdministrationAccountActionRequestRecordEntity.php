@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_administration_account_action_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_account_action_account', columns: ['account_reference'])]
 #[ORM\Index(name: 'idx_administration_account_action_status', columns: ['status'])]
-final class AdministrationAccountActionRequestRecord
+final class AdministrationAccountActionRequestRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
