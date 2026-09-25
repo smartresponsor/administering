@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Provider\Rolling;
+namespace App\Administering\Service\Rolling;
 
 use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionDecisionServiceInterface;
 
