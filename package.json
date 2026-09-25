@@ -1,0 +1,12 @@
+{
+  "name": "administering-ui-tests",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:behavioral-coverage",
+    "test:ui": "playwright test",
+    "test:behavioral-coverage": "npm run test:ui && php tools/coverage/administering-behavioral-ui-coverage.php"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

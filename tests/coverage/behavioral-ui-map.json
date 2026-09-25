@@ -1,0 +1,26 @@
+{
+  "eligible": {
+    "behavioral": [
+      "workflow:standalone-admin-authentication-required"
+    ],
+    "critical": [
+      "workflow:standalone-admin-authentication-required"
+    ]
+  },
+  "tests": {
+    "standalone admin dashboard fails closed when host authentication is unavailable": {
+      "functional": [
+        "route:administration_admin_index"
+      ],
+      "behavioral": [
+        "workflow:standalone-admin-authentication-required"
+      ],
+      "ui": [
+        "surface:administration_admin_index"
+      ],
+      "critical": [
+        "workflow:standalone-admin-authentication-required"
+      ]
+    }
+  }
+}
