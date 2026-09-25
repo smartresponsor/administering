@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Rolling;
 
-class RollingSubjectRoleAssignment
+class AdministrationRollingSubjectRoleAssignmentEntity
 {
     private string $subjectIdentifier = '';
     private string $roleKey = '';
