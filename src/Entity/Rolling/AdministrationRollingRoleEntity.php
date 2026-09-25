@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Entity\Rolling;
 
-class RollingRole
+class AdministrationRollingRoleEntity
 {
     private bool $enabled = false;
     private string $roleKey = '';
