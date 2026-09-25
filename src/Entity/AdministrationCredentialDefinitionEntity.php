@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdministrationCredentialDefinitionRepository::class)]
 #[ORM\Table(name: 'administration_credential_definition')]
 #[ORM\UniqueConstraint(name: 'uniq_administration_credential_definition_key_env', columns: ['credential_key', 'environment_name'])]
-class AdministrationCredentialDefinition
+class AdministrationCredentialDefinitionEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

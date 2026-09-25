@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationCredentialDefinition;
+use App\Administering\Entity\AdministrationCredentialDefinitionEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -14,7 +14,7 @@ final class AdministrationCredentialDefinitionCrudController extends AbstractRea
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationCredentialDefinition::class;
+        return AdministrationCredentialDefinitionEntity::class;
     }
 
     protected function entityPermission(): string
