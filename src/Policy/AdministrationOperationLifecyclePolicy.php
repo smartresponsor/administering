@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Lifecycle;
+namespace App\Administering\Policy;
 
 /**
  * Lifecycle guard for administration operation.
