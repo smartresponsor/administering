@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Accessing;
 
-use App\Administering\Entity\AdministrationAccessingAccountRecord;
+use App\Administering\Entity\AdministrationAccessingAccountRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Accessing\AdministrationAccountProjectionProviderInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Accessing section primary CRUD anchor from safe account projections.
@@ -21,7 +21,7 @@ final readonly class AdministrationAccessingAccountRecordSyncService implements 
 
     public function __construct(
         private AdministrationAccountProjectionProviderInterface $accountProjectionProvider,
-        private EntityManagerInterface $entityManager,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -34,10 +34,11 @@ final readonly class AdministrationAccessingAccountRecordSyncService implements 
     {
         $this->replaceRecords();
         $count = 0;
+        $records = [];
 
         foreach ($this->accountProjectionProvider->recent(100) as $account) {
             $status = $account->active() ? ($account->verified() ? 'active_verified' : 'active_unverified') : 'inactive';
-            $this->entityManager->persist(new AdministrationAccessingAccountRecord(
+            $records[] = new AdministrationAccessingAccountRecordEntity(
                 accountReference: $account->subjectId(),
                 displayLabel: $account->displayName() ?? $account->identifier(),
                 status: $status,
@@ -46,20 +47,17 @@ final readonly class AdministrationAccessingAccountRecordSyncService implements 
                     'identifier' => $account->identifier(),
                     'bootstrapRoles' => $account->bootstrapRoles(),
                 ],
-            ));
+            );
             ++$count;
         }
 
-        $this->entityManager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationAccessingAccountRecordEntity::class);
 
         return new AdministrationServiceSectionAnchorSyncResult($this->sectionKey(), $count);
     }
 
     private function replaceRecords(): void
     {
-        $this->entityManager->createQueryBuilder()
-            ->delete(AdministrationAccessingAccountRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationAccessingAccountRecordEntity::class, []);
     }
 }

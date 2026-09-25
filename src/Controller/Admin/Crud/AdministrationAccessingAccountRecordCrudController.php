@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationAccessingAccountRecord;
+use App\Administering\Entity\AdministrationAccessingAccountRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -14,7 +14,7 @@ final class AdministrationAccessingAccountRecordCrudController extends AbstractR
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationAccessingAccountRecord::class;
+        return AdministrationAccessingAccountRecordEntity::class;
     }
 
     protected function entityPermission(): string

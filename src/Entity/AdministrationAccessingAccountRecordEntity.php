@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_accessing_account_record')]
 #[ORM\Index(name: 'idx_administration_accessing_account_status', columns: ['status'])]
 #[ORM\Index(name: 'idx_administration_accessing_account_reference', columns: ['account_reference'])]
-final class AdministrationAccessingAccountRecord
+final class AdministrationAccessingAccountRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
