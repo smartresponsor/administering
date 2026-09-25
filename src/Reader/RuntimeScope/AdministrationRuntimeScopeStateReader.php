@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Reader\RuntimeScope;
 
 use App\Administering\Resolver\RuntimeScope\AdministrationRuntimeScopePathResolver;
-use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockNormalizer;
+use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeLockService;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeState;
 
 final readonly class AdministrationRuntimeScopeStateReader
@@ -14,7 +14,7 @@ final readonly class AdministrationRuntimeScopeStateReader
         private AdministrationRuntimeScopePathResolver $pathResolver,
         private AdministrationRuntimeScopeComposerInventoryReader $composerInventoryReader,
         private AdministrationRuntimeScopeBundleCatalogReader $catalogReader,
-        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
+        private AdministrationRuntimeScopeLockService $lockNormalizer,
     ) {
     }
 

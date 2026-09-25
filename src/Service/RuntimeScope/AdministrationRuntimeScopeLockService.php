@@ -7,7 +7,7 @@ namespace App\Administering\Service\RuntimeScope;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeLockEvidence;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeVisibility;
 
-final readonly class AdministrationRuntimeScopeLockNormalizer
+final readonly class AdministrationRuntimeScopeLockService
 {
     public function normalize(string $lockPath): AdministrationRuntimeScopeLockEvidence
     {
