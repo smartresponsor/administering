@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Contract\Accessing;
+namespace App\Administering\Provider\Accessing;
 
 use App\Administering\Contract\AdministrationComponentIntegrationContractInterface;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Contract\Rolling;
+namespace App\Administering\Provider\Rolling;
 
 use App\Administering\Contract\AdministrationComponentIntegrationContractInterface;
 
