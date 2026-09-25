@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'administration_managing_field_control_record')]
 #[ORM\Index(name: 'idx_administration_managing_field_resource', columns: ['resource_class'])]
 #[ORM\Index(name: 'idx_administration_managing_field_status', columns: ['access_status', 'visibility_status'])]
-final class AdministrationManagingFieldControlRecord
+final class AdministrationManagingFieldControlRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

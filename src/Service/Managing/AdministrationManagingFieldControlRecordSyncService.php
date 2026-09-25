@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Managing;
 
-use App\Administering\Entity\AdministrationManagingFieldControlRecord;
+use App\Administering\Entity\AdministrationManagingFieldControlRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessCatalogProviderInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Managing section primary CRUD anchor from field-access catalog metadata.
@@ -21,7 +21,7 @@ final readonly class AdministrationManagingFieldControlRecordSyncService impleme
 
     public function __construct(
         private AdministrationFieldAccessCatalogProviderInterface $fieldAccessCatalogProvider,
-        private EntityManagerInterface $entityManager,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -34,9 +34,10 @@ final readonly class AdministrationManagingFieldControlRecordSyncService impleme
     {
         $this->replaceRecords();
         $count = 0;
+        $records = [];
 
         foreach ($this->fieldAccessCatalogProvider->catalogItems() as $item) {
-            $this->entityManager->persist(new AdministrationManagingFieldControlRecord(
+            $records[] = new AdministrationManagingFieldControlRecordEntity(
                 resourceClass: 'managing.field.permission',
                 fieldName: $item->permissionKey,
                 pageName: 'all',
@@ -48,20 +49,17 @@ final readonly class AdministrationManagingFieldControlRecordSyncService impleme
                     'category' => $item->category,
                     'scopes' => $item->scopes,
                 ],
-            ));
+            );
             ++$count;
         }
 
-        $this->entityManager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationManagingFieldControlRecordEntity::class);
 
         return new AdministrationServiceSectionAnchorSyncResult($this->sectionKey(), $count);
     }
 
     private function replaceRecords(): void
     {
-        $this->entityManager->createQueryBuilder()
-            ->delete(AdministrationManagingFieldControlRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationManagingFieldControlRecordEntity::class, []);
     }
 }
