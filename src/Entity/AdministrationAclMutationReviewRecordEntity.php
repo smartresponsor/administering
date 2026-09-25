@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_administration_acl_review_request_key', columns: ['request_key'])]
 #[ORM\Index(name: 'idx_administration_acl_review_subject', columns: ['subject_identifier'])]
 #[ORM\Index(name: 'idx_administration_acl_review_permission', columns: ['permission_or_role_key'])]
-final class AdministrationAclMutationReviewRecord
+final class AdministrationAclMutationReviewRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

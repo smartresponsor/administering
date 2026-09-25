@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
 use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
@@ -73,12 +73,12 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
             {
             }
 
-            public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecord
+            public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecordEntity
             {
                 $this->capture->mutationType = $request->mutationType();
                 $this->capture->subjectIdentifier = $request->subjectIdentifier();
 
-                return new AdministrationAclMutationReviewRecord(
+                return new AdministrationAclMutationReviewRecordEntity(
                     'review-key',
                     $request->mutationType(),
                     $request->subjectIdentifier(),

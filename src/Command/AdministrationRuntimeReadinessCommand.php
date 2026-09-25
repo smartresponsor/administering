@@ -7,7 +7,7 @@ namespace App\Administering\Command;
 use App\Administering\CheckerInterface\Security\AdministrationPermissionCheckerInterface;
 use App\Administering\Entity\AdministrationAccountActionRequestRecordEntity;
 use App\Administering\Entity\AdministrationAclMutationApplyRecord;
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use App\Administering\Entity\AdministrationAuditEventEntity;
 use App\Administering\Entity\AdministrationConfigSnapshotEntity;
 use App\Administering\Entity\AdministrationCredentialStateEntity;
@@ -46,7 +46,7 @@ final class AdministrationRuntimeReadinessCommand extends Command
         AdministrationConfigSnapshotEntity::class,
         AdministrationCredentialStateEntity::class,
         AdministrationAccountActionRequestRecordEntity::class,
-        AdministrationAclMutationReviewRecord::class,
+        AdministrationAclMutationReviewRecordEntity::class,
         AdministrationAclMutationApplyRecord::class,
     ];
 

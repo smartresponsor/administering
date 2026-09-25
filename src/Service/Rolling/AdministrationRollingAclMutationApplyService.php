@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Service\Rolling;
 
 use App\Administering\Entity\AdministrationAclMutationApplyRecord;
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
@@ -51,10 +51,10 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
         $manager = $this->manager();
 
         $record = $manager
-            ->getRepository(AdministrationAclMutationReviewRecord::class)
+            ->getRepository(AdministrationAclMutationReviewRecordEntity::class)
             ->findOneBy(['requestKey' => $requestKey]);
 
-        if (!$record instanceof AdministrationAclMutationReviewRecord) {
+        if (!$record instanceof AdministrationAclMutationReviewRecordEntity) {
             return ManagingAclMutationApplyResult::skipped(
                 $requestKey,
                 'ACL mutation review record was not found.',
@@ -137,7 +137,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
     }
 
     private function recordApplyAttempt(
-        AdministrationAclMutationReviewRecord $record,
+        AdministrationAclMutationReviewRecordEntity $record,
         string $requestedBySubject,
         ManagingAclMutationApplyResult $result,
     ): void {

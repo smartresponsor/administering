@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -15,7 +15,7 @@ final class AdministrationAclMutationReviewRecordCrudController extends Abstract
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationAclMutationReviewRecord::class;
+        return AdministrationAclMutationReviewRecordEntity::class;
     }
 
     protected function entityPermission(): string
