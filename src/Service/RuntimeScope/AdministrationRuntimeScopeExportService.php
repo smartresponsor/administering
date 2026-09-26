@@ -19,7 +19,7 @@ final readonly class AdministrationRuntimeScopeExportService
         private AdministrationRuntimeScopeBundleCatalogReader $catalogReader,
         private AdministrationRuntimeScopeComposerInventoryReader $composerInventoryReader,
         private AdministrationRuntimeScopePhpLockSourceFactory $sourceFactory,
-        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
+        private AdministrationRuntimeScopeLockService $lockNormalizer,
     ) {
     }
 
@@ -97,7 +97,7 @@ final readonly class AdministrationRuntimeScopeExportService
             }
 
             $lockedEnabled = in_array($component, $existingLock->enabledComponents, true);
-            $desiredEnabled = $forcedEnabled || (!$forcedDisabled && $lockedEnabled);
+            $desiredEnabled = $forcedEnabled || $lockedEnabled;
 
             if ($desiredEnabled && $installed) {
                 $enabledComponents[] = $component;

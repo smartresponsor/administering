@@ -13,7 +13,7 @@ final readonly class AdministrationRuntimeScopeValidationService
     public function __construct(
         private AdministrationRuntimeScopePathResolver $pathResolver,
         private AdministrationRuntimeScopeConfigLeakScanner $configLeakScanner,
-        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
+        private AdministrationRuntimeScopeLockService $lockNormalizer,
     ) {
     }
 

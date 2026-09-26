@@ -46,17 +46,14 @@ final class AdministrationRuntimeComponentStatusServiceTest extends TestCase
         self::assertFalse($rows['accessing']->lockDisabled);
     }
 
-    public function testRequestedMissingComponentReportsMissingPackage(): void
+    public function testLegacyRuntimeScopeDoesNotCreateMissingPackageDecisionRows(): void
     {
         $rows = $this->statusesByComponent($this->state(runtimeScope: 'rolling'));
 
-        self::assertSame('missing_package', $rows['rolling']->status);
-        self::assertTrue($rows['rolling']->inRuntimeScope);
-        self::assertFalse($rows['rolling']->composerPackageInstalled);
-        self::assertFalse($rows['rolling']->lockEnabled);
+        self::assertArrayNotHasKey('rolling', $rows);
     }
 
-    public function testInstalledComponentOutsideScopeReportsOutOfScope(): void
+    public function testInstalledAndLockEnabledComponentIsAvailableRegardlessOfLegacyScope(): void
     {
         $rows = $this->statusesByComponent($this->state(
             runtimeScope: 'administering',
@@ -66,8 +63,8 @@ final class AdministrationRuntimeComponentStatusServiceTest extends TestCase
             enabledComponents: ['managing'],
         ));
 
-        self::assertSame('out_of_scope', $rows['managing']->status);
-        self::assertFalse($rows['managing']->inRuntimeScope);
+        self::assertSame('available', $rows['managing']->status);
+        self::assertTrue($rows['managing']->inRuntimeScope);
         self::assertTrue($rows['managing']->composerPackageInstalled);
         self::assertTrue($rows['managing']->lockEnabled);
     }

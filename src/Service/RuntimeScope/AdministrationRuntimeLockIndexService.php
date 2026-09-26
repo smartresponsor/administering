@@ -10,7 +10,7 @@ final readonly class AdministrationRuntimeLockIndexService
 {
     public function __construct(
         private string $projectDir,
-        private AdministrationRuntimeScopeLockNormalizer $lockNormalizer,
+        private AdministrationRuntimeScopeLockService $lockNormalizer,
     ) {
     }
 
