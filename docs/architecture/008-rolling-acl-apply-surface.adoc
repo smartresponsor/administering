@@ -11,11 +11,11 @@ Administering may promote a previously persisted Rolling ACL mutation review to 
 == Flow
 
 . Operator creates a Rolling ACL dry-run review.
-. Administering persists `AdministrationAclMutationReviewRecord`.
+. Administering persists `AdministrationAclMutationReviewRecordEntity`.
 . Operator submits the review request key for apply.
 . Administering builds a safe apply request from the persisted review.
 . Rolling-owned ACL administration service accepts or rejects execution.
-. Administering persists `AdministrationAclMutationApplyRecord` with safe result metadata.
+. Administering persists `AdministrationAclMutationApplyRecordEntity` with safe result metadata.
 
 == Forbidden payloads
 

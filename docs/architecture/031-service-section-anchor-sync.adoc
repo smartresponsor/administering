@@ -5,12 +5,12 @@ Each sidebar section must point to a section-owned EasyAdmin CRUD index, not to 
 
 The primary CRUD anchors are intentionally persisted as administrative/system records:
 
-* Accessing uses `AdministrationAccessingAccountRecord`.
-* Connected uses `AdministrationConnectedComponentRecord`.
-* Environment uses `AdministrationEnvironmentRuntimeRecord`.
-* Managing uses `AdministrationManagingFieldControlRecord`.
-* Symfony uses `AdministrationSymfonyRouteRecord`.
-* Unknown or planned sections use `AdministrationServiceSectionRecord` until a dedicated anchor is introduced.
+* Accessing uses `AdministrationAccessingAccountRecordEntity`.
+* Connected uses `AdministrationConnectedComponentRecordEntity`.
+* Environment uses `AdministrationEnvironmentRuntimeRecordEntity`.
+* Managing uses `AdministrationManagingFieldControlRecordEntity`.
+* Symfony uses `AdministrationSymfonyRouteRecordEntity`.
+* Unknown or planned sections use `AdministrationServiceSectionRecordEntity` until a dedicated anchor is introduced.
 
 The synchronization command is explicit and does not run during page rendering:
 

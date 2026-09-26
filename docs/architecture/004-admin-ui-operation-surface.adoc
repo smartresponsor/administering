@@ -13,7 +13,7 @@ The UI is responsible for visibility, review, and controlled orchestration, not 
 
 == Operation model
 
-Long-running work must be represented as an `AdministrationOperationRun` and executed through Messenger or an explicit controlled command.
+Long-running work must be represented as an `AdministrationOperationRunEntity` and executed through Messenger or an explicit controlled command.
 Examples:
 
 * configuration scan

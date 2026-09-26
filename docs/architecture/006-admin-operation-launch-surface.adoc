@@ -14,7 +14,7 @@ The UI must not queue raw secrets, decrypted credentials, full `.env` payloads, 
 ----
 /admin/operations
   -> AdministrationOperationSubmitter
-  -> AdministrationOperationRun in system SQLite
+  -> AdministrationOperationRunEntity in system SQLite
   -> Messenger message containing only operationKey
   -> AdministrationOperationRunner
   -> status/details visible through operation run pages
@@ -22,7 +22,7 @@ The UI must not queue raw secrets, decrypted credentials, full `.env` payloads, 
 
 == Storage
 
-`AdministrationOperationRun` belongs to the system SQLite entity manager. It must not be stored in the PostgreSQL user/business entity manager.
+`AdministrationOperationRunEntity` belongs to the system SQLite entity manager. It must not be stored in the PostgreSQL user/business entity manager.
 
 == Security
 

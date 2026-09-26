@@ -1,6 +1,6 @@
 = 069 Composer Package Evidence Boundary
 
-Administering is a standalone Symfony component. Runtime components are detected from local evidence, not required as PHP or Composer dependencies of Administering itself.
+Administering is a standalone Symfony component. The canonical platform baseline is an explicit Composer dependency, while optional runtime-scope components remain external evidence discovered from runtime inventory.
 
 == Rule
 
@@ -13,7 +13,9 @@ Administering may read component package names from:
 * `config/kernel/runtime_scope.prod.lock.php`
 * `config/runtime-scope/bundle_catalog.php`
 
-Administering must not require runtime-scope packages in its own `composer.json`.
+Administering must directly require `cruding/crud`, `collectioning/collection`, `tabling/table`, `viewing/view`, `interfacing/interface`, `objecting/object`, and `easycorp/easyadmin-bundle` in `composer.json`. Other runtime-scope packages remain optional evidence and must not become root dependencies unless Canonization explicitly promotes them to the platform baseline.
+
+Development baseline packages use sibling Composer `path` repositories with `options.symlink: true`; `composer.prod.json` uses packaged/VCS dependencies and contains no sibling path repositories.
 
 == Before
 
@@ -38,7 +40,8 @@ The architecture suite now includes:
 
 The guard rejects:
 
-* runtime-scope packages from `config/runtime-scope/bundle_catalog.php` in root `require` or `require-dev`;
-* sibling component path repositories such as `../Configuring`.
+* non-baseline runtime-scope packages from `config/runtime-scope/bundle_catalog.php` in root `require` or `require-dev`;
+* sibling component path repositories outside the Canonization-permitted helper contour;
+* baseline sibling repositories that are not Composer `path` repositories with `options.symlink: true`.
 
-This keeps runtime-scope packages as evidence and prevents Composer-level coupling from returning.
+This keeps optional runtime-scope packages as evidence while preserving the explicit Canon022 platform baseline and Canon023 development wiring.

@@ -3,7 +3,7 @@
 
 == What was changed
 
-Before this patch, `Administering/config/component/component.yaml` contained
+Before this patch, `Administering/config/component/administration_component.yaml` contained
 an `integrations:` block with detailed knowledge of Rolling's internal class names,
 route names, and Managing-specific contracts:
 

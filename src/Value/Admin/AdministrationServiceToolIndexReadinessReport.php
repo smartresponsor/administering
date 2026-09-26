@@ -7,7 +7,7 @@ namespace App\Administering\Value\Admin;
 /**
  * Read-only summary of the materialized service-tool index stored in SQLite.
  *
- * The report is intentionally derived from AdministrationServiceToolRecord rows,
+ * The report is intentionally derived from AdministrationServiceToolRecordEntity rows,
  * not directly from src/Service, so it verifies what EasyAdmin will actually see
  * after refresh-index has synchronized the filesystem catalog.
  */

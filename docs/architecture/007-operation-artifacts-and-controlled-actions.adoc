@@ -1,6 +1,6 @@
 = Operation Artifacts and Controlled Actions
 
-Administering may generate metadata-only artifacts for operation results. These artifacts are stored under `var/administering/operation-artifacts/` and indexed by the system SQLite storage through `AdministrationOperationArtifact`.
+Administering may generate metadata-only artifacts for operation results. These artifacts are stored under `var/administering/operation-artifacts/` and indexed by the system SQLite storage through `AdministrationOperationArtifactEntity`.
 
 Artifacts may contain safe summaries, counts, manifest previews, and checksums. They must not contain plain secrets, raw `.env` values, decrypted credentials, password hashes, TOTP secrets, recovery codes, session payloads, or raw production configuration dumps.
 
