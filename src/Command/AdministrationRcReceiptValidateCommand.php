@@ -277,7 +277,7 @@ final class AdministrationRcReceiptValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'passed' => $passed,
             'details' => $detail,
         ];

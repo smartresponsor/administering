@@ -282,7 +282,7 @@ final class AdministrationRcHandoffBundleCommand extends Command
      */
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
-        $checks[] = ['nameEntity' => $nameEntity, 'passed' => $ok, 'details' => $detail];
+        $checks[] = ['name' => $nameEntity, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
             $errors[] = sprintf('%s: %s', $nameEntity, $detail);
         }

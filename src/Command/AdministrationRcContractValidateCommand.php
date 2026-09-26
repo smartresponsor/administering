@@ -466,7 +466,7 @@ final class AdministrationRcContractValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $details): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'passed' => $passed,
             'details' => $details,
         ];
