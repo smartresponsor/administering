@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Command\Config;
 
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
-use App\Administering\Service\Config\AdministrationConfigFormResolverService;
+use App\Administering\Service\Config\AdministrationConfigFormService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
 use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -25,7 +25,7 @@ final class AdministrationConfigApplyCommand extends Command
     public function __construct(
         private readonly AdministrationConfigToolRegistryService $registryService,
         private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
-        private readonly AdministrationConfigFormResolverService $formResolverService,
+        private readonly AdministrationConfigFormService $formResolverService,
         private readonly AdministrationConfigStateService $stateService,
     ) {
         parent::__construct();
@@ -78,6 +78,6 @@ final class AdministrationConfigApplyCommand extends Command
 
         $io->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        return 'failed' === ($result['status'] ?? null) ? Command::FAILURE : Command::SUCCESS;
+        return 'failed' === $result['status'] ? Command::FAILURE : Command::SUCCESS;
     }
 }

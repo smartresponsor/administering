@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(private readonly iterable $ownerToolProviders = [])
     {
         parent::__construct();
@@ -145,7 +145,7 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
         return $requireOwnerPrefix && [] !== $prefixViolations ? Command::FAILURE : Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

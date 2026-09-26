@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Mapper\Config;
 
-use App\Administering\Value\Config\ConfigVariable;
+use App\Administering\Value\Config\AdministrationConfigVariable;
 
 final readonly class AdministrationConfigVariableFormMapper
 {
-    public static function fieldName(ConfigVariable $variable): string
+    public static function fieldName(AdministrationConfigVariable $variable): string
     {
         $suffix = strtolower((string) preg_replace('/[^A-Za-z0-9_]+/', '_', $variable->key));
         $suffix = trim($suffix, '_');
@@ -17,8 +17,8 @@ final readonly class AdministrationConfigVariableFormMapper
     }
 
     /**
-     * @param iterable<ConfigVariable> $variables
-     * @param array<string, mixed>     $variableData keyed by ConfigVariable::key
+     * @param iterable<AdministrationConfigVariable> $variables
+     * @param array<string, mixed>                   $variableData keyed by AdministrationConfigVariable::key
      *
      * @return array<string, mixed> keyed by generated form field names
      */
@@ -33,10 +33,10 @@ final readonly class AdministrationConfigVariableFormMapper
     }
 
     /**
-     * @param iterable<ConfigVariable> $variables
-     * @param array<string, mixed>     $formData  keyed by generated form field names
+     * @param iterable<AdministrationConfigVariable> $variables
+     * @param array<string, mixed>                   $formData  keyed by generated form field names
      *
-     * @return array<string, mixed> keyed by ConfigVariable::key
+     * @return array<string, mixed> keyed by AdministrationConfigVariable::key
      */
     public function toVariableData(iterable $variables, array $formData): array
     {

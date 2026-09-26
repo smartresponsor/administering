@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Config;
 
-final class ConfigVariableType
+final class AdministrationConfigVariableType
 {
     public const STRING = 'string';
     public const BOOL = 'bool';

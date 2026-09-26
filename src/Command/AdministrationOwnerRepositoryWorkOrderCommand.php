@@ -289,13 +289,12 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
             return null;
         }
 
-        try {
-            $decoded = json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return null;
+        $decoded = json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+        if (!is_array($decoded)) {
+            throw new \UnexpectedValueException(sprintf('Owner repository readiness JSON must decode to an object/array: %s', $path));
         }
 
-        return is_array($decoded) ? $decoded : null;
+        return $decoded;
     }
 
     private function componentToken(string $componentKey): string

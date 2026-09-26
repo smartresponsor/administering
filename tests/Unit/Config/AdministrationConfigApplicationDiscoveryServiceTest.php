@@ -14,7 +14,7 @@ final class AdministrationConfigApplicationDiscoveryServiceTest extends TestCase
         $projectDir = sys_get_temp_dir().'/administering-config-discovery-'.bin2hex(random_bytes(4));
         $componentDir = $projectDir.'/../DemoComponent';
         @mkdir($componentDir.'/config/component', 0775, true);
-        file_put_contents($componentDir.'/config/component/component.yaml', <<<'YAML'
+        file_put_contents($componentDir.'/config/component/administration_component.yaml', <<<'YAML'
 component: DemoComponent
 title: Demo Component
 package: demo/component

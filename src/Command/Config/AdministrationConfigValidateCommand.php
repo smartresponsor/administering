@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Command\Config;
 
 use App\Administering\Service\Config\AdministrationConfigToolRegistryService;
-use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,7 +38,7 @@ final class AdministrationConfigValidateCommand extends Command
                 $errors[] = sprintf('%s/%s: invalid form class %s', $descriptor->applicationCode, $descriptor->toolCode, $formClass ?? '<missing>');
             }
 
-            if (null === $serviceClass || !class_exists($serviceClass) || !is_subclass_of($serviceClass, ConfigToolServiceInterface::class)) {
+            if (null === $serviceClass || !class_exists($serviceClass) || !is_subclass_of($serviceClass, AdministrationConfigToolServiceInterface::class)) {
                 $errors[] = sprintf('%s/%s: missing service class %s', $descriptor->applicationCode, $descriptor->toolCode, $serviceClass ?? '<missing>');
             }
 

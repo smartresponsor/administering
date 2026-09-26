@@ -45,22 +45,22 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
 
         $artifactChecks = [
             [
-                'nameEntity' => 'owner repository slice intake report',
+                'name' => 'owner repository slice intake report',
                 'path' => $intakePath,
                 'status' => is_file($intakePath) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'transition freeze report',
+                'name' => 'transition freeze report',
                 'path' => $freezePath,
                 'status' => is_file($freezePath) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'owner-side external handoff directory',
+                'name' => 'owner-side external handoff directory',
                 'path' => $handoffDir,
                 'status' => is_dir($handoffDir) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'owner-side handoff report',
+                'name' => 'owner-side handoff report',
                 'path' => rtrim($handoffDir, '/\\').'/handoff-report.json',
                 'status' => is_file(rtrim($handoffDir, '/\\').'/handoff-report.json') ? 'present' : 'missing',
             ],
@@ -142,7 +142,7 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
         $io->table(
             ['Artifact', 'Status', 'Path'],
             array_map(static fn (array $item): array => [
-                $item['nameEntity'],
+                $item['name'],
                 $item['status'],
                 $item['path'],
             ], $artifactChecks),

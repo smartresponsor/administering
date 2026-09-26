@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageManifestReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -179,7 +179,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
      *
      * @return array<string, mixed>
      */
-    private function buildToolEntry(string $componentKey, string $componentToken, string $providerClass, ConfigurationToolDefinition $definition, array $violations): array
+    private function buildToolEntry(string $componentKey, string $componentToken, string $providerClass, AdministrationConfigurationToolDefinition $definition, array $violations): array
     {
         $servicePath = sprintf('%s/src/Service/Configuration/%sConfiguration%sService.php', $componentKey, $componentKey, $definition->toolSlug());
         $formTypePath = null === $definition->formTypeClass ? null : sprintf('%s/src/Form/Configuration/%sConfiguration%sFormType.php', $componentKey, $componentKey, $definition->toolSlug());
@@ -263,7 +263,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

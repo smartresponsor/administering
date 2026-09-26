@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
-use App\Administering\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
-use App\Administering\Value\Config\ConfigVariable;
+use App\Administering\ServiceInterface\Config\AdministrationManagedConfigVariablesProviderInterface;
+use App\Administering\Value\Config\AdministrationConfigVariable;
 
-final readonly class AdministrationConfigManagedVariableResolverService
+final readonly class AdministrationConfigManagedVariableService
 {
     public function __construct(private AdministrationConfigToolServiceLocator $toolServiceLocator)
     {
     }
 
-    /** @return list<ConfigVariable> */
+    /** @return list<AdministrationConfigVariable> */
     public function variablesForTool(string $applicationCode, string $toolCode): array
     {
         $toolService = $this->toolServiceLocator->forTool($applicationCode, $toolCode);
-        if (!$toolService instanceof ManagedConfigVariablesProviderInterface) {
+        if (!$toolService instanceof AdministrationManagedConfigVariablesProviderInterface) {
             return [];
         }
 

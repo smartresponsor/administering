@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -149,8 +149,8 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
      * @return array<string, mixed>
      */
     private function buildEntry(
-        ConfigurationToolProviderInterface $provider,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolProviderInterface $provider,
+        AdministrationConfigurationToolDefinition $definition,
         array $violations,
     ): array {
         $componentKey = $this->normalizeComponentKey($definition->componentKey());
@@ -210,7 +210,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

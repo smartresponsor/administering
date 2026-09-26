@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Command;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolTransitionStatusReport;
 use App\Administering\Value\Admin\AdministrationServiceTool;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationOwnerConfigurationToolTransitionStatusCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationServiceToolCatalogInterface $toolCatalog,
         private readonly iterable $ownerToolProviders = [],

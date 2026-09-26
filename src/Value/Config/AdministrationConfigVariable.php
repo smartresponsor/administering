@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Config;
 
-final readonly class ConfigVariable
+final readonly class AdministrationConfigVariable
 {
     /**
      * @param array<string, mixed> $options
@@ -14,8 +14,8 @@ final readonly class ConfigVariable
     public function __construct(
         public string $key,
         public string $label,
-        public string $type = ConfigVariableType::STRING,
-        public string $storage = ConfigVariableStorage::ENV,
+        public string $type = AdministrationConfigVariableType::STRING,
+        public string $storage = AdministrationConfigVariableStorage::ENV,
         public mixed $defaultValue = null,
         public bool $required = false,
         public array $options = [],

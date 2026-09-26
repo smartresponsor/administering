@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Config;
 
-final class ConfigVariableStorage
+final class AdministrationConfigVariableStorage
 {
     public const ENV = 'env';
     public const SECRET = 'secret';

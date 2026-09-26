@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Administering\Catalog\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationServiceTool;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 
 /**
  * Merges Administering-owned legacy tools with owner-provided configuration tools.
@@ -20,7 +20,7 @@ use App\Administering\Value\Tool\ConfigurationToolDefinition;
  */
 final readonly class AdministrationCompositeServiceToolCatalog implements AdministrationServiceToolCatalogInterface
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private AdministrationFilesystemServiceToolCatalog $internalCatalog,
         private AdministrationConfigurationToolDefinitionValidatorInterface $ownerToolDefinitionValidator,
@@ -28,6 +28,11 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
     ) {
     }
 
+    /**
+     * Returns the merged, validated tool inventory from internal and owner-provided sources.
+     *
+     * @return list<AdministrationServiceTool>
+     */
     public function tools(): array
     {
         $tools = $this->internalCatalog->tools();
@@ -45,6 +50,11 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
         return $this->sortBySectionAndKey($tools);
     }
 
+    /**
+     * Returns only tools belonging to the requested component section/token.
+     *
+     * @return list<AdministrationServiceTool>
+     */
     public function toolsForSection(string $section): array
     {
         $tools = $this->internalCatalog->toolsForSection($section);
@@ -66,7 +76,7 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
         return $this->sortBySectionAndKey($tools);
     }
 
-    private function hasMaterializationError(ConfigurationToolProviderInterface $provider, ConfigurationToolDefinition $definition): bool
+    private function hasMaterializationError(AdministrationConfigurationToolProviderInterface $provider, AdministrationConfigurationToolDefinition $definition): bool
     {
         foreach ($this->ownerToolDefinitionValidator->validate($provider, $definition) as $violation) {
             if ($violation->isError()) {
@@ -77,7 +87,7 @@ final readonly class AdministrationCompositeServiceToolCatalog implements Admini
         return false;
     }
 
-    private function fromOwnerDefinition(ConfigurationToolProviderInterface $provider, ConfigurationToolDefinition $definition): AdministrationServiceTool
+    private function fromOwnerDefinition(AdministrationConfigurationToolProviderInterface $provider, AdministrationConfigurationToolDefinition $definition): AdministrationServiceTool
     {
         return new AdministrationServiceTool(
             section: $definition->componentKey(),

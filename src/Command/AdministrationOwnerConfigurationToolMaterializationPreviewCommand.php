@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolMaterializationReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -173,7 +173,7 @@ final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand ex
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

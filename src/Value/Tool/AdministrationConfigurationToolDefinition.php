@@ -6,7 +6,7 @@ namespace App\Administering\Value\Tool;
 
 use App\Administering\Value\Operation\AdministrationOperationType;
 
-final readonly class ConfigurationToolDefinition
+final readonly class AdministrationConfigurationToolDefinition
 {
     /**
      * @param list<string>         $tags

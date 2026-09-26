@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Administering\Service\Config;
 
 use App\Administering\Form\Config\AdministrationIntegrationConfigFormType;
-use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Administering\Value\Config\ConfigToolDescriptor;
+use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
+use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
 use App\Administering\Value\Form\Config\AdministrationIntegrationConfigData;
 use Symfony\Component\Yaml\Yaml;
 
-final readonly class AdministrationIntegrationConfigService implements ConfigToolServiceInterface
+final readonly class AdministrationIntegrationConfigService implements AdministrationConfigToolServiceInterface
 {
     public function __construct(
         private string $projectDir,
@@ -19,9 +19,9 @@ final readonly class AdministrationIntegrationConfigService implements ConfigToo
     ) {
     }
 
-    public function descriptor(): ConfigToolDescriptor
+    public function descriptor(): AdministrationConfigToolDescriptor
     {
-        return new ConfigToolDescriptor(
+        return new AdministrationConfigToolDescriptor(
             applicationCode: 'Administering',
             toolCode: 'administering.integration',
             label: 'Administering Integration',
@@ -39,8 +39,8 @@ final readonly class AdministrationIntegrationConfigService implements ConfigToo
                 'profileStorageEntityManager',
             ],
             sensitiveFields: [],
-            readableFiles: ['config/component/component.yaml'],
-            writableFiles: ['config/component/component.yaml'],
+            readableFiles: ['config/component/administration_component.yaml'],
+            writableFiles: ['config/component/administration_component.yaml'],
             metadata: ['section' => 'Configuration'],
             secretNames: [],
             applyStrategy: 'component_yaml',
@@ -86,7 +86,7 @@ final readonly class AdministrationIntegrationConfigService implements ConfigToo
         $patch = $this->manifestPatch($payload);
         $write = $this->fileWriter->write(
             $this->projectDir.'/../Administering',
-            'config/component/component.yaml',
+            'config/component/administration_component.yaml',
             $patch,
             $this->descriptor()->writableFiles,
         );
@@ -124,7 +124,7 @@ final readonly class AdministrationIntegrationConfigService implements ConfigToo
     /** @return array<string, mixed> */
     private function manifest(): array
     {
-        $path = $this->projectDir.'/../Administering/config/component/component.yaml';
+        $path = $this->projectDir.'/../Administering/config/component/administration_component.yaml';
         $parsed = is_file($path) ? Yaml::parseFile($path) : [];
 
         return is_array($parsed) ? $parsed : [];

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Validator\Admin;
 
-use App\Administering\ServiceInterface\Config\ConfigVariableToolServiceInterface;
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Config\AdministrationConfigVariableToolServiceInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 
 /**
  * Validates producer-side configuration tool definitions before materialization.
@@ -19,8 +19,8 @@ use App\Administering\Value\Tool\ConfigurationToolDefinition;
 final readonly class AdministrationConfigurationToolDefinitionValidator implements AdministrationConfigurationToolDefinitionValidatorInterface
 {
     public function validate(
-        ConfigurationToolProviderInterface $provider,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolProviderInterface $provider,
+        AdministrationConfigurationToolDefinition $definition,
     ): array {
         $violations = [];
         $componentKey = $definition->componentKey();
@@ -65,7 +65,7 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Producer form data should follow producer-side Configuration prefix convention.', '*\\'.$expectedDataSuffix, $definition->formDataClass);
         }
 
-        $variableDriven = is_a($definition->serviceClass, ConfigVariableToolServiceInterface::class, true);
+        $variableDriven = is_a($definition->serviceClass, AdministrationConfigVariableToolServiceInterface::class, true);
         if ($definition->executable && null === $definition->formTypeClass && !$variableDriven) {
             $violations[] = $this->violation('error', $definition, 'formTypeClass', 'Executable producer tool must either expose a legacy form type or implement the Configuring variable-driven tool contract.');
         }
@@ -83,7 +83,7 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
 
     private function violation(
         string $severity,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolDefinition $definition,
         string $field,
         string $message,
         ?string $expected = null,

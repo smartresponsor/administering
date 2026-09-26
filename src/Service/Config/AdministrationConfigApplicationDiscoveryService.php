@@ -28,7 +28,7 @@ final readonly class AdministrationConfigApplicationDiscoveryService
             }
 
             $rootPath = $this->componentRootPath($componentName);
-            $componentManifestPath = $rootPath.'/config/component/component.yaml';
+            $componentManifestPath = $rootPath.'/config/component/administration_component.yaml';
             if (!is_file($componentManifestPath)) {
                 continue;
             }
