@@ -18,7 +18,7 @@ parameters:
             - src/Command/AdministrationRuntimeReadinessCommand.php (?)
             - src/Controller/Admin/AdministrationDashboardController.php (?)
             - src/ValidatorInterface/Admin/AdministrationConfigurationToolDefinitionValidatorInterface.php (?)
-            - src/ValidatorInterface/Admin/ConfigurationToolDefinitionValidatorInterface.php (?)
+            - src/ValidatorInterface/Admin/AdministrationConfigurationToolDefinitionValidatorInterface.php (?)
             - src/Form/Config (?)
             - src/Locator/Config (?)
             - src/Mapper/Config (?)
@@ -26,10 +26,10 @@ parameters:
             - src/Provider/Admin/DoctrineAdministrationServiceToolMenuSectionProvider.php (?)
             - src/Runner/Operation/AdministrationGovernanceOperationRunner.php (?)
             - src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php (?)
-            - src/Validator/Admin/ConfigurationToolDefinitionValidator.php (?)
+            - src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php (?)
             - src/Service/Config (?)
             - src/ServiceInterface/Config (?)
             - tests/Integration (?)
     ignoreErrors:
         - '#Property App\\Administering\\Entity\\.*::\$id \(int\|null\) is never assigned int so it can be removed from the property type\.#'
-        - '#Property App\\Administering\\Entity\\AdministrationCredentialDefinition::\$description \(string\|null\) is never assigned string so it can be removed from the property type\.#'
+        - '#Property App\\Administering\\Entity\\AdministrationCredentialDefinitionEntity::\$description \(string\|null\) is never assigned string so it can be removed from the property type\.#'

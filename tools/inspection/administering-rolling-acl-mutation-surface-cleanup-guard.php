@@ -7,7 +7,7 @@ $files = [
     'src/Controller/Admin/Surface/AdministrationRollingAclMutationController.php',
     'src/ServiceInterface/Rolling/AdministrationAclMutationReviewRecorderInterface.php',
     'src/Recorder/Rolling/AdministrationDoctrineAclMutationReviewRecorder.php',
-    'src/Recorder/Rolling/DoctrineAdministrationAclMutationReviewRecorder.php',
+    'src/Recorder/Rolling/AdministrationDoctrineAclMutationReviewRecorder.php',
 ];
 
 $forbidden = [

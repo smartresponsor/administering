@@ -8,38 +8,22 @@ use PHPUnit\Framework\TestCase;
 
 final class AdministrationCrudDirectionsPhysicalContractTest extends TestCase
 {
-    public function testAdministrationCrudDirectionTargetsExistPhysically(): void
+    public function testAdministrationDoesNotOwnGenericCrudDirectionMap(): void
     {
         $mapFile = dirname(__DIR__, 2).'/config/platform/routes/crud/administration-directions.yaml';
 
-        self::assertFileExists($mapFile);
-
-        $content = (string) file_get_contents($mapFile);
-        preg_match_all("/\n\s+(service|type): '([^']+)'/", $content, $matches, PREG_SET_ORDER);
-
-        self::assertNotSame([], $matches);
-
-        foreach ($matches as $match) {
-            $className = $match[2];
-            self::assertMatchesRegularExpression('/^App\\\\(Service|Form)\\\\/', $className);
-            self::assertTrue(
-                class_exists($className),
-                sprintf('Administration CRUD direction target must exist physically: %s', $className),
-            );
-        }
+        self::assertFileDoesNotExist(
+            $mapFile,
+            'Canon021 assigns generic application CRUD routing to Cruding; Administering must not restore a local direction map.',
+        );
     }
 
-    public function testAdministrationCrudDirectionsKeepReservedRoot(): void
+    public function testCrudingIsTheDeclaredGenericCrudOwnerDependency(): void
     {
-        $mapFile = dirname(__DIR__, 2).'/config/platform/routes/crud/administration-directions.yaml';
-        $content = (string) file_get_contents($mapFile);
-        preg_match_all("/\n\s+path: '([^']+)'/", $content, $matches);
+        $composerFile = dirname(__DIR__, 2).'/composer.json';
+        $composer = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertNotSame([], $matches[1]);
-
-        foreach ($matches[1] as $path) {
-            self::assertStringStartsWith('/administration/', $path);
-            self::assertStringNotContainsString('{ref}', $path);
-        }
+        self::assertIsArray($composer);
+        self::assertSame('dev-master', $composer['require']['cruding/crud'] ?? null);
     }
 }

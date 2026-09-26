@@ -34,7 +34,7 @@ credentials:
 # Component-specific integration contracts are discovered through runtime-scope evidence.
 
 administering_wave4:
-  operation_entity: App\\Administering\\Entity\\AdministrationOperationRun
+  operation_entity: App\\Administering\\Entity\\AdministrationOperationRunEntity
   ui_surface: easyadmin
   storage: system_sqlite_entity_manager
 

@@ -26,7 +26,7 @@ foreach ($checkedFiles as $file) {
     }
 
     if (preg_match('/(?<!Administration)ManagingFieldPermissionVocabulary::/', $contents)) {
-        fwrite(STDERR, sprintf("Forbidden non-owned ManagingFieldPermissionVocabulary usage in %s\n", $file));
+        fwrite(STDERR, sprintf("Forbidden non-owned AdministrationManagingFieldPermissionVocabulary usage in %s\n", $file));
         exit(1);
     }
 }

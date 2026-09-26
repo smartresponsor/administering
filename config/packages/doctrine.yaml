@@ -2,6 +2,7 @@ doctrine:
   dbal:
     url: '%env(default:administering_standalone_database_url:DATABASE_URL)%'
   orm:
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
     auto_mapping: true
     mappings:
       Administering:

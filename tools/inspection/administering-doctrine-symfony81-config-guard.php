@@ -8,7 +8,7 @@ $paths = [
     $root.'/config/packages/dev/doctrine.yaml',
     $root.'/config/packages/prod/doctrine.yaml',
     $root.'/config/packages/test/doctrine.yaml',
-    $root.'/config/component/doctrine.system.yaml',
+    $root.'/config/component/administration_doctrine_system.yaml',
 ];
 
 $violations = [];

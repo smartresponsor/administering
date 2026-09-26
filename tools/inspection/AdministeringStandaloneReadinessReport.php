@@ -30,7 +30,7 @@ $add('standalone Kernel exists', is_file($root.'/src/Kernel.php'));
 $add('standalone bundles map exists', is_file($root.'/config/bundles.php'));
 $add('standalone framework config exists', is_file($root.'/config/packages/framework.yaml'));
 $add('standalone doctrine config exists', is_file($root.'/config/packages/doctrine.yaml'));
-$add('standalone route import exists', is_file($root.'/config/routes/administering_standalone.yaml'));
+$add('standalone route import exists', is_file($root.'/config/routes/administration_standalone.yaml'));
 
 $composerPath = $root.'/composer.json';
 $composer = json_decode($read($composerPath), true);
@@ -40,7 +40,12 @@ if (is_array($composer)) {
     $add('composer script inspect:standalone exists', isset($scripts['inspect:standalone']));
     $add('composer script lint:php exists', isset($scripts['lint:php']));
     $add('composer script quality:local exists', isset($scripts['quality:local']));
-    $add('composer script console targets bin/console', isset($scripts['console']) && $scripts['console'] === 'bin/console');
+    $consoleScript = $scripts['console'] ?? null;
+    $add(
+        'composer script console targets bin/console',
+        is_string($consoleScript) && in_array(trim($consoleScript), ['bin/console', 'php bin/console', '@php bin/console'], true),
+        'expected bin/console, php bin/console, or @php bin/console',
+    );
 }
 
 $services = $read($root.'/config/services.yaml');
@@ -51,7 +56,15 @@ $add(
 );
 
 foreach (['.php-cs-fixer.cache', '.phpunit.result.cache'] as $cacheFile) {
-    $add($cacheFile.' is absent', !file_exists($root.'/'.$cacheFile), 'generated local cache must not be committed');
+    $trackedOutput = [];
+    $ignoredOutput = [];
+    exec(sprintf('git -C %s ls-files --error-unmatch -- %s 2>NUL', escapeshellarg($root), escapeshellarg($cacheFile)), $trackedOutput, $trackedExitCode);
+    exec(sprintf('git -C %s check-ignore -q -- %s', escapeshellarg($root), escapeshellarg($cacheFile)), $ignoredOutput, $ignoredExitCode);
+    $add(
+        $cacheFile.' is not committed source',
+        0 !== $trackedExitCode && 0 === $ignoredExitCode,
+        'generated local cache may exist, but it must be untracked and ignored',
+    );
 }
 
 $phpFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
@@ -62,14 +75,21 @@ foreach ($phpFiles as $file) {
     }
 
     $path = $file->getPathname();
-    if (str_contains($path, DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR)) {
+    $relativePath = str_replace('\\', '/', ltrim(str_replace($root, '', $path), DIRECTORY_SEPARATOR));
+    if (
+        str_starts_with($relativePath, 'vendor/')
+        || str_starts_with($relativePath, 'var/')
+        || str_starts_with($relativePath, '.gating/')
+        || str_starts_with($relativePath, 'tools/stubs/payload/')
+        || str_starts_with($relativePath, '.git/')
+    ) {
         continue;
     }
 
     $content = $read($path);
-    if (preg_match('/namespace\s+([^;]+);/m', $content, $namespace) && preg_match('/\b(?:final\s+|abstract\s+)?(?:class|interface|trait|enum)\s+(\w+)/m', $content, $symbol)) {
+    if (preg_match('/namespace\s+([^;]+);/m', $content, $namespace) && preg_match('/^(?:\s*(?:final|abstract|readonly)\s+)*(?:class|interface|trait|enum)\s+(\w+)/m', $content, $symbol)) {
         $fqcn = trim($namespace[1]).'\\'.$symbol[1];
-        $declaredClasses[$fqcn][] = str_replace($root.DIRECTORY_SEPARATOR, '', $path);
+        $declaredClasses[$fqcn][] = $relativePath;
     }
 }
 $duplicates = [];

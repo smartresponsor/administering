@@ -23,6 +23,15 @@ try {
 
 $catalogPath = $root.'/config/runtime-scope/bundle_catalog.php';
 $runtimePackages = [];
+$allowedLocalRepositories = [
+    'cruding/crud' => '../Cruding',
+    'viewing/view' => '../Viewing',
+    'interfacing/interface' => '../Interfacing',
+    'objecting/object' => '../Objecting',
+    'gating/gate' => '../Gating',
+    'collectioning/collection' => '../Collectioning',
+    'tabling/table' => '../Tabling',
+];
 if (is_file($catalogPath)) {
     $catalog = require $catalogPath;
     if (is_array($catalog) && isset($catalog['components']) && is_array($catalog['components'])) {
@@ -47,8 +56,8 @@ foreach (['require', 'require-dev'] as $section) {
     }
 
     foreach (array_keys($packages) as $package) {
-        if (isset($runtimePackages[$package])) {
-            $findings[] = sprintf('composer.json %s requires runtime-scope package %s for component %s; keep it as composer inventory evidence, not Administering dependency.', $section, $package, $runtimePackages[$package]);
+        if (isset($runtimePackages[$package]) && !array_key_exists($package, $allowedLocalRepositories)) {
+            $findings[] = sprintf('composer.json %s requires non-baseline runtime-scope package %s for component %s; keep optional runtime-scope packages as inventory evidence.', $section, $package, $runtimePackages[$package]);
         }
     }
 }
@@ -66,8 +75,16 @@ if (is_array($repositories)) {
         }
 
         $normalizedUrl = str_replace('\\', '/', $url);
+        if (in_array($normalizedUrl, array_values($allowedLocalRepositories), true)) {
+            if ('path' !== ($repository['type'] ?? null) || true !== ($repository['options']['symlink'] ?? null)) {
+                $findings[] = sprintf('composer.json repositories[%d] must expose canon-permitted local sibling %s as a path repository with options.symlink=true.', $index, $url);
+            }
+
+            continue;
+        }
+
         if (preg_match('#(^|/)\.\./[A-Z][A-Za-z0-9_-]*$#', $normalizedUrl)) {
-            $findings[] = sprintf('composer.json repositories[%d] points at sibling component path %s; Administering must not hard-wire sibling repositories.', $index, $url);
+            $findings[] = sprintf('composer.json repositories[%d] points at non-canonical sibling component path %s; optional runtime-scope packages must remain inventory evidence.', $index, $url);
         }
     }
 }
