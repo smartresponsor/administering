@@ -491,3 +491,158 @@ Artificial target classes, dependency distortion, or collapsing valid technical 
 Что достигнуто? Work 3 (VERIFICATION_AND_FIX) is green: completed value blocks are isolated in signed commits, all hard acceptance gates pass, standalone readiness is restored, and full Gating has zero failed rules.
 
 Что осталось до RC? Only warning-level documentation/test-coverage backlog, safe integration of the remaining mixed Administering worktree, and eventual push of Gating `99f9752` once its concurrent owner worktree becomes clean.
+
+## 2026-09-25 — isolated integration pass
+
+### Signed value commits
+
+- `3a47539` — `test: add standalone browser coverage`: Playwright/browser harness, package manifest/lock, coverage map/producer, and standalone public loopback entrypoints.
+- `95ed907` — `feat: centralize administration persistence access`: repository-owned Doctrine access boundary used by non-repository application roles.
+- `d4ef281` — `feat: add authentication-required responder`: host-sign-in redirect with standalone fail-closed HTTP 401 behavior and direct unit coverage.
+- `4099e95` — `refactor: canonicalize admin response subscriber`: moved the no-store subscriber to EventSubscriber and removed its duplicate.
+- `dd694fc` — `refactor: canonicalize runtime scope lock service`: renamed LockNormalizer to LockService and updated the state reader.
+- `86c512b` — `refactor: move operation lifecycle to policy`: moved the lifecycle guard into the canonical Policy root.
+- `1be0467` — `refactor: move integration contracts to providers`: moved Accessing/Rolling integration-contract providers to Provider roots and updated their inspection guards.
+- `42259ec` — `refactor: move rolling decision to service`: moved the deny-by-default Rolling decision implementation from Provider to Service while preserving unrelated service-container hunks outside the commit.
+- `31beb14` — `refactor: remove obsolete accessing providers`: removed two unused Accessing-prefixed fallback provider duplicates.
+- `ee72076` — `refactor: remove obsolete administration implementations`: removed nine dead pre-canonical provider/queue/recorder/scanner duplicates after confirming canonical counterparts were already tracked and wired.
+- `1fb5ddc` — `refactor: remove obsolete security fallbacks`: removed obsolete Bootstrap/Rolling security provider identities and the unused null audit recorder.
+- `35d5e81` — `refactor: remove obsolete canonical duplicates`: removed stale runner, dynamic config form, and credential-operator identities with tracked canonical replacements.
+- `2eb8924` — `test: move coupling fixtures to stubs`: moved owner-coupling regression source snippets into explicit stub fixtures.
+- `d220493` — `test: rename runtime scope lock test`: aligned direct tests with the committed LockService rename.
+
+### Verification during integration
+
+- PHPUnit remains green at 137 tests / 617 assertions.
+- PHPStan remains green at 722 files / 0 errors.
+- Symfony container lint remains green.
+- Administering architecture guard suite remains green.
+- Browser/Playwright flow remains green and runtime logs resolve the canonical EventSubscriber FQCN.
+- No broad `git add -A` or mixed-worktree commit was used; partial-index handling preserved unrelated `config/services.yaml` hunks.
+
+### Residual integration boundary
+
+- Entity `*Entity` migration, Config interface/value identity migration, Form topology, Handler migration, Parser move, and remaining Doctrine consumer refactors are still coupled across many dirty paths and are intentionally not split into non-self-contained commits.
+- `tools/payload -> tools/stubs/payload` is also currently mixed with those identity migrations and standalone-readiness changes; it remains uncommitted.
+- The next safe work should build a self-contained Entity/Config slice, rerun full gates, and then continue narrowing the remaining mixed graph.
+
+Что достигнуто? Fourteen additional signed value commits were isolated from the mixed Administering worktree while preserving unrelated concurrent edits and keeping all exercised verification gates green.
+
+Что осталось до RC? Integrate the coupled Entity/Config/Form/Handler/Parser/Doctrine migration graph in self-contained slices, refresh the final full gate snapshot, and then reconcile any remaining warning-level debt without weakening thresholds.
+
+## 2026-09-26 — Console-MCP RC reconnaissance and Entity/persistence integration
+
+### Factual baseline
+
+- Workspace resolved through Console MCP as `D:\\PhpstormProjects\\www\\Administering`; active branch is `engine/administering-post-rc-canon-composer`.
+- The worktree is deliberately mixed with a large pre-existing/concurrent migration set. No reset, stash, clean, broad add, or destructive reconciliation is allowed; coherent value blocks must remain isolated.
+- Read the Administering root contracts and execution surfaces: `AGENTS.md`, `README.md`, `composer.json`, `composer.prod.json`, `.gating/README.md`, PHPUnit/PHPStan/Playwright configuration, service wiring, current Git state, Composer scripts, and the existing orchestration journal.
+- Read the required dependency contour from Objecting, Cruding, Viewing, and Interfacing, plus the executable Gating companion and authoritative Canonization source. Administering currently declares the complete Canon022 application baseline directly: Objecting, Cruding, Collectioning, Tabling, Viewing, Interfacing, and EasyAdmin.
+- Market/peer baseline for this responsibility remains conventional admin CRUD/actions/filtering with explicit server-side authorization. Growth features such as richer metrics, operator customization, and additional UX polish remain separate from RC correctness.
+
+### Canonization rules consulted and target mapping
+
+- `Canon001`, `Canon018`, `Canon019`, `Canon020`: preserve `App\\Administering\\`, the `Administration*` subject identity, role-first Symfony topology, and no competing Domain/Port/Adapter roots.
+- `Canon004`: Doctrine entity terminal classes must end in `Entity`; the staged migration renames `AdministrationServiceToolRecord` to `AdministrationServiceToolRecordEntity`.
+- `Canon010`: architecture renames must update callers and repository surfaces completely. Exact tracked-tree searches for the old `AdministrationServiceToolRecord` class-use shapes returned no remaining hits.
+- `Canon021`: generic application CRUD remains Cruding-owned; the touched `AdministrationServiceToolRecordCrudController` is an EasyAdmin back-office surface and therefore falls under the explicit admin exception.
+- `Canon022`, `Canon023`, `Canon024`, `Canon033`, `Canon043`, `Canon045`: development uses explicit local first-party path/symlink repositories with `dev-master`, production uses packaged/VCS resolution, and development/production manifests preserve component identity.
+- `Canon041` and `Canon042`: repository-local PHPUnit/Symfony browser/Playwright tooling exists; behavioral/UI coverage remains measurable warning-level debt rather than a hidden release claim.
+- `Canon047`: direct Doctrine manager access belongs in Repository. The staged slice replaces command/controller/provider `ManagerRegistry` access with the already-owned `AdministrationPersistenceRepository`.
+- `Canon051`: the persistence repository remains free of application orchestration dependencies.
+
+### RC-critical workstream selected
+
+- Integrate the already-isolated 15-file Entity/persistence slice: canonical Entity suffix, complete caller migration, repository-owned Doctrine access, and corresponding EasyAdmin/service-tool consumers.
+- Preserve all unrelated unstaged Form/Config/Managing/Composer/tooling migration work for later coherent slices.
+- Re-run deterministic Symfony/Doctrine/Gating/browser acceptance after the signed slice is committed.
+
+### Growth workstream kept outside RC
+
+- Increase semantic PHPDoc coverage and executable/functional/UI coverage without weakening Canon thresholds.
+- Add richer operator metrics, customization, and UX maturity only after correctness, package boundaries, persistence ownership, and acceptance gates remain stable.
+
+### Verification before integration
+
+- Changed PHP lint: PASS.
+- `composer validate --strict --check-lock`: PASS.
+- PHPUnit: 137 tests / 617 assertions, PASS.
+- PHPStan: 722 files / 0 errors, PASS.
+- Administering architecture guard suite: PASS.
+
+Что достигнуто? The current Entity/persistence migration is factually mapped to the authoritative canon and passes the deterministic baseline while unrelated mixed work remains preserved.
+
+Что осталось до RC? Commit only the isolated staged slice, then run container/YAML/style/Doctrine/Gating/browser acceptance and inspect the post-commit Git state before selecting another safe integration block.
+
+### Integration and acceptance result
+
+- Signed commit `34804dd` (`refactor: canonicalize service tool entity persistence`) contains exactly the isolated 15-file Entity/persistence slice; no unrelated dirty paths were staged.
+- Post-commit Symfony YAML lint: PASS (13 files).
+- Symfony container lint: PASS.
+- PHP-CS-Fixer dry-run: PASS (0 / 722 fixable).
+- Doctrine mapping/schema validation: PASS; migrations are up to date.
+- Initial full Gating exposed a local Canon052 topology defect: an ignored consumer `.gating/` contained a copied Gating owner tree.
+- Read `Canon052GatingIntegrationRule` and its executable mirror, then preserved the forbidden local owner copy non-destructively under `.console-mcp/canon052-gating-owner-*`; no owner source was deleted and the canonical consumer README/artifact surface was retained.
+- Full Gating after remediation: 71 rules, 0 failed, 3 warnings, 10 skipped; Canon052 PASS. Remaining warnings are the known Canon031/040/042 documentation and coverage debt.
+- Existing Playwright behavioral flow: PASS (1/1). Standalone admin dashboard remains fail-closed when host authentication is unavailable.
+- Behavioral/UI evidence regenerated: functional 1/224, behavioral 1/1, UI 1/203, critical 1/1.
+- RC static contract: `3rc_contract_valid`.
+- Aggregate `quality` start was refused by the Console runtime capacity guard because resource pressure was WARN and stability DEGRADED. The constituent lint/container/PHPStan/style/PHPUnit/Doctrine/Gating/browser checks were executed separately and are green; the capacity guard was not bypassed.
+
+Что достигнуто? The Entity/persistence slice is signed and accepted by Symfony, Doctrine, Gating, and the repository's real-browser behavioral test; the newly exposed Canon052 local topology defect is also closed without destructive cleanup.
+
+Что осталось до RC? Publish the signed branch checkpoint when guarded Git permits it, then continue the remaining Config/Form/Handler/Parser/Managing migration graph as separate self-contained slices; Canon031/040/042 remain explicit warning-level growth debt.
+
+## 2026-09-26 — mixed-worktree integration closure and Work 3 GREEN
+
+### Integrated value blocks
+
+- `04d7303` — canonicalized the 45-file Admin form topology from `Form/Administration` to `Form/Admin`.
+- `dbd8041` — canonicalized Config service/interface/value identities and removed obsolete duplicate contracts/validators.
+- `195577a` — canonicalized Managing value identities and synchronized controller/provider/service/interface/test consumers.
+- `b596933` — added the missing repository-owned Config registry persistence boundary.
+- `2ae5446` — moved the form input parser from the generic Support root to the explicit Parser role root.
+- `ce511e3` — moved Config-center persistence access onto `AdministrationPersistenceRepository` and the canonical authentication-required responder.
+- `414c20c` — normalized Accessing routes into separate path segments.
+- `1ad7060` — preserved canonical Accessing account subject identity for Administering-backed users.
+- `99f784d` — aligned runtime-scope semantics with Composer capability inventory plus lock evidence instead of legacy scope-only rows.
+- `1f8e643` — normalized route metadata vocabulary from `nameEntity` to `name`.
+- `b3a4343` — moved payload fixtures under `tools/stubs/payload`.
+- `5afaed3` — ignored generated local Console/Playwright/RC evidence and other repository noise.
+- `3401158` — aligned development/production Composer contracts, subject-prefixed YAML/routes, Doctrine naming/schema migration, test tooling, and inspection guards with Canonization.
+- `681422c` — normalized the RC check result schema from `nameEntity` to `name`.
+- `f9d41a5` — fixed connected-component config discovery to derive each owner's Canon038 manifest filename from that sibling package's Composer subject token.
+- `ddf45de` — made malformed sibling Composer manifests fail fast, closing the Canon011 silent-fallback finding.
+- `3fcecec` — aligned architecture documentation with current Entity, package, runtime-scope, and persistence identities.
+- `de247e1` — added the persistent RC handoff manifest and owner README while leaving generated proof results ignored.
+- `90c7573` — retained the bounded canonicalization migration helpers and migrations directory marker.
+
+### Semantic repairs made while reviewing the diffs
+
+- Rejected a mechanical rewrite that would have changed foreign Managing vocabulary to an Administering-prefixed name inside a guard and documentation example.
+- Rejected mechanical cross-component YAML rewrites: Rolling/Billing examples keep their owner-specific subject prefixes.
+- Fixed `AdministrationConfigApplicationDiscoveryService` so it no longer assumes every sibling owns `administration_component.yaml`; it derives `<subject>_component.yaml` from the sibling `composer.json:name`.
+- Removed the parse-error silent fallback from that discovery path after Canon011 correctly surfaced it.
+- Repaired 15 UTF-8 em-dash mojibake occurrences in the service-tool architecture documentation.
+- Restored consumer `.gating/README.md` to artifact-only semantics; no copied owner policy/tooling was committed.
+
+### Work 3 final verification
+
+- Aggregate `composer quality`: PASS.
+- Composer validation: PASS.
+- YAML lint: 13 files, PASS.
+- Symfony container lint: PASS.
+- PHPStan: 722 files, 0 errors.
+- PHP-CS-Fixer dry-run: 0 / 722 fixable.
+- PHPUnit: 137 tests / 617 assertions, PASS.
+- `quality:local`: PASS; architecture suite, standalone boundary/readiness, PHPStan, PHPUnit and YAML checks are green.
+- Doctrine mapping/database schema: PASS; migrations are up to date.
+- RC static contract: `3rc_contract_valid`.
+- PHP coverage evidence refreshed: lines 1522/16854 (9.0%), methods 174/2276 (7.6%), branches 788/1759 (44.8%).
+- Playwright/browser behavioral flow: 1/1 PASS; standalone admin dashboard remains fail-closed when host authentication is unavailable.
+- Behavioral/UI evidence refreshed: functional 1/224, behavioral 1/1, UI 1/203, critical 1/1.
+- Gating hard rules are GREEN. The remaining Canon031, Canon040 and Canon042 findings are warning-level documentation/coverage debt; thresholds were not weakened.
+
+Что достигнуто? The original 258-entry mixed worktree has been decomposed into coherent signed value commits, semantic migration mistakes were repaired instead of normalized into the codebase, and Work 3 is GREEN at hard-error severity with fresh PHP and browser evidence.
+
+Что осталось до RC? No unintegrated product/config/tooling value remains from this mixed worktree. Only explicit warning-level documentation and coverage growth debt remains; after this journal commit the branch can be pushed as a clean RC checkpoint.
