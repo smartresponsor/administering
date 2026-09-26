@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 
 /**
@@ -12,5 +12,5 @@ use App\Administering\Value\Operation\AdministrationOperationPlan;
  */
 interface AdministrationServiceToolOperationPlanFactoryInterface
 {
-    public function createForSubmittedTool(AdministrationServiceToolRecord $record, mixed $formData): AdministrationOperationPlan;
+    public function createForSubmittedTool(AdministrationServiceToolRecordEntity $record, mixed $formData): AdministrationOperationPlan;
 }

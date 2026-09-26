@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Form\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 
 final class AdministrationAdminServiceToolRuntimeControlsData
 {
@@ -17,7 +17,7 @@ final class AdministrationAdminServiceToolRuntimeControlsData
     ) {
     }
 
-    public static function fromRecord(AdministrationServiceToolRecord $record): self
+    public static function fromRecord(AdministrationServiceToolRecordEntity $record): self
     {
         return new self(
             enabled: $record->isEnabled(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Guard\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -22,7 +22,7 @@ final class AdministrationServiceToolOpenGuard implements AdministrationServiceT
     private const SOURCE_INTERNAL = 'administering_internal';
     private const SOURCE_OWNER = 'owner_component';
 
-    public function assertRecordCanOpen(AdministrationServiceToolRecord $record): void
+    public function assertRecordCanOpen(AdministrationServiceToolRecordEntity $record): void
     {
         $toolKey = $record->getToolKey();
 
@@ -75,7 +75,7 @@ final class AdministrationServiceToolOpenGuard implements AdministrationServiceT
         }
     }
 
-    private function assertRecordSourceConsistency(AdministrationServiceToolRecord $record): void
+    private function assertRecordSourceConsistency(AdministrationServiceToolRecordEntity $record): void
     {
         $toolKey = $record->getToolKey();
         $sourceOwnership = $record->getSourceOwnership();

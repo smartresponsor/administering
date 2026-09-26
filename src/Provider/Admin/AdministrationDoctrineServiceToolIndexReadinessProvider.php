@@ -4,39 +4,33 @@ declare(strict_types=1);
 
 namespace App\Administering\Provider\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceToolIndexReadinessProviderInterface;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\Value\Admin\AdministrationServiceToolIndexReadinessReport;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Reads the SQLite materialized service-tool index and reports EasyAdmin readiness.
  */
 final readonly class AdministrationDoctrineServiceToolIndexReadinessProvider implements AdministrationServiceToolIndexReadinessProviderInterface
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
+    public function __construct(private AdministrationPersistenceRepository $persistenceRepository)
     {
     }
 
     public function report(?string $sectionFilter = null): AdministrationServiceToolIndexReadinessReport
     {
-        $manager = $this->entityManager();
-        $builder = $manager->createQueryBuilder()
-            ->select('record')
-            ->from(AdministrationServiceToolRecord::class, 'record')
-            ->orderBy('record.sectionKey', 'ASC')
-            ->addOrderBy('record.position', 'ASC')
-            ->addOrderBy('record.toolSlug', 'ASC');
-
+        $criteria = [];
         if (null !== $sectionFilter && '' !== trim($sectionFilter)) {
-            $builder
-                ->andWhere('record.sectionKey = :section')
-                ->setParameter('section', trim($sectionFilter));
+            $criteria['sectionKey'] = trim($sectionFilter);
         }
 
-        /** @var list<AdministrationServiceToolRecord> $records */
-        $records = $builder->getQuery()->getResult();
+        /** @var list<AdministrationServiceToolRecordEntity> $records */
+        $records = $this->persistenceRepository->findBy(
+            AdministrationServiceToolRecordEntity::class,
+            $criteria,
+            ['sectionKey' => 'ASC', 'position' => 'ASC', 'toolSlug' => 'ASC'],
+        );
         $statusCounts = [];
         $rows = [];
         $executableCount = 0;
@@ -89,15 +83,5 @@ final readonly class AdministrationDoctrineServiceToolIndexReadinessProvider imp
             statusCounts: $statusCounts,
             records: $rows,
         );
-    }
-
-    private function entityManager(): EntityManagerInterface
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (!$manager instanceof EntityManagerInterface) {
-            throw new \LogicException('No Doctrine entity manager is configured for Administering service tool records. Configure the SQLite/system entity manager for App\\Administering entities.');
-        }
-
-        return $manager;
     }
 }

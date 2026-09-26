@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_administration_service_tool_status', columns: ['status'])]
 #[ORM\Index(name: 'idx_administration_service_tool_source_ownership', columns: ['source_ownership'])]
 #[ORM\Index(name: 'idx_administration_service_tool_owner_component', columns: ['owner_component_key'])]
-final class AdministrationServiceToolRecord
+final class AdministrationServiceToolRecordEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

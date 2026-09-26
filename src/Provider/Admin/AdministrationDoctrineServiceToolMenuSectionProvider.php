@@ -6,12 +6,11 @@ namespace App\Administering\Provider\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceSectionCatalogInterface;
 use App\Administering\Entity\AdministrationServiceSectionRecordEntity;
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceToolMenuSectionProviderInterface;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\Value\Admin\AdministrationServiceSection;
 use App\Administering\Value\Admin\AdministrationServiceToolMenuSection;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Builds the left-menu section projection from SQLite materialized records.
@@ -24,7 +23,7 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
 {
     public function __construct(
         private AdministrationServiceSectionCatalogInterface $sectionCatalog,
-        private ManagerRegistry $managerRegistry,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -34,9 +33,8 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
         $catalogSections = $this->catalogSectionsByKey();
 
         try {
-            $manager = $this->entityManager();
-            $sectionRecords = $this->sectionRecordsByKey($manager);
-            $toolStats = $this->toolStatsBySection($manager);
+            $sectionRecords = $this->sectionRecordsByKey();
+            $toolStats = $this->toolStatsBySection();
         } catch (\Throwable) {
             return $this->fallbackSections($catalogSections);
         }
@@ -103,15 +101,10 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
     }
 
     /** @return array<string, AdministrationServiceSectionRecordEntity> */
-    private function sectionRecordsByKey(EntityManagerInterface $manager): array
+    private function sectionRecordsByKey(): array
     {
         /** @var list<AdministrationServiceSectionRecordEntity> $records */
-        $records = $manager->createQueryBuilder()
-            ->select('record')
-            ->from(AdministrationServiceSectionRecordEntity::class, 'record')
-            ->orderBy('record.sectionKey', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $records = $this->persistenceRepository->findBy(AdministrationServiceSectionRecordEntity::class, [], ['sectionKey' => 'ASC']);
 
         $indexed = [];
         foreach ($records as $record) {
@@ -122,18 +115,14 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
     }
 
     /** @return array<string, array{toolCount:int, executableCount:int, formReadyCount:int, indexedOnlyCount:int}> */
-    private function toolStatsBySection(EntityManagerInterface $manager): array
+    private function toolStatsBySection(): array
     {
-        /** @var list<AdministrationServiceToolRecord> $records */
-        $records = $manager->createQueryBuilder()
-            ->select('record')
-            ->from(AdministrationServiceToolRecord::class, 'record')
-            ->andWhere('record.visible = true')
-            ->andWhere('record.enabled = true')
-            ->orderBy('record.sectionKey', 'ASC')
-            ->addOrderBy('record.position', 'ASC')
-            ->getQuery()
-            ->getResult();
+        /** @var list<AdministrationServiceToolRecordEntity> $records */
+        $records = $this->persistenceRepository->findBy(
+            AdministrationServiceToolRecordEntity::class,
+            ['visible' => true, 'enabled' => true],
+            ['sectionKey' => 'ASC', 'position' => 'ASC'],
+        );
 
         $stats = [];
         foreach ($records as $record) {
@@ -188,18 +177,6 @@ final readonly class AdministrationDoctrineServiceToolMenuSectionProvider implem
         }
 
         return $sections;
-    }
-
-    private function entityManager(): EntityManagerInterface
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class)
-            ?? $this->managerRegistry->getManagerForClass(AdministrationServiceSectionRecordEntity::class);
-
-        if (!$manager instanceof EntityManagerInterface) {
-            throw new \LogicException('No Doctrine entity manager is configured for Administering service-tool menu records.');
-        }
-
-        return $manager;
     }
 
     private function labelFromKey(string $key): string

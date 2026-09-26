@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Factory\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOperationPlanFactoryInterface;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 
@@ -17,7 +17,7 @@ use App\Administering\Value\Operation\AdministrationOperationPlan;
  */
 final class AdministrationServiceToolOperationPlanFactory implements AdministrationServiceToolOperationPlanFactoryInterface
 {
-    public function createForSubmittedTool(AdministrationServiceToolRecord $record, mixed $formData): AdministrationOperationPlan
+    public function createForSubmittedTool(AdministrationServiceToolRecordEntity $record, mixed $formData): AdministrationOperationPlan
     {
         return new AdministrationOperationPlan(
             $record->getOperationType(),

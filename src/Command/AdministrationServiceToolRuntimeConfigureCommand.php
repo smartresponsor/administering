@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class AdministrationServiceToolRuntimeConfigureCommand extends Command
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationAuditRecorderInterface $auditRecorder,
     ) {
         parent::__construct();
@@ -86,15 +86,8 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
             return Command::INVALID;
         }
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            $io->error('No Doctrine entity manager is configured for AdministrationServiceToolRecord.');
-
-            return Command::FAILURE;
-        }
-
-        $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        $record = $this->persistenceRepository->findOneBy(AdministrationServiceToolRecordEntity::class, ['toolKey' => $toolKey]);
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             $io->error(sprintf('Service-tool record "%s" was not found. Run administering:service-tools:refresh-index first.', $toolKey));
 
             return Command::FAILURE;
@@ -113,7 +106,7 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
         /* @var int|null $position */
         /* @var string|null $labelOverride */
         $record->configureRuntimeControls($enabled, $visible, $position, $labelOverride, $clearLabelOverride);
-        $manager->flush();
+        $this->persistenceRepository->flush(AdministrationServiceToolRecordEntity::class);
 
         $after = [
             'enabled' => $record->isEnabled(),
