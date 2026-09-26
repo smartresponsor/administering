@@ -7,7 +7,7 @@ namespace App\Administering\Controller\Admin;
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
 use App\Administering\Controller\Admin\Crud\AdministrationConfigToolCrudController;
 use App\Administering\Controller\Admin\Crud\AdministrationServiceToolRecordCrudController;
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\Form\Admin\AdministrationAdminServiceToolRuntimeControlsFormType;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceSectionToolDashboardProviderInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface;
@@ -88,7 +88,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
 
         $crudController = $controllerFactory->getCrudControllerInstance(AdministrationConfigToolCrudController::class, Crud::PAGE_INDEX, $request);
         if (null === $crudController) {
-            throw new \LogicException('Unable to instantiate the AdministrationConfigTool CRUD controller for the main dashboard.');
+            throw new \LogicException('Unable to instantiate the AdministrationConfigToolEntity CRUD controller for the main dashboard.');
         }
 
         $request->attributes->set(EA::CRUD_CONTROLLER_FQCN, AdministrationConfigToolCrudController::class);
@@ -103,7 +103,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         }
 
         if (!$responseParameters instanceof KeyValueStore) {
-            throw new \LogicException('Unexpected controller result returned by the AdministrationConfigTool CRUD index.');
+            throw new \LogicException('Unexpected controller result returned by the AdministrationConfigToolEntity CRUD index.');
         }
 
         $templateParameters = $responseParameters->all();
@@ -183,7 +183,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         }
 
         $record = $this->toolRecordStorage->findOneByToolKey($toolKey);
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             throw $this->createNotFoundException(sprintf('Unknown Administering service tool "%s".', $toolKey));
         }
 
@@ -234,7 +234,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         }
 
         $record = $this->toolRecordStorage->findOneByToolKey($toolKey);
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             throw $this->createNotFoundException(sprintf('Unknown Administering service tool "%s".', $toolKey));
         }
 

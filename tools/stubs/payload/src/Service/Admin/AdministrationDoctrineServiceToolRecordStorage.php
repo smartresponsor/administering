@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolRecordStorageInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,21 +15,21 @@ final readonly class AdministrationDoctrineServiceToolRecordStorage implements A
     ) {
     }
 
-    public function findOneByToolKey(string $toolKey): ?AdministrationServiceToolRecord
+    public function findOneByToolKey(string $toolKey): ?AdministrationServiceToolRecordEntity
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
+        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecordEntity::class);
         if (null === $manager) {
             throw new \LogicException('No Doctrine manager is configured for Administering service tool records.');
         }
 
-        $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
+        $record = $manager->getRepository(AdministrationServiceToolRecordEntity::class)->findOneBy(['toolKey' => $toolKey]);
 
-        return $record instanceof AdministrationServiceToolRecord ? $record : null;
+        return $record instanceof AdministrationServiceToolRecordEntity ? $record : null;
     }
 
     public function flush(): void
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
+        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecordEntity::class);
         if (null === $manager) {
             throw new \LogicException('No Doctrine manager is configured for Administering service tool records.');
         }

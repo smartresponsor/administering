@@ -11,9 +11,9 @@ services:
       tags: ['administering.component_integration_contract']
     App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface:
       tags: ['administering.service_tool_handler']
-    App\Configuring\ServiceInterface\Tool\ConfigurationToolProviderInterface:
+    App\Configuring\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface:
       tags: ['configuring.configuration_tool_provider']
-    App\Configuring\ServiceInterface\Config\ConfigToolServiceInterface:
+    App\Configuring\ServiceInterface\Config\AdministrationConfigToolServiceInterface:
       tags: ['configuring.config_tool']
 
   App\Administering\:

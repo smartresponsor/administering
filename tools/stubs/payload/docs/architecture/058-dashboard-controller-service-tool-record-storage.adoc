@@ -22,7 +22,7 @@ This keeps Administering less coupled to a concrete Accessing entity class in st
 
 == Service extraction
 
-Doctrine lookup and flush for `AdministrationServiceToolRecord` moved behind `AdministrationServiceToolRecordStorageInterface`.
+Doctrine lookup and flush for `AdministrationServiceToolRecordEntity` moved behind `AdministrationServiceToolRecordStorageInterface`.
 The controller now delegates service-tool record storage instead of pulling Doctrine manager/repository details directly into action methods.
 
 == Route risk
