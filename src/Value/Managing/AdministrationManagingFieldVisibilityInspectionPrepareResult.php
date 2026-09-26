@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldVisibilityInspectionPrepareResult
+final readonly class AdministrationManagingFieldVisibilityInspectionPrepareResult
 {
     /**
      * @param array<string, mixed> $payload

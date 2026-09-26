@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldViewProfilePriorityRow
+final readonly class AdministrationManagingFieldViewProfilePriorityRow
 {
     public function __construct(
         public int $priority,

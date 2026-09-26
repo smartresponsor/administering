@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileApplyServiceInterface;
-use App\Administering\Value\Managing\ManagingFieldViewProfileApplyRequest;
-use App\Administering\Value\Managing\ManagingFieldViewProfileApplyResult;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileApplyRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileApplyResult;
 
 /**
  * Prepares a reviewed Managing field view profile payload without writing owner storage.
  */
 final readonly class AdministrationManagingFieldViewProfileApplyService implements AdministrationFieldViewProfileApplyServiceInterface
 {
-    public function prepare(ManagingFieldViewProfileApplyRequest $request): ManagingFieldViewProfileApplyResult
+    public function prepare(AdministrationManagingFieldViewProfileApplyRequest $request): AdministrationManagingFieldViewProfileApplyResult
     {
         $valid = [] !== $request->normalizedProfilePayload;
 
-        return new ManagingFieldViewProfileApplyResult(
+        return new AdministrationManagingFieldViewProfileApplyResult(
             $valid,
             $valid ? 'prepared' : 'rejected',
             $valid ? 'Managing profile apply payload prepared for owner runtime.' : 'Normalized profile payload is empty.',

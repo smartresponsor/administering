@@ -6,15 +6,15 @@ namespace App\Administering\Service\Rolling;
 
 use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
-use App\Administering\Value\Managing\ManagingAclMutationApplyResult;
+use App\Administering\Value\Managing\AdministrationManagingAclMutationApplyResult;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Builds a controlled apply request from an existing Administering review record
@@ -23,7 +23,7 @@ use Doctrine\Persistence\ManagerRegistry;
 final readonly class AdministrationRollingAclMutationApplyService implements AdministrationAclMutationApplyServiceInterface, AdministrationServiceToolHandlerInterface
 {
     public function __construct(
-        private ManagerRegistry $managerRegistry,
+        private AdministrationPersistenceRepository $persistenceRepository,
         private AdministrationAuditRecorderInterface $auditRecorder,
         private AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
     ) {
@@ -46,16 +46,12 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             : AdministrationOperationExecutionResult::failed($result->safeMessage(), $this->executionSafeContext($invocation, $result));
     }
 
-    public function applyReviewedMutation(string $requestKey, string $requestedBySubject): ManagingAclMutationApplyResult
+    public function applyReviewedMutation(string $requestKey, string $requestedBySubject): AdministrationManagingAclMutationApplyResult
     {
-        $manager = $this->manager();
-
-        $record = $manager
-            ->getRepository(AdministrationAclMutationReviewRecordEntity::class)
-            ->findOneBy(['requestKey' => $requestKey]);
+        $record = $this->persistenceRepository->findOneBy(AdministrationAclMutationReviewRecordEntity::class, ['requestKey' => $requestKey]);
 
         if (!$record instanceof AdministrationAclMutationReviewRecordEntity) {
-            return ManagingAclMutationApplyResult::skipped(
+            return AdministrationManagingAclMutationApplyResult::skipped(
                 $requestKey,
                 'ACL mutation review record was not found.',
                 ['reason' => 'missing_review_record'],
@@ -63,7 +59,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
         }
 
         if (!$record->valid()) {
-            $result = ManagingAclMutationApplyResult::rejected(
+            $result = AdministrationManagingAclMutationApplyResult::rejected(
                 $requestKey,
                 'ACL mutation review is invalid and cannot be applied.',
                 ['reason' => 'invalid_review_record'],
@@ -85,7 +81,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             $this->safeContext($record->safeReviewPayload()['safe_context'] ?? []),
         );
 
-        $result = ManagingAclMutationApplyResult::skipped(
+        $result = AdministrationManagingAclMutationApplyResult::skipped(
             $record->requestKey(),
             'Rolling ACL mutation apply is dry-run only inside Administering standalone runtime.',
             [
@@ -107,7 +103,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
     }
 
     /** @return array<string, mixed> */
-    private function executionSafeContext(AdministrationServiceToolInvocation $invocation, ManagingAclMutationApplyResult $result): array
+    private function executionSafeContext(AdministrationServiceToolInvocation $invocation, AdministrationManagingAclMutationApplyResult $result): array
     {
         return [
             'tool_key' => $invocation->toolKey,
@@ -139,7 +135,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
     private function recordApplyAttempt(
         AdministrationAclMutationReviewRecordEntity $record,
         string $requestedBySubject,
-        ManagingAclMutationApplyResult $result,
+        AdministrationManagingAclMutationApplyResult $result,
     ): void {
         $applyRecord = new AdministrationAclMutationApplyRecordEntity(
             $record->requestKey(),
@@ -154,9 +150,7 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             $result->toSafeArray(),
         );
 
-        $manager = $this->manager();
-        $manager->persist($applyRecord);
-        $manager->flush();
+        $this->persistenceRepository->persist($applyRecord);
 
         $this->auditRecorder->record('administration.rolling.acl_mutation.applied', $requestedBySubject, [
             'request_key' => $record->requestKey(),
@@ -167,16 +161,5 @@ final readonly class AdministrationRollingAclMutationApplyService implements Adm
             'status' => $result->status(),
             'succeeded' => $result->succeeded(),
         ]);
-    }
-
-    private function manager(): \Doctrine\Persistence\ObjectManager
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationAclMutationReviewRecord::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering ACL mutation records. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        return $manager;
     }
 }

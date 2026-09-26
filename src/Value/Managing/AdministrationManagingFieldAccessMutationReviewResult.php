@@ -6,10 +6,10 @@ namespace App\Administering\Value\Managing;
 
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 
-final readonly class ManagingFieldAccessMutationReviewResult
+final readonly class AdministrationManagingFieldAccessMutationReviewResult
 {
     public function __construct(
-        public ManagingFieldAccessPolicyDescriptor $descriptor,
+        public AdministrationManagingFieldAccessPolicyDescriptor $descriptor,
         public AdministrationRollingAclMutationReview $review,
         public string $requestKey,
     ) {

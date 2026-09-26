@@ -6,9 +6,9 @@ namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
-use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewResult;
-use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMutationReviewResult;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessPolicyDescriptor;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
 use App\Administering\Value\Rolling\AdministrationRollingFieldAccessDecisionRequest;
 use App\Administering\Value\Rolling\AdministrationRollingFieldAccessScopeSet;
@@ -23,13 +23,13 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
     ) {
     }
 
-    public function review(ManagingFieldAccessMutationReviewInput $input): ManagingFieldAccessMutationReviewResult
+    public function review(AdministrationManagingFieldAccessMutationReviewInput $input): AdministrationManagingFieldAccessMutationReviewResult
     {
         $request = $this->toRollingMutationRequest($input);
         $review = $this->buildReview($input, $request);
         $record = $this->reviewRecorder->record($request, $review);
 
-        return new ManagingFieldAccessMutationReviewResult(
+        return new AdministrationManagingFieldAccessMutationReviewResult(
             $input->descriptor,
             $review,
             $record->requestKey(),
@@ -37,7 +37,7 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
     }
 
     private function buildReview(
-        ManagingFieldAccessMutationReviewInput $input,
+        AdministrationManagingFieldAccessMutationReviewInput $input,
         AdministrationRollingAclMutationRequest $request,
     ): \App\Administering\Value\Rolling\AdministrationRollingAclMutationReview {
         $descriptor = $input->descriptor;
@@ -73,7 +73,7 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
         );
     }
 
-    private function toRollingMutationRequest(ManagingFieldAccessMutationReviewInput $input): AdministrationRollingAclMutationRequest
+    private function toRollingMutationRequest(AdministrationManagingFieldAccessMutationReviewInput $input): AdministrationRollingAclMutationRequest
     {
         $descriptor = $input->descriptor;
         $scope = AdministrationRollingFieldAccessScopeSet::fromRequest(new AdministrationRollingFieldAccessDecisionRequest(
@@ -97,20 +97,20 @@ final readonly class AdministrationManagingFieldAccessMutationReviewService impl
         );
     }
 
-    private function mutationType(ManagingFieldAccessPolicyDescriptor $descriptor): string
+    private function mutationType(AdministrationManagingFieldAccessPolicyDescriptor $descriptor): string
     {
-        if (ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
+        if (AdministrationManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
             return $descriptor->allows() ? 'permission.grant' : 'permission.revoke';
         }
 
         return $descriptor->allows() ? 'acl.allow' : 'acl.deny';
     }
 
-    private function subjectIdentifier(ManagingFieldAccessPolicyDescriptor $descriptor): string
+    private function subjectIdentifier(AdministrationManagingFieldAccessPolicyDescriptor $descriptor): string
     {
         $identifier = trim($descriptor->subjectIdentifier);
 
-        if (ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
+        if (AdministrationManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE === $descriptor->subjectType) {
             return $identifier;
         }
 

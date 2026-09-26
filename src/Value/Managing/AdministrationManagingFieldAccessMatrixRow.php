@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldAccessMatrixRow
+final readonly class AdministrationManagingFieldAccessMatrixRow
 {
     public function __construct(
         public int $priority,

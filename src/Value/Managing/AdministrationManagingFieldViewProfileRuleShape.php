@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldViewProfileRuleShape
+final readonly class AdministrationManagingFieldViewProfileRuleShape
 {
     /** @param list<string> $allowedValues */
     public function __construct(

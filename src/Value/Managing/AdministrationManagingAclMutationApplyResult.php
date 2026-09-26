@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingAclMutationApplyResult
+final readonly class AdministrationManagingAclMutationApplyResult
 {
     public function __construct(
         private string $requestKey,

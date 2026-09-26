@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileReviewService;
-use App\Administering\Value\Managing\ManagingFieldViewProfileEditRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileEditRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileReviewServiceTest extends TestCase
@@ -28,7 +28,7 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
             ],
         ];
 
-        $result = $service->review(new ManagingFieldViewProfileEditRequest(
+        $result = $service->review(new AdministrationManagingFieldViewProfileEditRequest(
             profileKey: 'role:security.admin',
             currentProfilePayload: [],
             requestedProfilePayload: $requestedPayload,
@@ -46,7 +46,7 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
     {
         $service = new AdministrationManagingFieldViewProfileReviewService();
         $payload = ['subjects' => ['user:42' => ['defaults' => ['detail' => ['visible' => ['description']]]]]];
-        $result = $service->review(new ManagingFieldViewProfileEditRequest(
+        $result = $service->review(new AdministrationManagingFieldViewProfileEditRequest(
             profileKey: 'user:42',
             currentProfilePayload: $payload,
             requestedProfilePayload: $payload,
@@ -59,7 +59,7 @@ final class AdministrationManagingFieldViewProfileReviewServiceTest extends Test
 
     public function testRejectsMissingProfileKey(): void
     {
-        $result = (new AdministrationManagingFieldViewProfileReviewService())->review(new ManagingFieldViewProfileEditRequest(
+        $result = (new AdministrationManagingFieldViewProfileReviewService())->review(new AdministrationManagingFieldViewProfileEditRequest(
             profileKey: '',
             currentProfilePayload: [],
             requestedProfilePayload: ['subjects' => []],

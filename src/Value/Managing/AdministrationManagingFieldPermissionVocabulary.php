@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final class ManagingFieldPermissionVocabulary
+final class AdministrationManagingFieldPermissionVocabulary
 {
     public const FIELD_VIEW = 'managing.field.view';
     public const FIELD_CONFIGURE = 'managing.field.configure';

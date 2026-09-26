@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldAccessCatalogItem
+final readonly class AdministrationManagingFieldAccessCatalogItem
 {
     /** @param list<string> $scopes */
     public function __construct(

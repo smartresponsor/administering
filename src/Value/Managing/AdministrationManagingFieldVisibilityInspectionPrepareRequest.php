@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldVisibilityInspectionPrepareRequest
+final readonly class AdministrationManagingFieldVisibilityInspectionPrepareRequest
 {
     /**
      * @param list<string> $statusCandidates

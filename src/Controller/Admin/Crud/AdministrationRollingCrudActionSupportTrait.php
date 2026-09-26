@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 trait AdministrationRollingCrudActionSupportTrait
 {
-    protected function rollingEntityManager(string $entityFqcn): EntityManagerInterface
+    protected function rollingPersistenceRepository(): AdministrationPersistenceRepository
     {
-        $manager = $this->container->get('doctrine')->getManagerForClass($entityFqcn);
-        if (!$manager instanceof EntityManagerInterface) {
-            throw new \RuntimeException(sprintf('No Doctrine entity manager found for "%s".', $entityFqcn));
+        $repository = $this->container->get(AdministrationPersistenceRepository::class);
+        if (!$repository instanceof AdministrationPersistenceRepository) {
+            throw new \RuntimeException('Administering persistence repository is unavailable.');
         }
 
-        return $manager;
+        return $repository;
     }
 
     /**
@@ -60,9 +60,7 @@ trait AdministrationRollingCrudActionSupportTrait
      */
     protected function rollingPersistAndRedirect(AdminContext $context, object $entity, string $flashMessage): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $manager = $this->rollingEntityManager($entity::class);
-        $manager->persist($entity);
-        $manager->flush();
+        $this->rollingPersistenceRepository()->persist($entity);
 
         $this->addFlash('success', $flashMessage);
 
@@ -77,9 +75,7 @@ trait AdministrationRollingCrudActionSupportTrait
      */
     protected function rollingRemoveAndRedirect(AdminContext $context, object $entity, string $flashMessage): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $manager = $this->rollingEntityManager($entity::class);
-        $manager->remove($entity);
-        $manager->flush();
+        $this->rollingPersistenceRepository()->remove($entity);
 
         $this->addFlash('success', $flashMessage);
 
@@ -96,12 +92,12 @@ trait AdministrationRollingCrudActionSupportTrait
      */
     protected function rollingBatchMutate(AdminContext $context, BatchActionDto $batchActionDto, string $expectedClass, callable $mutator, string $flashMessagePattern): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $manager = $this->rollingEntityManager($batchActionDto->getEntityFqcn());
-        $repository = $manager->getRepository($batchActionDto->getEntityFqcn());
+        $repository = $this->rollingPersistenceRepository();
+        $entityClass = $batchActionDto->getEntityFqcn();
         $changed = 0;
 
         foreach ($batchActionDto->getEntityIds() as $entityId) {
-            $entity = $repository->find($entityId);
+            $entity = $repository->find($entityClass, $entityId);
             if (!$entity instanceof $expectedClass) {
                 continue;
             }
@@ -113,7 +109,7 @@ trait AdministrationRollingCrudActionSupportTrait
             }
         }
 
-        $manager->flush();
+        $repository->flush($entityClass);
 
         $this->addFlash('success', sprintf($flashMessagePattern, $changed));
 
@@ -129,21 +125,21 @@ trait AdministrationRollingCrudActionSupportTrait
      */
     protected function rollingBatchRemove(AdminContext $context, BatchActionDto $batchActionDto, string $expectedClass, string $flashMessagePattern): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $manager = $this->rollingEntityManager($batchActionDto->getEntityFqcn());
-        $repository = $manager->getRepository($batchActionDto->getEntityFqcn());
+        $repository = $this->rollingPersistenceRepository();
+        $entityClass = $batchActionDto->getEntityFqcn();
         $removed = 0;
 
         foreach ($batchActionDto->getEntityIds() as $entityId) {
-            $entity = $repository->find($entityId);
+            $entity = $repository->find($entityClass, $entityId);
             if (!$entity instanceof $expectedClass) {
                 continue;
             }
 
-            $manager->remove($entity);
+            $repository->remove($entity, false);
             ++$removed;
         }
 
-        $manager->flush();
+        $repository->flush($entityClass);
 
         $this->addFlash('success', sprintf($flashMessagePattern, $removed));
 

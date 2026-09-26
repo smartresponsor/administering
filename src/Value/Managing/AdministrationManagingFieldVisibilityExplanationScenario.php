@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldVisibilityExplanationScenario
+final readonly class AdministrationManagingFieldVisibilityExplanationScenario
 {
     /** @param list<string> $matchingAxes */
     public function __construct(

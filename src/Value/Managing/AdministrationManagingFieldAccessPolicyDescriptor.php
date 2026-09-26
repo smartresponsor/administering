@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldAccessPolicyDescriptor
+final readonly class AdministrationManagingFieldAccessPolicyDescriptor
 {
     public const SUBJECT_ROLE = 'role';
     public const SUBJECT_USER = 'user';
@@ -12,7 +12,7 @@ final readonly class ManagingFieldAccessPolicyDescriptor
     public const EFFECT_DENY = 'deny';
 
     public function __construct(
-        public ManagingFieldAccessTarget $target,
+        public AdministrationManagingFieldAccessTarget $target,
         public string $permissionKey,
         public string $subjectType,
         public string $subjectIdentifier,

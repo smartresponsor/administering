@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldViewProfileApplyResult
+final readonly class AdministrationManagingFieldViewProfileApplyResult
 {
     /**
      * @param array<string, mixed> $payload

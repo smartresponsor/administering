@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldAccessMutationReviewInput
+final readonly class AdministrationManagingFieldAccessMutationReviewInput
 {
     public function __construct(
-        public ManagingFieldAccessPolicyDescriptor $descriptor,
+        public AdministrationManagingFieldAccessPolicyDescriptor $descriptor,
         public string $requestedBySubject,
     ) {
     }

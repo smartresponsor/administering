@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldAccessTarget
+final readonly class AdministrationManagingFieldAccessTarget
 {
     /** @param array<string, mixed> $attributes */
     public function __construct(

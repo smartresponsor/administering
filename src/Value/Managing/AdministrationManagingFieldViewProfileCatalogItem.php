@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldViewProfileCatalogItem
+final readonly class AdministrationManagingFieldViewProfileCatalogItem
 {
     /** @param list<string> $ruleKeys */
     public function __construct(

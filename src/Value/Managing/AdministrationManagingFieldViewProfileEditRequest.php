@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldViewProfileEditRequest
+final readonly class AdministrationManagingFieldViewProfileEditRequest
 {
     /**
      * @param array<string, mixed> $currentProfilePayload

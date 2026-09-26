@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingAclMutationApplySummary
+final readonly class AdministrationManagingAclMutationApplySummary
 {
     /**
      * @param array<string, int> $countByStatus

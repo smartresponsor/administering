@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Managing;
 
-final readonly class ManagingFieldVisibilityExplanationStep
+final readonly class AdministrationManagingFieldVisibilityExplanationStep
 {
     public const AXIS_AVAILABILITY = 'availability';
     public const AXIS_ACCESS = 'access';

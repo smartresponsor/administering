@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileCatalogProviderInterface;
-use App\Administering\Value\Managing\ManagingFieldViewProfileCatalogItem;
-use App\Administering\Value\Managing\ManagingFieldViewProfilePriorityRow;
-use App\Administering\Value\Managing\ManagingFieldViewProfileRuleShape;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileCatalogItem;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfilePriorityRow;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileRuleShape;
 
 /**
  * Builds read-only Administering metadata for Managing field view profile administration.
@@ -17,7 +17,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
     public function catalogItems(): array
     {
         return [
-            new ManagingFieldViewProfileCatalogItem(
+            new AdministrationManagingFieldViewProfileCatalogItem(
                 'system-default',
                 'System default field presentation',
                 'Managing',
@@ -26,7 +26,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden'],
                 'Baseline presentation defaults applied after access has been allowed.',
             ),
-            new ManagingFieldViewProfileCatalogItem(
+            new AdministrationManagingFieldViewProfileCatalogItem(
                 'role-default',
                 'Role default view profile',
                 'Administering',
@@ -35,7 +35,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden', 'assign'],
                 'Admin-assigned role default can shape presentation but cannot grant field access.',
             ),
-            new ManagingFieldViewProfileCatalogItem(
+            new AdministrationManagingFieldViewProfileCatalogItem(
                 'group-default',
                 'Group default view profile',
                 'Administering',
@@ -44,7 +44,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden', 'assign'],
                 'Admin-assigned group default is evaluated inside the already allowed access corridor.',
             ),
-            new ManagingFieldViewProfileCatalogItem(
+            new AdministrationManagingFieldViewProfileCatalogItem(
                 'user-default',
                 'User assigned default view profile',
                 'Administering',
@@ -53,7 +53,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden', 'assign', 'reset'],
                 'Administrator can inspect or reset a user profile without changing field access policy.',
             ),
-            new ManagingFieldViewProfileCatalogItem(
+            new AdministrationManagingFieldViewProfileCatalogItem(
                 'user',
                 'User personal view profile',
                 'Managing',
@@ -68,19 +68,19 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
     public function priorityRows(): array
     {
         return [
-            new ManagingFieldViewProfilePriorityRow(10, 'System/component hard deny', 'Managing', 'deny', 'nothing', 'Unavailable, denied, or non-page fields are removed before user profile logic.'),
-            new ManagingFieldViewProfilePriorityRow(20, 'Effective security decision', 'Rolling', 'allow/deny/abstain', 'presentation only', 'Rolling deny remains stronger than every profile or UI preference.'),
-            new ManagingFieldViewProfilePriorityRow(30, 'Admin field policy', 'Administering/Rolling', 'allow/deny/profile assignment', 'presentation only', 'Admin-assigned access policy decides the corridor in which profiles may operate.'),
-            new ManagingFieldViewProfilePriorityRow(40, 'Role/group/user default profile', 'Administering', 'visible/hidden', 'system defaults only', 'Default profiles may shape presentation but cannot create access.'),
-            new ManagingFieldViewProfilePriorityRow(50, 'User personal view profile', 'Managing', 'visible/hidden', 'allowed presentation', 'Personal preference can override visibility only for hideable and allowed fields.'),
-            new ManagingFieldViewProfilePriorityRow(60, 'EasyAdmin field emission', 'Managing', 'render/not-render', 'none', 'EasyAdmin receives only the final allowed and visible field set.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(10, 'System/component hard deny', 'Managing', 'deny', 'nothing', 'Unavailable, denied, or non-page fields are removed before user profile logic.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(20, 'Effective security decision', 'Rolling', 'allow/deny/abstain', 'presentation only', 'Rolling deny remains stronger than every profile or UI preference.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(30, 'Admin field policy', 'Administering/Rolling', 'allow/deny/profile assignment', 'presentation only', 'Admin-assigned access policy decides the corridor in which profiles may operate.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(40, 'Role/group/user default profile', 'Administering', 'visible/hidden', 'system defaults only', 'Default profiles may shape presentation but cannot create access.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(50, 'User personal view profile', 'Managing', 'visible/hidden', 'allowed presentation', 'Personal preference can override visibility only for hideable and allowed fields.'),
+            new AdministrationManagingFieldViewProfilePriorityRow(60, 'EasyAdmin field emission', 'Managing', 'render/not-render', 'none', 'EasyAdmin receives only the final allowed and visible field set.'),
         ];
     }
 
     public function ruleShapes(): array
     {
         return [
-            new ManagingFieldViewProfileRuleShape(
+            new AdministrationManagingFieldViewProfileRuleShape(
                 'subjects',
                 'subjects.{subjectIdentifier}',
                 'map',
@@ -88,7 +88,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['defaults', 'resources'],
                 'Subject identifiers may be exact, such as user:42, or wildcard * for shared defaults.',
             ),
-            new ManagingFieldViewProfileRuleShape(
+            new AdministrationManagingFieldViewProfileRuleShape(
                 'defaults',
                 'subjects.{subject}.defaults.{page}',
                 'list',
@@ -96,7 +96,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden'],
                 'Page may be index, detail, new, edit, all, or *.',
             ),
-            new ManagingFieldViewProfileRuleShape(
+            new AdministrationManagingFieldViewProfileRuleShape(
                 'resources',
                 'subjects.{subject}.resources.{resourceClass}.{page}',
                 'list',
@@ -104,7 +104,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['visible', 'hidden'],
                 'Resource-specific page rules win over subject defaults.',
             ),
-            new ManagingFieldViewProfileRuleShape(
+            new AdministrationManagingFieldViewProfileRuleShape(
                 'visible',
                 'visible: [fieldName]',
                 'list',
@@ -112,7 +112,7 @@ final readonly class AdministrationManagingFieldViewProfileCatalogProvider imple
                 ['field names'],
                 'Visible never grants access; denied fields still remain unavailable.',
             ),
-            new ManagingFieldViewProfileRuleShape(
+            new AdministrationManagingFieldViewProfileRuleShape(
                 'hidden',
                 'hidden: [fieldName]',
                 'list',
