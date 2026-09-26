@@ -6,10 +6,11 @@ namespace App\Administering\Controller\Admin\Config;
 
 use App\Administering\Entity\Config\AdministrationConfigToolEntity;
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
+use App\Administering\Repository\AdministrationPersistenceRepository;
+use App\Administering\Responder\Security\AdministrationAuthenticationRequiredResponder;
 use App\Administering\Service\Config\AdministrationConfigFormService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\ClickableInterface;
@@ -20,11 +21,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationConfigCenterController extends AbstractController
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
         private readonly AdministrationConfigFormService $formResolverService,
         private readonly AdministrationConfigStateService $stateService,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
+        private readonly AdministrationAuthenticationRequiredResponder $authenticationRequiredResponder,
     ) {
     }
 
@@ -36,7 +38,7 @@ final class AdministrationConfigCenterController extends AbstractController
     public function index(): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $this->denyAccessUnlessGranted('administration.config.view');
@@ -62,7 +64,7 @@ final class AdministrationConfigCenterController extends AbstractController
     public function edit(string $applicationCode, string $toolCode, Request $request): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $tool = $this->tool($applicationCode, $toolCode);
@@ -153,12 +155,11 @@ final class AdministrationConfigCenterController extends AbstractController
      */
     private function fetch(string $entityClass): array
     {
-        $manager = $this->managerRegistry->getManagerForClass($entityClass);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor($entityClass)) {
             return [];
         }
 
-        return $manager->getRepository($entityClass)->findBy([], ['id' => 'ASC']);
+        return $this->persistenceRepository->findBy($entityClass, [], ['id' => 'ASC']);
     }
 
     private function count(string $entityClass): int
@@ -176,12 +177,11 @@ final class AdministrationConfigCenterController extends AbstractController
 
     private function tool(string $applicationCode, string $toolCode): ?AdministrationConfigToolEntity
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationConfigToolEntity::class);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor(AdministrationConfigToolEntity::class)) {
             return null;
         }
 
-        $tool = $manager->getRepository(AdministrationConfigToolEntity::class)->findOneBy([
+        $tool = $this->persistenceRepository->findOneBy(AdministrationConfigToolEntity::class, [
             'applicationCode' => $applicationCode,
             'toolCode' => $toolCode,
         ]);
