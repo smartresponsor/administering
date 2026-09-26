@@ -77,11 +77,7 @@ final readonly class AdministrationConfigApplicationDiscoveryService
             return null;
         }
 
-        try {
-            $composer = json_decode((string) file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return null;
-        }
+        $composer = json_decode((string) file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($composer) || !is_string($composer['name'] ?? null)) {
             return null;
