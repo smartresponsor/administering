@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Administering\Support\Form;
+namespace App\Administering\Parser\Form;
 
 final readonly class AdministrationFormInputParser
 {
