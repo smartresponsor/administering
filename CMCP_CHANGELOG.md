@@ -743,3 +743,18 @@ Growth workstream:
 Что имеем? The previously warning-level executable-responsibility debt on RcStatus is structurally closed without changing the CLI contract, while zero-HIGH Inspecting status is preserved.
 
 Что осталось до RC? Canon052 is the only hard Gating blocker and requires repository-state untracking/removal of non-artifact consumer `.gating/` paths, which remains outside the current non-destructive authority. Canon031/040/042 are warning-level documentation/coverage evidence debt.
+
+## 2026-09-28 — Canon052 boundary and coverage evidence refresh
+
+- Read the actual `Canon052GatingIntegrationRule` implementation from the local Gating repository. Consumer `.gating/` permits only root `README.md` plus generated top-level surfaces `report(s)/`, `evidence/`, `cache/`, `checksum(s)/`, and `artifact(s)/`.
+- The current Canon052 failures are path-based. Rewriting file contents or adding generated markers cannot make `.gating/AGENTS.md`, `.gating/bin/*`, `.gating/contract/*`, policy/config/tooling files, and similar tracked paths canonical while those paths remain present.
+- Moving, deleting, or untracking those paths is therefore structurally required. Rule bypasses, alternate gate targets, or weakening Canon052 were explicitly rejected as non-canonical.
+- `composer test:coverage` was run with Xdebug path coverage and completed successfully: 139 tests / 625 assertions.
+- Canon040 evidence is now fresh rather than stale. Current measured coverage is lines **1631/17055 (9.6%)**, methods **183/2309 (7.9%)**, branches **899/2117 (42.5%)**; Gating classifies this as `HIGH_TEST_DEBT`.
+- Canon042 currently reports functional **1/224 (0.4%)**, behavioral **1/1 (100%)**, UI **1/203 (0.5%)**, critical **1/1 (100%)**, also `HIGH_BEHAVIORAL_TEST_DEBT`.
+- These coverage warnings are genuine remediation tracks, not freshness problems. Artificial timestamp refresh or evidence masking is not an acceptable fix.
+- Engine task status was also inspected. Its orchestration-level `blocked` state is a separate browser/chat-bind readiness issue (`ENGINE_CHAT_INITIAL_READINESS_BLOCKED`) and does not invalidate direct repository execution already completed through Console MCP.
+
+Что достигнуто? Canon052 is proven to require repository-state removal/move/untracking rather than an in-place content-only fix, and Canon040 now exposes current quantitative coverage debt from freshly generated evidence.
+
+Что осталось до RC? The sole hard repository gate remains Canon052, which cannot be repaired under `Destructive operations: FORBIDDEN`. Canon031, Canon040, and Canon042 remain warning-level debt; their remediation is substantial documentation/test expansion rather than a bounded RC unblock.
