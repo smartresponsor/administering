@@ -758,3 +758,21 @@ Growth workstream:
 Что достигнуто? Canon052 is proven to require repository-state removal/move/untracking rather than an in-place content-only fix, and Canon040 now exposes current quantitative coverage debt from freshly generated evidence.
 
 Что осталось до RC? The sole hard repository gate remains Canon052, which cannot be repaired under `Destructive operations: FORBIDDEN`. Canon031, Canon040, and Canon042 remain warning-level debt; their remediation is substantial documentation/test expansion rather than a bounded RC unblock.
+
+## 2026-09-28 — RC status service regression hardening
+
+- Classified the five pre-existing dirty paths before further mutation. `composer.json`, `composer.lock`, `composer.prod.json`, and `config/bundles.php` form a coherent pre-existing Failing baseline adoption; `.gating/README.md` is a consumer README overwrite. None was created by this pass, so all remain preserved and uncommitted here.
+- Added focused regression coverage for `AdministrationRcStatusReportService`.
+- Core ready-path test validates current proof/index/validation/owner-review/final-seal artifacts and SHA-256 integrity.
+- Negative-path test proves stale final-seal proof hashes block the report.
+- Terminal-path test covers receipt, receipt validation, handoff index, handoff-index validation, handoff bundle, handoff-bundle validation, text artifact presence, and corresponding hash checks.
+- `composer test`: PASS, **142 tests / 643 assertions**.
+- `composer stan`: PASS, 725 files / 0 errors.
+- `composer cs:check`: PASS, 725 files.
+- `composer test:coverage`: PASS. Repository coverage moved from the freshly measured 9.6% lines / 7.9% methods / 42.5% branches to **11.4% lines / 8.4% methods / 50.5% branches**.
+- Canon040 still classifies the repository as `HIGH_TEST_DEBT` because line/method coverage remains far below the 50% high-debt boundary; this is a broad remediation program, not a bounded RC unblock.
+- Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-134410.json`: **118 findings, 0 high**, max complexity 23, PHPStan 0 errors.
+
+Что достигнуто? The extracted RC status service now has direct ready, stale-hash failure, and full terminal handoff regression coverage while the zero-HIGH Inspecting state is preserved.
+
+Что осталось до RC? Canon052 remains the sole hard Gating blocker under the current authority. Canon031/040/042 remain broad warning-level documentation and test-coverage programs.
