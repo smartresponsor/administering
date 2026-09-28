@@ -695,3 +695,33 @@ Growth workstream:
 Что достигнуто? Three of the six supplied high Inspecting complexity findings are removed with fresh-fingerprint evidence, deterministic source gates are green, and the changes stay inside Administering while preserving unrelated pre-existing Composer/Gating work.
 
 Что осталось до RC? Three broader high-complexity entrypoints remain for separate bounded decomposition. Overall Gating cannot become green in this execution because Canon052 requires destructive consumer `.gating/` cleanup, explicitly forbidden here. Commit and publish only the coherent remediation files; preserve the unrelated five pre-existing dirty paths.
+
+## 2026-09-28 — continued high-complexity RC tail
+
+### Additional bounded passes
+
+- `AdministrationServiceToolRuntimeControlsImportCommand::execute()` was decomposed into control collection and change comparison helpers. CS, PHPStan, and PHPUnit remained GREEN. Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-125056.json` reduced the high backlog from 3 to 2.
+- `AdministrationRcContractValidateCommand::execute()` was decomposed into Composer, manifest, static-contract coverage, helper, README, and artifact-list validation helpers. `composer rc:contract:validate` returned `3rc_contract_valid`; CS/PHPStan/PHPUnit remained GREEN. Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-125533.json` reduced the high backlog from 2 to 1.
+- `AdministrationRcStatusCommand::execute()` was decomposed in two safe passes: artifact/status/hash validation and report publication first, then optional artifact loading and report assembly. The intermediate Inspecting result reduced complexity from 60 to 33; a final Inspecting run was started after the second decomposition and must be read from the persisted report before claiming the high backlog is closed.
+- A temporary PHPStan regression from extracted `?array` parameters was repaired with precise `array<string, mixed>|null` contracts. Current `composer cs:check`, `composer stan`, and `composer test` are GREEN (723 files / 0 PHPStan errors; 139 tests / 622 assertions).
+- `composer rc:status` remains fail-closed because generated RC proof/index/validation/owner-review/final-seal artifacts are currently absent from the ignored runtime-proof-results directory. The failure is artifact availability, not a source-code regression.
+- Canon052 was re-investigated: root `.gitignore` already ignores `/.gating/`, and Gating requires the consumer directory to be artifact-only. A non-filesystem-destructive route exists via untracking owner/tooling paths while preserving local files, but that still removes tracked repository paths and is therefore not executed under `Destructive operations: FORBIDDEN`.
+
+Что имеем? Five of the original six high Inspecting findings are proven closed, all deterministic source gates are green, and the final RcStatus high is reduced substantially with one fresh-fingerprint verification still pending.
+
+### Final verification for this remediation block
+
+- Final post-decomposition Inspecting report: `D--PhpstormProjects-www-Administering-20260928-130841.json`.
+- Inspecting summary: 118 findings, **0 high**, 118 medium; PHPStan analyzer 0 errors; max cyclomatic complexity reduced to 23.
+- Compared with the supplied baseline: 122 findings / 6 high / max complexity 60 -> 118 findings / 0 high / max complexity 23.
+- `composer cs:check`: PASS.
+- `composer stan`: PASS, 723 files / 0 errors.
+- `composer test`: PASS, 139 tests / 622 assertions.
+- `composer rc:contract:validate`: PASS with `3rc_contract_valid`.
+- `composer rc:status`: fail-closed as expected because ignored generated proof artifacts are absent; source behavior remains deterministic and reports each missing artifact.
+- Gating hard failure remains Canon052 only. Canon014 is now warning-level because `AdministrationRcStatusCommand` is 949 lines even though executable complexity is no longer high; Canon031/040/042 also remain warning-level.
+- No browser/mobile/UI surface changed; behavioral visual evidence is not applicable to this source-only command refactor.
+
+Что достигнуто? The complete supplied HIGH Inspecting front is closed on the current source fingerprint, with deterministic CS/PHPStan/PHPUnit evidence and valid RC static-contract behavior.
+
+Что осталось до RC? Canon052 requires removing owner/tooling paths from the tracked consumer `.gating/` surface. The safe filesystem-preserving implementation would be Git untracking plus the existing root ignore, but it is a repository-state deletion and remains outside this task's `Destructive operations: FORBIDDEN` authority. Warning-level Canon014/031/040/042 can continue as post-high structural/coverage work.

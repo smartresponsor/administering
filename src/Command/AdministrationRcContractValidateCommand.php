@@ -181,161 +181,10 @@ final class AdministrationRcContractValidateCommand extends Command
         $helper = $this->readText($helperFile, $checks, $errors, 'helper');
         $readme = $this->readText($readmeFile, $checks, $errors, 'readme');
 
-        $scripts = is_array($composer) && is_array($composer['scripts'] ?? null) ? $composer['scripts'] : [];
-        $qualityChain = $scripts['quality:rc-3rc'] ?? null;
-        $this->addCheck($checks, $errors, 'composer_quality_rc_3rc_is_array', is_array($qualityChain), 'composer scripts.quality:rc-3rc must be an ordered array');
-        if (is_array($qualityChain)) {
-            $this->addCheck($checks, $errors, 'composer_quality_rc_3rc_expected_order', self::EXPECTED_CHAIN === array_values($qualityChain), 'quality:rc-3rc order matches canonical sequence');
-        }
-
-        foreach (self::REQUIRED_ALIASES as $alias) {
-            $this->addCheck($checks, $errors, 'composer_alias_'.str_replace([':', '-'], '_', $alias), isset($scripts[$alias]), sprintf('composer script %s exists', $alias));
-        }
-
-        foreach (self::REQUIRED_ALIAS_COMMAND_MARKERS as $alias => $commandMarker) {
-            $aliasCommand = $this->composerAliasCommand($scripts[$alias] ?? null);
-            $this->addCheck(
-                $checks,
-                $errors,
-                'composer_alias_command_marker_'.str_replace([':', '-'], '_', $alias),
-                '' !== $aliasCommand && str_contains($aliasCommand, $commandMarker),
-                sprintf('composer script %s invokes %s', $alias, $commandMarker),
-            );
-        }
-
-        $composerAliasCommands = $this->composerAliasCommands($scripts);
-        foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
-            $this->addCheck(
-                $checks,
-                $errors,
-                'composer_alias_mentions_'.$this->checkName($artifactPath),
-                str_contains($composerAliasCommands, $artifactPath),
-                sprintf('composer rc aliases mention %s as input or output', $artifactPath),
-            );
-        }
-
-        if (is_array($manifest)) {
-            $this->addCheck($checks, $errors, 'manifest_component', 'Administering' === ($manifest['component'] ?? null), 'component=Administering');
-            $this->addCheck($checks, $errors, 'manifest_package', 'administering/admin' === ($manifest['package'] ?? null), 'package=administering/admin');
-            $this->addCheck($checks, $errors, 'manifest_namespace', 'App\Administering' === ($manifest['namespace'] ?? null), 'namespace=App\Administering');
-
-            $manifestComposerScripts = $manifest['composer_scripts'] ?? [];
-            $this->addCheck($checks, $errors, 'manifest_composer_scripts_map', is_array($manifestComposerScripts), 'manifest composer_scripts map exists');
-            if (is_array($manifestComposerScripts)) {
-                $this->addCheck($checks, $errors, 'manifest_quality_rc_3rc_script', isset($manifestComposerScripts['quality_rc_3rc']), 'composer_scripts.quality_rc_3rc exists');
-                foreach (self::REQUIRED_ALIASES as $alias) {
-                    $manifestKey = $this->manifestComposerScriptKey($alias);
-                    $expectedValue = 'composer '.$alias;
-                    $actualValue = $manifestComposerScripts[$manifestKey] ?? null;
-                    $this->addCheck(
-                        $checks,
-                        $errors,
-                        'manifest_composer_script_'.$manifestKey,
-                        $actualValue === $expectedValue,
-                        sprintf('composer_scripts.%s must be %s', $manifestKey, $expectedValue),
-                    );
-                }
-            }
-
-            $manifestComposerAliases = $manifest['composer_aliases'] ?? [];
-            $this->addCheck($checks, $errors, 'manifest_composer_aliases_map', is_array($manifestComposerAliases), 'manifest composer_aliases map exists');
-            if (is_array($manifestComposerAliases)) {
-                foreach (self::REQUIRED_ALIASES as $alias) {
-                    $manifestKey = $this->manifestComposerScriptKey($alias);
-                    $expectedValue = 'composer '.$alias;
-                    $actualValue = $manifestComposerAliases[$manifestKey] ?? null;
-                    $this->addCheck(
-                        $checks,
-                        $errors,
-                        'manifest_composer_alias_'.$manifestKey,
-                        $actualValue === $expectedValue,
-                        sprintf('composer_aliases.%s must be %s', $manifestKey, $expectedValue),
-                    );
-                }
-            }
-
-            $staticContractValidation = $manifest['static_contract_validation'] ?? [];
-            $this->addCheck($checks, $errors, 'manifest_static_contract_validation_map', is_array($staticContractValidation), 'manifest static_contract_validation map exists');
-            if (is_array($staticContractValidation)) {
-                $purpose = (string) ($staticContractValidation['purpose'] ?? '');
-                $this->addCheck(
-                    $checks,
-                    $errors,
-                    'manifest_static_contract_mentions_readme',
-                    str_contains($purpose, 'README') || str_contains($purpose, 'README.adoc'),
-                    'static_contract_validation purpose mentions README drift coverage',
-                );
-
-                $coverage = $staticContractValidation['coverage'] ?? [];
-                $this->addCheck($checks, $errors, 'manifest_static_contract_coverage_list', is_array($coverage), 'static_contract_validation.coverage list exists');
-                if (is_array($coverage)) {
-                    $coverageValues = array_values(array_filter($coverage, 'is_string'));
-                    foreach (self::REQUIRED_STATIC_CONTRACT_COVERAGE as $coverageMarker) {
-                        $this->addCheck(
-                            $checks,
-                            $errors,
-                            'manifest_static_contract_coverage_'.$this->checkName($coverageMarker),
-                            in_array($coverageMarker, $coverageValues, true),
-                            sprintf('static_contract_validation.coverage includes %s', $coverageMarker),
-                        );
-                    }
-                }
-            }
-
-            $manifestArtifacts = $manifest['artifacts'] ?? [];
-            $this->addCheck($checks, $errors, 'manifest_artifacts_map', is_array($manifestArtifacts), 'manifest artifacts map exists');
-            if (is_array($manifestArtifacts)) {
-                $artifactValues = array_values(array_filter($manifestArtifacts, 'is_string'));
-                foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
-                    $this->addCheck(
-                        $checks,
-                        $errors,
-                        'manifest_artifact_'.$this->checkName($artifactPath),
-                        in_array($artifactPath, $artifactValues, true),
-                        sprintf('manifest artifacts include %s', $artifactPath),
-                    );
-                }
-            }
-
-            $helperWrites = $manifest['windows_helper']['writes'] ?? [];
-            $this->addCheck($checks, $errors, 'manifest_windows_helper_writes_list', is_array($helperWrites), 'manifest windows_helper.writes list exists');
-            if (is_array($helperWrites)) {
-                foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
-                    $this->addCheck(
-                        $checks,
-                        $errors,
-                        'manifest_helper_writes_'.$this->checkName($artifactPath),
-                        in_array($artifactPath, $helperWrites, true),
-                        sprintf('windows_helper.writes include %s', $artifactPath),
-                    );
-                }
-            }
-        }
-
-        if (is_string($helper)) {
-            foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
-                $windowsPath = str_replace('/', '\\', $artifactPath);
-                $this->addCheck(
-                    $checks,
-                    $errors,
-                    'helper_mentions_'.$this->checkName($artifactPath),
-                    str_contains($helper, $windowsPath) || str_contains($helper, $artifactPath),
-                    sprintf('helper mentions %s', $artifactPath),
-                );
-            }
-        }
-
-        if (is_string($readme)) {
-            foreach (self::README_REQUIRED_MARKERS as $marker) {
-                $this->addCheck(
-                    $checks,
-                    $errors,
-                    'readme_mentions_'.$this->checkName($marker),
-                    str_contains($readme, $marker),
-                    sprintf('README mentions %s', $marker),
-                );
-            }
-        }
+        $this->validateComposerContract($composer, $checks, $errors);
+        $this->validateManifestContract($manifest, $checks, $errors);
+        $this->validateHelperContract($helper, $checks, $errors);
+        $this->validateReadmeContract($readme, $checks, $errors);
 
         $valid = [] === $errors;
         $report = [
@@ -374,6 +223,219 @@ final class AdministrationRcContractValidateCommand extends Command
         }
 
         return $valid ? Command::SUCCESS : Command::FAILURE;
+    }
+
+    /**
+     * @param array<string, mixed>|null                                $composer
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateComposerContract(?array $composer, array &$checks, array &$errors): void
+    {
+        $scripts = is_array($composer['scripts'] ?? null) ? $composer['scripts'] : [];
+        $qualityChain = $scripts['quality:rc-3rc'] ?? null;
+        $this->addCheck($checks, $errors, 'composer_quality_rc_3rc_is_array', is_array($qualityChain), 'composer scripts.quality:rc-3rc must be an ordered array');
+        if (is_array($qualityChain)) {
+            $this->addCheck($checks, $errors, 'composer_quality_rc_3rc_expected_order', self::EXPECTED_CHAIN === array_values($qualityChain), 'quality:rc-3rc order matches canonical sequence');
+        }
+
+        foreach (self::REQUIRED_ALIASES as $alias) {
+            $this->addCheck($checks, $errors, 'composer_alias_'.str_replace([':', '-'], '_', $alias), isset($scripts[$alias]), sprintf('composer script %s exists', $alias));
+        }
+
+        foreach (self::REQUIRED_ALIAS_COMMAND_MARKERS as $alias => $commandMarker) {
+            $aliasCommand = $this->composerAliasCommand($scripts[$alias] ?? null);
+            $this->addCheck(
+                $checks,
+                $errors,
+                'composer_alias_command_marker_'.str_replace([':', '-'], '_', $alias),
+                '' !== $aliasCommand && str_contains($aliasCommand, $commandMarker),
+                sprintf('composer script %s invokes %s', $alias, $commandMarker),
+            );
+        }
+
+        $composerAliasCommands = $this->composerAliasCommands($scripts);
+        foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
+            $this->addCheck(
+                $checks,
+                $errors,
+                'composer_alias_mentions_'.$this->checkName($artifactPath),
+                str_contains($composerAliasCommands, $artifactPath),
+                sprintf('composer rc aliases mention %s as input or output', $artifactPath),
+            );
+        }
+    }
+
+    /**
+     * @param array<string, mixed>|null                                $manifest
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateManifestContract(?array $manifest, array &$checks, array &$errors): void
+    {
+        if (null === $manifest) {
+            return;
+        }
+
+        $this->addCheck($checks, $errors, 'manifest_component', 'Administering' === ($manifest['component'] ?? null), 'component=Administering');
+        $this->addCheck($checks, $errors, 'manifest_package', 'administering/admin' === ($manifest['package'] ?? null), 'package=administering/admin');
+        $this->addCheck($checks, $errors, 'manifest_namespace', 'App\\Administering' === ($manifest['namespace'] ?? null), 'namespace=App\\Administering');
+
+        $this->validateManifestComposerMap($manifest['composer_scripts'] ?? [], 'scripts', $checks, $errors);
+        $this->validateManifestComposerMap($manifest['composer_aliases'] ?? [], 'aliases', $checks, $errors);
+        $this->validateStaticContractCoverage($manifest['static_contract_validation'] ?? [], $checks, $errors);
+        $this->validateArtifactList($manifest['artifacts'] ?? [], 'manifest_artifact_', 'manifest artifacts include %s', $checks, $errors);
+
+        $helperWrites = $manifest['windows_helper']['writes'] ?? [];
+        $this->addCheck($checks, $errors, 'manifest_windows_helper_writes_list', is_array($helperWrites), 'manifest windows_helper.writes list exists');
+        if (is_array($helperWrites)) {
+            foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
+                $this->addCheck(
+                    $checks,
+                    $errors,
+                    'manifest_helper_writes_'.$this->checkName($artifactPath),
+                    in_array($artifactPath, $helperWrites, true),
+                    sprintf('windows_helper.writes include %s', $artifactPath),
+                );
+            }
+        }
+    }
+
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateManifestComposerMap(mixed $map, string $kind, array &$checks, array &$errors): void
+    {
+        $isScripts = 'scripts' === $kind;
+        $mapCheck = $isScripts ? 'manifest_composer_scripts_map' : 'manifest_composer_aliases_map';
+        $mapDetail = $isScripts ? 'manifest composer_scripts map exists' : 'manifest composer_aliases map exists';
+        $this->addCheck($checks, $errors, $mapCheck, is_array($map), $mapDetail);
+        if (!is_array($map)) {
+            return;
+        }
+
+        if ($isScripts) {
+            $this->addCheck($checks, $errors, 'manifest_quality_rc_3rc_script', isset($map['quality_rc_3rc']), 'composer_scripts.quality_rc_3rc exists');
+        }
+
+        foreach (self::REQUIRED_ALIASES as $alias) {
+            $manifestKey = $this->manifestComposerScriptKey($alias);
+            $expectedValue = 'composer '.$alias;
+            $prefix = $isScripts ? 'manifest_composer_script_' : 'manifest_composer_alias_';
+            $label = $isScripts ? 'composer_scripts' : 'composer_aliases';
+            $this->addCheck(
+                $checks,
+                $errors,
+                $prefix.$manifestKey,
+                ($map[$manifestKey] ?? null) === $expectedValue,
+                sprintf('%s.%s must be %s', $label, $manifestKey, $expectedValue),
+            );
+        }
+    }
+
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateStaticContractCoverage(mixed $staticContractValidation, array &$checks, array &$errors): void
+    {
+        $this->addCheck($checks, $errors, 'manifest_static_contract_validation_map', is_array($staticContractValidation), 'manifest static_contract_validation map exists');
+        if (!is_array($staticContractValidation)) {
+            return;
+        }
+
+        $purpose = (string) ($staticContractValidation['purpose'] ?? '');
+        $this->addCheck(
+            $checks,
+            $errors,
+            'manifest_static_contract_mentions_readme',
+            str_contains($purpose, 'README') || str_contains($purpose, 'README.adoc'),
+            'static_contract_validation purpose mentions README drift coverage',
+        );
+
+        $coverage = $staticContractValidation['coverage'] ?? [];
+        $this->addCheck($checks, $errors, 'manifest_static_contract_coverage_list', is_array($coverage), 'static_contract_validation.coverage list exists');
+        if (!is_array($coverage)) {
+            return;
+        }
+
+        $coverageValues = array_values(array_filter($coverage, 'is_string'));
+        foreach (self::REQUIRED_STATIC_CONTRACT_COVERAGE as $coverageMarker) {
+            $this->addCheck(
+                $checks,
+                $errors,
+                'manifest_static_contract_coverage_'.$this->checkName($coverageMarker),
+                in_array($coverageMarker, $coverageValues, true),
+                sprintf('static_contract_validation.coverage includes %s', $coverageMarker),
+            );
+        }
+    }
+
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateArtifactList(mixed $artifacts, string $checkPrefix, string $detailPattern, array &$checks, array &$errors): void
+    {
+        $this->addCheck($checks, $errors, 'manifest_artifacts_map', is_array($artifacts), 'manifest artifacts map exists');
+        if (!is_array($artifacts)) {
+            return;
+        }
+
+        $artifactValues = array_values(array_filter($artifacts, 'is_string'));
+        foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
+            $this->addCheck(
+                $checks,
+                $errors,
+                $checkPrefix.$this->checkName($artifactPath),
+                in_array($artifactPath, $artifactValues, true),
+                sprintf($detailPattern, $artifactPath),
+            );
+        }
+    }
+
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateHelperContract(?string $helper, array &$checks, array &$errors): void
+    {
+        if (null === $helper) {
+            return;
+        }
+
+        foreach (self::REQUIRED_ARTIFACTS as $artifactPath) {
+            $windowsPath = str_replace('/', '\\', $artifactPath);
+            $this->addCheck(
+                $checks,
+                $errors,
+                'helper_mentions_'.$this->checkName($artifactPath),
+                str_contains($helper, $windowsPath) || str_contains($helper, $artifactPath),
+                sprintf('helper mentions %s', $artifactPath),
+            );
+        }
+    }
+
+    /**
+     * @param list<array{name: string, passed: bool, details: string}> $checks
+     * @param list<string>                                             $errors
+     */
+    private function validateReadmeContract(?string $readme, array &$checks, array &$errors): void
+    {
+        if (null === $readme) {
+            return;
+        }
+
+        foreach (self::README_REQUIRED_MARKERS as $requiredMarker) {
+            $this->addCheck(
+                $checks,
+                $errors,
+                'readme_mentions_'.$this->checkName($requiredMarker),
+                str_contains($readme, $requiredMarker),
+                sprintf('README mentions %s', $requiredMarker),
+            );
+        }
     }
 
     private function pathOption(mixed $value): string
