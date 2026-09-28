@@ -39,6 +39,35 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $componentFilter = $this->normalizeOptionalString($input->getArgument('component'));
         $requireOwnerPrefix = (bool) $input->getOption('require-owner-prefix');
+        $discovery = $this->discover($componentFilter);
+        $payload = $this->buildPayload($componentFilter, $discovery['providers'], $discovery['tools'], $discovery['prefixViolations']);
+
+        $writeResult = $this->writeJsonReport($input->getOption('write-json'), $payload, $io);
+        if (null !== $writeResult) {
+            return $writeResult;
+        }
+
+        $exitCode = $this->exitCode($requireOwnerPrefix, $discovery['prefixViolations']);
+        if ((bool) $input->getOption('json')) {
+            $output->writeln(json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return $exitCode;
+        }
+
+        $this->renderHumanReport($io, $componentFilter, $discovery['providers'], $discovery['tools'], $discovery['prefixViolations']);
+
+        return $exitCode;
+    }
+
+    /**
+     * @return array{
+     *   providers: list<array{componentKey: string, componentToken: string, providerClass: class-string}>,
+     *   tools: list<array<string, mixed>>,
+     *   prefixViolations: list<array{toolKey: mixed, serviceShortName: mixed, expectedServicePrefix: mixed}>
+     * }
+     */
+    private function discover(?string $componentFilter): array
+    {
         $providers = [];
         $tools = [];
         $prefixViolations = [];
@@ -48,12 +77,11 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
                 continue;
             }
 
-            $providerRow = [
+            $providers[] = [
                 'componentKey' => $provider->componentKey(),
                 'componentToken' => $provider->componentToken(),
                 'providerClass' => $provider::class,
             ];
-            $providers[] = $providerRow;
 
             foreach ($provider->tools() as $definition) {
                 $row = $definition->toArray() + [
@@ -75,7 +103,23 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
 
         usort($tools, static fn (array $left, array $right): int => [$left['componentToken'], $left['toolKey']] <=> [$right['componentToken'], $right['toolKey']]);
 
-        $payload = [
+        return [
+            'providers' => $providers,
+            'tools' => $tools,
+            'prefixViolations' => $prefixViolations,
+        ];
+    }
+
+    /**
+     * @param list<array{componentKey: string, componentToken: string, providerClass: class-string}> $providers
+     * @param list<array<string, mixed>>                                                             $tools
+     * @param list<array{toolKey: mixed, serviceShortName: mixed, expectedServicePrefix: mixed}>     $prefixViolations
+     *
+     * @return array<string, mixed>
+     */
+    private function buildPayload(?string $componentFilter, array $providers, array $tools, array $prefixViolations): array
+    {
+        return [
             'schema' => 'administering.owner_configuration_tool_discovery.v1',
             'generatedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             'componentFilter' => $componentFilter,
@@ -86,33 +130,49 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
             'tools' => $tools,
             'prefixViolations' => $prefixViolations,
         ];
+    }
 
-        $writeJson = $input->getOption('write-json');
-        if (null !== $writeJson) {
-            if (!is_string($writeJson) || '' === trim($writeJson)) {
-                $io->error('The --write-json path must not be blank.');
-
-                return Command::INVALID;
-            }
-
-            $targetPath = trim($writeJson);
-            $targetDirectory = dirname($targetPath);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                $io->error(sprintf('Unable to create discovery report directory: %s', $targetDirectory));
-
-                return Command::FAILURE;
-            }
-
-            file_put_contents($targetPath, json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner configuration tool discovery report written to %s.', $targetPath));
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private function writeJsonReport(mixed $writeJson, array $payload, SymfonyStyle $io): ?int
+    {
+        if (null === $writeJson) {
+            return null;
         }
 
-        if ((bool) $input->getOption('json')) {
-            $output->writeln(json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        if (!is_string($writeJson) || '' === trim($writeJson)) {
+            $io->error('The --write-json path must not be blank.');
 
-            return $requireOwnerPrefix && [] !== $prefixViolations ? Command::FAILURE : Command::SUCCESS;
+            return Command::INVALID;
         }
 
+        $targetPath = trim($writeJson);
+        $targetDirectory = dirname($targetPath);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            $io->error(sprintf('Unable to create discovery report directory: %s', $targetDirectory));
+
+            return Command::FAILURE;
+        }
+
+        file_put_contents($targetPath, json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner configuration tool discovery report written to %s.', $targetPath));
+
+        return null;
+    }
+
+    /**
+     * @param list<array{componentKey: string, componentToken: string, providerClass: class-string}> $providers
+     * @param list<array<string, mixed>>                                                             $tools
+     * @param list<array{toolKey: mixed, serviceShortName: mixed, expectedServicePrefix: mixed}>     $prefixViolations
+     */
+    private function renderHumanReport(
+        SymfonyStyle $io,
+        ?string $componentFilter,
+        array $providers,
+        array $tools,
+        array $prefixViolations,
+    ): void {
         $io->section('Owner configuration tool discovery');
         $io->writeln(sprintf('Component filter: <info>%s</info>', $componentFilter ?? 'all'));
         $io->writeln(sprintf('Providers: <info>%d</info>', count($providers)));
@@ -122,7 +182,7 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
         if ([] === $providers) {
             $io->warning('No owner configuration tool providers were discovered. This is expected before neighboring components are wired into the host/Administering container.');
 
-            return $requireOwnerPrefix ? Command::FAILURE : Command::SUCCESS;
+            return;
         }
 
         $io->table(
@@ -141,7 +201,13 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
         if ([] !== $prefixViolations) {
             $io->warning('Some owner tools do not use the owner-side Configuration prefix. Keep Administering-prefixed services only inside Administering.');
         }
+    }
 
+    /**
+     * @param list<array{toolKey: mixed, serviceShortName: mixed, expectedServicePrefix: mixed}> $prefixViolations
+     */
+    private function exitCode(bool $requireOwnerPrefix, array $prefixViolations): int
+    {
         return $requireOwnerPrefix && [] !== $prefixViolations ? Command::FAILURE : Command::SUCCESS;
     }
 

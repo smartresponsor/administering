@@ -776,3 +776,24 @@ Growth workstream:
 Что достигнуто? The extracted RC status service now has direct ready, stale-hash failure, and full terminal handoff regression coverage while the zero-HIGH Inspecting state is preserved.
 
 Что осталось до RC? Canon052 remains the sole hard Gating blocker under the current authority. Canon031/040/042 remain broad warning-level documentation and test-coverage programs.
+
+## 2026-09-28 — owner configuration discovery command decomposition
+
+Production pattern mixin used for this pass:
+- Symfony Console commands remain thin orchestration shells.
+- Discovery/collection and presentation are separated from input normalization and exit-code policy.
+- Machine-readable JSON remains deterministic and contract-shaped.
+- Validation/output paths remain fail-closed rather than silently degrading.
+
+Changes:
+- Decomposed `AdministrationOwnerConfigurationToolDiscoveryCommand::execute()` into focused private responsibilities: discovery, payload construction, JSON artifact writing, human rendering, and exit-code resolution.
+- Public command name, arguments/options, JSON schema, owner-prefix enforcement semantics, component filtering, sorting, and report-writing behavior are unchanged.
+- `composer cs:check`: PASS across 725 files after repository-owned formatting.
+- `composer stan`: PASS across 725 files / 0 errors.
+- `composer test`: PASS, 142 tests / 643 assertions.
+- Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-140652.json`: **116 findings, 0 high**, complexity 26, design 13, maintainability 77, max complexity 23, PHPStan 0 errors.
+- The prior `AdministrationOwnerConfigurationToolDiscoveryCommand::execute()` complexity-23 finding is gone.
+
+Что достигнуто? One top medium complexity hotspot was removed without changing the CLI contract, reducing Inspecting from 118 to 116 findings while preserving zero-HIGH status.
+
+Что осталось до RC? Canon052 remains the sole hard Gating blocker and still requires repository-state move/delete/untracking outside the current non-destructive authority. Canon031/040/042 and the remaining medium Inspecting backlog are separate growth/remediation tracks.
