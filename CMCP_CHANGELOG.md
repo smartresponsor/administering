@@ -838,3 +838,34 @@ Changes:
 Что достигнуто? The last hard Gating blocker is removed. Administering now has a fully green hard gate set, with only warning-level documentation/coverage evidence debt remaining.
 
 Что осталось до RC? Refresh warning-level coverage evidence and obtain a fresh Inspecting report for the latest source fingerprint when the execution plane allows it. No hard Gating failure remains.
+
+
+## 2026-09-28 — terminal 3RC acceptance closure
+
+Production/RC patterns applied:
+- operation catalogs advertise only capabilities backed by a concrete execution path;
+- read-only/future vocabulary remains known without being falsely launchable;
+- terminal handoff snapshots carry hashes for every artifact their validator requires;
+- RC stages fail closed and are repaired at the first inconsistent boundary rather than bypassed.
+
+Material repairs:
+- Removed `administration.connected_component.readiness_refresh` and `administration.connected_component.evidence_reload` from `AdministrationOperationType::launchable()`. Both remain known operation vocabulary in `all()`; the connected-component readiness architecture is explicitly a read-only report surface and neither key has a concrete runner implementation.
+- Added regression coverage proving those read/future keys remain known but non-launchable.
+- Runtime readiness moved from two unsupported launchable operations to zero; `rc:proof` is now READY with lifecycle and Messenger-boundary proofs both successful.
+- Found and repaired a second RC-chain defect at terminal-status validation: the validator required the current `final_status_validation_sha256`, but `AdministrationRcStatusCommand` / `AdministrationRcStatusReportService` did not include that artifact in handoff-enabled status snapshots.
+- Added the final-status-validation path/hash to handoff-enabled status inventory and regression coverage for the hash.
+
+Verification:
+- `composer cs:check`: PASS, 725 files.
+- `composer stan`: PASS, 725 files / 0 errors.
+- `composer test`: PASS, **143 tests / 650 assertions**.
+- `composer test:coverage`: PASS, 143 tests / 650 assertions. Fresh Canon040 metrics: lines **11.4%**, methods **8.3%**, branches **50.7%**; still warning-level HIGH_TEST_DEBT.
+- `composer gate`: PASS — **71 rules, 0 failed, 3 warning, 10 skipped**; Canon052 remains GREEN.
+- RC chain PASS through proof index, proof validation, owner review, final seal, final-seal validation, status, receipt, receipt validation, final status, final-status validation, handoff index, handoff-index validation, terminal status, terminal-status validation, handoff bundle, handoff-bundle validation, bundle status, and **rc:acceptance**.
+- Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-181949.json`: **114 findings, 0 high**, complexity 25, design 13, maintainability 76, max complexity 23, PHPStan 0 errors.
+- Remaining Gating warnings are Canon031 documentation coverage, Canon040 quantitative test coverage debt, and Canon042 stale/low behavioral/UI evidence; none is a hard gate.
+- No browser/mobile/user-visible UI changed in this closure.
+
+Что достигнуто? Administering now has zero hard Gating failures, zero HIGH Inspecting findings, a current green runtime proof, and a complete terminal 3RC acceptance chain.
+
+Что осталось до RC? No hard repository/3RC acceptance blocker remains in this bounded track. Canon031/040/042 are explicit warning-level growth/remediation programs rather than blockers.

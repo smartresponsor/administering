@@ -47,6 +47,7 @@ final class AdministrationRcStatusCommand extends Command
             ->addOption('handoff-index-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-index.json.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-index.json')
             ->addOption('handoff-index-text-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-index.txt.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-index.txt')
             ->addOption('handoff-index-validation-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-index-validation.json.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-index-validation.json')
+            ->addOption('final-status-validation-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-final-status-validation.json.', 'delivery/rc/runtime-proof-results/administering-rc-final-status-validation.json')
             ->addOption('handoff-bundle-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-bundle.json.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.json')
             ->addOption('handoff-bundle-text-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-bundle.txt.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-bundle.txt')
             ->addOption('handoff-bundle-validation-file', null, InputOption::VALUE_REQUIRED, 'Path to administering-rc-handoff-bundle-validation.json.', 'delivery/rc/runtime-proof-results/administering-rc-handoff-bundle-validation.json')
@@ -74,6 +75,7 @@ final class AdministrationRcStatusCommand extends Command
         $handoffIndexFile = $this->pathOption($input->getOption('handoff-index-file'));
         $handoffIndexTextFile = $this->pathOption($input->getOption('handoff-index-text-file'));
         $handoffIndexValidationFile = $this->pathOption($input->getOption('handoff-index-validation-file'));
+        $finalStatusValidationFile = $this->pathOption($input->getOption('final-status-validation-file'));
         $handoffBundleFile = $this->pathOption($input->getOption('handoff-bundle-file'));
         $handoffBundleTextFile = $this->pathOption($input->getOption('handoff-bundle-text-file'));
         $handoffBundleValidationFile = $this->pathOption($input->getOption('handoff-bundle-validation-file'));
@@ -101,6 +103,7 @@ final class AdministrationRcStatusCommand extends Command
             $handoffIndexFile,
             $handoffIndexTextFile,
             $handoffIndexValidationFile,
+            $finalStatusValidationFile,
             $handoffBundleFile,
             $handoffBundleTextFile,
             $handoffBundleValidationFile,

@@ -32,8 +32,6 @@ final class AdministrationOperationType
             self::CONFIGURATION_SCAN,
             self::CREDENTIAL_PRESENCE_CHECK,
             self::COMPOSER_VALIDATE,
-            self::CONNECTED_COMPONENT_READINESS_REFRESH,
-            self::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
             self::SERVICE_SECTION_ANCHORS_SYNC,
             self::SERVICE_TOOL_LAUNCH,
             self::ROLLING_ACL_CATALOG_REFRESH,

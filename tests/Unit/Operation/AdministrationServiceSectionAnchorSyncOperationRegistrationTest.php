@@ -15,4 +15,16 @@ final class AdministrationServiceSectionAnchorSyncOperationRegistrationTest exte
         self::assertTrue(AdministrationOperationType::isLaunchable(AdministrationOperationType::SERVICE_SECTION_ANCHORS_SYNC));
         self::assertContains(AdministrationOperationType::SERVICE_SECTION_ANCHORS_SYNC, AdministrationOperationType::launchable());
     }
+
+    public function testConnectedComponentReadSurfacesAreKnownButNotLaunchableOperations(): void
+    {
+        foreach ([
+            AdministrationOperationType::CONNECTED_COMPONENT_READINESS_REFRESH,
+            AdministrationOperationType::CONNECTED_COMPONENT_EVIDENCE_RELOAD,
+        ] as $operationType) {
+            self::assertTrue(AdministrationOperationType::isKnown($operationType));
+            self::assertFalse(AdministrationOperationType::isLaunchable($operationType));
+            self::assertNotContains($operationType, AdministrationOperationType::launchable());
+        }
+    }
 }

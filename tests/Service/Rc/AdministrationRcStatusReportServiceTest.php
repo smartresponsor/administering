@@ -64,6 +64,7 @@ final class AdministrationRcStatusReportServiceTest extends TestCase
             self::assertTrue($report['sealed_3rc_validated']);
             self::assertSame('3rc_receipt_valid', $report['artifact_status']['receipt_validation']);
             self::assertSame('3rc_handoff_index_valid', $report['artifact_status']['handoff_index_validation']);
+            self::assertSame(hash_file('sha256', $files['finalStatusValidation']), $report['artifacts']['final_status_validation_sha256']);
             self::assertSame('3rc_handoff_bundle_valid', $report['artifact_status']['handoff_bundle_validation']);
             self::assertSame(hash_file('sha256', $files['handoffBundleText']), $report['artifacts']['handoff_bundle_text_sha256']);
         } finally {
@@ -96,6 +97,7 @@ final class AdministrationRcStatusReportServiceTest extends TestCase
             $files['handoffIndex'],
             $files['handoffIndexText'],
             $files['handoffIndexValidation'],
+            $files['finalStatusValidation'],
             $files['handoffBundle'],
             $files['handoffBundleText'],
             $files['handoffBundleValidation'],
@@ -126,6 +128,7 @@ final class AdministrationRcStatusReportServiceTest extends TestCase
             'handoffIndex' => $directory.DIRECTORY_SEPARATOR.'handoff-index.json',
             'handoffIndexText' => $directory.DIRECTORY_SEPARATOR.'handoff-index.txt',
             'handoffIndexValidation' => $directory.DIRECTORY_SEPARATOR.'handoff-index-validation.json',
+            'finalStatusValidation' => $directory.DIRECTORY_SEPARATOR.'final-status-validation.json',
             'handoffBundle' => $directory.DIRECTORY_SEPARATOR.'handoff-bundle.json',
             'handoffBundleText' => $directory.DIRECTORY_SEPARATOR.'handoff-bundle.txt',
             'handoffBundleValidation' => $directory.DIRECTORY_SEPARATOR.'handoff-bundle-validation.json',
@@ -189,6 +192,11 @@ final class AdministrationRcStatusReportServiceTest extends TestCase
         $this->writeJson($files['finalStatus'], [
             'status' => 'sealed_3rc_validated',
             'sealed_3rc_validated' => true,
+            'errors' => [],
+        ]);
+        $this->writeJson($files['finalStatusValidation'], [
+            'status' => 'final_status_valid',
+            'final_status_valid' => true,
             'errors' => [],
         ]);
         $this->writeJson($files['handoffIndex'], [
