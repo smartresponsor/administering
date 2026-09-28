@@ -646,3 +646,52 @@ Artificial target classes, dependency distortion, or collapsing valid technical 
 Что достигнуто? The original 258-entry mixed worktree has been decomposed into coherent signed value commits, semantic migration mistakes were repaired instead of normalized into the codebase, and Work 3 is GREEN at hard-error severity with fresh PHP and browser evidence.
 
 Что осталось до RC? No unintegrated product/config/tooling value remains from this mixed worktree. Only explicit warning-level documentation and coverage growth debt remains; after this journal commit the branch can be pushed as a clean RC checkpoint.
+
+## 2026-09-28 — engine-20260928101956-administering-26ec2f Inspecting remediation
+
+### Baseline and reconnaissance
+
+- Workspace/target: `D:\\PhpstormProjects\\www\\Administering`; branch `engine/administering-post-rc-canon-composer`, baseline HEAD `d8aeee40aad42105b1606354f0d8b955f67e694a`, upstream synchronized at reconnaissance.
+- Pre-existing dirty paths preserved and excluded from this remediation commit intent: `.gating/README.md`, `composer.json`, `composer.lock`, `composer.prod.json`, `config/bundles.php`.
+- Mandatory dependency contour verified from local Composer/package contracts: Objecting, Cruding, Viewing, Interfacing. Gating executable profile/rule-set and Canonization normative rules were read locally.
+- Canonization rules consulted: Canon011, Canon014, Canon021, Canon022, Canon023, Canon024. Concrete mapping: this pass targets Canon014 executable-responsibility debt while preserving Canon011 observable failures, Canon021 CRUD ownership, and the existing Canon022-024 dependency/package model.
+- Fresh Inspecting report `.canon-scanning/reports/20260928-030002/repositories/Administering.inspecting.json`: 122 findings, including 6 high cyclomatic-complexity findings. Selected bounded high finding: `AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand::validateManifest()` complexity 25.
+- Analyzer caveat in the supplied report: Rector failed with a syntax-error diagnostic and Semgrep exceeded its 60-second timeout; php-structure findings remain actionable baseline evidence.
+
+### Market / maturity opening mixin
+
+Mature administration systems separate policy, authorization and execution responsibilities instead of concentrating them in entrypoint commands. EasyAdmin exposes granular backend permissions/actions on top of Symfony Security; Backstage similarly separates plugin actions from centralized authorization policy and emits structured audit events. For Administering, the RC-critical implication is cohesive command orchestration with delegated validation/report responsibilities and deterministic failure behavior. Post-RC growth remains richer operator diagnostics, approval workflows, audit/event correlation, and permission explainability without moving generic CRUD, rendering, shell or system-field ownership into Administering.
+
+RC-critical workstream:
+- reduce high-complexity executable entrypoints without changing public CLI behavior;
+- preserve fail-closed validation and deterministic exit codes;
+- add regression tests and run local deterministic gates plus fresh Inspecting.
+
+Growth workstream:
+- richer operator-facing diagnostics/approvals/audit correlation;
+- broader UX and policy explainability after RC, without expanding component ownership.
+
+### Material implementation
+
+- Decomposed `validateManifest()` into focused component, identity, file and tool validation methods while preserving manifest schema, issue paths, duplicate detection, summaries and exit semantics.
+- Added command regression coverage for a valid manifest and duplicate overlay-target rejection.
+- No sibling repository was modified; no destructive operation was used.
+
+Что имеем? One supplied high Inspecting finding has a bounded implementation repair with regression coverage, while pre-existing dependency/composer work remains preserved separately.
+
+### Verification and remediation progress
+
+- `composer lint:composer`: PASS.
+- `composer cs:check`: PASS after normalizing the new regression test line ending with the repository-owned fixer.
+- `composer stan`: PASS, 723 files, 0 errors.
+- `composer test`: PASS, 139 tests / 622 assertions.
+- Gating: Canon014, Canon022, Canon023 and Canon024 are GREEN. Overall Gating remains RED on pre-existing Canon052 because consumer `.gating/` contains owner/normative Gating files; removing those files would be destructive cleanup and is forbidden by this task's capability envelope. Canon031/040/042 remain warning-level documentation/coverage debt.
+- Fresh Inspecting after the manifest-validator repair: 120 findings, 5 high; the selected complexity-25 finding disappeared.
+- Second bounded repair decomposed `AdministrationOwnerRepositoryPatchReadinessCommand::execute()`; CS/PHPStan/PHPUnit remained green. Fresh Inspecting then reported 120 findings, 4 high; that complexity-26 finding disappeared.
+- Third bounded repair decomposed `AdministrationOwnerRepositorySliceIntakeCommand::execute()` into repository-slice construction, report persistence and rendering responsibilities; CS/PHPStan/PHPUnit remained green.
+- Latest Inspecting report `D--PhpstormProjects-www-Administering-20260928-104011.json`: 119 findings, 3 high, PHPStan 0 errors. Remaining high findings are `AdministrationRcContractValidateCommand::execute()` (32), `AdministrationRcStatusCommand::execute()` (60), and `AdministrationServiceToolRuntimeControlsImportCommand::execute()` (32).
+- No browser/mobile UI files or user-observable flows were changed in these passes, so visual screenshot evidence is not applicable.
+
+Что достигнуто? Three of the six supplied high Inspecting complexity findings are removed with fresh-fingerprint evidence, deterministic source gates are green, and the changes stay inside Administering while preserving unrelated pre-existing Composer/Gating work.
+
+Что осталось до RC? Three broader high-complexity entrypoints remain for separate bounded decomposition. Overall Gating cannot become green in this execution because Canon052 requires destructive consumer `.gating/` cleanup, explicitly forbidden here. Commit and publish only the coherent remediation files; preserve the unrelated five pre-existing dirty paths.

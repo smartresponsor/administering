@@ -58,41 +58,9 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
             return Command::FAILURE;
         }
 
-        $repositorySlices = [];
-        foreach ($components as $componentKey) {
-            $repositoryName = $repositoryMap[$componentKey] ?? $componentKey;
-            $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
-            $available = is_dir($expectedPath);
-            $repositorySlices[] = [
-                'componentKey' => $componentKey,
-                'repositoryName' => $repositoryName,
-                'expectedPath' => $expectedPath,
-                'sliceStatus' => $available ? 'available' : 'pending_current_slice',
-                'reason' => $available
-                    ? 'Sibling repository folder is present; verify that it is the current slice before applying owner-side overlays.'
-                    : 'Current slice is not available in the workspace root yet.',
-                'nextAction' => $available
-                    ? 'Run repository-specific audit before applying external overlay.'
-                    : 'Request/upload current repository slice before generating a concrete neighbor patch.',
-            ];
-        }
-
+        $repositorySlices = $this->buildRepositorySlices($components, $repositoryMap, $workspaceRoot);
         if (null !== $hostApplication) {
-            $repositoryName = $repositoryMap[$hostApplication] ?? $hostApplication;
-            $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
-            $available = is_dir($expectedPath);
-            $repositorySlices[] = [
-                'componentKey' => 'host_application',
-                'repositoryName' => $repositoryName,
-                'expectedPath' => $expectedPath,
-                'sliceStatus' => $available ? 'available' : 'pending_current_slice',
-                'reason' => $available
-                    ? 'Host/post-application repository folder is present; verify current slice and system configuration ownership.'
-                    : 'Host/post-application current slice is not available yet.',
-                'nextAction' => $available
-                    ? 'Audit host-owned Symfony environment, credentials, secrets, and component enablement configuration.'
-                    : 'Request/upload host/post-application current slice before host configuration work.',
-            ];
+            $repositorySlices[] = $this->hostRepositorySlice($hostApplication, $repositoryMap, $workspaceRoot);
         }
 
         $missingCount = count(array_filter($repositorySlices, static fn (array $item): bool => 'available' !== $item['sliceStatus']));
@@ -126,19 +94,100 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
             $nextWorkMode,
         );
 
-        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
-        if (null !== $writeJson) {
-            $targetPath = $this->projectPath($writeJson);
-            $targetDirectory = dirname($targetPath);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                $io->error(sprintf('Unable to create owner slice intake report directory: %s', $targetDirectory));
-
-                return Command::FAILURE;
-            }
-            file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner slice intake report written to %s.', $targetPath));
+        if (!$this->writeReport($input, $io, $report)) {
+            return Command::FAILURE;
         }
 
+        return $this->renderReport($input, $output, $io, $report, $repositorySlices);
+    }
+
+    /**
+     * @param list<string>          $components
+     * @param array<string, string> $repositoryMap
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function buildRepositorySlices(array $components, array $repositoryMap, string $workspaceRoot): array
+    {
+        $slices = [];
+        foreach ($components as $componentKey) {
+            $repositoryName = $repositoryMap[$componentKey] ?? $componentKey;
+            $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
+            $available = is_dir($expectedPath);
+            $slices[] = [
+                'componentKey' => $componentKey,
+                'repositoryName' => $repositoryName,
+                'expectedPath' => $expectedPath,
+                'sliceStatus' => $available ? 'available' : 'pending_current_slice',
+                'reason' => $available
+                    ? 'Sibling repository folder is present; verify that it is the current slice before applying owner-side overlays.'
+                    : 'Current slice is not available in the workspace root yet.',
+                'nextAction' => $available
+                    ? 'Run repository-specific audit before applying external overlay.'
+                    : 'Request/upload current repository slice before generating a concrete neighbor patch.',
+            ];
+        }
+
+        return $slices;
+    }
+
+    /**
+     * @param array<string, string> $repositoryMap
+     *
+     * @return array<string, mixed>
+     */
+    private function hostRepositorySlice(string $hostApplication, array $repositoryMap, string $workspaceRoot): array
+    {
+        $repositoryName = $repositoryMap[$hostApplication] ?? $hostApplication;
+        $expectedPath = rtrim($workspaceRoot, '/\\').'/'.$repositoryName;
+        $available = is_dir($expectedPath);
+
+        return [
+            'componentKey' => 'host_application',
+            'repositoryName' => $repositoryName,
+            'expectedPath' => $expectedPath,
+            'sliceStatus' => $available ? 'available' : 'pending_current_slice',
+            'reason' => $available
+                ? 'Host/post-application repository folder is present; verify current slice and system configuration ownership.'
+                : 'Host/post-application current slice is not available yet.',
+            'nextAction' => $available
+                ? 'Audit host-owned Symfony environment, credentials, secrets, and component enablement configuration.'
+                : 'Request/upload host/post-application current slice before host configuration work.',
+        ];
+    }
+
+    private function writeReport(
+        InputInterface $input,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositorySliceIntakeReport $report,
+    ): bool {
+        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
+        if (null === $writeJson) {
+            return true;
+        }
+
+        $targetPath = $this->projectPath($writeJson);
+        $targetDirectory = dirname($targetPath);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            $io->error(sprintf('Unable to create owner slice intake report directory: %s', $targetDirectory));
+
+            return false;
+        }
+
+        file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner slice intake report written to %s.', $targetPath));
+
+        return true;
+    }
+
+    /** @param list<array<string, mixed>> $repositorySlices */
+    private function renderReport(
+        InputInterface $input,
+        OutputInterface $output,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositorySliceIntakeReport $report,
+        array $repositorySlices,
+    ): int {
         $shouldFail = (bool) $input->getOption('fail-if-missing') && !$report->readyForOwnerSliceWork;
         if ((bool) $input->getOption('json')) {
             $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

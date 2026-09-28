@@ -112,19 +112,49 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             $nextWorkMode,
         );
 
-        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
-        if (null !== $writeJson) {
-            $targetPath = $this->projectPath($writeJson);
-            $targetDirectory = dirname($targetPath);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                $io->error(sprintf('Unable to create patch readiness report directory: %s', $targetDirectory));
-
-                return Command::FAILURE;
-            }
-            file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner repository patch readiness report written to %s.', $targetPath));
+        if (!$this->writeReport($input, $io, $report)) {
+            return Command::FAILURE;
         }
 
+        return $this->renderReport($input, $output, $io, $report, $artifactChecks, $repositoryReadiness);
+    }
+
+    private function writeReport(
+        InputInterface $input,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositoryPatchReadinessReport $report,
+    ): bool {
+        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
+        if (null === $writeJson) {
+            return true;
+        }
+
+        $targetPath = $this->projectPath($writeJson);
+        $targetDirectory = dirname($targetPath);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            $io->error(sprintf('Unable to create patch readiness report directory: %s', $targetDirectory));
+
+            return false;
+        }
+
+        file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner repository patch readiness report written to %s.', $targetPath));
+
+        return true;
+    }
+
+    /**
+     * @param list<array<string, string>> $artifactChecks
+     * @param list<array<string, mixed>>  $repositoryReadiness
+     */
+    private function renderReport(
+        InputInterface $input,
+        OutputInterface $output,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositoryPatchReadinessReport $report,
+        array $artifactChecks,
+        array $repositoryReadiness,
+    ): int {
         $shouldFail = (bool) $input->getOption('fail-if-not-ready') && !$report->readyForPatchWaves;
         if ((bool) $input->getOption('json')) {
             $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
