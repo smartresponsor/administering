@@ -45,16 +45,64 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
         $componentFilter = $this->normalizeOptionalString($input->getArgument('component'));
         $pipelineReportPath = $this->projectPath((string) $input->getOption('pipeline-report'));
         $handoffDir = $this->projectPath((string) $input->getOption('handoff-dir'));
-
         $externalPipelinePresent = is_file($pipelineReportPath);
-        $handoffBundlePresent = is_dir($handoffDir)
+        $handoffBundlePresent = $this->handoffBundlePresent($handoffDir);
+        $discovery = $this->collectTransitionTools($componentFilter);
+        $issues = $this->transitionIssues($externalPipelinePresent, $handoffBundlePresent);
+        $recommendedNextActions = $this->recommendedNextActions($discovery['decisionCounts'], $externalPipelinePresent, $handoffBundlePresent);
+        $report = new AdministrationOwnerConfigurationToolTransitionDecisionReport(
+            $componentFilter,
+            $discovery['tools'],
+            $discovery['decisionCounts'],
+            $issues,
+            $recommendedNextActions,
+            $externalPipelinePresent,
+            $handoffBundlePresent,
+        );
+
+        $writeResult = $this->writeReport($input->getOption('write-json'), $report, $io);
+        if (null !== $writeResult) {
+            return $writeResult;
+        }
+
+        $shouldFail = (bool) $input->getOption('fail-if-not-ready') && !$report->canStopInternalExpansion();
+        if ((bool) $input->getOption('json')) {
+            $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+        }
+
+        $this->renderHumanReport(
+            $io,
+            $componentFilter,
+            $report,
+            $discovery['tools'],
+            $recommendedNextActions,
+            $externalPipelinePresent,
+            $handoffBundlePresent,
+        );
+
+        return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    private function handoffBundlePresent(string $handoffDir): bool
+    {
+        return is_dir($handoffDir)
             && is_file($handoffDir.'/README.adoc')
             && is_file($handoffDir.'/CHECKLIST.adoc')
             && is_file($handoffDir.'/handoff-report.json');
+    }
 
+    /**
+     * @return array{
+     *   tools: list<array<string, mixed>>,
+     *   decisionCounts: array<string, int>
+     * }
+     */
+    private function collectTransitionTools(?string $componentFilter): array
+    {
         $tools = [];
         $decisionCounts = [];
-        $issues = [];
 
         foreach ($this->toolCatalog->tools() as $tool) {
             if (!$this->matchesToolFilter($tool, $componentFilter)) {
@@ -83,6 +131,18 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
         usort($tools, static fn (array $left, array $right): int => [$left['decision'], $left['section'], $left['toolKey']] <=> [$right['decision'], $right['section'], $right['toolKey']]);
         ksort($decisionCounts);
 
+        return [
+            'tools' => $tools,
+            'decisionCounts' => $decisionCounts,
+        ];
+    }
+
+    /**
+     * @return list<array{severity: string, code: string, message: string}>
+     */
+    private function transitionIssues(bool $externalPipelinePresent, bool $handoffBundlePresent): array
+    {
+        $issues = [];
         if (!$externalPipelinePresent) {
             $issues[] = [
                 'severity' => 'warning',
@@ -99,38 +159,43 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
             ];
         }
 
-        $recommendedNextActions = $this->recommendedNextActions($decisionCounts, $externalPipelinePresent, $handoffBundlePresent);
-        $report = new AdministrationOwnerConfigurationToolTransitionDecisionReport(
-            $componentFilter,
-            $tools,
-            $decisionCounts,
-            $issues,
-            $recommendedNextActions,
-            $externalPipelinePresent,
-            $handoffBundlePresent,
-        );
+        return $issues;
+    }
 
-        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
-        if (null !== $writeJson) {
-            $targetPath = $this->projectPath($writeJson);
-            $targetDirectory = dirname($targetPath);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                $io->error(sprintf('Unable to create transition decision report directory: %s', $targetDirectory));
-
-                return Command::FAILURE;
-            }
-
-            file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner-side transition decision report written to %s.', $targetPath));
+    private function writeReport(mixed $writeJson, AdministrationOwnerConfigurationToolTransitionDecisionReport $report, SymfonyStyle $io): ?int
+    {
+        $writeJson = $this->normalizeOptionalString($writeJson);
+        if (null === $writeJson) {
+            return null;
         }
 
-        $shouldFail = (bool) $input->getOption('fail-if-not-ready') && !$report->canStopInternalExpansion();
-        if ((bool) $input->getOption('json')) {
-            $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $targetPath = $this->projectPath($writeJson);
+        $targetDirectory = dirname($targetPath);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            $io->error(sprintf('Unable to create transition decision report directory: %s', $targetDirectory));
 
-            return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+            return Command::FAILURE;
         }
 
+        file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner-side transition decision report written to %s.', $targetPath));
+
+        return null;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $tools
+     * @param list<string>               $recommendedNextActions
+     */
+    private function renderHumanReport(
+        SymfonyStyle $io,
+        ?string $componentFilter,
+        AdministrationOwnerConfigurationToolTransitionDecisionReport $report,
+        array $tools,
+        array $recommendedNextActions,
+        bool $externalPipelinePresent,
+        bool $handoffBundlePresent,
+    ): void {
         $io->section('Owner-side transition decision');
         $io->writeln(sprintf('Component filter: <info>%s</info>', $componentFilter ?? 'all'));
         $io->writeln(sprintf('Tools: <info>%d</info>', $report->toolCount()));
@@ -166,8 +231,6 @@ final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extend
         if (0 < $report->warningCount()) {
             $io->warning(sprintf('%d transition warning(s) found.', $report->warningCount()));
         }
-
-        return $shouldFail ? Command::FAILURE : Command::SUCCESS;
     }
 
     private function decision(AdministrationServiceTool $tool): string

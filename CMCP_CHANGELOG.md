@@ -797,3 +797,27 @@ Changes:
 Что достигнуто? One top medium complexity hotspot was removed without changing the CLI contract, reducing Inspecting from 118 to 116 findings while preserving zero-HIGH status.
 
 Что осталось до RC? Canon052 remains the sole hard Gating blocker and still requires repository-state move/delete/untracking outside the current non-destructive authority. Canon031/040/042 and the remaining medium Inspecting backlog are separate growth/remediation tracks.
+
+
+## 2026-09-28 — transition decision command decomposition
+
+Production pattern mixin used for this pass:
+- keep Symfony Console entrypoints orchestration-only;
+- isolate discovery/classification, issue construction, artifact persistence, and human rendering;
+- preserve deterministic JSON and explicit fail-if-not-ready semantics;
+- retain owner/host transition policy in existing typed value/catalog contracts rather than creating a parallel decision architecture.
+
+Changes:
+- Decomposed `AdministrationOwnerConfigurationToolTransitionDecisionCommand::execute()` into focused helpers for handoff-bundle presence, transition-tool collection, issue construction, report persistence, and human rendering.
+- Public command name/options, component filtering, decision vocabulary, sorting, report schema, recommended actions, and exit-code behavior remain unchanged.
+- `composer cs:check`: PASS across 725 files.
+- `composer stan`: PASS across 725 files / 0 errors.
+- `composer test`: PASS, 142 tests / 643 assertions.
+- Gating continues to show Canon014 GREEN; aggregate failure remains Canon052. Canon031/040/042 remain warning-level.
+- A fresh full Inspecting invocation was attempted, but the Console MCP quality-inspection call timed out before a new persisted report appeared. The last persisted Inspecting proof therefore remains `D--PhpstormProjects-www-Administering-20260928-140652.json` (116 findings, 0 high). No newer Inspecting result is claimed for this pass.
+- A fresh `test:coverage` invocation also returned an execution-plane internal failure without a usable receipt, so coverage freshness is not claimed after this source edit.
+- No browser/mobile/user-visible UI changed; visual verification remains not applicable.
+
+Что достигнуто? The second top-level transition command has been decomposed with deterministic source gates green and Canon014 still passing.
+
+Что осталось до RC? Fresh Inspecting/coverage evidence for this exact source fingerprint remains a verification tail because the execution plane failed before producing artifacts. Canon052 remains the sole hard repository Gating blocker and still requires repository-state move/delete/untracking outside the current non-destructive authority.
