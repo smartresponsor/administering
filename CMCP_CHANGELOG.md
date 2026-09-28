@@ -725,3 +725,21 @@ Growth workstream:
 Что достигнуто? The complete supplied HIGH Inspecting front is closed on the current source fingerprint, with deterministic CS/PHPStan/PHPUnit evidence and valid RC static-contract behavior.
 
 Что осталось до RC? Canon052 requires removing owner/tooling paths from the tracked consumer `.gating/` surface. The safe filesystem-preserving implementation would be Git untracking plus the existing root ignore, but it is a repository-state deletion and remains outside this task's `Destructive operations: FORBIDDEN` authority. Warning-level Canon014/031/040/042 can continue as post-high structural/coverage work.
+
+## 2026-09-28 — Canon014 responsibility extraction
+
+- Moved RC artifact parsing, contract/status validation, hash verification, and report construction from `AdministrationRcStatusCommand` into autowired `App\\Administering\\Service\\Rc\\AdministrationRcStatusReportService`.
+- The Symfony Console command now owns only option normalization, invocation of the report service, optional report/summary writing, and presentation.
+- Command size reduced from approximately 949 lines to 259 lines; no public command name, option, composer alias, manifest command, or helper command changed.
+- `composer cs:check`: PASS across 724 files.
+- `composer stan`: PASS, 724 files / 0 errors.
+- `composer test`: PASS, 139 tests / 625 assertions.
+- `composer rc:contract:validate`: PASS with `3rc_contract_valid`.
+- `composer rc:status`: preserves fail-closed behavior for the currently absent ignored/generated runtime-proof artifacts.
+- Gating: **Canon014 PASSED** — no executable object exceeds the responsibility review threshold. Hard failure remains Canon052 only; Canon031/040/042 remain warning-level.
+- Fresh Inspecting `D--PhpstormProjects-www-Administering-20260928-132058.json`: 118 findings, 0 high, 118 medium, max complexity 23, PHPStan 0 errors.
+- No UI/browser/mobile surface changed; visual evidence remains not applicable.
+
+Что имеем? The previously warning-level executable-responsibility debt on RcStatus is structurally closed without changing the CLI contract, while zero-HIGH Inspecting status is preserved.
+
+Что осталось до RC? Canon052 is the only hard Gating blocker and requires repository-state untracking/removal of non-artifact consumer `.gating/` paths, which remains outside the current non-destructive authority. Canon031/040/042 are warning-level documentation/coverage evidence debt.
