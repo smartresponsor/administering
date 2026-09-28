@@ -821,3 +821,20 @@ Changes:
 Что достигнуто? The second top-level transition command has been decomposed with deterministic source gates green and Canon014 still passing.
 
 Что осталось до RC? Fresh Inspecting/coverage evidence for this exact source fingerprint remains a verification tail because the execution plane failed before producing artifacts. Canon052 remains the sole hard repository Gating blocker and still requires repository-state move/delete/untracking outside the current non-destructive authority.
+
+
+## 2026-09-28 — Canon052 consumer gating surface cleanup
+
+- Explicit user authorization was received to proceed with the Canon052 move/removal boundary that had previously been blocked by the task's destructive-operation restriction.
+- The tracked consumer `.gating/README.md` was removed from the Git index while preserving working-tree content first.
+- Because Canon052 evaluates the physical consumer `.gating/` surface rather than Git tracking state alone, the complete local embedded Gating copy was moved intact to ignored local backup `var/gating-legacy-20260928`.
+- No embedded Gating files were deleted; the move preserves local recovery material while removing owner/policy/tooling files from the canonical consumer surface.
+- `composer gate`: **PASS**.
+- Canon052: **PASSED** — canonical consumer installs and executes Gating through the standard Composer contract.
+- Aggregate Gating result: **71 rules, 0 failed, 3 warning, 0 suppressed, 10 skipped**.
+- Remaining warnings are Canon031 PHPDoc coverage, Canon040 stale PHPUnit coverage evidence after the latest source edit, and Canon042 stale behavioral/UI evidence. These are warning-level debt, not hard RC blockers.
+- No browser/mobile/user-visible UI was changed.
+
+Что достигнуто? The last hard Gating blocker is removed. Administering now has a fully green hard gate set, with only warning-level documentation/coverage evidence debt remaining.
+
+Что осталось до RC? Refresh warning-level coverage evidence and obtain a fresh Inspecting report for the latest source fingerprint when the execution plane allows it. No hard Gating failure remains.
