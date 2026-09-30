@@ -869,3 +869,53 @@ Verification:
 Что достигнуто? Administering now has zero hard Gating failures, zero HIGH Inspecting findings, a current green runtime proof, and a complete terminal 3RC acceptance chain.
 
 Что осталось до RC? No hard repository/3RC acceptance blocker remains in this bounded track. Canon031/040/042 are explicit warning-level growth/remediation programs rather than blockers.
+
+## 2026-09-29 — engine-20260930020852-administering-deb694 Canon052 regression remediation
+
+### Baseline and material read set
+- Read task execution specification, repository AGENTS/README/composer surfaces, current Git status/diff, prior CMCP journal tail, fresh CanonScanning Gating RED report, and supplied Inspecting report fingerprint evidence.
+- Read mandatory dependency contour contracts from Objecting, Cruding, Viewing, and Interfacing (AGENTS.md, README.md, composer.json), plus Gating owner contracts.
+- Read Canonization normative Canon052 rule and guard matrix; mapped Administering to the canonical Gating consumer contract.
+- Current worktree had four pre-existing Failing-adoption changes: composer.json, composer.lock, composer.prod.json, config/bundles.php. They are preserved and excluded from this Canon052 remediation.
+
+### Market / maturity opening mixin
+- EasyAdmin represents the mature Symfony baseline: explicit dashboards, action-level authorization, deterministic admin routes, and testable administrative actions.
+- Backstage-style enterprise developer portals emphasize plugin ownership, discoverable component metadata, extension boundaries, and central governance without copying plugin engines into consumers.
+- Administering therefore remains a thin governance/orchestration surface with deterministic evidence and package-owned helper engines. Embedded Gating policy/tooling inside consumer .gating/ violates that ownership boundary.
+- Growth remains richer explainability, operator UX, and test evidence; generic CRUD remains owned by Cruding and presentation remains owned by Viewing/Interfacing.
+
+### Target-to-canon mapping
+- Canon052: development Gating symlink/package, dev-master dependency, production metadata, and Composer gate/quality scripts are present; consumer-local .gating/ must be artifact-only.
+- Canon021: generic CRUD stays outside Administering and remains owned by Cruding.
+- Canon022/023/024/025/026: standalone/bundle, dev symlink, production package, dual-runtime, and PHP/Symfony baseline were GREEN in supplied CanonScanning evidence.
+- Canon029/031/040/041/042: quality tooling exists; PHPDoc, PHPUnit coverage, and behavioral/UI coverage remain warning-level debt rather than this hard RC regression.
+
+### RC-critical workstream
+- Root cause: a full embedded Gating package was physically present again under ignored consumer .gating/, reproducing Canon052 RED after the previous cleanup.
+- Remediation: moved the complete .gating/ directory intact to ignored var/gating-legacy-20260930-administering-deb694. No files were deleted and no pre-existing Failing-adoption changes were modified.
+- Acceptance gates: Gating hard gate and post-mutation Inspecting.
+
+### Growth workstream
+- Raise semantic PHPDoc coverage (Canon031).
+- Expand PHPUnit line/method coverage (Canon040).
+- Expand functional/UI cohort coverage and refresh evidence (Canon042).
+- Continue medium-severity command decomposition only when behavior-preserving tests justify it.
+
+### Material risks
+- .gating/ may be recreated by external tooling again; recurrence belongs at the producer/updater rather than in a weakened Canon052 rule.
+- Pre-existing Failing adoption is not semantically part of this task and must not be committed as if authored here.
+
+Что имеем? Canon052 root cause is remediated non-destructively and the embedded engine is preserved under ignored var/ for recovery.
+
+Что осталось? Run Gating and post-mutation Inspecting, verify final Git state, then integrate only the owned orchestration journal change if safe.
+
+### Verification result
+- composer gate: PASS — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon052 PASSED.
+- Remaining warnings are Canon031 PHPDoc coverage, Canon040 quantitative PHPUnit coverage, and Canon042 stale/low behavioral/UI evidence.
+- Post-mutation Inspecting was invoked, but the Console MCP orchestration call timed out before returning a receipt. No new Inspecting result is claimed. Because no PHP/source/UI file changed in this remediation, the supplied fresh Inspecting report remains the applicable source-quality baseline for the unchanged code fingerprint: 114 medium findings, 0 high.
+- No browser/mobile/user-observable UI surface changed; runtime restart and visual evidence are not applicable.
+- Final tracked task-owned mutation is CMCP_CHANGELOG.md only. The pre-existing Failing-adoption changes remain untouched and unstaged.
+
+Что имеем? Canon052 regression is fixed and deterministically GREEN; the repository has zero hard Gating failures for this pass.
+
+Что осталось? Only warning-level Canon031/040/042 growth debt remains. Git integration for the owned journal entry is the final tail.
