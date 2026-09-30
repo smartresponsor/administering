@@ -919,3 +919,31 @@ Verification:
 Что имеем? Canon052 regression is fixed and deterministically GREEN; the repository has zero hard Gating failures for this pass.
 
 Что осталось? Only warning-level Canon031/040/042 growth debt remains. Git integration for the owned journal entry is the final tail.
+
+## 2026-09-30 — engine-20260930212358-administering-924e81 live verification
+
+### Reconnaissance and canonical mapping
+- Read the authoritative task specification and current Console-MCP workspace state.
+- Re-read the fresh upstream CanonScanning Gating/Inspecting evidence and the normative `Canonization/.canonization/Governance/Architecture/Rule/Canon052GatingIntegrationRule.md` plus its executable Gating mirror.
+- Re-read the mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contract surfaces relevant to this boundary.
+- Current branch `engine/administering-post-rc-canon-composer` started aligned with upstream at `bdf0e4d3f5bf359b777110a1f7b527bcaf5e0f3b` with five pre-existing dirty paths: `AGENTS.md`, `composer.json`, `composer.lock`, `composer.prod.json`, and `config/bundles.php`.
+- The supplied 2026-09-29 Gating report was RED only on Canon052 because a full consumer-local `.gating/` copy existed at scan time; PHPDoc/test/UI coverage were warning-level only.
+- The supplied Inspecting report remained source-quality baseline evidence: 114 medium findings, zero autofixable findings, with Rector syntax and Semgrep timeout analyzer degradation noted.
+
+### Market / maturity split
+- Mature Symfony admin tooling such as EasyAdmin provides dashboards, CRUD/action primitives, authorization, filtering, and testability; Administering remains responsible for governance/operability around those surfaces rather than duplicating generic CRUD.
+- RC-critical stream: canonical Gating integration, deterministic quality, runtime/container integrity, and package/boundary correctness.
+- Growth stream: PHPDoc coverage, PHPUnit line/method coverage, behavioral/UI cohort evidence, and medium-complexity refactors; these remain non-blocking while hard gates are green.
+
+### Live-state result
+- A non-destructive preview move of `.gating/` was attempted only after confirming Canon052 semantics; Console MCP returned ENOENT because the directory is already absent in the current physical workspace.
+- Therefore no redundant migration was performed and no legacy files were deleted or overwritten.
+- Live `composer gate`: PASS — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon052 is PASS.
+- Live `composer validate --strict --check-lock`: PASS.
+- Live `composer quality`: PASS. YAML lint PASS (13 files), Symfony container lint PASS, PHPStan PASS (725 files / 0 errors), PHP-CS-Fixer dry-run PASS (0 files), PHPUnit PASS (143 tests / 650 assertions), Gating PASS.
+- Remaining warnings: Canon031 PHPDoc coverage, Canon040 quantitative test coverage debt, Canon042 stale/low behavioral/UI evidence.
+- No browser/mobile/user-observable UI was changed by this task; runtime restart and visual screenshot evidence are not applicable.
+
+Что имеем? Current physical repository state is hard-gate GREEN, Canon052 is no longer reproducible, and the declared quality pipeline passes while pre-existing Composer/Failing changes remain preserved.
+
+Что осталось до RC? Final Git status/diff/upstream inspection and coherent integration of only this task-owned CMCP journal update if it can be committed without absorbing the five pre-existing dirty paths.
