@@ -1,5 +1,70 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004080925-administering-28a096 RC config-validation acceptance
+
+### Factual baseline and work selection
+
+- Console MCP resolved the authoritative workspace at `D:\\PhpstormProjects\\www\\Administering`; branch `engine/administering-post-rc-canon-composer`. Pre-existing dirty work is preserved: this shared journal plus `src/Command/Config/AdministrationConfigValidateCommand.php`, whose decomposition was started by an earlier autonomous Administering run and is directly in scope for the supplied Inspecting complexity backlog.
+- Read the authoritative execution specification, Administering repository/package/test/runtime contracts, supplied 2026-09-29 Gating RED and Inspecting reports, and current Composer/test configuration. The supplied Gating RED failed only Canon052 because a copied Gating engine existed under consumer `.gating/`; the current tracked repository has no `.gating/` path and current Composer manifests use package-owned Gating.
+- Mandatory application contour was read from Objecting, Cruding, Viewing, Interfacing, plus current Canonization-expanded Collectioning and Tabling contracts. Collectioning and Tabling have no root `AGENTS.md`; their existing `README.md` and `composer.json` were read instead. Gating owner profile/rule-set and Canonization textual Canon014/021/031/040/042/052 rules were read and mapped.
+- Supplied Inspecting evidence reports the original `AdministrationConfigValidateCommand::execute()` at cyclomatic complexity 16 among medium findings. The current dirty decomposition delegates form/service/file/secret validation to cohesive private helpers while preserving public command name, descriptor iteration/order, diagnostics and exit semantics.
+- Market/enterprise baseline: mature Symfony admin systems keep server-side authorization/validation explicit and thin at entrypoints, while developer portals such as Backstage separate central policy decisions from backend/plugin enforcement. Administering therefore remains a governance/orchestration surface and does not absorb generic CRUD, rendering, shell, collection-query, table-definition or system-field ownership.
+
+### Target-to-canon mapping and maturity split
+
+- Canon014: directly applicable to the selected Symfony Console entrypoint; the existing decomposition reduces stable subordinate validation responsibilities inside `execute()` without adding an alternative architecture layer.
+- Canon021: unchanged; no generic CRUD machinery is introduced and EasyAdmin remains the explicit administrative exception.
+- Canon031/040/042: warning-level documentation/executable/UI coverage programs remain growth work; thresholds are not weakened and no UI surface is changed in this pass.
+- Canon052: package-owned Gating remains the canonical model; no executable consumer `.gating/` policy/runtime is introduced.
+- RC-critical workstream: verify and integrate the existing config-validation decomposition, prove current Canon052 hard-green, run deterministic static/test/architecture gates, and obtain fresh post-mutation Inspecting evidence.
+- Growth workstream: semantic PHPDoc coverage, broad PHPUnit/behavioral/UI coverage, richer approval/explainability UX and further medium-complexity refactors remain outside this bounded RC repair.
+- No route/template/JavaScript/navigation/form/browser/mobile behavior is modified by the selected source refactor, so runtime restart, Panther/Playwright cohort execution and screenshots are not applicable unless verification exposes an adjacent UI change.
+
+Что имеем? Historical Canon052 RED is classified against the current topology, the full dependency/canon contour is mapped, and the existing config-command decomposition is a bounded in-scope Inspecting remediation.
+
+Что осталось? Run changed-PHP lint, Composer validation, PHPUnit/PHPStan/CS/Symfony/architecture/Gating, fresh post-mutation Inspecting, then integrate only the coherent source+journal block if all applicable hard gates are green.
+
+## 2026-10-04 — engine-20261004092214-administering-d08ef3 RC reconnaissance and config-validation cohesion
+
+### Factual baseline and market/canon split
+
+- Console MCP resolved the authoritative workspace at `D:\\PhpstormProjects\\www\\Administering`; active branch `engine/administering-post-rc-canon-composer`, HEAD `002eb2fe710bb6589914861c819dcb34609fcd9e`, upstream aligned (ahead 0 / behind 0). The only pre-existing dirty path is this shared `CMCP_CHANGELOG.md`; no product/source dirt is being overwritten or reset.
+- Read the authoritative execution specification, Administering root contracts (`AGENTS.md`, `README.md`, `README.adoc`, `composer.json`, `composer.prod.json`, `.gitignore`), package/test surfaces, historical CanonScanning Gating RED report, historical supplied Inspecting report, and the fresh local Inspecting report `D--PhpstormProjects-www-Administering-20261004-092051.json`.
+- Mandatory dependency contour read from Objecting, Cruding, Viewing, and Interfacing (`AGENTS.md`, `README.md`, `composer.json`). Read-and-comply contour read from Gating (`AGENTS.md`, `README.md`, `composer.json`, Administering profile/rule-set) and Canonization textual Canon014/021/031/040/042/052 rules. `MANIFEST.json` is not present in the Administering root and is not invented.
+- Code Memory scope resolution reports `CODE_MEMORY_SCOPE_SCRIPT_NOT_DECLARED`; no memory/roadmap graph is fabricated as acceptance evidence.
+- Historical Canon052 RED is tied to a copied consumer-local `.gating/` engine at the 2026-09-29 scan fingerprint. Current manifests implement the Canon052 package/symlink contract and the fresh worktree has no source change requiring a duplicate pre-remediation Inspecting run. A live Gating start was attempted but correctly deferred by Console MCP capacity admission (`RESOURCE_PRESSURE_WATCH`, `ENGINE_BACKLOG_HIGH`); the guard was not bypassed.
+- Current fresh Inspecting evidence reports 105 medium findings, 0 high, PHPStan 0 errors, max complexity 21. Selected bounded candidate: `AdministrationConfigValidateCommand::execute()` complexity 16; the command currently combines descriptor orchestration with four stable validation groups in one entry method.
+- Market/enterprise baseline: EasyAdmin delegates backend/action enforcement to Symfony Security and supports action-level permissions; Backstage separates central policy decisions from plugin/backend enforcement. For Administering, RC-critical maturity therefore favors thin orchestration, explicit validation boundaries, deterministic diagnostics, and fail-closed behavior. Growth remains richer operator explainability/approval UX plus broad Canon031/040/042 documentation/test/UI coverage, without moving generic CRUD, rendering, shell, or Objecting responsibilities into Administering.
+
+### Target-to-canon mapping and selected work
+
+- Canon014 applies to the selected Symfony Console entrypoint: orchestration may remain in the command, while stable form/service/file/secret validation responsibilities should be delegated into focused private helpers; no new architecture layer is required for these cohesive local checks.
+- Canon021 remains unchanged: this pass introduces no generic CRUD route/controller/service and does not alter the EasyAdmin back-office exception.
+- Canon031/040/042 remain warning-level growth programs; thresholds will not be weakened. No browser/mobile/UI surface is selected, so behavioral screenshots are not acceptance evidence for this source-only command refactor.
+- Canon052 remains package-owned; no executable policy/config is added to consumer `.gating/`.
+- RC-critical workstream: decompose the config validation entrypoint while preserving validation order, messages, success/failure exit semantics, and descriptor counting; then run changed-PHP lint, Composer validation, tests/static/style/Symfony/architecture/Gating as capacity permits, and fresh post-mutation Inspecting.
+- Growth workstream: semantic PHPDoc coverage, executable coverage, functional/UI coverage, richer audit/explainability, and approval workflow UX remain separate from this bounded repair.
+
+Что имеем? The historical RED has been classified against current repository evidence, the mandatory dependency/canon contour is mapped, and one bounded current Inspecting complexity candidate has a behavior-preserving remediation path.
+
+Что осталось? Implement the command decomposition, run deterministic acceptance plus fresh Inspecting on the mutated source fingerprint, update this journal with actual results, then integrate/publish only the coherent source+journal block.
+
+### Implementation and acceptance
+
+- Refactored `src/Command/Config/AdministrationConfigValidateCommand.php`: `execute()` now remains workflow orchestration and delegates form-class, service-class, writable-file, and secret-name checks to cohesive private helpers. Validation order, diagnostic strings, descriptor count, success path, and failure semantics are unchanged.
+- Direct command smoke: `php bin/console administering:config:validate --env=test --no-interaction` GREEN (`Validated 0 configuration tool descriptors.`), proving the changed entrypoint is registered and executable in the existing Symfony runtime without a restart.
+- Deterministic gates GREEN: changed PHP lint; `composer validate --strict --check-lock`; PHPUnit `154 tests / 704 assertions`; PHPStan `730/730`, 0 errors; PHP-CS-Fixer dry run `730` files, 0 fixable; Symfony container lint; YAML lint `13` files.
+- Fresh post-mutation Inspecting report: `D--PhpstormProjects-www-Administering-20261004-093030.json` — 104 medium, 0 high, PHPStan 0; complexity findings reduced from 20 to 19 and the selected `AdministrationConfigValidateCommand::execute()` complexity-16 finding is gone.
+- Live Gating GREEN on hard acceptance: `71` rules, `0` failed, `3` warning, `10` skipped. Canon014 and Canon052 both PASS. Historical Canon052 copied-engine RED is therefore factually closed on the current tree.
+- Coverage evidence was regenerated with `composer test:coverage`: `154 tests / 704 assertions`; Canon040 is now current rather than stale and reports measured HIGH_TEST_DEBT (lines 14.5%, methods 10.2%, branches 53.7%). Canon031 remains class 48.5% / contract-method 6.1%; Canon042 remains stale/low behavioral-UI evidence. These are explicit warning-level growth/remediation fronts, not hidden or threshold-suppressed.
+- `architecture:check` is not a declared Composer script and was not invented; architecture acceptance is provided by live Gating (`structure.forbidden_architecture`, namespace/layer/canon checks) plus fresh Inspecting.
+- No route/template/JavaScript/navigation/form/browser/mobile surface changed. Runtime restart and visual/Playwright/Panther evidence are not applicable to this source-only CLI cohesion refactor.
+
+Что имеем? The selected current complexity finding is removed, all applicable deterministic hard gates are green, Canon052 is current-green, and remaining quality debt is explicitly warning-classified.
+
+Что осталось? Inspect final Git status/diff ownership, create one coherent signed commit for the source plus shared CMCP journal state, push the current branch, and confirm final upstream parity/cleanliness.
+
+
 ## 2026-10-04 — engine-20261004090708-administering-6edeb4 RC reconnaissance and external-package pipeline hardening
 
 - Baseline: branch `engine/administering-post-rc-canon-composer`, initial HEAD `facd9c126cc1ac781e535fcdeb9676e8fe12fe87`, upstream aligned; preserved pre-existing in-scope edits in this journal and `src/Command/AdministrationOwnerConfigurationToolExternalPackagePipelineCommand.php` rather than resetting concurrent autonomous work.
