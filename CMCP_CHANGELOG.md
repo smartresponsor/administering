@@ -34,6 +34,15 @@
 
 Что осталось? Commit exactly the two documented commands plus this journal, push the current branch, and verify final clean worktree and upstream parity.
 
+### Integration result
+
+- Signed commit `6996478` (`docs: clarify administering audit command contracts`) contains exactly the two audit-command PHPDoc improvements plus this task journal; the commit hook re-ran PHP-CS-Fixer on staged PHP and found no additional changes.
+- Push to `origin/engine/administering-post-rc-canon-composer`: PASS (`88631dd..6996478`). No destructive Git operation, stash, reset, cleanup, sibling mutation, runtime restart, or UI artifact generation was used.
+
+Что имеем? The bounded Canon031 improvement is implemented, deterministically accepted, signed, and published without widening Administering responsibility.
+
+Что осталось? Only final post-journal commit/push parity verification; Canon031/040/042 remain explicit non-blocking growth debt.
+
 ## 2026-10-04 — engine-20261004080925-administering-28a096 RC config-validation acceptance
 
 ### Factual baseline and work selection
