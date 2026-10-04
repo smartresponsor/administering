@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-decision',
     description: 'Reports whether the owner-side transition track is ready to stop internal tool expansion and move to neighbor current slices.',
 )]
+/**
+ * Reports whether owner-side configuration-tool migration can leave the internal Administering transition phase.
+ */
 final class AdministrationOwnerConfigurationToolTransitionDecisionCommand extends Command
 {
     public function __construct(

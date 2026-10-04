@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-freeze',
     description: 'Builds the final freeze report for pausing internal Administering transition waves and switching to owner/host current-slice work.',
 )]
+/**
+ * Produces the final freeze decision for the internal owner-configuration transition track.
+ */
 final class AdministrationOwnerConfigurationToolTransitionFreezeCommand extends Command
 {
     public function __construct(private readonly string $projectDir)

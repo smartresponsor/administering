@@ -20,6 +20,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-status',
     description: 'Reports owner-side migration status for internal and owner-provided configuration tools.',
 )]
+/**
+ * Reports current owner-side migration status for Administering configuration tools and providers.
+ */
 final class AdministrationOwnerConfigurationToolTransitionStatusCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */

@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-handoff-checklist',
     description: 'Builds the final checklist for switching from Administering internal transition waves to owner/host current-slice work.',
 )]
+/**
+ * Builds the handoff checklist required before owner-repository current-slice work may begin.
+ */
 final class AdministrationOwnerConfigurationToolTransitionHandoffChecklistCommand extends Command
 {
     public function __construct(private readonly string $projectDir)

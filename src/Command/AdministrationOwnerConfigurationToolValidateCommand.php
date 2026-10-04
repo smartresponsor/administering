@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:validate',
     description: 'Validates owner-provided configuration tool definitions before SQLite/EasyAdmin materialization.',
 )]
+/**
+ * Validates owner-provided configuration-tool definitions before Administering materializes or executes them.
+ */
 final class AdministrationOwnerConfigurationToolValidateCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */

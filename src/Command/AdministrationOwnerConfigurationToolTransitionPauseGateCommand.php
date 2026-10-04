@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-pause-gate',
     description: 'Reports whether Administering should pause internal waves and move the next work to owner/host current slices.',
 )]
+/**
+ * Applies the advisory pause gate that separates internal Administering expansion from owner or host migration work.
+ */
 final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand extends Command
 {
     public function __construct(
