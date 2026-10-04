@@ -34,6 +34,14 @@
 Что имеем? The bounded Canon031 lifecycle-proof documentation contract is materially improved and all applicable deterministic/static/test/Gating/Inspecting evidence is green or observational-only.
 Что осталось? Inspect the exact diff and branch/upstream state, commit only the command+journal task block, push safely, and verify final clean synchronized state.
 
+### Git integration and closure
+- Exact pre-integration diff contained only `CMCP_CHANGELOG.md` and `src/Command/AdministrationOperationLifecycleProofCommand.php`; branch `engine/administering-post-rc-canon-composer` was aligned with its upstream (`ahead 0`, `behind 0`) before integration.
+- Signed commit `57cbdbc` (`Document Administering lifecycle proof contract`) created the coherent two-file task block and pushed successfully to `origin/engine/administering-post-rc-canon-composer`.
+- No destructive operation, runtime restart, UI mutation, or unrelated repository mutation was performed.
+
+Что имеем? The lifecycle-proof Canon031 remediation is implemented, verified, signed, and published with hard Gating at zero failures and fresh Inspecting at zero high findings.
+Что осталось? Publish this journal closure and confirm the final worktree/HEAD/upstream state is clean and synchronized.
+
 ## 2026-10-04 — engine-20261004123714-administering-333051 — Canon031 materialization-preview command contract
 
 ### Reconnaissance, maturity mixin, and canon mapping
