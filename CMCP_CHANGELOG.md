@@ -1104,6 +1104,43 @@ Verification:
 
 Что осталось? Implement the validator decomposition, re-run applicable deterministic gates and fresh Inspecting, update this journal with actual acceptance evidence, then commit/push only the coherent source/test/journal block.
 
+## 2026-10-04 — engine-20261004075123-administering-841185 runtime-scope state-reader hardening
+
+### Reconnaissance baseline
+
+- Console MCP resolved the authoritative workspace at `D:\\PhpstormProjects\\www\\Administering`; baseline hard Gating was green with 0 failures and warning-only Canon031/040/042 debt.
+- Consumed the supplied historical CanonScanning RED and Inspecting reports. The Canon052 RED was stale for the live tree and the current live gate confirms Canon052 green; the supplied Inspecting baseline identified `AdministrationRuntimeScopeStateReader::read()` as a long-method candidate.
+- Read Administering root instructions/README/Composer/test/gate surfaces plus the required Objecting, Cruding, Viewing, Interfacing, Gating and Canonization contracts. Normative Canonization files consulted include the guard matrix and Canon021, Canon031, Canon040, Canon042 and Canon052.
+- Composer dependencies/path wiring for Objecting, Cruding, Viewing and Interfacing are present in the target manifest; Gating remains tooling/quality infrastructure rather than an invented runtime dependency.
+
+### Market / maturity split
+
+- Mature Symfony administrative platforms and enterprise control planes keep state discovery, normalization and diagnostics deterministic and independently testable; admin orchestration should aggregate explicit source evidence rather than hide source failures.
+- RC-critical stream: reduce state-reader orchestration complexity, add direct aggregation/error-path regression coverage, and preserve the Administering runtime-scope boundary.
+- Growth stream: broad Canon031 documentation completion, Canon040 repository-wide coverage expansion and Canon042 UI/workflow inventory growth remain non-blocking follow-up work and are not mixed into this bounded repair.
+
+### Material implementation and findings
+
+- Extracted catalog and Composer inventory reads from `AdministrationRuntimeScopeStateReader::read()` into focused private helpers while preserving the public state payload and source-error ordering.
+- Added `AdministrationRuntimeScopeStateReaderTest` covering valid Composer/catalog/lock aggregation and fail-closed missing Composer/lock behavior.
+- The new Windows-hosted test exposed a real adjacent defect in `AdministrationRuntimeScopePathResolver::absolutePath()`: a drive-rooted `C:\\...` path was incorrectly prefixed with the Administering project directory. Replaced the fragile drive-root regex with explicit drive-letter/root-separator detection.
+- No browser/mobile/UI surface changed, so screenshot evidence is not applicable to this pass.
+
+### Verification checkpoint
+
+- `composer test`: GREEN — 152 tests / 696 assertions after the path resolver fix.
+- `composer test:coverage`: GREEN; refreshed persistent php-code-coverage evidence. Live Canon040 moved to 13.5% lines / 9.7% methods / 53.4% branches (still warning-level `HIGH_TEST_DEBT`).
+- `composer quality:architecture`: GREEN.
+- live `composer gate`: GREEN hard baseline, 0 failures; Canon031/040/042 remain warnings.
+- post-mutation Inspecting `D--PhpstormProjects-www-Administering-20261004-081630.json`: selected `AdministrationRuntimeScopeStateReader::read()` long-method finding is absent; repository max complexity is 21. The report's 4 HIGH findings are all confined to the unrelated concurrent uncommitted `tests/Command/AdministrationOwnerConfigurationToolTransitionPauseGateCommandTest.php` and match the aggregate PHPStan blocker.
+- `composer cs:check`: our changed state-reader/test files are clean; the aggregate command is currently blocked by an unrelated concurrent uncommitted `tests/Command/AdministrationOwnerConfigurationToolTransitionPauseGateCommandTest.php` formatting change.
+- `composer stan`: current aggregate run is likewise blocked only by that concurrent uncommitted test file (PHPDoc/type findings outside this task-owned change set).
+- Concurrent repository work advanced HEAD during execution and owns `CMCP_CHANGELOG.md`, `AdministrationOwnerConfigurationToolTransitionPauseGateCommand.php`, `AdministrationConfigurationToolDefinitionValidator.php` and its test surface. Those changes are preserved and must not be silently absorbed into this task commit.
+
+Что имеем? Runtime-scope state aggregation is decomposed and regression-tested, a real Windows absolute-path bug is fixed, PHPUnit/coverage/architecture/live Gating are green, and all hard canon rules remain green.
+
+Что осталось? Publish this journal-only task record; signed implementation commit `088f87c` is already pushed and no task-owned source/test integration tail remains. Repository-wide Canon031/040/042 warning debt remains growth work.
+
 ### Implementation and acceptance evidence
 
 - Refactored `AdministrationConfigurationToolDefinitionValidator::validate()` into cohesive private identity, service, form-convention, executable-contract, and tool-key validation groups. The public interface, violation ordering, severities, messages, and expected/actual values are preserved.
