@@ -32,6 +32,14 @@
 Что имеем? The independent Canon031 validation-command contract is materially documented, deterministic acceptance is GREEN, coverage evidence is fresh, and post-mutation Inspecting remains zero-HIGH.
 Что осталось? Commit exactly the validation command plus this acceptance journal, publish the synchronized branch, then verify final clean HEAD/upstream parity.
 
+### Integration result
+
+- Signed commit `7ae09fb` (`docs: clarify handoff bundle validation contract`) contains exactly the validation-command semantic PHPDoc and this task journal update; the staged PHP-CS-Fixer hook reported 0 additional fixes.
+- Push to `origin/engine/administering-post-rc-canon-composer`: PASS (`4306174..7ae09fb`). No reset, stash, clean, destructive file operation, runtime restart, sibling-repository mutation, or UI artifact generation was used.
+
+Что имеем? The bounded Canon031 validation contract is implemented, accepted, signed, and published on the synchronized branch.
+Что осталось? Commit and publish this terminal journal receipt, then confirm clean worktree and final upstream parity.
+
 ## 2026-10-04 — engine-20261004110910-administering-d05f63 Canon031 external-package handoff contract
 
 ### Factual baseline, market contour, and canon mapping
