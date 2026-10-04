@@ -1012,3 +1012,14 @@ Verification:
 Что имеем? The current Canon022/Failing adoption is lock-consistent, architecture-consistent and hard-gate GREEN; the stale Administering package-boundary guard was repaired instead of weakening Canonization, and all applicable constituent acceptance gates pass.
 
 Что осталось? Create one signed coherent commit, push the already-synchronized current branch, and verify final clean HEAD/upstream state.
+
+### Terminal integration state
+
+- Signed commit `af07dba` (`fix: align administering failing baseline with canon`) contains the complete eight-file canon-alignment block.
+- Push to `origin/engine/administering-post-rc-canon-composer`: PASS.
+- Post-push branch state: clean worktree, HEAD `af07dbab9a6db8f058a3cd56f19e37dcddab3c5e`, ahead 0 / behind 0 versus the configured upstream.
+- No hard repository or integration blocker remains for this task. Canon031/040/042 remain explicit warning-level growth debt and were not weakened or misreported as release failures.
+
+Что имеем? The task-owned Canon022/Failing alignment is implemented, deterministically verified, signed, published, and synchronized with its upstream branch.
+
+Что осталось? No authorized RC-critical tail remains in the bounded objective of this autonomous run.
