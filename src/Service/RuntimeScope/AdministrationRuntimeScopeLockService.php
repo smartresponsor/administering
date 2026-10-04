@@ -12,55 +12,33 @@ final readonly class AdministrationRuntimeScopeLockService
     public function normalize(string $lockPath): AdministrationRuntimeScopeLockEvidence
     {
         if (!is_file($lockPath)) {
-            return new AdministrationRuntimeScopeLockEvidence(
-                path: $lockPath,
-                present: false,
-                status: 'missing',
-                sha256: null,
-                schema: null,
-                scope: null,
-                strict: null,
-                sourceComposerFile: null,
-                sourceComposerSha256: null,
-                sourceComposerPackageCount: null,
-                generatedAt: null,
-                generatedBy: null,
-                enabledBundleTokens: [],
-                enabledComponents: [],
-                disabledComponents: [],
-                errors: [sprintf('Runtime scope lock is missing: %s', $lockPath)],
-                warnings: [],
-            );
+            return $this->missingEvidence($lockPath);
         }
 
         $sha256 = hash_file('sha256', $lockPath) ?: null;
         try {
-            $payload = require $lockPath;
-            if (!is_array($payload)) {
-                throw new \RuntimeException('Runtime scope lock must return an array.');
-            }
+            $payload = $this->readPayload($lockPath);
         } catch (\Throwable $exception) {
-            return new AdministrationRuntimeScopeLockEvidence(
-                path: $lockPath,
-                present: true,
-                status: 'unreadable',
-                sha256: $sha256,
-                schema: null,
-                scope: null,
-                strict: null,
-                sourceComposerFile: null,
-                sourceComposerSha256: null,
-                sourceComposerPackageCount: null,
-                generatedAt: null,
-                generatedBy: null,
-                enabledBundleTokens: [],
-                enabledComponents: [],
-                disabledComponents: [],
-                errors: [sprintf('Unable to read runtime scope lock %s: %s', $lockPath, $exception->getMessage())],
-                warnings: [],
-            );
+            return $this->unreadableEvidence($lockPath, $sha256, $exception);
         }
 
+        return $this->normalizedEvidence($lockPath, $sha256, $payload);
+    }
+
+    /** @return array<string, mixed> */
+    private function readPayload(string $lockPath): array
+    {
+        $payload = require $lockPath;
+        if (!is_array($payload)) {
+            throw new \RuntimeException('Runtime scope lock must return an array.');
+        }
+
+        return $payload;
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function normalizedEvidence(string $lockPath, ?string $sha256, array $payload): AdministrationRuntimeScopeLockEvidence
+    {
         $errors = [];
         $warnings = [];
         $schema = is_string($payload['schema'] ?? null) ? $payload['schema'] : null;
@@ -94,6 +72,52 @@ final readonly class AdministrationRuntimeScopeLockService
             disabledComponents: $disabledComponents,
             errors: array_values(array_unique($errors)),
             warnings: array_values(array_unique($warnings)),
+        );
+    }
+
+    private function missingEvidence(string $lockPath): AdministrationRuntimeScopeLockEvidence
+    {
+        return new AdministrationRuntimeScopeLockEvidence(
+            path: $lockPath,
+            present: false,
+            status: 'missing',
+            sha256: null,
+            schema: null,
+            scope: null,
+            strict: null,
+            sourceComposerFile: null,
+            sourceComposerSha256: null,
+            sourceComposerPackageCount: null,
+            generatedAt: null,
+            generatedBy: null,
+            enabledBundleTokens: [],
+            enabledComponents: [],
+            disabledComponents: [],
+            errors: [sprintf('Runtime scope lock is missing: %s', $lockPath)],
+            warnings: [],
+        );
+    }
+
+    private function unreadableEvidence(string $lockPath, ?string $sha256, \Throwable $exception): AdministrationRuntimeScopeLockEvidence
+    {
+        return new AdministrationRuntimeScopeLockEvidence(
+            path: $lockPath,
+            present: true,
+            status: 'unreadable',
+            sha256: $sha256,
+            schema: null,
+            scope: null,
+            strict: null,
+            sourceComposerFile: null,
+            sourceComposerSha256: null,
+            sourceComposerPackageCount: null,
+            generatedAt: null,
+            generatedBy: null,
+            enabledBundleTokens: [],
+            enabledComponents: [],
+            disabledComponents: [],
+            errors: [sprintf('Unable to read runtime scope lock %s: %s', $lockPath, $exception->getMessage())],
+            warnings: [],
         );
     }
 

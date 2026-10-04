@@ -1,5 +1,35 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004083306-administering-e9ea19 runtime-scope lock normalization cohesion
+
+### Factual baseline and target-to-canon mapping
+
+- Workspace resolved exclusively through Console MCP at `D:\\PhpstormProjects\\www\\Administering`; the Windows path was never probed through the ChatGPT container.
+- Read the authoritative execution specification, current Administering README/Composer/test/gate/journal surfaces, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating execution contour, and Canonization textual Canon014/021/052 rules plus the guard matrix.
+- Historical Canon052 RED is stale for the live tree: current Gating proves Canon052 GREEN. Fresh pre-change Inspecting evidence `D--PhpstormProjects-www-Administering-20261004-082150.json` reports 108 medium / 0 high and identifies `AdministrationRuntimeScopeLockService::normalize()` at 87 lines / complexity 17.
+- Canon014 maps to keeping orchestration cohesive; this pass delegates payload reading and evidence construction without creating a new architecture layer. Canon021 remains unchanged (no generic CRUD added). Canon052 remains package-owned with no consumer-local policy/tooling copy.
+- Mature Symfony administration systems favor explicit server-side governance, thin orchestration boundaries, deterministic diagnostics and independently testable policy/state normalization. RC-critical work selected: reduce the lock-normalizer hotspot without changing its fail-closed contract. Growth remains Canon031 semantic PHPDoc, Canon040 repository-wide executable coverage, Canon042 functional/UI coverage, and broader operator UX/explainability.
+
+### Material implementation and verification
+
+- Refactored `AdministrationRuntimeScopeLockService::normalize()` into a thin branch coordinator delegating lock payload reading, normalized evidence construction, missing-lock evidence and unreadable-lock evidence to focused private methods.
+- Preserved the public signature, schema/token normalization, warning/error text, status vocabulary, SHA-256 behavior, metadata extraction and fail-closed semantics; no route, Doctrine, template, JavaScript or browser/mobile surface changed.
+- `composer test`: GREEN — 152 tests / 696 assertions.
+- `composer test:coverage`: GREEN — 152 tests / 696 assertions with refreshed Xdebug path-coverage evidence. Canon040 remains genuine warning-level HIGH_TEST_DEBT at repository scale rather than stale evidence.
+- `composer stan`: GREEN — 729/729 files, 0 errors.
+- `composer cs:check`: GREEN — 0/729 fixable files.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer lint:yaml`: GREEN — 13 YAML files.
+- `composer lint:container`: GREEN.
+- `composer inspect:architecture`: GREEN — all nine architecture guards pass.
+- `composer gate`: GREEN at hard severity — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon014, Canon021 and Canon052 PASS. Remaining warnings are Canon031, Canon040 and Canon042.
+- A fresh post-mutation Inspecting run was requested through Console MCP with the full timeout envelope, but the call timed out before returning a receipt and no new persisted Administering report was discoverable afterward. Fresh Inspecting for this exact fingerprint is therefore NOT_VERIFIED; no result is inferred from the timeout.
+- Because no user-observable UI/navigation/form/browser flow changed, runtime restart, Panther/Playwright cohort execution and screenshots are not applicable.
+
+Что имеем? The selected runtime-scope lock normalization hotspot is materially decomposed and all applicable deterministic source/package/canon gates are GREEN, with refreshed PHPUnit coverage evidence.
+
+Что осталось? Obtain fresh Inspecting evidence for this exact source fingerprint when the execution plane can return/persist it, then integrate the source+journal block and verify final clean HEAD/upstream parity. Canon031/040/042 remain explicit non-blocking growth debt.
+
 ## 2026-10-04 — engine-20261004081953-administering-8712e5 post-integration reconciliation
 
 ### Baseline, mapping, and reconciliation
