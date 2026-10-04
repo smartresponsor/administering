@@ -20,6 +20,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:materialization-preview',
     description: 'Shows which owner-provided configuration tools are eligible for SQLite/EasyAdmin materialization.',
 )]
+/**
+ * Builds a read-only materialization preview for owner-provided configuration tools.
+ *
+ * The command validates discovered definitions and classifies them as accepted or rejected evidence without
+ * creating EasyAdmin/SQLite materialization state or changing neighboring owner repositories.
+ */
 final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
@@ -30,6 +36,9 @@ final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand ex
         parent::__construct();
     }
 
+    /**
+     * Defines component filtering, JSON evidence output, and explicit empty/rejected-result tolerance controls.
+     */
     protected function configure(): void
     {
         $this
@@ -40,6 +49,12 @@ final class AdministrationOwnerConfigurationToolMaterializationPreviewCommand ex
             ->addOption('allow-rejected', null, InputOption::VALUE_NONE, 'Do not fail when some owner tools are rejected from materialization.');
     }
 
+    /**
+     * Validates matching owner definitions, emits deterministic accepted/rejected preview evidence, and fails closed.
+     *
+     * Empty discovery and rejected definitions remain failures unless the caller explicitly opts into the matching
+     * tolerance switch; optional JSON persistence records the preview without materializing configuration state.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

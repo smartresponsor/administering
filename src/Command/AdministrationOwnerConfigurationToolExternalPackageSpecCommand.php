@@ -21,6 +21,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-spec',
     description: 'Builds a reviewed external handoff spec for owner-side configuration tool packages.',
 )]
+/**
+ * Builds a non-destructive owner-package handoff specification from discovered configuration-tool providers.
+ *
+ * Provider definitions are validated before inclusion, rejected entries remain visible as evidence, and the
+ * generated paths are review guidance only: this command never moves or deletes neighboring repository source.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
@@ -31,6 +37,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
         parent::__construct();
     }
 
+    /**
+     * Defines component filtering, machine-readable output, artifact writing, and explicit tolerance switches
+     * controlling whether an empty or partially rejected handoff may exit successfully.
+     */
     protected function configure(): void
     {
         $this
@@ -41,6 +51,12 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
             ->addOption('allow-rejected', null, InputOption::VALUE_NONE, 'Do not fail when some owner tools are rejected from the external package spec.');
     }
 
+    /**
+     * Collects matching owner providers, validates each tool definition, and emits one deterministic handoff report.
+     *
+     * Rejected definitions remain visible for review; absence and validation failures fail closed unless explicitly
+     * tolerated, while optional JSON writing persists evidence without applying the described repository overlay.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
