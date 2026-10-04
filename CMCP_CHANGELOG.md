@@ -1,5 +1,59 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004110859-administering-1a38e8 Canon031 handoff-bundle validation contract
+
+### Factual baseline, market contour, and canon mapping
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on `engine/administering-post-rc-canon-composer`; baseline HEAD `458656cd8a3e4d7a9b399351adf5e321f4f1a180` was clean and synchronized with `origin/engine/administering-post-rc-canon-composer`.
+- Read the authoritative execution specification, Administering root contracts, development/production Composer manifests, package/test/gate surfaces, historical CanonScanning RED and supplied Inspecting evidence, plus the current orchestration journal.
+- Read mandatory Objecting, Cruding, Viewing, and Interfacing root contracts; read Gating owner contracts and Canonization textual Canon031/Canon052 rules. `MANIFEST.json` and consumer `.gating/README.md` are absent in the current Administering root and were not invented.
+- Historical Canon052 RED was a copied consumer-local Gating engine. Live Gating on the current tree is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS; the old RED is evidence history, not a current remediation target.
+- Canon031 currently reports 337/687 documented classes (49.1%) and 70/1010 documented contract methods (6.9%). A concurrent journal entry already selects `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleCommand`, so this run avoids that path and selects the independent `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleValidateCommand` class/configure/execute weak symbols.
+- Canon040 and Canon042 remain warning-level coverage programs. No browser/mobile/UI surface is selected, so runtime restart, cohort UI execution, and screenshots are not applicable to this bounded documentation-only source change.
+- Market/maturity contour: mature Symfony administration systems require server-side action/security enforcement, while mature developer portals separate permission policy from backend/plugin enforcement. RC-critical maturity here is explicit fail-closed handoff validation and deterministic operator evidence; richer approval/explainability UX and broad coverage expansion remain growth work.
+
+### Selected material work and acceptance plan
+
+- Add semantic PHPDoc documenting the validation command's non-mutating governance responsibility, CLI tolerance contract, and fail-closed execution semantics without changing command identity, options, report schema, artifact contents, or runtime behavior.
+- Run changed-PHP/static/style/test/package/Symfony/Gating checks as available, measure the Canon031 delta, and obtain fresh post-mutation Inspecting evidence because tracked PHP source changes.
+- Integrate only this command-documentation plus task journal block and publish the current branch if deterministic acceptance remains green.
+
+Что имеем? Current hard canon is GREEN, the historical Canon052 failure is superseded by live evidence, concurrent ownership is separated, and one independent Canon031 contract target is selected.
+Что осталось? Apply semantic contract documentation, execute post-mutation verification, then commit/push and confirm clean upstream parity.
+
+## 2026-10-04 — engine-20261004110910-administering-d05f63 Canon031 external-package handoff contract
+
+### Factual baseline, market contour, and canon mapping
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on branch `engine/administering-post-rc-canon-composer`; baseline HEAD `458656cd8a3e4d7a9b399351adf5e321f4f1a180`, clean and synchronized with its configured upstream.
+- Read the authoritative execution specification, Administering root contracts, current Composer/runtime/gate surfaces, historical CanonScanning RED report, and existing CMCP journal. The historical 2026-09-29 failure is Canon052 consumer-local Gating duplication; current live Gating is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS.
+- Read mandatory Objecting, Cruding, Viewing, and Interfacing `AGENTS.md`, `README.md`, and `composer.json` contracts. Read Gating owner contracts plus the Administering profile/rule-set and Canonization authoritative `Canon031PhpDocCoverageRule` and `Canon052GatingIntegrationRule`.
+- Objecting system-field ownership, Cruding generic CRUD ownership/EasyAdmin exception, Viewing rendering ownership, and Interfacing shell/template ownership remain unchanged. No sibling implementation is moved into Administering.
+- Code Memory scope resolution reports `CODE_MEMORY_SCOPE_SCRIPT_NOT_DECLARED`; no memory/roadmap graph is invented as acceptance evidence.
+- Market/maturity contour: mature Symfony admin stacks enforce action authorization server-side and mature developer portals separate central permission policy from plugin/backend enforcement while exposing structured audit evidence. RC-critical maturity for Administering is deterministic governance/handoff contracts and independently understandable operator entrypoints; richer approval, explainability, audit UX, and broad coverage uplift remain growth work.
+- Current Canon031 is warning-level at 337/687 documented classes (49.1%) and 70/1010 contract methods (6.9%). The selected bounded target is `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleCommand`, whose class, `configure()`, and `execute()` are current representative weak symbols.
+- Canon040 and Canon042 are warning-level coverage programs and are not promoted into a hard blocker. No browser/mobile/UI surface is selected, so runtime restart, cohort browser execution, and screenshots are not applicable unless scope changes.
+
+### Selected work and acceptance plan
+
+- Add meaningful semantic PHPDoc for the command responsibility, CLI option contract, and fail-closed execution/exit semantics without altering command name, options, report schema, generated artifacts, or runtime behavior.
+- Run changed-PHP lint, Composer validation, PHPStan, CS dry-run, PHPUnit, YAML/container lint, architecture/Gating checks, refresh PHPUnit coverage evidence, and run fresh post-mutation Inspecting.
+- If acceptance is green, integrate only the coherent command-documentation plus CMCP journal block and publish the current branch.
+
+### Implementation and acceptance
+
+- Added semantic class/configure/execute PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleCommand`; no executable statements, CLI options, schemas, output paths, or exit semantics changed.
+- Immediate Gating confirmation moved the task-owned Canon031 contribution from 337/687 classes and 70/1010 contract methods to 338/687 and 72/1010 while retaining 0 failed rules.
+- A concurrent documentation-only edit appeared in `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleValidateCommand.php` after this task's dry-run. It is preserved as independently owned work and excluded from this task's commit. The later combined-tree gate reports 339/687 classes and 74/1010 methods.
+- Verification: changed-PHP lint GREEN; `composer validate --strict --check-lock` GREEN; PHPStan GREEN; PHPUnit GREEN (154 tests, 704 assertions); YAML lint GREEN; container lint GREEN; architecture guard suite GREEN; refreshed path coverage GREEN and Canon040 now reports measured debt instead of stale evidence; Gating GREEN with 71 rules / 0 failed / 3 warning / 10 skipped.
+- `composer cs:check` is not green on the combined dirty tree solely because the concurrent validator edit has fixer-reported line-ending/comment-alignment differences. This task does not rewrite that independently owned file merely to obtain a clean aggregate style check.
+- Fresh post-mutation Inspecting completed with 0 PHPStan errors and 104 medium structural observations (no autofixes). The task-owned handoff command is reported only for pre-existing long-method maintainability observations; no new high-severity/error finding or behavior regression is reported.
+- Canon031, Canon040, and Canon042 remain warning-level growth/debt programs. Current Canon040 evidence is fresh at 14.5% lines, 10.2% methods, and 53.7% branches; Canon042 remains stale/low coverage and is outside this non-UI documentation slice.
+- No user-observable UI changed, so runtime restart, cohort browser verification, Playwright/Panther execution, and new visual artifacts are not applicable to this change.
+
+Что имеем? This task materially improved one current Canon031 command contract, all hard Gating rules remain GREEN, runtime/static/tests/container/architecture checks are GREEN, and fresh Inspecting shows no error-level regression.
+Что осталось? Commit only `CMCP_CHANGELOG.md` plus the task-owned handoff command, publish the branch, and verify final branch/upstream state while preserving the concurrent validator edit.
+
 ## 2026-10-04 — engine-20261004103321-administering-7b1ae3 Canon031 owner-package apply-script contract
 
 ### Baseline, dependency contour, canon mapping, and workstreams
