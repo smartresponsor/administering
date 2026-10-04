@@ -24,6 +24,31 @@
 
 Что осталось? Run changed-PHP lint, Composer validation, PHPUnit/PHPStan/CS/Symfony/architecture/Gating, fresh post-mutation Inspecting, then integrate only the coherent source+journal block if all applicable hard gates are green.
 
+### Acceptance evidence
+
+- Changed-PHP lint: GREEN for `src/Command/Config/AdministrationConfigValidateCommand.php`.
+- `composer validate --strict --check-lock`: GREEN.
+- Aggregate `composer quality`: GREEN, including Composer validation, YAML lint (13 files), Symfony container lint, PHPStan (730 files / 0 errors), PHP-CS-Fixer dry-run (0/730 fixable), PHPUnit (154 tests / 704 assertions), and live full-profile Gating.
+- Repository architecture guard suite: GREEN — all nine checks pass.
+- Live Gating inside the successful aggregate quality run confirms 0 failed rules; Canon014 executable responsibility, Canon021 CRUD ownership, Canon022 dependency baseline and Canon052 Gating integration all PASS. Canon031/040/042 remain warning-level growth debt; current Canon040 evidence is 14.5% lines / 10.2% methods / 53.7% branches.
+- Fresh post-mutation Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-094048.json`. Result: 104 medium findings, 0 high, PHPStan 0 errors, max complexity 21. The supplied baseline contained 114 medium findings and the original `AdministrationConfigValidateCommand::execute()` complexity-16 finding; that selected finding is absent from the fresh report.
+- Initial direct Gating/Inspecting calls hit transient Console MCP upstream 502 responses; later successful aggregate Gating and fresh Inspecting receipts supersede those transport failures. No verifier result is inferred from a failed call.
+- No user-observable UI/navigation/form/browser/mobile surface changed, so runtime restart, Panther/Playwright cohort execution and screenshots are not applicable to this source-only command refactor.
+
+Что имеем? The selected config-validation orchestration hotspot is removed, all applicable deterministic hard gates are GREEN, and fresh Inspecting independently confirms the targeted complexity finding is gone with zero high findings.
+
+Что осталось? Integrate exactly the coherent config-command refactor and this task journal, push the current branch, and verify final clean HEAD/upstream parity. Canon031/040/042 remain explicit non-blocking growth debt.
+
+### Integration reconciliation
+
+- During final Git inspection, another authorized Administering run integrated the already-verified config-command refactor as commit `064d941` (`refactor: simplify config validation command`) and pushed it to `origin/engine/administering-post-rc-canon-composer`.
+- Current branch state after that integration: HEAD `064d9411ebc17ffc8080f575e8af52f391984ae9`, ahead 0 / behind 0; the only remaining dirty path is this task-specific `CMCP_CHANGELOG.md` entry.
+- This run does not duplicate, reset, amend, or overwrite the published source commit. The remaining integration tail is journal-only.
+
+Что имеем? The verified source remediation is already committed and upstream-synchronized without duplicate integration; only this execution journal remains local.
+
+Что осталось? Commit and push this journal-only record, then confirm a clean worktree and final upstream parity.
+
 ## 2026-10-04 — engine-20261004092214-administering-d08ef3 RC reconnaissance and config-validation cohesion
 
 ### Factual baseline and market/canon split
