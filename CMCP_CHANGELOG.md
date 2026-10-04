@@ -1,5 +1,47 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004090708-administering-6edeb4 RC reconnaissance and external-package pipeline hardening
+
+- Baseline: branch `engine/administering-post-rc-canon-composer`, initial HEAD `facd9c126cc1ac781e535fcdeb9676e8fe12fe87`, upstream aligned; preserved pre-existing in-scope edits in this journal and `src/Command/AdministrationOwnerConfigurationToolExternalPackagePipelineCommand.php` rather than resetting concurrent autonomous work.
+- Read target contracts and consumed supplied 2026-09-29 CanonScanning Gating/Inspecting evidence before remediation. The historical RED is Canon052 consumer-local Gating-copy drift; current repository evidence records that contour as already remediated and live Gating hard-green with only Canon031/040/042 warning debt.
+- Mandatory dependency contour read: Objecting, Cruding, Viewing, and Interfacing `AGENTS.md`, `README.md`, and `composer.json`; policy contour read: Gating profile/rule-set plus Canonization textual Canon014/021/031/040/042/052 rules. This work remains an Administering CLI orchestration concern; no generic CRUD, Objecting field, rendering, shell, or sibling-runtime responsibility moves into Administering.
+- Fresh reusable Inspecting evidence immediately preceding this task: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-090048.json` reports PHPStan 0 errors, 106 medium findings, 0 high findings, max complexity 21. It still identifies `AdministrationOwnerConfigurationToolExternalPackagePipelineCommand::execute()` as a 179-line/complexity-18 candidate because it predates the uncommitted decomposition now present in the worktree.
+- Market/enterprise comparison: EasyAdmin distinguishes menu visibility from action authorization; Backstage separates central policy decisions from backend/plugin enforcement. RC implication: preserve explicit command-step failure boundaries, deterministic validation ownership, auditable outputs, and non-destructive handoff semantics. Growth remains separate.
+- RC-critical workstream: finish the Canon014-oriented pipeline decomposition, remove duplicate PHPDoc from extraction, add regression tests for ordered dispatch plus stop/continue failure semantics, then run deterministic lint/tests/static analysis/CS/Composer/Symfony/Gating and post-mutation Inspecting.
+- Growth workstream (non-blocking): richer pipeline resumability/provenance, policy-driven step catalogs, operator-facing diagnostics and visual workflow surfaces.
+- UI/runtime applicability: CLI/test/journal only; no browser/mobile semantics changed, so Panther/Playwright/screenshots are not acceptance evidence and the managed Symfony runtime will not be restarted.
+- Current status: implementation/testing in progress; final gate, Git integration, and post-integration state pending.
+
+## 2026-10-04 — engine-20261004085503-administering-e0a419 external package pipeline cohesion
+
+### Factual baseline and market/canon mapping
+
+- Resolved the authoritative workspace exclusively through Console MCP at `D:\\PhpstormProjects\\www\\Administering`; branch `engine/administering-post-rc-canon-composer` starts clean and upstream-aligned at `facd9c126cc1ac781e535fcdeb9676e8fe12fe87`.
+- Read the authoritative execution specification, current Administering root/runtime/package/test/journal surfaces, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner profile/rule-set, and Canonization textual Canon014/021/031/040/042/052 rules. `MANIFEST.json` is not present in the target root and is not invented.
+- Historical CanonScanning Canon052 RED is stale for the live tree. Current `composer gate` is GREEN at hard severity: 71 rules, 0 failed, 3 warnings, 10 skipped; Canon014, Canon021 and Canon052 pass. Warning-only debt remains Canon031 PHPDoc, Canon040 executable coverage, and Canon042 behavioral/UI coverage.
+- Fresh Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-090048.json`: 106 medium findings, 0 high, PHPStan 0 errors, max cyclomatic complexity 21. Selected current executable hotspot: `AdministrationOwnerConfigurationToolExternalPackagePipelineCommand::execute()` at 179 lines / complexity 18.
+- Current EasyAdmin guidance keeps authorization server-side and warns that menu visibility alone does not secure actions; Backstage similarly separates centralized policy decisions from plugin/backend enforcement. For Administering, the RC-critical stream is deterministic, fail-closed governance orchestration with thin executable entrypoints. Growth remains broader PHPDoc/test/UI coverage and richer operator UX without moving generic CRUD, rendering, shell, or system-field ownership into Administering.
+- Canon014 maps directly to the selected pipeline command: stable pipeline definition, command dispatch/reporting, artifact persistence, and human rendering can be delegated to focused private methods while keeping the command as orchestrator. Canon021 remains unchanged; no generic CRUD is introduced. Canon052 remains package-owned; no consumer `.gating/` policy/runtime copy is created.
+
+### Selected work and acceptance plan
+
+- Decompose the external-package pipeline command without changing command name/options, step order, option propagation, fail-fast/continue-on-failure semantics, report schema, JSON output, or generated artifact paths.
+- Add focused regression coverage for successful ordered dispatch plus failure stopping/continuation where practical, because the selected command currently has no dedicated test class.
+- Run changed-PHP lint, PHPUnit, PHPStan, CS dry-run, Composer validation, YAML/container/architecture/Gating checks, and fresh post-mutation Inspecting. No browser/mobile/UI source is selected, so runtime restart, cohorts, Playwright/Panther screenshots and visual artifacts are not applicable unless scope changes.
+
+### Implementation and acceptance evidence
+
+- Decomposed `AdministrationOwnerConfigurationToolExternalPackagePipelineCommand::execute()` into focused private helpers for stable step definitions, child-command dispatch, report persistence, and human rendering. Public command name/options, step ordering, option propagation, fail-fast/continue-on-failure behavior, report schema, artifact paths, JSON behavior, and exit semantics are preserved.
+- A concurrent untracked `AdministrationOwnerConfigurationToolExternalPackagePipelineCommandTest` appeared during verification. Its first observed revision used the removed Symfony 8 `Application::add()` API and made the first coverage run fail; before review, the concurrent writer corrected it to `addCommand()`. The current file is coherent in-scope value and is preserved: it verifies all six commands dispatch in order and both stop/continue failure semantics.
+- Changed-PHP lint: GREEN for source and regression test. `composer test`: GREEN — 154 tests / 704 assertions. `composer test:coverage`: GREEN — 154 tests / 704 assertions with fresh Xdebug path coverage. `composer stan`: GREEN — 730 files / 0 errors. `composer cs:check`: GREEN — 0 / 730 fixable. Composer strict/check-lock validation, YAML lint (13 files), Symfony container lint, and the full architecture guard suite are GREEN.
+- Post-change live Gating: GREEN at hard severity — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon014, Canon021 and Canon052 PASS. Fresh Canon040 evidence is 14.5% lines / 10.3% methods / 53.7% branches; Canon031 and Canon042 remain warning-level growth debt.
+- Final fresh Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-092051.json`: 105 medium / 0 high, PHPStan 0 errors, 20 complexity findings. Baseline was 106 medium / 0 high with 21 complexity findings; the selected pipeline `execute()` long-method and complexity-18 findings are absent. The remaining `pipelineDefinitions()` 84-line finding is static orchestration data and has no complexity finding.
+- Transient Console MCP 502/capacity responses were execution-plane transport/admission events; later successful receipts supersede them. No browser/mobile/UI behavior changed, so runtime restart, cohorts, Panther/Playwright screenshots, and visual artifacts are not applicable.
+
+Что имеем? The selected Canon014/Inspecting executable hotspot is removed, its failure semantics are regression-covered, every applicable deterministic hard gate is GREEN, and fresh Inspecting confirms a net quality improvement.
+
+Что осталось? Integrate exactly the coherent pipeline source, its regression test, and this task journal record; push the current branch and verify final clean HEAD/upstream parity. Canon031/040/042 remain explicit non-blocking growth debt.
+
 ## 2026-10-04 — engine-20261004083306-administering-e9ea19 runtime-scope lock normalization cohesion
 
 ### Factual baseline and target-to-canon mapping
@@ -1431,3 +1473,10 @@ Verification:
 - No browser/mobile/user-observable UI changed; runtime restart, cohort UI checks, screenshots, and visual artifacts are not applicable.
 
 ### Concurrent integration reconciliation
+### Acceptance update
+
+- Material implementation completed: pipeline orchestration decomposition plus dedicated ordered-dispatch and fail-fast/continue-on-failure regression coverage; the Symfony 8 test harness was corrected from removed `Application::add()` to `addCommand()` after the first test run exposed it.
+- Deterministic gates are GREEN: Composer strict/check-lock, changed-PHP lint, PHPUnit 154 tests / 704 assertions, PHPStan 730 files / 0 errors, CS 0/730 fixable, YAML 13 files, Symfony container, and live Gating 71 rules / 0 failed / 3 warnings / 10 skipped. Canon014, Canon021 and Canon052 pass; Canon031/040/042 remain warning-level growth debt.
+- Fresh post-mutation Inspecting `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-091737.json`: 105 medium / 0 high, PHPStan 0, max complexity 21. The prior pipeline `execute()` long-method and complexity-18 findings are gone; complexity findings reduced from 21 to 20. The remaining pipeline-local observation is the declarative `pipelineDefinitions()` method at 84 lines.
+- No route/template/JavaScript/navigation/form/browser/mobile/runtime-composition surface changed; runtime restart, Panther/Playwright cohorts and screenshots are not applicable.
+- The earlier `Current status` line above is superseded by this acceptance update: implementation and applicable verification are complete; Git integration/post-integration parity are the only remaining tail.
