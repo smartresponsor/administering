@@ -1,5 +1,39 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004095846-administering-de9b6e Canon031 command-contract documentation
+
+### Factual baseline and canon mapping
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on branch `engine/administering-post-rc-canon-composer`, clean and upstream-aligned at baseline HEAD `88631dd34147cc271638f89e80c9d271dbf8aaa5`.
+- Read the authoritative task specification, Administering root/runtime/package/test contracts, supplied CanonScanning RED evidence, and current Composer/Gating state. The historical RED is Canon052 from a copied consumer-local Gating engine; live Gating on the current tree is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS.
+- Read mandatory Objecting, Cruding, Viewing and Interfacing root contracts plus available manifests; Interfacing has no `MANIFEST.json`. Read Gating owner contracts and Canonization normative `Canon031PhpDocCoverageRule` and `Canon052GatingIntegrationRule` plus the guard matrix.
+- Canon031 currently reports 333/687 documented classes (48.5%) and 62/1010 documented contract methods (6.1%). Canon040 and Canon042 remain warning-level coverage programs; no thresholds are weakened.
+- Canon021 remains unchanged: generic application CRUD stays Cruding-owned while EasyAdmin back-office surfaces remain the explicit administrative exception. Canon052 remains package-owned and consumer `.gating/` remains artifact-only.
+- Market/enterprise baseline favors explicit, independently testable administration boundaries and meaningful operator-facing contracts. RC-critical work selected: document concrete audit/discovery command responsibilities surfaced by Canon031 without changing runtime behavior. Growth remains broad PHPDoc/test/UI coverage and richer operator UX.
+
+### Material implementation
+
+- Added meaningful class/configure/execute PHPDoc to `AdministrationAdminSurfaceMirrorAuditCommand` and `AdministrationEasyAdminCrudBoundaryAuditCommand`.
+- Documentation states the actual audit responsibility and failure semantics; it does not duplicate implementation mechanics or invent a new architecture layer.
+- No route, template, JavaScript, form, navigation, browser/mobile behavior, persistence mapping, or runtime composition changed; runtime restart and visual evidence are not applicable.
+
+Что имеем? Current hard canon is GREEN and this pass materially reduces current Canon031 debt on two Administering-owned command contracts.
+
+Что осталось? Run deterministic Composer/static/test/Gating acceptance, record the measured Canon031 delta, then integrate and publish only this coherent source-documentation + orchestration-journal block.
+
+### Acceptance evidence
+
+- The first `composer quality` attempt reached GREEN Composer validation, YAML lint, Symfony container lint and PHPStan, then stopped at PHP-CS-Fixer because the two touched files required canonical line-ending/comment alignment. Repository-owned `composer cs:fix` corrected exactly those two files.
+- Repeated `composer quality`: GREEN — Composer validation, 13 YAML files, Symfony container, PHPStan 730/730 with 0 errors, PHP-CS-Fixer 0/730 fixable, PHPUnit 154 tests / 704 assertions, and the full Gating profile all pass.
+- Canon031 improved from classes 333/687 (48.5%) and contract methods 62/1010 (6.1%) to classes 335/687 (48.8%) and contract methods 66/1010 (6.5%). The two documented audit commands disappeared from the representative uncovered-symbol list.
+- `composer test:coverage`: GREEN — 154 tests / 704 assertions with fresh Xdebug path-coverage evidence, preventing this production-source documentation change from leaving Canon040 evidence stale.
+- A standalone post-coverage `composer gate` retry first received an upstream 502, then a timeout, and the asynchronous fallback was capacity-deferred under `ENGINE_BACKLOG_HIGH`; none of those transport/admission events is claimed as a verifier result. The successful aggregate `composer quality` Gating receipt already verifies the exact source mutation at 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS. The later coverage refresh changes ignored generated evidence only, not source.
+- Canon040 quantitative coverage and Canon042 behavioral/UI coverage remain warning-level growth debt. No UI/browser/mobile behavior changed, so runtime restart, cohort browser checks, screenshots and visual artifacts are not applicable.
+
+Что имеем? The selected Canon031 debt is measurably reduced, aggregate deterministic acceptance is GREEN, Canon052 remains hard-green, and coverage evidence is current.
+
+Что осталось? Commit exactly the two documented commands plus this journal, push the current branch, and verify final clean worktree and upstream parity.
+
 ## 2026-10-04 — engine-20261004080925-administering-28a096 RC config-validation acceptance
 
 ### Factual baseline and work selection

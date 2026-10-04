@@ -15,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
     name: 'administering:ea-crud:boundary-audit',
     description: 'Audits EasyAdmin CRUD boundaries: native CRUD templates, SQLite/system entities, and Symfony-form-safe actions.'
 )]
+/**
+ * Audits EasyAdmin CRUD surfaces without transferring generic application CRUD ownership from Cruding.
+ */
 final class AdministrationEasyAdminCrudBoundaryAuditCommand extends Command
 {
     public function __construct(
@@ -24,11 +27,17 @@ final class AdministrationEasyAdminCrudBoundaryAuditCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the optional JSON report mode used by automated boundary verification.
+     */
     protected function configure(): void
     {
         $this->addOption('json', null, InputOption::VALUE_NONE, 'Print machine-readable JSON.');
     }
 
+    /**
+     * Runs the EasyAdmin boundary scan and fails when administrative ownership invariants are broken.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $report = $this->scanner->scan($this->projectDir);
