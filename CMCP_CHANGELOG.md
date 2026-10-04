@@ -1,5 +1,35 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004102255-administering-f68504 Canon031 owner-tool discovery contract
+
+### Factual baseline, market contour, and canon mapping
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on `engine/administering-post-rc-canon-composer` with a clean worktree. The supplied 2026-09-29 RED failed historical Canon052 consumer-local Gating duplication; current live Gating is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS.
+- Read Administering repository/runtime/package/test contracts, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner profile/rule-set, and Canonization textual Canon014/021/031/040/042/052 rules plus the guard matrix.
+- Live Canon031 baseline is classes 335/687 (48.8%) and contract methods 66/1010 (6.5%). Canon040 remains HIGH_TEST_DEBT at 14.5% lines / 10.2% methods / 53.7% branches; Canon042 evidence is stale and low for functional/UI inventories. No threshold is weakened or replaced with synthetic evidence.
+- Current EasyAdmin guidance keeps backend/action authorization in Symfony Security and distinguishes menu visibility from action authorization; Backstage exposes granular permission policy and structured audit events. RC maturity therefore favors explicit server-side governance, deterministic operator evidence, and independently understandable command contracts.
+- RC-critical workstream: reduce current Canon031 semantic documentation debt on an Administering-owned operator discovery command without changing behavior, package boundaries, routes, persistence, or UI. Growth remains broader Canon031 completion, Canon040 executable coverage, Canon042 functional/UI coverage, and richer operator explainability/approval UX.
+- `AdministrationOwnerConfigurationToolDiscoveryCommand` is a representative Canon031 weak symbol. Its implementation already has bounded discovery/report/fail semantics, so meaningful class/configure/execute PHPDoc clarifies the current contract rather than inventing behavior.
+
+### Material implementation
+
+- Added semantic class documentation describing the read-only owner-tool discovery boundary, naming enforcement, and deterministic human/JSON evidence surface.
+- Added meaningful `configure()` and `execute()` contract documentation; runtime code, options, outputs, exit semantics, dependencies, routes, persistence, and UI remain unchanged.
+- No browser/mobile/user-observable UI surface changed; runtime restart, cohort browser execution, screenshots, and visual artifacts are not applicable.
+
+Что имеем? Current hard canon is GREEN, the historical Canon052 RED is superseded by live evidence, and the selected Canon031 debt has a bounded documentation-only implementation.
+Что осталось? Run deterministic quality/Gating acceptance, measure the Canon031 delta, then integrate and publish only the coherent source-documentation + orchestration-journal block.
+
+### Acceptance
+
+- `composer quality`: GREEN after repository-owned `cs:fix` normalized the touched PHP file; Composer validation, YAML/container lint, PHPStan 730/730, CS, PHPUnit 154 tests / 704 assertions, and Gating all pass.
+- Canon031 improved from 335/687 classes (48.8%) and 66/1010 contract methods (6.5%) to 336/687 (48.9%) and 68/1010 (6.7%). The touched discovery command is no longer in the representative weak-symbol list.
+- `composer test:coverage`: GREEN, refreshing canonical evidence after the source touch; Canon040 returns to measured 14.5% lines / 10.2% methods / 53.7% branches rather than stale-evidence status.
+- Post-mutation Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-103434.json`: phpstan errors 0; 104 medium findings, 0 high, max complexity 21. The documentation-only change did not worsen the prior 104-medium structural baseline.
+
+Что имеем? Deterministic acceptance is GREEN and the selected Canon031 metric improved exactly as intended; no UI evidence is applicable.
+Что осталось? Commit/push the coherent change and verify final worktree, HEAD, upstream, and publish state.
+
 ## 2026-10-04 — engine-20261004095846-administering-de9b6e Canon031 command-contract documentation
 
 ### Factual baseline and canon mapping

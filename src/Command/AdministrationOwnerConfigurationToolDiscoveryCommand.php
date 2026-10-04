@@ -17,6 +17,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:discover',
     description: 'Reports owner-provided configuration tools before they are materialized into the Administering SQLite/EasyAdmin projection.',
 )]
+/**
+ * Audits owner-provided configuration tool metadata before Administering materializes its operator projection.
+ *
+ * The command keeps discovery read-only, can enforce owner-side service naming, and exposes the same
+ * deterministic inventory as either human output or a JSON handoff artifact for repository governance.
+ */
 final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
@@ -25,6 +31,9 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares filtering, machine-output, naming-enforcement, and artifact options for discovery runs.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +43,9 @@ final class AdministrationOwnerConfigurationToolDiscoveryCommand extends Command
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the discovery report to a JSON file path.');
     }
 
+    /**
+     * Discovers owner tool providers, publishes the requested report, and fails when enforced naming invariants are violated.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
