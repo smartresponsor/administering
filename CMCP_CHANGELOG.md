@@ -1190,3 +1190,35 @@ Verification:
 Что имеем? The bounded owner-validator complexity remediation is implemented, regression-covered, deterministically verified, freshly inspected, committed, and published.
 
 Что осталось? Only final post-journal integration verification. The remaining Canon031/040/042 warnings are growth/test-debt backlog and are not regressions introduced by this task.
+
+## 2026-10-04 — engine-20261004074435-administering-80e5af acceptance and integration checkpoint
+
+### Factual reconciliation
+
+- Re-read the authoritative execution specification and current Console-MCP workspace state rather than relying on the historical CanonScanning snapshot alone.
+- Re-read the mandatory Objecting, Cruding, Viewing, and Interfacing dependency contracts, the Gating Administering profile/rule-set, Canonization guard matrix and relevant textual rules, the historical RED Gating report, and the supplied Inspecting baseline.
+- The historical hard Canon052 failure is no longer reproducible: live Gating reports 71 rules with 0 failed; Canon052 is GREEN. Canon031, Canon040, and Canon042 remain warning-level documentation/coverage debt.
+- The selected owner-configuration validator remediation was already present as the current coherent repository change during this execution window. Its public diagnostic order/severity contract is covered by the dedicated regression test.
+
+### Market / maturity split
+
+- Mature Symfony admin stacks such as EasyAdmin keep admin primitives, authorization hooks, and testable action behavior explicit; developer-portal/admin platforms such as Backstage similarly separate plugin/tool ownership from centralized governance and permission policy.
+- RC-critical workstream: preserve thin, deterministic validation/orchestration boundaries, hard-green package/canon enforcement, and evidence-backed failure behavior without duplicating Cruding, Viewing, Interfacing, or Objecting responsibilities.
+- Growth workstream: semantic PHPDoc coverage, broad executable coverage, functional/UI cohort coverage, richer operator explainability, approval/audit UX, and the remaining medium Inspecting backlog stay separate from this bounded RC-critical repair.
+
+### Verification evidence
+
+- Changed PHP lint: PASS for the validator and its regression test.
+- `composer validate --strict --check-lock`: PASS.
+- PHPUnit: PASS — 149 tests / 672 assertions.
+- PHPStan: PASS — 727/727 files, 0 errors.
+- PHP-CS-Fixer dry-run: PASS — 0/727 fixable.
+- YAML lint: PASS — 13 files.
+- Symfony container lint: PASS.
+- Architecture guard suite: PASS.
+- Gating: PASS — 71 rules, 0 failed, 3 warnings, 10 skipped.
+- Aggregate `composer quality` was not started because the managed execution plane admitted light work only under `ENGINE_BACKLOG_HIGH`; its deterministic constituent checks were executed separately and are GREEN.
+- Fresh Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-075156.json`: 112 medium findings, 0 high, PHPStan 0 errors, max complexity 23. Both prior owner-validator `validate()` findings are absent, reducing the supplied baseline from 114 to 112 findings.
+- No browser/mobile/user-observable UI changed; runtime restart, cohort UI checks, screenshots, and visual artifacts are not applicable.
+
+### Concurrent integration reconciliation
