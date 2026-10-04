@@ -18,8 +18,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-pipeline',
     description: 'Runs the non-destructive owner-side external handoff generation and validation pipeline.',
 )]
+/**
+ * Orchestrates the non-destructive external-package handoff pipeline for owner configuration tools.
+ *
+ * The command dispatches manifest, validation, overlay-plan, apply-script, and handoff-bundle stages in deterministic order while preserving each child command's explicit failure contract. It can stop on the first failed stage or collect all failures without applying changes to neighboring repositories.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand extends Command
 {
+    /**
+     * Defines artifact locations, reporting modes, tolerance switches, and pipeline failure policy.
+     *
+     * Options are forwarded only to stages that own them, while `continue-on-failure` controls orchestration rather than weakening any child validation contract.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +44,11 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
             ->addOption('continue-on-failure', null, InputOption::VALUE_NONE, 'Continue running later steps after a failed step and report all failures.');
     }
 
+    /**
+     * Runs the ordered handoff pipeline and publishes deterministic human or JSON evidence.
+     *
+     * Execution creates only the requested artifact directories and files, returns a failure status when dispatch or any stage fails, and never applies the generated overlay to neighboring repositories.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

@@ -1,5 +1,50 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004121851-administering-50b9bf — Canon031 external-package pipeline contract documentation
+
+### Reconnaissance and baseline
+- Current branch/HEAD: `engine/administering-post-rc-canon-composer` at `c1297c8c53f3540969af2874cba720ac6865605a`; worktree clean and synchronized with `origin/engine/administering-post-rc-canon-composer` (`ahead=0`, `behind=0`).
+- Read target contracts and state: `AGENTS.md`, `README.md`, `composer.json`, `CMCP_CHANGELOG.md`, live Gating output, and `src/Command/AdministrationOwnerConfigurationToolExternalPackagePipelineCommand.php`.
+- Read mandatory application contour contracts from Objecting, Cruding, Viewing, and Interfacing (`AGENTS.md`, `README.md`, `composer.json`) and the Administering Gating profile/rule-set plus Gating owner contracts.
+- Canonization rules consulted: `Canon031PhpDocCoverageRule.md` and `Canon052GatingIntegrationRule.md`. Target mapping: Canon031 applies to the public command class and its contract-significant `configure()`/`execute()` methods; Canon052 is already satisfied by the current consumer integration and artifact-only `.gating/` posture.
+- Historical RED evidence (`20260929-030002/.../Administering.json`) failed Canon052, but current `composer gate` is GREEN for Canon052 and has `0 failed`; the historical failure is stale. Current Canon031 remains a warning at classes `342/687 (49.8%)`, methods `80/1010 (7.9%)`.
+- Historical Inspecting evidence at the supplied fingerprint reported 114 medium findings and specifically flagged the pre-refactor pipeline `execute()` as long/complex. The current implementation is already decomposed into `pipelineDefinitions()`, `runPipeline()`, rendering/report helpers, so those old line/complexity observations are not a safe current remediation target.
+- Code-memory scope resolution was attempted through the repository-declared contract and returned `CODE_MEMORY_SCOPE_SCRIPT_NOT_DECLARED`; no graph mutation is available through that repository surface.
+
+### Opening maturity mixin
+- Mature admin/control-plane expectations relevant to this component are deterministic orchestration, explicit stage ownership, fail-closed exit status, machine-readable evidence, non-destructive preview/handoff workflows, and a human-review boundary before cross-repository application.
+- The current external-package pipeline already follows those safeguards: ordered child-command dispatch, per-stage validation, JSON evidence, explicit tolerance switches, and generation of a non-destructive apply script rather than implicit neighboring-repository mutation.
+- RC-critical workstream: document the command-level orchestration and failure/non-destructive contracts that are currently implicit in code and are explicitly reported as missing by Canon031. This is documentation hardening only; no runtime behavior, UI, route, entity, or dependency change is justified.
+- Growth workstream (post-RC): broader test-coverage uplift (Canon040), refreshed behavioral/UI evidence (Canon042), and selective current-fingerprint complexity remediation where Inspecting proves remaining hotspots. These do not block this bounded Canon031 pass.
+
+### Selected implementation
+- Add meaningful semantic PHPDoc to `AdministrationOwnerConfigurationToolExternalPackagePipelineCommand` and its contract-significant `configure()` and `execute()` methods.
+- Preserve existing Symfony Console behavior, child-command order, option forwarding, failure semantics, artifact paths, and neighboring-repository safety boundary.
+
+### Risks and verification gates
+- Risk is limited to documentation drift; comments must describe only behavior demonstrated by the current implementation.
+- Deterministic acceptance: `composer gate`, Composer validation, code style/static analysis/tests via repository-declared quality scripts, and post-mutation Inspecting because production PHP source changed.
+- Behavioral/UI/runtime evidence is not applicable unless source mutation escapes PHPDoc-only scope; no browser-visible surface is selected.
+
+Что имеем? Clean synchronized baseline, current Canon052 GREEN, current Canon031 weak-symbol evidence, canonical rule mapping, and one bounded documentation-only RC work item.
+Что осталось? Apply semantic PHPDoc, verify deterministic gates plus fresh Inspecting, reconcile Git state, commit/publish if green and safe.
+
+### Implementation and acceptance
+- Added semantic class PHPDoc documenting deterministic orchestration, failure policy, and the non-destructive neighboring-repository boundary.
+- Added semantic `configure()` PHPDoc documenting artifact/report/tolerance option ownership and the orchestration-only meaning of `continue-on-failure`.
+- Added semantic `execute()` PHPDoc documenting ordered dispatch, deterministic evidence output, failure status, and the fact that the generated overlay is never applied by this command.
+- No executable statements, signatures, routes, service wiring, entities, templates, frontend assets, or runtime configuration changed.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; refreshed canonical coverage evidence.
+- `composer quality`: GREEN; Composer/YAML/container lint, PHPStan, PHP-CS-Fixer check, PHPUnit, and Gating all passed.
+- Post-change Gating: `0 failed`, `3 warning`, `10 skipped`; Canon052 remains GREEN. Canon031 improved from classes `342/687 (49.8%)` to `343/687 (49.9%)` and contract methods `80/1010 (7.9%)` to `82/1010 (8.1%)`; the pipeline class/configure/execute weak symbols disappeared from representative evidence.
+- Fresh Inspecting report: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-122909.json`; PHPStan `0 errors`, 104 medium observational findings, 0 high/critical. The historical pipeline `execute()` long-method/high-complexity finding is no longer present; current pipeline-specific observation is `pipelineDefinitions()` at 84 lines and is non-blocking for this PHPDoc-only Canon031 slice.
+- Behavioral/UI evidence: not applicable because the only production-source mutation is PHPDoc; no user-observable behavior or browser/mobile flow changed.
+
+Что имеем? Coherent Canon031 documentation hardening with measurable coverage improvement and green deterministic quality gates; no behavioral delta.
+Что осталось? Inspect final diff/worktree and publish this coherent slice; broader Canon031/Canon040/Canon042 debt remains a subsequent RC workstream rather than a blocker for this bounded slice.
+
+
 ## 2026-10-04 — engine-20261004121209-administering-2681e3 Canon031 overlay-plan reconciliation
 
 ### Factual baseline, market contour, and canon mapping
