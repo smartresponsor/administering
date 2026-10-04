@@ -12,6 +12,14 @@
 - UI/runtime applicability: CLI/test/journal only; no browser/mobile semantics changed, so Panther/Playwright/screenshots are not acceptance evidence and the managed Symfony runtime will not be restarted.
 - Current status: implementation/testing in progress; final gate, Git integration, and post-integration state pending.
 
+### Acceptance update
+
+- Material implementation completed: pipeline orchestration decomposition plus dedicated ordered-dispatch and fail-fast/continue-on-failure regression coverage; the Symfony 8 test harness was corrected from removed `Application::add()` to `addCommand()` after the first test run exposed it.
+- Deterministic gates are GREEN: Composer strict/check-lock, changed-PHP lint, PHPUnit 154 tests / 704 assertions, PHPStan 730 files / 0 errors, CS 0/730 fixable, YAML 13 files, Symfony container, and live Gating 71 rules / 0 failed / 3 warnings / 10 skipped. Canon014, Canon021 and Canon052 pass; Canon031/040/042 remain warning-level growth debt.
+- Fresh post-mutation Inspecting `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-091737.json`: 105 medium / 0 high, PHPStan 0, max complexity 21. The prior pipeline `execute()` long-method and complexity-18 findings are gone; complexity findings reduced from 21 to 20. The remaining pipeline-local observation is the declarative `pipelineDefinitions()` method at 84 lines.
+- No route/template/JavaScript/navigation/form/browser/mobile/runtime-composition surface changed; runtime restart, Panther/Playwright cohorts and screenshots are not applicable.
+- The earlier `Current status` line above is superseded by this acceptance update: implementation and applicable verification are complete; Git integration/post-integration parity are the only remaining tail.
+
 ## 2026-10-04 — engine-20261004085503-administering-e0a419 external package pipeline cohesion
 
 ### Factual baseline and market/canon mapping
@@ -1473,10 +1481,3 @@ Verification:
 - No browser/mobile/user-observable UI changed; runtime restart, cohort UI checks, screenshots, and visual artifacts are not applicable.
 
 ### Concurrent integration reconciliation
-### Acceptance update
-
-- Material implementation completed: pipeline orchestration decomposition plus dedicated ordered-dispatch and fail-fast/continue-on-failure regression coverage; the Symfony 8 test harness was corrected from removed `Application::add()` to `addCommand()` after the first test run exposed it.
-- Deterministic gates are GREEN: Composer strict/check-lock, changed-PHP lint, PHPUnit 154 tests / 704 assertions, PHPStan 730 files / 0 errors, CS 0/730 fixable, YAML 13 files, Symfony container, and live Gating 71 rules / 0 failed / 3 warnings / 10 skipped. Canon014, Canon021 and Canon052 pass; Canon031/040/042 remain warning-level growth debt.
-- Fresh post-mutation Inspecting `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-091737.json`: 105 medium / 0 high, PHPStan 0, max complexity 21. The prior pipeline `execute()` long-method and complexity-18 findings are gone; complexity findings reduced from 21 to 20. The remaining pipeline-local observation is the declarative `pipelineDefinitions()` method at 84 lines.
-- No route/template/JavaScript/navigation/form/browser/mobile/runtime-composition surface changed; runtime restart, Panther/Playwright cohorts and screenshots are not applicable.
-- The earlier `Current status` line above is superseded by this acceptance update: implementation and applicable verification are complete; Git integration/post-integration parity are the only remaining tail.
