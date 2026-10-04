@@ -1,5 +1,91 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004123714-administering-333051 — Canon031 materialization-preview command contract
+
+### Reconnaissance, maturity mixin, and canon mapping
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` as the authoritative workspace on `engine/administering-post-rc-canon-composer`; the historical 2026-09-29 Canon052 RED was consumed before live verification.
+- Read current Administering root contracts/manifests/journal, the supplied Gating and Inspecting reports, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating Administering profile/rule-set, and Canonization textual `Canon031PhpDocCoverageRule.md` plus `Canon052GatingIntegrationRule.md`.
+- Live Gating is hard-green: 71 rules / 0 failed / 3 warnings / 10 skipped, with Canon052 PASS. Canon031 is the current semantic-documentation front; after a concurrent external-package-spec PHPDoc edit it measures 344/687 documented classes (50.1%) and 84/1010 documented contract methods (8.3%). Canon040/042 remain warning-level coverage programs.
+- A concurrent uncommitted `AdministrationOwnerConfigurationToolExternalPackageSpecCommand.php` documentation change appeared during this run and is explicitly preserved/excluded from task ownership.
+- Mature EasyAdmin practice keeps backend action authorization enforced through Symfony Security rather than menu visibility alone; Backstage-style control planes similarly separate central permission policy from plugin/resource enforcement. For Administering this favors explicit, deterministic operator contracts and auditable fail-closed commands rather than moving generic CRUD, rendering, shell, or system-field ownership into this component.
+- RC-critical workstream: add semantic class/configure/execute documentation to the independent `AdministrationOwnerConfigurationToolMaterializationPreviewCommand`, accurately documenting its preview-only classification, evidence-writing options, and fail-closed tolerance semantics without executable behavior changes.
+- Growth workstream: broader Canon031 completion, executable coverage (Canon040), behavioral/UI coverage (Canon042), and current-fingerprint medium Inspecting refactors remain separate and do not block this bounded contract-hardening slice.
+- UI/runtime applicability: no route, template, JavaScript, form, navigation, browser/mobile behavior, or runtime composition is selected; runtime restart, cohorts, and screenshots are not applicable unless scope changes.
+
+### Acceptance plan
+- Add semantic PHPDoc only to the materialization-preview command class plus `configure()` and `execute()`.
+- Run changed-PHP/static/style/test/Composer/Symfony/Gating acceptance, refresh PHPUnit coverage because production source changed, obtain fresh post-mutation Inspecting evidence, then integrate only the task-owned command+journal while preserving concurrent work.
+
+Что имеем? Current hard canon is GREEN, historical Canon052 is superseded by live evidence, and one independent current Canon031 weak-symbol cluster is selected without colliding with concurrent work.
+Что осталось? Apply the bounded documentation change, execute deterministic acceptance plus fresh Inspecting, reconcile Git ownership, and publish only the coherent task block when safe.
+
+### Implementation and acceptance
+- Added semantic class documentation describing the preview-only classification responsibility and the non-mutating EasyAdmin/SQLite/neighbor-repository boundary.
+- Added semantic `configure()` documentation for component filtering, JSON evidence output, and explicit empty/rejected tolerance controls.
+- Added semantic `execute()` documentation for deterministic accepted/rejected evidence, fail-closed default semantics, and non-materializing JSON persistence. No executable statement, CLI option, report schema, route, persistence mapping, service wiring, template, or browser/mobile behavior changed.
+- `composer test:coverage`: GREEN — 154 tests / 704 assertions; Canon040 evidence refreshed.
+- `composer quality`: GREEN — Composer validation, 13 YAML files, Symfony container lint, PHPStan 730/730 with 0 errors, PHP-CS-Fixer 0/730 fixable, PHPUnit 154 tests / 704 assertions, and Gating all pass.
+- Post-change Gating: 71 rules / 0 failed / 3 warnings / 10 skipped; Canon052 remains PASS. Canon031 improved from the concurrent live baseline 344/687 classes (50.1%) and 84/1010 contract methods (8.3%) to 345/687 (50.2%) and 86/1010 (8.5%); the materialization-preview class/configure/execute cluster disappeared from representative weak-symbol evidence.
+- Fresh post-mutation Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-124912.json`; PHPStan 0 errors, 104 medium findings, 0 high/autofixable, max complexity 21. The command's pre-existing 107-line / complexity-17 observations remain medium structural debt and are not disguised by this documentation-only pass.
+- No user-observable UI changed; managed runtime restart, Panther/Playwright cohorts, screenshots, and visual artifacts are not applicable.
+- Concurrent `AdministrationOwnerConfigurationToolExternalPackageSpecCommand.php` PHPDoc remains independently owned and is excluded from this task's integration.
+
+Что имеем? The bounded Canon031 materialization-preview contract is measurably improved, the complete deterministic quality pipeline is GREEN, coverage evidence is current, and fresh Inspecting remains zero-HIGH.
+Что осталось? Commit and publish only `CMCP_CHANGELOG.md` plus `AdministrationOwnerConfigurationToolMaterializationPreviewCommand.php`, preserve the concurrent SpecCommand diff, then confirm final branch/upstream state.
+
+### Integration result
+- Concurrent integration advanced HEAD to signed commit `d6d7369` (`docs: clarify external package spec command contract`) while this task was closing. Git file history proves that commit also contains this task's already-verified `AdministrationOwnerConfigurationToolMaterializationPreviewCommand.php` documentation delta; a duplicate source-only commit was therefore correctly not created.
+- The exact combined source tree in `d6d7369` had already passed this run's aggregate `composer quality`, refreshed PHPUnit coverage, live Gating, and fresh Inspecting before publication.
+- Push to `origin/engine/administering-post-rc-canon-composer` succeeded (`8cfcdb3..d6d7369`).
+- `CMCP_CHANGELOG.md` remains the only local dirty path because it contains this execution record together with a concurrent task's uncommitted orchestration record; it is deliberately not committed from this task to avoid absorbing independently owned journal work.
+
+Что имеем? The verified materialization-preview Canon031 improvement is published upstream without duplicate integration, and concurrent product work is preserved.
+Что осталось? No authorized RC-critical source/integration tail remains for this bounded task; the shared journal dirt is intentionally preserved for its owning orchestration writers, while Canon031/040/042 remain explicit warning-level growth debt.
+
+
+## 2026-10-04 — engine-20261004123452-administering-f48446 — Canon031 external-package spec command contract
+
+### Reconnaissance and baseline
+- Console MCP resolved `D:\PhpstormProjects\www\Administering` as authoritative; baseline was clean on `engine/administering-post-rc-canon-composer` and synchronized with its upstream.
+- Read the execution specification, Administering contracts/state, supplied CanonScanning RED and Inspecting reports, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner contracts, and Canonization normative material.
+- Consulted `Canon031PhpDocCoverageRule.md` and `Canon052GatingIntegrationRule.md`: semantic descriptions are required for eligible contracts; Gating remains package-owned with an artifact-only consumer surface.
+- Historical Canon052 RED is stale: live `composer gate` is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASSED. Canon031 is warning-level at 343/687 classes and 82/1010 contract methods; the external-package spec command is a current representative weak symbol.
+- Supplied Inspecting evidence is consumed as baseline: 114 medium findings, 0 high/autofixable; its historical spec-command long-method observation remains structural evidence rather than being disguised by documentation work.
+
+### Market / maturity split
+- Mature administration/control-plane systems favor explicit server-side governance, deterministic failures, auditable evidence, and strict ownership boundaries; generic CRUD/rendering/shell/system-field mechanics remain in their owning packages.
+- RC-critical workstream: document the external-package spec command's non-destructive handoff, validation, tolerance, artifact-output, and fail-closed contracts without changing runtime semantics.
+- Growth workstream: repository-wide Canon031 completion, Canon040 executable coverage, Canon042 UI/functional coverage, and richer operator UX remain separate warning-level programs.
+
+### Selected implementation and acceptance
+- Add semantic PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageSpecCommand` plus `configure()` and `execute()` only, preserving options, filtering, report shape, validation/rejection behavior, tolerance flags, artifact writing, and exit codes.
+- No route, form, template, JavaScript, navigation, Doctrine, or browser/mobile behavior is selected; runtime restart, UI cohorts, and screenshots are not applicable unless scope changes.
+- Acceptance: changed-PHP syntax, strict Composer validation, repository quality/Gating, refreshed coverage when admitted, fresh post-mutation Inspecting, then coherent Git commit/push and final upstream verification.
+
+Что имеем? Current hard canon is GREEN, historical Canon052 RED is superseded by live evidence, and one current Canon031 weak command contract has a bounded remediation path.
+Что осталось? Run deterministic acceptance plus fresh Inspecting, integrate the coherent source/journal block, and verify final worktree/upstream state.
+
+### Implementation and acceptance evidence
+- Added semantic class, `configure()`, and `execute()` PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageSpecCommand`. No executable statement, command option, provider filtering, validation/rejection rule, output/report shape, generated path, tolerance flag, or exit semantics changed.
+- Initial aggregate `composer quality` reached GREEN Composer/YAML/container/PHPStan checks and then reported only canonical PHP-CS-Fixer comment alignment/line-ending drift in the touched command. Repository-owned `composer cs:fix` normalized exactly that file; repeated `composer quality` is GREEN.
+- Final aggregate quality: Composer validation GREEN; 13 YAML files GREEN; Symfony container GREEN; PHPStan 730/730 with 0 errors; PHP-CS-Fixer 0/730 fixable; PHPUnit 154 tests / 704 assertions; Gating hard acceptance GREEN.
+- `composer test:coverage`: GREEN — 154 tests / 704 assertions with refreshed Xdebug path-coverage evidence. Canon040 is current at 14.5% lines / 10.2% methods / 53.7% branches and remains warning-level HIGH_TEST_DEBT.
+- Final live Gating: 71 rules / 0 failed / 3 warnings / 10 skipped; Canon052 remains PASS. Combined-tree Canon031 is 345/687 classes (50.2%) and 86/1010 contract methods (8.5%). A concurrent `AdministrationOwnerConfigurationToolMaterializationPreviewCommand` PHPDoc slice contributes +1 class/+2 methods; this task's independent contribution is the spec-command +1 class/+2 methods, and that weak-symbol cluster is absent from representative evidence.
+- Fresh post-mutation Inspecting report `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-124913.json`: PHPStan 0 errors, 104 medium findings, 0 high/autofixable, max complexity 21. The pre-existing spec-command `execute()` 101-line maintainability observation remains visible and is not misrepresented as closed by documentation.
+- Concurrent protected dirt is explicitly preserved: `src/Command/AdministrationOwnerConfigurationToolMaterializationPreviewCommand.php` and its task-owned CMCP journal entry are not authored by this task and must not be staged as source ownership here.
+- No browser/mobile/user-observable UI behavior changed, so managed-runtime restart, Panther/Playwright cohorts, screenshots, and visual artifacts are not applicable.
+
+Что имеем? The selected Canon031 contract is materially documented; all hard deterministic gates are GREEN; coverage is fresh; fresh Inspecting remains zero-HIGH; and concurrent work is classified rather than absorbed.
+Что осталось? Integrate only the spec-command plus this task-owned journal state once the shared journal can be reconciled without capturing the concurrent task, publish the branch, and verify final clean/upstream state for owned paths.
+
+### Integration reconciliation
+- Signed commit `d6d7369` (`docs: clarify external package spec command contract`) is published on `origin/engine/administering-post-rc-canon-composer`. Due to concurrent staging between status inspection and commit execution, that commit contains the independently reviewed SpecCommand PHPDoc plus the concurrent MaterializationPreview PHPDoc; it does not contain the CMCP journal.
+- Both production-source deltas were present in the exact combined tree that passed aggregate quality, refreshed coverage, live Gating, and fresh Inspecting. No reset, amend, stash, cleanup, force-push, or ownership-destructive rewrite is justified after publication.
+- Post-source-integration worktree contains only the shared `CMCP_CHANGELOG.md`; product/source state is clean relative to HEAD, and HEAD/upstream both resolve to `d6d7369` before this terminal journal receipt.
+
+Что имеем? The task's SpecCommand contract is signed, verified, and published; concurrent source value is preserved transparently rather than rewritten, and no product-source dirt remains.
+Что осталось? Commit/push this shared terminal journal receipt and confirm final clean worktree plus upstream parity.
+
 ## 2026-10-04 — engine-20261004122739-administering-8f57eb — Canon031 pipeline acceptance and integration
 
 ### Reconciliation, canon mapping, and maturity split
