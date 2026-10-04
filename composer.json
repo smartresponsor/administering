@@ -46,6 +46,16 @@
     },
     {
       "type": "path",
+      "url": "../Failing",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "failing/failure": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
       "url": "../Gating",
       "options": {
         "symlink": true,
@@ -77,6 +87,7 @@
   ],
   "require": {
     "cruding/crud": "dev-master",
+    "failing/failure": "dev-master",
     "collectioning/collection": "dev-master",
     "tabling/table": "dev-master",
     "viewing/view": "dev-master",

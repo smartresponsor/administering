@@ -28,6 +28,7 @@ $allowedLocalRepositories = [
     'viewing/view' => '../Viewing',
     'interfacing/interface' => '../Interfacing',
     'objecting/object' => '../Objecting',
+    'failing/failure' => '../Failing',
     'gating/gate' => '../Gating',
     'collectioning/collection' => '../Collectioning',
     'tabling/table' => '../Tabling',

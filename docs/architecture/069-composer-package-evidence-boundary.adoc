@@ -13,7 +13,7 @@ Administering may read component package names from:
 * `config/kernel/runtime_scope.prod.lock.php`
 * `config/runtime-scope/bundle_catalog.php`
 
-Administering must directly require `cruding/crud`, `collectioning/collection`, `tabling/table`, `viewing/view`, `interfacing/interface`, `objecting/object`, and `easycorp/easyadmin-bundle` in `composer.json`. Other runtime-scope packages remain optional evidence and must not become root dependencies unless Canonization explicitly promotes them to the platform baseline.
+Administering must directly require `cruding/crud`, `collectioning/collection`, `tabling/table`, `viewing/view`, `interfacing/interface`, `objecting/object`, `failing/failure`, and `easycorp/easyadmin-bundle` in `composer.json`. Other runtime-scope packages remain optional evidence and must not become root dependencies unless Canonization explicitly promotes them to the platform baseline.
 
 Development baseline packages use sibling Composer `path` repositories with `options.symlink: true`; `composer.prod.json` uses packaged/VCS dependencies and contains no sibling path repositories.
 

@@ -947,3 +947,68 @@ Verification:
 Что имеем? Current physical repository state is hard-gate GREEN, Canon052 is no longer reproducible, and the declared quality pipeline passes while pre-existing Composer/Failing changes remain preserved.
 
 Что осталось до RC? Final Git status/diff/upstream inspection and coherent integration of only this task-owned CMCP journal update if it can be committed without absorbing the five pre-existing dirty paths.
+
+## 2026-10-04 — engine-20261004062920-administering-719d11 reconnaissance and live canon baseline
+
+### Factual baseline
+
+- Workspace resolved through Console MCP as `D:\\PhpstormProjects\\www\\Administering`; active branch is `engine/administering-post-rc-canon-composer`.
+- Pre-existing dirty work is preserved as current repository state: `AGENTS.md`, `composer.json`, `composer.lock`, `composer.prod.json`, and `config/bundles.php`. The Composer/bundle changes form one coherent Failing baseline adoption and are not reverted or rewritten as unrelated work.
+- Read the authoritative execution specification, current repository contracts/manifests, existing CMCP journal, supplied CanonScanning Gating RED report, and supplied Inspecting report.
+- Read mandatory dependency contours for Objecting, Cruding, Viewing, and Interfacing, plus Gating owner profile/rule-set and Canonization normative material.
+- Fresh supplied Inspecting evidence for fingerprint `fd018e08f971f194ba98fcbbe73944d9e9647f127a6d82f9600db7ee1bed9513` reports 114 medium findings, 0 high findings, 0 autofixable findings, and max complexity 23. Rector and Semgrep analyzer degradation in that report remains evidence metadata rather than a target hard failure.
+
+### Canonization mapping consulted
+
+- Canon021: generic application CRUD remains Cruding-owned; EasyAdmin administrative/back-office CRUD is explicitly allowed in Administering.
+- Canon022: standalone applications directly require Cruding, Collectioning, Tabling, Viewing, Interfacing, Objecting, Failing, and EasyAdmin, and register `App\\Failing\\FailingBundle`. The current dirty Composer/bundle adoption is therefore canon-aligned in-scope value.
+- Canon023: development first-party path repositories use `symlink: true`.
+- Canon024: production Composer resolution remains package/VCS based and path-independent.
+- Canon025: Administering remains dual-mode standalone Symfony application plus reusable bundle.
+- Canon052: `gating/gate` is development-linked through the canonical sibling package and consumer `.gating/` is artifact-only. The physical consumer `.gating/` directory is currently absent, so the 2026-09-29 copied-engine failure is no longer reproducible.
+- Canon064-066: Failing owns the generic failure mechanism; consumers retain concrete vocabulary and deterministic operation membership. No Failing-owner implementation is moved into Administering.
+
+### Market / maturity split
+
+- Mature Symfony administration stacks provide dashboard/CRUD/action primitives, authorization and testability while keeping application policy and audit/governance in the owning admin component.
+- RC-critical stream: canonical dependency/package wiring, Gating integration, deterministic quality, fail-closed administration behavior, and reproducible verification.
+- Growth stream: raise semantic PHPDoc coverage, PHP executable coverage, functional/UI coverage and continue medium-severity cohesion refactors without weakening thresholds or moving CRUD/rendering/system-field ownership into Administering.
+
+### Live verification baseline
+
+- `composer gate`: PASS, 71 rules, 0 failed, 3 warnings, 10 skipped.
+- Canon052: PASS on current physical workspace.
+- Remaining Gating warnings are Canon031 PHPDoc coverage, Canon040 quantitative test coverage, and Canon042 behavioral/UI coverage freshness/quantity; they remain warning-level growth debt.
+- No browser/mobile/user-visible UI mutation has been made in this execution window so far; visual evidence is not yet applicable.
+
+Что имеем? The historical Canon052 RED is no longer reproducible, the current Failing dependency adoption matches Canon022, fresh supplied Inspecting has zero high findings, and live Gating is hard-green.
+
+Что осталось? Run aggregate quality on the current dirty fingerprint, inspect final Git/upstream state, integrate the coherent in-scope value safely, and re-check post-integration state before declaring the autonomous RC objective complete.
+
+### Material remediation and verification
+
+- Aggregate `composer quality` was requested twice but the Console MCP runtime capacity guard refused to start heavy work with `RESOURCE_PRESSURE_WARN` and `ENGINE_BACKLOG_HIGH`. The guard was not bypassed; the constituent deterministic acceptance contour was executed separately.
+- `composer validate --strict --check-lock`: PASS.
+- PHPStan: PASS, 725 files / 0 errors.
+- PHPUnit: PASS, 143 tests / 650 assertions.
+- PHP-CS-Fixer dry-run: PASS, 0 / 725 fixable.
+- Symfony YAML lint: PASS, 13 files.
+- Symfony container lint: PASS.
+- Doctrine mapping/database schema validation: PASS.
+- Doctrine migrations currentness: PASS.
+- Full Gating after remediation: PASS, 71 rules / 0 failed / 3 warnings / 10 skipped.
+- Changed-PHP syntax: PASS for `config/bundles.php` and `tools/inspection/administering-composer-package-boundary-guard.php`.
+- The first live architecture-suite run exposed one genuine target-owned drift: `administering-composer-package-boundary-guard.php` still classified `../Failing` as a forbidden optional runtime-scope repository even though current Canon022 promotes `failing/failure` to the mandatory standalone baseline.
+- Added `failing/failure => ../Failing` to the guard's permitted canonical baseline and synchronized `docs/architecture/069-composer-package-evidence-boundary.adoc` with the current Canon022 dependency list.
+- Re-ran `inspect:architecture`: PASS; all nine architecture checks are green, including Composer package boundary.
+- No `src/` or browser/mobile/UI surface changed in this task. The supplied Inspecting source report remains applicable to the unchanged inspected source scope, so no duplicate Inspecting run was required. Visual evidence is not applicable.
+
+### Git integration readiness
+
+- Current branch `engine/administering-post-rc-canon-composer` is synchronized with `origin/engine/administering-post-rc-canon-composer` before integration: ahead 0, behind 0.
+- The eight dirty paths now form one coherent canon-alignment block: Failing dependency/bundle adoption, agent-facing Canon projection, package-boundary guard/documentation synchronization, lock update, and this orchestration journal.
+- No unrelated dirty path remains in the current worktree.
+
+Что имеем? The current Canon022/Failing adoption is lock-consistent, architecture-consistent and hard-gate GREEN; the stale Administering package-boundary guard was repaired instead of weakening Canonization, and all applicable constituent acceptance gates pass.
+
+Что осталось? Create one signed coherent commit, push the already-synchronized current branch, and verify final clean HEAD/upstream state.

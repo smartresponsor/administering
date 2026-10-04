@@ -9,5 +9,6 @@ return [
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
+    App\Failing\FailingBundle::class => ['all' => true],
     App\Administering\AdministeringBundle::class => ['all' => true],
 ];
