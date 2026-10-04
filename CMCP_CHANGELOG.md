@@ -1180,3 +1180,13 @@ Verification:
 Что имеем? The current owner-validator refactor is now evidence-backed: its public behavior is regression-tested, all applicable deterministic constituent gates are GREEN, live Gating has 0 hard failures, and fresh Inspecting proves the two targeted findings are removed.
 
 Что осталось? Integrate exactly `src/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidator.php`, `tests/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidatorTest.php`, and this CMCP journal; push the current branch; then verify clean worktree, final HEAD, and upstream parity. Canon031/040/042 stay as explicit non-blocking growth debt.
+
+### Integration result
+
+- Signed commit `96a2344` (`refactor administering owner tool validation`) contains exactly the validator refactor, its regression test, and this CMCP journal.
+- Push to `origin/engine/administering-post-rc-canon-composer` succeeded (`78341c5..96a2344`).
+- No destructive Git operation, stash, reset, cleanup, runtime restart, or sibling-repository mutation was used.
+
+Что имеем? The bounded owner-validator complexity remediation is implemented, regression-covered, deterministically verified, freshly inspected, committed, and published.
+
+Что осталось? Only final post-journal integration verification. The remaining Canon031/040/042 warnings are growth/test-debt backlog and are not regressions introduced by this task.
