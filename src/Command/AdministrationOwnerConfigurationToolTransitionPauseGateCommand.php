@@ -59,32 +59,7 @@ final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand exten
         $handoffBundleValidationPresent = is_file($handoffValidationPath);
         $transitionDecisionReportPresent = is_file($transitionDecisionPath);
 
-        $classificationCounts = [];
-        $classifications = [];
-
-        foreach ($this->toolCatalog->tools() as $tool) {
-            if (!$this->matchesToolFilter($tool, $componentFilter)) {
-                continue;
-            }
-
-            $classification = $this->classify($tool);
-            $classificationCounts[$classification] = ($classificationCounts[$classification] ?? 0) + 1;
-            $classifications[] = [
-                'classification' => $classification,
-                'section' => $tool->section,
-                'toolKey' => $tool->toolKey,
-                'toolSlug' => $tool->toolSlug,
-                'sourceOwnership' => $tool->sourceOwnership,
-                'serviceClass' => $tool->serviceClass,
-                'ownerComponentKey' => $tool->ownerComponentKey,
-                'ownerComponentToken' => $tool->ownerComponentToken,
-                'recommendedNextTarget' => $this->recommendedNextTarget($tool, $classification),
-                'recommendedAction' => $this->recommendedAction($classification),
-            ];
-        }
-
-        ksort($classificationCounts);
-        usort($classifications, static fn (array $left, array $right): int => [$left['classification'], $left['section'], $left['toolKey']] <=> [$right['classification'], $right['section'], $right['toolKey']]);
+        [$classificationCounts, $classifications] = $this->classificationRows($componentFilter);
 
         $issues = $this->issues(
             $externalPipelineReportPresent,
@@ -126,21 +101,28 @@ final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand exten
             return $shouldFail ? Command::FAILURE : Command::SUCCESS;
         }
 
+        $this->renderReport($io, $report);
+
+        return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    private function renderReport(SymfonyStyle $io, AdministrationOwnerConfigurationToolTransitionPauseGateReport $report): void
+    {
         $io->section('Owner-side transition pause gate');
-        $io->writeln(sprintf('Component filter: <info>%s</info>', $componentFilter ?? 'all'));
+        $io->writeln(sprintf('Component filter: <info>%s</info>', $report->componentFilter ?? 'all'));
         $io->writeln(sprintf('Tools: <info>%d</info>', $report->toolCount()));
         $io->writeln(sprintf('Owner-provided: <info>%d</info>', $report->ownerProvidedCount()));
         $io->writeln(sprintf('Admin shell-owned: <info>%d</info>', $report->adminShellOwnedCount()));
         $io->writeln(sprintf('Owner repository candidates: <comment>%d</comment>', $report->ownerRepositoryCandidateCount()));
         $io->writeln(sprintf('Host/post-application candidates: <comment>%d</comment>', $report->hostApplicationCandidateCount()));
-        $io->writeln(sprintf('External pipeline report: <info>%s</info>', $externalPipelineReportPresent ? 'present' : 'missing'));
-        $io->writeln(sprintf('Handoff bundle: <info>%s</info>', $handoffBundlePresent ? 'present' : 'missing'));
-        $io->writeln(sprintf('Handoff bundle validation: <info>%s</info>', $handoffBundleValidationPresent ? 'present' : 'missing'));
-        $io->writeln(sprintf('Transition decision report: <info>%s</info>', $transitionDecisionReportPresent ? 'present' : 'missing'));
+        $io->writeln(sprintf('External pipeline report: <info>%s</info>', $report->externalPipelineReportPresent ? 'present' : 'missing'));
+        $io->writeln(sprintf('Handoff bundle: <info>%s</info>', $report->handoffBundlePresent ? 'present' : 'missing'));
+        $io->writeln(sprintf('Handoff bundle validation: <info>%s</info>', $report->handoffBundleValidationPresent ? 'present' : 'missing'));
+        $io->writeln(sprintf('Transition decision report: <info>%s</info>', $report->transitionDecisionReportPresent ? 'present' : 'missing'));
         $io->writeln(sprintf('Can pause internal waves: <info>%s</info>', $report->canPauseInternalWaves() ? 'yes' : 'not yet'));
         $io->writeln(sprintf('Next work mode: <info>%s</info>', $report->nextWorkMode()));
 
-        if ([] !== $classifications) {
+        if ([] !== $report->classifications) {
             $io->table(
                 ['Classification', 'Section', 'Tool key', 'Source', 'Recommended target', 'Recommended action'],
                 array_map(static fn (array $row): array => [
@@ -150,7 +132,7 @@ final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand exten
                     $row['sourceOwnership'],
                     $row['recommendedNextTarget'] ?? '-',
                     $row['recommendedAction'],
-                ], $classifications),
+                ], $report->classifications),
             );
         }
 
@@ -164,8 +146,41 @@ final class AdministrationOwnerConfigurationToolTransitionPauseGateCommand exten
         if (0 < $report->warningCount()) {
             $io->warning(sprintf('%d pause-gate warning(s) found.', $report->warningCount()));
         }
+    }
 
-        return $shouldFail ? Command::FAILURE : Command::SUCCESS;
+    /**
+     * @return array{0:array<string, int>, 1:list<array<string, mixed>>}
+     */
+    private function classificationRows(?string $componentFilter): array
+    {
+        $classificationCounts = [];
+        $classifications = [];
+
+        foreach ($this->toolCatalog->tools() as $tool) {
+            if (!$this->matchesToolFilter($tool, $componentFilter)) {
+                continue;
+            }
+
+            $classification = $this->classify($tool);
+            $classificationCounts[$classification] = ($classificationCounts[$classification] ?? 0) + 1;
+            $classifications[] = [
+                'classification' => $classification,
+                'section' => $tool->section,
+                'toolKey' => $tool->toolKey,
+                'toolSlug' => $tool->toolSlug,
+                'sourceOwnership' => $tool->sourceOwnership,
+                'serviceClass' => $tool->serviceClass,
+                'ownerComponentKey' => $tool->ownerComponentKey,
+                'ownerComponentToken' => $tool->ownerComponentToken,
+                'recommendedNextTarget' => $this->recommendedNextTarget($tool, $classification),
+                'recommendedAction' => $this->recommendedAction($classification),
+            ];
+        }
+
+        ksort($classificationCounts);
+        usort($classifications, static fn (array $left, array $right): int => [$left['classification'], $left['section'], $left['toolKey']] <=> [$right['classification'], $right['section'], $right['toolKey']]);
+
+        return [$classificationCounts, $classifications];
     }
 
     private function classify(AdministrationServiceTool $tool): string
