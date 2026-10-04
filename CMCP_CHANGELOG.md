@@ -58,6 +58,20 @@
 Что имеем? Current hard canon is GREEN, the historical Canon052 RED is superseded by live evidence, and one bounded current Canon031 weak command contract is selected from executable evidence.
 Что осталось? Add semantic documentation without executable changes, run the full applicable acceptance contour plus fresh Inspecting, then commit/push exactly the coherent source+journal block and verify final upstream parity.
 
+### Acceptance and integration result
+
+- Added semantic class, `configure()`, and `execute()` PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageManifestCommand`; no executable statements, command identity/options, report schema, artifact paths, or exit behavior changed.
+- Repository-owned PHP-CS-Fixer normalized only the touched command after the first aggregate run exposed comment alignment/line-ending drift. Final `composer quality`: GREEN — Composer validation, 13 YAML files, Symfony container, PHPStan 730/730 with 0 errors, PHP-CS-Fixer 0/730 fixable, PHPUnit 154 tests / 704 assertions, and Gating all pass.
+- Changed-PHP lint: GREEN. `composer test:coverage`: GREEN — 154 tests / 704 assertions with refreshed Xdebug path-coverage evidence.
+- Final live Gating: 71 rules / 0 failed / 3 warnings / 10 skipped. Canon052 remains PASS. Canon031 improved from 339/687 classes and 74/1010 contract methods to 340/687 and 76/1010; this command disappeared from the representative weak-symbol list.
+- Refreshed Canon040 evidence is current at 14.5% lines (2492/17157), 10.2% methods (240/2345), and 53.7% branches (1438/2679), remaining warning-level `HIGH_TEST_DEBT`. Canon042 remains warning-level stale/low behavioral/UI coverage; no user-observable UI changed in this task, so browser/mobile cohort execution and screenshots are not applicable acceptance evidence.
+- Fresh post-mutation Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-115134.json`: 104 medium findings, 0 high, 0 autofixable, PHPStan 0 errors, max complexity 21. The existing manifest-command 110-line `execute()` observation remains medium structural debt and was not introduced by the PHPDoc-only change.
+- During final Git reconciliation, another authorized Administering execution integrated the exact two-path coherent block as commit `80cea9f` (`Document Administering manifest command contract`) and published it to `origin/engine/administering-post-rc-canon-composer`. This task did not duplicate, reset, amend, stash, or overwrite that integration.
+- Post-integration repository state: clean worktree, HEAD `80cea9fada6899192c3a7fe08b1b23ee7afd2d7b`, ahead 0 / behind 0 before this terminal journal-only receipt.
+
+Что имеем? The bounded Canon031 manifest-command contract is materially documented, deterministic acceptance is GREEN, fresh coverage and Inspecting evidence are current, and the source change is already published with exact-path ownership preserved.
+Что осталось? Publish this terminal task-specific journal receipt only, then confirm final clean worktree and upstream parity. Repository-wide Canon031/040/042 warning debt remains explicit growth work, not a blocker introduced by this task.
+
 ## 2026-10-04 — engine-20261004110859-administering-1a38e8 Canon031 handoff-bundle validation contract
 
 ### Factual baseline, market contour, and canon mapping
