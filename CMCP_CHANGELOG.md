@@ -1,5 +1,24 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004121209-administering-2681e3 Canon031 overlay-plan reconciliation
+
+### Factual baseline, market contour, and canon mapping
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` as the authoritative workspace on branch `engine/administering-post-rc-canon-composer`, HEAD `d58890009e87f16cebb4bc22d1586883cf0a66d6`, synchronized with its upstream at reconnaissance.
+- One pre-existing dirty product path is preserved: `src/Command/AdministrationOwnerConfigurationToolExternalPackageOverlayPlanCommand.php`. Its diff adds semantic PHPDoc only to the command class, `configure()`, and `execute()`; no executable statement or CLI contract changes.
+- Read the authoritative task specification, Administering repository/package/test contracts, the supplied CanonScanning Gating RED, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner profile/rule-set, and Canonization textual Canon031/Canon052 rules.
+- Historical Canon052 failed because a copied Gating engine/policy tree existed in consumer `.gating/`. Current manifests implement package-owned Gating; live verification is required rather than replaying the stale failure.
+- Canon031 requires meaningful human-readable descriptions for classes and contract-significant public/protected methods. The reviewed overlay-plan descriptions explain non-destructive planning, safety/repository-relative boundaries, CLI review controls, and fail-closed execution semantics and therefore map directly to the warning backlog.
+- Objecting system fields, Cruding generic CRUD, Viewing rendering, and Interfacing shell/template ownership remain untouched. No `src/Domain`, Port/Adapter/Adaptor taxonomy, alternative namespace root, runtime route, persistence, form, template, navigation, or browser/mobile surface is introduced.
+- Mature administration/control-plane practice favors explicit fail-closed operator commands, machine-readable evidence, non-destructive plans, and human review gates. RC-critical work is this bounded semantic command contract plus deterministic verification; repository-wide Canon031 completion, broader executable/UI coverage, and richer operator UX remain growth work.
+
+### Acceptance plan
+- Update this orchestration journal, run changed-PHP syntax validation, strict Composer validation, the repository quality/Gating contour, and fresh post-mutation Inspecting because production PHP source is dirty.
+- No user-observable UI behavior changed; managed runtime restart, Panther/Playwright cohorts, screenshots, and visual artifacts are not applicable unless scope changes.
+- Reconcile Git by semantic ownership: preserve concurrent work, stage only verified coherent paths, commit/push only when current branch/upstream evidence makes publication safe, then inspect final HEAD/worktree/upstream state.
+
+Что имеем? One bounded pre-existing Canon031 command-documentation slice is reviewed against the actual textual canon and dependency boundaries without overwriting it.
+Что осталось? Execute deterministic verification and fresh Inspecting, record actual acceptance evidence, then integrate/publish the coherent source+journal block if green.
+
 ## 2026-10-04 — engine-20261004120541-administering-3e8fc6 Canon031 overlay-plan command contract
 
 ### Baseline, market contour, and canon mapping
@@ -15,8 +34,17 @@
 - No user-observable UI/navigation/form/browser/mobile behavior changed; runtime restart, behavioral cohort execution, and screenshots are not applicable.
 - Acceptance gates: changed-PHP lint, strict Composer validation, aggregate `composer quality`, post-mutation Inspecting, then coherent Git integration/publication and final worktree/upstream verification.
 
-Что имеем? Historical Canon052 is closed in the current tree and one live Canon031 weak-symbol cluster is semantically remediated without behavior change.
-Что осталось? Run deterministic gates and fresh Inspecting, record evidence, commit/push the coherent command+journal work, and verify final HEAD/upstream parity.
+### Acceptance evidence
+- Changed PHP lint: GREEN for `src/Command/AdministrationOwnerConfigurationToolExternalPackageOverlayPlanCommand.php`.
+- `composer validate --strict --check-lock`: GREEN.
+- Aggregate `composer quality`: GREEN — YAML 13/13, container lint GREEN, PHPStan 730/730 with 0 errors, PHP-CS-Fixer 0/730 fixable, PHPUnit 154 tests / 704 assertions, and Gating 71 rules / 0 failed / 3 warnings / 10 skipped.
+- Canon031 improved from 341/687 classes (49.6%) and 78/1010 methods (7.7%) to 342/687 classes (49.8%) and 80/1010 methods (7.9%); the overlay-plan class/configure/execute weak-symbol cluster disappeared from representative evidence. Canon052 remains PASS.
+- `composer test:coverage`: GREEN, 154 tests / 704 assertions, refreshing canonical coverage evidence after the source-documentation touch.
+- Fresh post-mutation Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-121337.json`: PHPStan 0 errors, 104 medium findings, 0 high/autofixable, max complexity 21. Existing overlay-plan `execute()`/`buildOverlayPlan()` long-method observations remain medium structural debt and are unchanged semantically by this documentation pass.
+- No runtime/UI behavior changed, so runtime restart, Panther/Playwright cohort execution, screenshots, and visual evidence are not applicable.
+
+Что имеем? The targeted Canon031 contract is accepted by the full deterministic pipeline; live hard canon is GREEN and fresh Inspecting has zero HIGH findings.
+Что осталось? Commit and publish exactly the overlay-plan documentation plus this journal acceptance, then verify clean worktree and upstream parity.
 
 ## 2026-10-04 — engine-20261004115119-administering-50b816 Canon031 manifest-validator contract
 
