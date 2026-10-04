@@ -17,10 +17,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-manifest:validate',
     description: 'Validates a non-destructive owner-side external package manifest before neighbor overlays.',
 )]
+/**
+ * Validates owner-side package manifests before any neighboring repository overlay handoff is accepted.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand extends Command
 {
     private const EXPECTED_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_manifest.v1';
 
+    /**
+     * Declares manifest input, machine-readable reporting, and explicit warning or error tolerance controls.
+     */
     protected function configure(): void
     {
         $this
@@ -31,6 +37,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
             ->addOption('allow-errors', null, InputOption::VALUE_NONE, 'Do not fail when errors are found. Transitional/manual review only.');
     }
 
+    /**
+     * Validates manifest structure and overlay safety, emits evidence, and fails closed unless tolerance is explicit.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
