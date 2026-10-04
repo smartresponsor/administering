@@ -12,7 +12,12 @@ final readonly class AdministrationRuntimeScopePathResolver
 
     public function absolutePath(string $path): string
     {
-        if (str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\\/]/', $path)) {
+        $isWindowsAbsolute = isset($path[2])
+            && ctype_alpha($path[0])
+            && ':' === $path[1]
+            && ('\\' === $path[2] || '/' === $path[2]);
+
+        if (str_starts_with($path, '/') || $isWindowsAbsolute) {
             return rtrim($path, '/\\');
         }
 

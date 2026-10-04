@@ -27,28 +27,8 @@ final readonly class AdministrationRuntimeScopeStateReader
         $catalogPath = $this->pathResolver->bundleCatalogPath();
         $sourceErrors = [];
 
-        $catalog = ['components' => []];
-        try {
-            $catalog = $this->catalogReader->catalog($catalogPath);
-        } catch (\Throwable $exception) {
-            $sourceErrors[] = $exception->getMessage();
-        }
-
-        $composerPackages = [];
-        $composerComponentPackages = [];
-        $ignoredRuntimeScopePackages = [];
-        if (!is_file($composerPath)) {
-            $sourceErrors[] = sprintf('Composer inventory is missing: %s', $composerPath);
-        } else {
-            try {
-                $composerInventory = $this->composerInventoryReader->inventory($composerPath, $catalog);
-                $composerPackages = $composerInventory->packages;
-                $composerComponentPackages = $composerInventory->componentPackages;
-                $ignoredRuntimeScopePackages = $composerInventory->ignoredRuntimeScopePackages;
-            } catch (\Throwable $exception) {
-                $sourceErrors[] = $exception->getMessage();
-            }
-        }
+        $catalog = $this->readCatalog($catalogPath, $sourceErrors);
+        [$composerPackages, $composerComponentPackages, $ignoredRuntimeScopePackages] = $this->readComposerInventory($composerPath, $catalog, $sourceErrors);
 
         $lockEvidence = $this->lockNormalizer->normalize($lockPath);
         $sourceErrors = [...$sourceErrors, ...$lockEvidence->errors];
@@ -79,5 +59,50 @@ final readonly class AdministrationRuntimeScopeStateReader
             installedComponents: $installedComponents,
             sourceErrors: $sourceErrors,
         );
+    }
+
+    /**
+     * @param list<string> $sourceErrors
+     *
+     * @return array{components: array<string, array{package: string, bundleToken: string}>}
+     */
+    private function readCatalog(string $catalogPath, array &$sourceErrors): array
+    {
+        try {
+            return $this->catalogReader->catalog($catalogPath);
+        } catch (\Throwable $exception) {
+            $sourceErrors[] = $exception->getMessage();
+
+            return ['components' => []];
+        }
+    }
+
+    /**
+     * @param array{components: array<string, array{package: string, bundleToken: string}>} $catalog
+     * @param list<string>                                                                  $sourceErrors
+     *
+     * @return array{0: array<string, true>, 1: array<string, string>, 2: list<string>}
+     */
+    private function readComposerInventory(string $composerPath, array $catalog, array &$sourceErrors): array
+    {
+        if (!is_file($composerPath)) {
+            $sourceErrors[] = sprintf('Composer inventory is missing: %s', $composerPath);
+
+            return [[], [], []];
+        }
+
+        try {
+            $composerInventory = $this->composerInventoryReader->inventory($composerPath, $catalog);
+
+            return [
+                $composerInventory->packages,
+                $composerInventory->componentPackages,
+                $composerInventory->ignoredRuntimeScopePackages,
+            ];
+        } catch (\Throwable $exception) {
+            $sourceErrors[] = $exception->getMessage();
+
+            return [[], [], []];
+        }
     }
 }
