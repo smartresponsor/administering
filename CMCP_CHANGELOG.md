@@ -1122,3 +1122,61 @@ Verification:
 Что достигнуто? The selected validation boundary now has focused executable regression coverage, the full deterministic quality pipeline is GREEN, fresh Inspecting remains zero-HIGH, and stale Canon052 evidence remains conclusively superseded by live hard-green Gating.
 
 Что осталось до RC? Stage/commit/push only the new validator test and this CMCP journal while preserving the concurrent unrelated validator edit, then verify branch/upstream state. Canon031/040/042 remain explicit warning-level growth debt rather than hard RC blockers.
+
+## 2026-10-04 — engine-20261004073803-administering-a30755 owner-validator cohesion remediation
+
+### Factual reconnaissance baseline
+
+- Workspace resolved through Console MCP as `D:\\PhpstormProjects\\www\\Administering`; active branch `engine/administering-post-rc-canon-composer`, baseline HEAD `78341c52cef17e42bbdd93e498883c1a3f4ec158`, upstream aligned at reconnaissance.
+- The current worktree contains exactly two pre-existing/concurrent paths: `src/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidator.php` and new `tests/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidatorTest.php`. They form one coherent candidate remediation block and are preserved rather than reset, stashed, overwritten, or silently absorbed.
+- Read the authoritative execution specification, Administering `AGENTS.md`, `README.md`, `README.adoc`, development/production Composer manifests, PHPUnit/PHPStan/PHP-CS-Fixer/npm/Playwright-facing test contracts, relevant architecture documentation, source interfaces/value objects, current Git state/diff, and the existing CMCP journal.
+- `MANIFEST.json` is not present in the current Administering root; no missing-file assumption was substituted with another repository surface.
+- Mandatory dependency contour read from Objecting, Cruding, Viewing, and Interfacing (`AGENTS.md`, `README.md`, `composer.json`) and package wiring verified against Administering manifests. Mandatory read-and-comply contour read from Gating and Canonization, including the Administering Gating profile/rule-set and normative Canon014/021/022/023/024/029/031/040/042/052 rules.
+- The repository does not declare the Code Memory `memory:scope:resolve` Composer script; Console MCP reports `CODE_MEMORY_SCOPE_SCRIPT_NOT_DECLARED`. No memory/roadmap graph is invented as verification evidence.
+- Supplied CanonScanning RED evidence is historical: its sole hard failure was Canon052 from a copied consumer `.gating/` engine. Recent repository evidence and the current canonical topology show that remediation must be validated live rather than replayed from the stale report.
+- Supplied Inspecting evidence for fingerprint `fd018e08f971f194ba98fcbbe73944d9e9647f127a6d82f9600db7ee1bed9513` has 114 medium findings / 0 high and specifically reports `AdministrationOwnerConfigurationToolDefinitionValidator::validate()` at 61 lines and cyclomatic complexity 20. Because the current production validator is now modified, fresh post-remediation Inspecting is required before closure.
+
+### Target-to-canon mapping
+
+- Canon014: the validator is not itself an executable Command/Handler/Runner/Invoker, but the same cohesion principle applies as quality evidence: one public validation orchestration method should delegate stable validation groups instead of accumulating all identity/tool/form checks inline. The current decomposition is therefore a justified Inspecting remediation, not a new architecture layer.
+- Canon021: no generic CRUD route/controller/service is introduced; Administering remains an EasyAdmin governance shell and Cruding keeps generic application CRUD ownership.
+- Canon022/023/024: development and production manifests retain the standalone baseline, local dev symlinks and path-independent production resolution; this source-only validator change does not alter package topology.
+- Canon029: PHP-CS-Fixer/PHPStan contracts are present and Inspecting is an external verification contour; the modified production source requires a fresh Inspecting result after deterministic gates.
+- Canon031/040/042: PHPDoc, executable coverage and behavioral/UI coverage remain measurable warning-level growth debt. This pass may improve direct test coverage but will not weaken thresholds or claim repository-wide coverage closure.
+- Canon052: the stale copied-engine failure must be superseded by live Gating evidence; consumer-local policy/runtime duplication will not be recreated.
+
+### Market / maturity opening mixin
+
+- Mature Symfony administration stacks (EasyAdmin/Sonata-style back-office systems) keep validation and policy boundaries independently testable while controller/UI entrypoints remain thin; enterprise admin/governance systems likewise favor deterministic diagnostics and explicit provenance over monolithic validation branches.
+- RC-critical workstream: accept and verify the bounded owner-configuration validator cohesion refactor, preserve diagnostic order/severity/public contract, add direct regression coverage, and prove the historical complexity hotspot is removed without changing owner-component responsibility.
+- Growth workstream: broader semantic PHPDoc coverage, executable coverage, functional/UI coverage, richer operator explainability and approval/audit UX remain separate; none should expand Administering into owner configuration semantics or duplicate Cruding/Viewing/Interfacing/Objecting responsibilities.
+
+### Material risks and planned gates
+
+- The dirty source change originated concurrently with the prior task, so value must be established from the actual diff/tests/gates before it is integrated.
+- Validation output order is observable to tests/report consumers; decomposition must preserve field/severity ordering exactly.
+- No browser/mobile/UI source is changed, so runtime restart, cohort browser checks, screenshots and visual artifacts are not applicable unless scope changes.
+- Planned acceptance: changed-PHP lint, full PHPUnit, PHPStan, CS dry-run, Composer validation, live Gating, aggregate `composer quality` when capacity allows, and fresh post-mutation Inspecting.
+
+Что имеем? A bounded current-worktree refactor maps directly to a supplied Inspecting complexity hotspot, its public validation contract and owner-boundary documentation are understood, and the stale Canon052 RED is isolated from the current remediation.
+
+Что осталось? Run deterministic gates against the exact dirty block, repair only evidence-backed failures, obtain fresh Inspecting for the modified production source, then commit/push the coherent source/test/journal block and verify final HEAD/upstream state.
+
+### Acceptance pass
+
+- Changed-PHP lint: GREEN for the validator and its new test.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer test`: GREEN — 149 tests / 672 assertions.
+- `composer stan`: GREEN — 727/727 files, 0 errors.
+- `composer cs:check`: GREEN — 0/727 fixable files.
+- `composer lint:yaml`: GREEN — 13 YAML files valid.
+- `composer lint:container`: GREEN — Symfony DI type compatibility valid.
+- `composer inspect:architecture`: GREEN — owner coupling, runtime-scope, EasyAdmin boundary, package boundary and runtime output guards all pass.
+- `composer gate`: GREEN for hard canon — 71 rules, 0 failed, 3 warning, 10 skipped. Canon052 is now live GREEN, superseding the historical 2026-09-29 copied-engine failure. Remaining warnings are Canon031 PHPDoc 48.5% classes / 6.1% contract methods, Canon040 coverage 12.1% lines / 9.0% methods / 52.7% branches, and Canon042 stale behavioral/UI evidence.
+- Aggregate `composer quality` was attempted twice but correctly refused before process start by Console MCP heavy-capacity admission (`ENGINE_BACKLOG_HIGH`; first attempt also had `RESOURCE_PRESSURE_WATCH`). Its deterministic constituent checks were executed individually and are GREEN; no gate was bypassed or weakened.
+- Fresh post-mutation Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-074757.json`. Result: 112 medium findings, 0 high, PHPStan 0 errors, max complexity 23. The supplied baseline had 114 medium findings; both owner-validator findings (`validate()` 61-line long method and complexity 20) are absent from the fresh report, proving the selected remediation closed the targeted hotspot without introducing replacement findings.
+- No browser/mobile/UI files or flows changed. Runtime restart, cohort browser tests, screenshots, and visual-artifact generation are therefore not applicable to this change set.
+
+Что имеем? The current owner-validator refactor is now evidence-backed: its public behavior is regression-tested, all applicable deterministic constituent gates are GREEN, live Gating has 0 hard failures, and fresh Inspecting proves the two targeted findings are removed.
+
+Что осталось? Integrate exactly `src/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidator.php`, `tests/Validator/Admin/AdministrationOwnerConfigurationToolDefinitionValidatorTest.php`, and this CMCP journal; push the current branch; then verify clean worktree, final HEAD, and upstream parity. Canon031/040/042 stay as explicit non-blocking growth debt.

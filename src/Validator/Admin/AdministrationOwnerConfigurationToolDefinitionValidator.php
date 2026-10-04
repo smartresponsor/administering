@@ -21,10 +21,22 @@ final readonly class AdministrationOwnerConfigurationToolDefinitionValidator imp
         AdministrationOwnerConfigurationToolProviderInterface $provider,
         AdministrationOwnerConfigurationToolDefinition $definition,
     ): array {
+        return [
+            ...$this->identityViolations($provider, $definition),
+            ...$this->toolShapeViolations($definition),
+            ...$this->formContractViolations($definition),
+            ...$this->toolKeyViolations($definition),
+        ];
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function identityViolations(
+        AdministrationOwnerConfigurationToolProviderInterface $provider,
+        AdministrationOwnerConfigurationToolDefinition $definition,
+    ): array {
         $violations = [];
         $componentKey = $definition->componentKey;
         $componentToken = $definition->componentToken;
-        $toolKey = $definition->toolKey();
 
         if ('' === trim($componentKey)) {
             $violations[] = $this->violation('error', $definition, 'componentKey', 'Component key must not be blank.');
@@ -42,6 +54,14 @@ final readonly class AdministrationOwnerConfigurationToolDefinitionValidator imp
             $violations[] = $this->violation('error', $definition, 'componentToken', 'Definition component token must match provider component token.', $provider->componentToken(), $componentToken);
         }
 
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function toolShapeViolations(AdministrationOwnerConfigurationToolDefinition $definition): array
+    {
+        $violations = [];
+
         if ('' === trim($definition->toolSlug) || 1 !== preg_match('/^[A-Z][A-Za-z0-9]*$/', $definition->toolSlug)) {
             $violations[] = $this->violation('error', $definition, 'toolSlug', 'Tool slug must be non-empty PascalCase.', 'PascalCase', $definition->toolSlug);
         }
@@ -54,7 +74,15 @@ final readonly class AdministrationOwnerConfigurationToolDefinitionValidator imp
             $violations[] = $this->violation('error', $definition, 'serviceShortName', 'Owner tool service must use owner-side Configuration prefix and Service suffix.', $definition->expectedServicePrefix().'*Service', $definition->serviceShortName);
         }
 
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function formContractViolations(AdministrationOwnerConfigurationToolDefinition $definition): array
+    {
+        $violations = [];
         $expectedFormSuffix = $definition->expectedServicePrefix().$definition->toolSlug.'FormType';
+
         if (null !== $definition->formTypeClass && !str_ends_with($definition->formTypeClass, '\\'.$expectedFormSuffix)) {
             $violations[] = $this->violation('warning', $definition, 'formTypeClass', 'Owner form type should follow owner-side Configuration prefix convention.', '*\\'.$expectedFormSuffix, $definition->formTypeClass);
         }
@@ -72,11 +100,20 @@ final readonly class AdministrationOwnerConfigurationToolDefinitionValidator imp
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Executable owner tool should expose a form data class for stable form payload semantics.');
         }
 
-        if ($toolKey !== strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug)) {
-            $violations[] = $this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug), $toolKey);
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function toolKeyViolations(AdministrationOwnerConfigurationToolDefinition $definition): array
+    {
+        $toolKey = $definition->toolKey();
+        $expectedToolKey = strtolower($definition->componentToken).'.'.$this->camelToSnake($definition->toolSlug);
+
+        if ($toolKey === $expectedToolKey) {
+            return [];
         }
 
-        return $violations;
+        return [$this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', $expectedToolKey, $toolKey)];
     }
 
     private function violation(
