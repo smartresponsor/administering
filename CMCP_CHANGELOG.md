@@ -1,5 +1,79 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004120541-administering-3e8fc6 Canon031 overlay-plan command contract
+
+### Baseline, market contour, and canon mapping
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` as authoritative; branch `engine/administering-post-rc-canon-composer` began at `709b4781fbf323bae7d503203e5f9ac30323d560`, upstream parity 0/0, with pre-existing concurrent journal edits preserved.
+- Read the authoritative task specification, Administering `AGENTS.md`, `README.md`, `composer.json`, historical CanonScanning Gating RED and Inspecting evidence, Objecting/Cruding/Viewing/Interfacing package contracts, Gating owner contract, and Canonization Canon031/Canon052 rule texts.
+- Historical Canon052 failed because consumer `.gating/` held a copied executable/policy tree. Current live `composer gate` is GREEN for Canon052 and reports 71 rules / 0 failed / 3 warnings / 10 skipped.
+- Current Canon031 is warning-only at classes 341/687 (49.6%) and contract methods 78/1010 (7.7%); its representative backlog names the overlay-plan command class, `configure()`, and `execute()`.
+- Canon031 requires meaningful descriptions for eligible classes and contract-significant methods; Canon052 requires package-owned Gating with artifact-only consumer `.gating/`. Objecting system fields, Cruding generic CRUD, Viewing rendering, and Interfacing shell/template ownership remain untouched.
+- Market maturity baseline: administrative/control-plane tooling favors explicit fail-closed commands, machine-readable evidence, non-destructive plan generation, and operator review gates. RC-critical work is the overlay-plan command contract plus deterministic verification; broader Canon031 completion, coverage and operator UX remain growth work.
+
+### Material implementation and acceptance plan
+- Added semantic PHPDoc to the overlay-plan command class plus `configure()` and `execute()`, documenting manifest selection, review controls, path safety, non-destructive behavior, and fail-closed semantics without changing runtime behavior.
+- No user-observable UI/navigation/form/browser/mobile behavior changed; runtime restart, behavioral cohort execution, and screenshots are not applicable.
+- Acceptance gates: changed-PHP lint, strict Composer validation, aggregate `composer quality`, post-mutation Inspecting, then coherent Git integration/publication and final worktree/upstream verification.
+
+Что имеем? Historical Canon052 is closed in the current tree and one live Canon031 weak-symbol cluster is semantically remediated without behavior change.
+Что осталось? Run deterministic gates and fresh Inspecting, record evidence, commit/push the coherent command+journal work, and verify final HEAD/upstream parity.
+
+## 2026-10-04 — engine-20261004115119-administering-50b816 Canon031 manifest-validator contract
+
+### Baseline and canon mapping
+- Console MCP resolved `D:\PhpstormProjects\www\Administering` as the authoritative workspace. The supplied 2026-09-29 Gating RED failed Canon052 because a copied Gating engine existed under consumer `.gating/`; live current Gating proves that topology is already remediated and Canon052 is PASS.
+- Read Administering repository/package/test contracts, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner profile/rule-set, Canonization normative Canon031 and Canon052 rules, the supplied Gating/Inspecting reports, and current Git/upstream state.
+- The prior manifest-command Canon031 work was integrated concurrently as HEAD `80cea9fada6899192c3a7fe08b1b23ee7afd2d7b`; this run did not duplicate or overwrite it and selected the independent `AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand` weak symbol.
+- Market/maturity contour: mature Symfony/EasyAdmin administration keeps authorization server-side and operator commands deterministic, while Backstage-style control planes separate permission decision/enforcement and expose structured audit evidence. RC-critical work here is an independently understandable fail-closed validation contract; broader explainability, test/UI coverage and repository-wide Canon031 completion remain growth work.
+- Canon031 requires meaningful descriptions for classes and contract-significant methods; Canon052 requires package-owned Gating and artifact-only consumer `.gating/`. Objecting system fields, Cruding generic CRUD, Viewing rendering and Interfacing shell responsibilities remain untouched.
+
+### Material implementation and acceptance
+- Added semantic PHPDoc for the manifest-validator class plus `configure()` and `execute()`, documenting non-mutating handoff validation, explicit tolerance controls and fail-closed evidence semantics without changing CLI options, validation logic, report schema, routes, persistence or UI behavior.
+- Repository-owned PHP-CS-Fixer normalized the touched file after the first dry-run identified only comment alignment/line-ending differences; repeated CS check is GREEN.
+- `php -l`: GREEN. `composer validate --strict`: GREEN. Aggregate `composer quality`: GREEN, including 13 YAML files, Symfony container, PHPStan 730/730 with 0 errors, CS 0/730 fixable, PHPUnit 154 tests / 704 assertions, and Gating.
+- Live Gating: 71 rules / 0 failed / 3 warnings / 10 skipped; Canon052 PASS. Canon031 improved to 341/687 classes (49.6%) and 78/1010 contract methods (7.7%); this manifest-validator is no longer a representative weak symbol.
+- `composer test:coverage`: GREEN, 154 tests / 704 assertions, refreshing canonical coverage evidence after the production-source documentation touch.
+- Fresh post-mutation Inspecting report `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-120204.json`: PHPStan 0 errors, 104 medium findings, 0 high/autofixable, max complexity 21. The existing validator `execute()` long-method observation remains medium structural debt and is unchanged by this documentation-only pass.
+- No user-observable UI/navigation/form/browser/mobile behavior changed; runtime restart, Panther/Playwright cohort execution and screenshots are not applicable.
+
+Что имеем? Independent Canon031 documentation hardening is materialized and accepted by the full deterministic quality pipeline, live hard Gating remains GREEN, and fresh Inspecting has zero HIGH findings.
+Что осталось? Commit and publish exactly the validator documentation plus this orchestration journal, then confirm clean worktree and upstream parity.
+
+## 2026-10-04 — engine-20261004115821-administering-ec214d Canon031 manifest-validation contract
+
+### Factual baseline, market contour, and canon mapping
+
+- Console MCP resolved the authoritative workspace at `D:\\PhpstormProjects\\www\\Administering`; the only pre-existing dirty product path at reconnaissance is `src/Command/AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand.php`, containing semantic PHPDoc only. It is preserved and reviewed as current in-scope value rather than reset or overwritten.
+- Read the authoritative execution specification, Administering root contracts/manifests/journal, historical CanonScanning RED, supplied Inspecting evidence, and mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contracts. `MANIFEST.json` is absent in the current Administering root and is not invented.
+- Historical CanonScanning RED fails only Canon052 because a full Gating owner/policy tree existed under consumer `.gating/` at scan time. Current Canon052 text requires package-owned `gating/gate`, dev sibling symlink, standard Composer gate/quality integration, path-independent production packaging, and an artifact-only consumer `.gating/` surface.
+- Canon031 requires meaningful descriptions for eligible classes and public/protected contract methods. The current manifest-validation command was a representative weak symbol in historical Canon031 evidence; its new class, `configure()`, and `execute()` descriptions are semantic and accurately describe manifest validation, evidence output, explicit tolerance switches, and fail-closed behavior.
+- Supplied Inspecting evidence records 114 medium / 0 high findings and specifically observes the manifest-validation `execute()` long-method shape. This pass does not pretend that structural observation is closed by documentation; fresh Inspecting is required after the tracked PHP source mutation.
+- Mature Symfony administration/internal-platform tooling keeps operator commands explicit, deterministic, fail-closed, independently understandable, and auditable while generic CRUD, system fields, rendering, and shell responsibilities stay in their owning packages. RC-critical work here is the semantic command contract plus deterministic verification and integration. Growth work remains repository-wide Canon031/040/042 coverage, operator explainability, and medium structural decomposition.
+
+### Boundary and acceptance plan
+
+- Objecting system-field ownership, Cruding generic CRUD ownership/EasyAdmin exception, Viewing rendering ownership, and Interfacing shell/template ownership remain unchanged; this documentation-only command contract introduces no new runtime dependency or architecture layer.
+- No route, form, template, JavaScript, navigation, browser/mobile, Doctrine, or runtime behavior changes are present. Runtime restart, cohort browser execution, screenshots, and visual artifacts are not applicable unless scope changes.
+- Acceptance gates: changed-PHP lint, strict Composer validation, Symfony YAML/container lint, PHPStan, CS dry-run, PHPUnit, live Gating with Canon031/052 evidence, refreshed coverage when admitted, fresh post-mutation Inspecting, then coherent Git integration/publication.
+
+### Verification and acceptance
+
+- `php -l` on the changed command: GREEN.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer lint:yaml`: GREEN, 13 YAML files valid.
+- `composer lint:container`: GREEN, service type injection validated.
+- `composer stan`: GREEN, 730 analyzed files and no PHPStan errors.
+- `composer cs:check`: GREEN, 0/730 fixable files. Initial execution-service 502 was transient and a later real command completed successfully.
+- `composer test`: GREEN, 154 tests / 704 assertions. Initial execution-service 502 was transient and a later real command completed successfully.
+- `composer test:coverage`: GREEN, the same 154 tests / 704 assertions under Xdebug path coverage; evidence refreshed in `var/coverage`.
+- `composer gate`: GREEN for hard rules: 71 rules, 0 failed, 3 warnings, 10 skipped. Canon052 is live GREEN. Canon031 is now 341/687 classes (49.6%) and 78/1010 contract methods (7.7%); the manifest-validation command is no longer in the representative weak-symbol list. Canon040/042 remain explicit growth/test-debt warnings, not hard failures.
+- Fresh post-mutation Inspecting: 0 PHPStan errors, 104 medium findings, 0 high/critical, 0 autofixable; report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-120722.json`. The known `AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand::execute()` 80-line maintainability observation remains visible and is not disguised by the PHPDoc improvement.
+- The first aggregate `composer quality` start was not admitted because shared runtime capacity was temporarily `ADMIT_LIGHT_ONLY`; its constituent deterministic gates relevant to this documentation-only PHP change were then executed individually and are GREEN.
+- No user-observable UI/runtime behavior changed, so browser cohorts, runtime restart, screenshots, and visual evidence are not applicable to this pass.
+
+Что имеем? The historical Canon052 hard RED is factually GREEN in the live repository, the Canon031 manifest-validator documentation contract is accepted by Gating, deterministic constituent gates are green, and fresh Inspecting preserves the remaining medium structural debt transparently.
+Что осталось? The reviewed command documentation was concurrently integrated and published as `709b478` (`docs: clarify manifest validation contract`) while verification was running. Publish only this task journal without staging the newly arrived, separate `AdministrationOwnerConfigurationToolExternalPackageOverlayPlanCommand.php` Canon031 work, then verify upstream parity and preserved unrelated dirty state.
+
 ## 2026-10-04 — engine-20261004114407-administering-de6a31 Canon031 manifest-command verification and integration
 
 ### Baseline
