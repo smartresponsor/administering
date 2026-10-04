@@ -1023,3 +1023,47 @@ Verification:
 Что имеем? The task-owned Canon022/Failing alignment is implemented, deterministically verified, signed, published, and synchronized with its upstream branch.
 
 Что осталось? No authorized RC-critical tail remains in the bounded objective of this autonomous run.
+
+## 2026-10-04 — engine-20261004070836-administering-1a048d documentation/runtime reconciliation
+
+### Factual baseline and canonical mapping
+
+- Workspace resolved through Console MCP as `D:\\PhpstormProjects\\www\\Administering`; the worktree is clean on `engine/administering-post-rc-canon-composer` at the start of this execution window.
+- Read the authoritative execution specification, root repository contracts, development/production Composer manifests, package/test configuration, prior CMCP journal, supplied CanonScanning Gating RED evidence, and supplied Inspecting evidence for fingerprint `fd018e08f971f194ba98fcbbe73944d9e9647f127a6d82f9600db7ee1bed9513`.
+- Read the mandatory local dependency contour from Objecting, Cruding, Viewing, and Interfacing, plus Gating owner contracts and the Administering Gating profile/rule-set.
+- Read normative Canonization rules relevant to this pass: Canon017, Canon021-026, Canon031, Canon036, Canon040, Canon042, and Canon052.
+- Canon021-026 and Canon052 map cleanly to the current package/runtime topology: generic CRUD remains Cruding-owned with the EasyAdmin exception; the standalone baseline is direct in both manifests; development dependencies use local symlinks; production remains path-independent; dual runtime surfaces exist; PHP/Symfony floors are canonical; consumer Gating integration is package-owned and `.gating/` artifact-only.
+- Canon017 is semantically applicable to the root documentation: `README.md` still describes a `W14` patch kit and `README.adoc` describes a `W03` patch kit computed against an old ZIP snapshot, neither of which describes the current repository/runtime.
+- Canon036 is also applicable: Markdown and AsciiDoc must not remain two independently maintained narrative copies. The repair will make `README.md` the repository-facing narrative and `README.adoc` a thin entry point.
+
+### Market / maturity opening mixin
+
+- Mature Symfony administration systems keep authorization enforcement server-side and separate policy decisions from menu/UI visibility. EasyAdmin documents that hidden menu entries do not secure actions; Backstage similarly separates permission policy decisions from enforcement.
+- RC-critical stream: keep Administering's package/runtime boundaries deterministic and remove authoritative root documentation that can recreate superseded architecture or operational steps.
+- Growth stream: improve Canon031 semantic PHPDoc coverage, Canon040 executable coverage, and Canon042 functional/UI inventory coverage without weakening thresholds or moving responsibilities from Cruding, Objecting, Viewing, or Interfacing.
+
+### Live verification baseline
+
+- `composer gate`: PASS — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon052 PASS. Remaining warnings are Canon031, Canon040, and Canon042.
+- `composer validate --strict --check-lock`: PASS.
+- Supplied Inspecting report is reusable for the unchanged PHP/source fingerprint before this documentation-only mutation: 114 medium findings, 0 high findings. No duplicate pre-remediation Inspecting run is warranted.
+- No browser/mobile/user-observable UI change is planned; visual/behavioral evidence is therefore not applicable to this documentation repair.
+
+Что имеем? The current runtime/package canon is hard-green, while the root README surfaces are factually stale and semantically violate Canon017/Canon036 despite Canon017 being skipped by the current profile token configuration.
+
+Что осталось? Replace the stale root patch-kit narratives with one current README narrative plus a thin AsciiDoc entry point, re-run deterministic gates, update this journal with acceptance evidence, then commit/push only the coherent documentation block.
+
+### Material repair and acceptance
+
+- Replaced the obsolete one-line `README.md` W14 patch-kit instruction with a current repository-facing overview derived from the live Composer/runtime contracts and canonical responsibility boundaries.
+- Replaced the obsolete `README.adoc` W03/`AdministeringFr.zip` patch-kit narrative with a thin entry point to `README.md`, eliminating the independent duplicate narrative prohibited by Canon036.
+- No PHP, Symfony configuration, Doctrine mapping, route, template, JavaScript, browser flow, or user-observable UI surface changed.
+- `composer quality`: PASS. Composer validation, YAML lint (13 files), Symfony container lint, PHPStan (725 files / 0 errors), PHP-CS-Fixer dry-run (0 fixable files), PHPUnit (143 tests / 650 assertions), and Gating all passed.
+- Post-repair Gating remains 71 rules / 0 failed / 3 warnings / 10 skipped. Canon036 and Canon052 are GREEN; Canon017 remains mechanically skipped because the profile has no stale-documentation token list, while its semantic requirement is now satisfied for the root README mismatch identified in this run.
+- The remaining Canon031, Canon040, and Canon042 results are unchanged warning-level documentation/test/UI coverage debt. Thresholds were not weakened.
+- Inspecting was not duplicated after this documentation-only mutation because no PHP/source analyzer scope changed; the supplied source-quality evidence remains applicable to source: 114 medium findings and 0 high findings.
+- Visual/behavioral verification is not applicable because no browser/mobile/UI behavior changed.
+
+Что достигнуто? The authoritative root documentation now describes the current Administering package/runtime and has one canonical narrative source; the complete deterministic quality pipeline remains hard-green.
+
+Что осталось до RC? Commit and push exactly `README.md`, `README.adoc`, and this orchestration journal, then verify the final clean/upstream-synchronized Git state.
