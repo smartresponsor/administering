@@ -1,5 +1,39 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004132532-administering-311bf1 — Canon031 operation lifecycle proof command contract
+
+### Reconnaissance, maturity mixin, and canon mapping
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` as the authoritative clean workspace on `engine/administering-post-rc-canon-composer`; the supplied 2026-09-29 Canon052 RED and Inspecting report were consumed before selecting work.
+- Read current Administering root/package/journal contracts, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner Administering profile/rule-set, and Canonization textual `Canon031PhpDocCoverageRule.md` plus `Canon052GatingIntegrationRule.md`.
+- The historical Canon052 failure is a copied consumer-local Gating engine. Current manifests and recent live repository evidence use package-owned `gating/gate`, the canonical sibling symlink in development, path-independent production metadata, and artifact-only consumer `.gating/`; the stale RED is not replayed as a current defect.
+- Supplied Inspecting is medium-only source-quality baseline evidence (114 medium, 0 high). Recent accepted Administering evidence records 104 medium / 0 high after subsequent source work; a fresh post-mutation run is required for this source fingerprint.
+- Canon031 requires meaningful descriptions independently for eligible classes and contract-significant methods. `AdministrationOperationLifecycleProofCommand` already has semantic class documentation, while its protected `configure()` and `execute()` methods remain undocumented contract methods.
+- EasyAdmin/Symfony practice keeps action authorization in server-side security rather than menu visibility alone; Backstage-style control planes similarly separate permission policy from backend/plugin enforcement. Administering therefore remains a deterministic governance/orchestration surface with fail-closed proof evidence rather than absorbing generic CRUD, rendering, shell, or Objecting system-field ownership.
+- RC-critical workstream: document the lifecycle-proof command's CLI configuration and synchronous persisted proof/failure contract without executable behavior changes, then verify deterministic quality and fresh Inspecting.
+- Growth workstream: repository-wide Canon031 completion, Canon040 executable coverage, Canon042 functional/UI coverage, and remaining medium Inspecting decomposition stay separate and do not block this bounded semantic-contract pass.
+- UI/runtime applicability: no route, template, JavaScript, navigation, form, browser/mobile, or runtime-composition behavior is selected; runtime restart, cohorts, and screenshots are not applicable unless scope changes.
+
+### Acceptance plan
+- Add semantic PHPDoc only to `AdministrationOperationLifecycleProofCommand::configure()` and `::execute()`.
+- Run changed-source/package/static/style/test/Symfony/Gating acceptance as available, refresh coverage if the repository contract requires it, obtain fresh post-mutation Inspecting evidence, then integrate only the coherent command+journal block and verify final HEAD/upstream state.
+
+Что имеем? Historical Canon052 is classified as stale, the current dependency/canon boundaries are mapped, and one factual Canon031 contract-method gap is selected without behavior or UI expansion.
+Что осталось? Apply the two semantic method descriptions, execute deterministic acceptance and fresh Inspecting, then commit/push the coherent task block if green.
+
+### Implementation and acceptance
+- Added meaningful Canon031 PHPDoc to `AdministrationOperationLifecycleProofCommand::configure()` and `::execute()`; no executable statement, option, dependency, route, template, form, JavaScript, or runtime wiring changed.
+- Live Gating exposed that the existing semantic class description was separated from the declaration by `#[AsCommand]`; moved the unchanged description below the attribute so it is immediately adjacent to the class and deterministically countable by Canon031.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer cs:check`: GREEN, 0/730 fixable files.
+- `composer stan`: GREEN, 730 files, 0 errors.
+- `composer test`: GREEN after final source mutation, 154 tests / 704 assertions.
+- `composer gate:report`: GREEN for hard canon, 71 total / 58 passed / 0 failed / 10 skipped / 3 warnings. Canon052 passes. Canon031 improved from the prior accepted 345/687 classes and 86/1010 contract methods to 346/687 classes and 88/1012 contract methods; lifecycle-proof is no longer a representative uncovered class.
+- Fresh Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-133341.json`; 104 medium, 0 high, 0 autofixable, PHPStan analyzer 0 errors, max complexity 21. The existing 80-line lifecycle `execute()` maintainability observation remains growth debt and was not worsened by this documentation-only pass.
+- Behavioral/UI applicability remains NOT_APPLICABLE: no user-observable UI/navigation/form/interaction change, so no runtime restart, cohort browser flow, or visual artifact is justified for this task.
+
+Что имеем? The bounded Canon031 lifecycle-proof documentation contract is materially improved and all applicable deterministic/static/test/Gating/Inspecting evidence is green or observational-only.
+Что осталось? Inspect the exact diff and branch/upstream state, commit only the command+journal task block, push safely, and verify final clean synchronized state.
+
 ## 2026-10-04 — engine-20261004123714-administering-333051 — Canon031 materialization-preview command contract
 
 ### Reconnaissance, maturity mixin, and canon mapping

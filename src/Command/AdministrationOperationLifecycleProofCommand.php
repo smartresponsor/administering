@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:operation:lifecycle-proof',
+    description: 'Executes a safe Administering operation synchronously and verifies run/event/artifact reporting.',
+)]
 /**
  * Runs one metadata-only Administering operation synchronously as a 3RC proof.
  *
@@ -28,10 +32,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * process so operators and watchdog checks can prove the lifecycle without a
  * running async worker.
  */
-#[AsCommand(
-    name: 'administering:operation:lifecycle-proof',
-    description: 'Executes a safe Administering operation synchronously and verifies run/event/artifact reporting.',
-)]
 final class AdministrationOperationLifecycleProofCommand extends Command
 {
     public function __construct(
@@ -44,6 +44,9 @@ final class AdministrationOperationLifecycleProofCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Configures the launchable operation, safe proof target, and machine-readable output controls.
+     */
     protected function configure(): void
     {
         $this
@@ -52,6 +55,9 @@ final class AdministrationOperationLifecycleProofCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON.');
     }
 
+    /**
+     * Persists and executes the synchronous lifecycle proof, returning failure unless terminal status, events, and artifact evidence all satisfy the RC contract.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
