@@ -1,5 +1,27 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004122739-administering-8f57eb — Canon031 pipeline acceptance and integration
+
+### Reconciliation, canon mapping, and maturity split
+- Console MCP resolved `D:\PhpstormProjects\www\Administering` as the authoritative workspace. Reconnaissance found exactly two inherited, coherent in-scope dirty paths: this orchestration journal and `src/Command/AdministrationOwnerConfigurationToolExternalPackagePipelineCommand.php`; no reset, stash, clean, overwrite, or sibling mutation was used.
+- Read Administering repository/package contracts, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner profile/rule-set, Canonization authoritative Canon031/Canon052 rules, and the supplied CanonScanning Gating/Inspecting reports before drawing conclusions.
+- The supplied 2026-09-29 Canon052 RED is historical. Current live Gating reports 71 rules / 0 failed / 3 warnings / 10 skipped and Canon052 PASS, so destructive replay of the old consumer `.gating/` cleanup is neither justified nor required.
+- Canon031 applies to the pipeline command class plus contract-significant `configure()` and `execute()` methods. The inherited PHPDoc is semantic, describes actual deterministic orchestration/failure/non-destructive handoff behavior, and does not change executable statements, signatures, routes, dependencies, persistence, or UI.
+- Mature control-plane/admin practice favors deterministic orchestration, explicit stage ownership, fail-closed status, machine-readable evidence, and non-destructive operator handoff. RC-critical work is the bounded semantic contract plus deterministic acceptance; broader Canon031 completion, Canon040 executable coverage, Canon042 behavioral/UI coverage, and remaining medium Inspecting debt stay separate growth work.
+
+### Acceptance evidence
+- `composer validate --strict --check-lock`: GREEN.
+- Changed PHP syntax lint: GREEN for `AdministrationOwnerConfigurationToolExternalPackagePipelineCommand.php`.
+- `composer cs:check`: GREEN, 0 / 730 fixable files.
+- `composer test`: GREEN, 154 tests / 704 assertions.
+- Live `composer gate:report`: hard GREEN — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon052 PASS. Canon031 is warning-only at classes 343/687 (49.9%) and contract methods 82/1010 (8.1%), and the pipeline class/configure/execute cluster is absent from representative weak-symbol evidence.
+- Fresh post-mutation Inspecting report `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261004-123722.json`: PHPStan 0 errors, 104 medium findings, 0 high/critical. The supplied historical pipeline `execute()` 179-line / complexity-18 findings are gone; only the current declarative `pipelineDefinitions()` 84-line medium observation remains.
+- A direct asynchronous aggregate `composer gate` start was initially capacity-deferred under `ENGINE_BACKLOG_HIGH`, and a later start received an execution-plane 502. These transport/admission events are superseded by the successful deterministic `gate:report` execution and are not treated as repository failures.
+- No browser/mobile/user-observable behavior changed. Runtime restart, Panther/Playwright cohorts, screenshots, and visual artifacts are not applicable to this PHPDoc-only source delta.
+
+Что имеем? The inherited Canon031 pipeline documentation slice is factually accepted, historical Canon052 RED is superseded by live PASS evidence, and fresh Inspecting confirms zero high findings with the old pipeline complexity hotspot absent.
+Что осталось? During verification, another authorized execution integrated and published the pipeline source as `61f2d7c` (`docs(administering): document external package pipeline contract`), leaving only this task-specific journal receipt dirty. Publish this journal-only receipt, then confirm clean worktree and upstream parity. Canon031/040/042 remain explicit warning-level growth debt rather than blockers introduced by this task.
+
 ## 2026-10-04 — engine-20261004121851-administering-50b9bf — Canon031 external-package pipeline contract documentation
 
 ### Reconnaissance and baseline
