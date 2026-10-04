@@ -1,5 +1,32 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004103321-administering-7b1ae3 Canon031 owner-package apply-script contract
+
+### Baseline, dependency contour, canon mapping, and workstreams
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on `engine/administering-post-rc-canon-composer`; pre-existing dirty work was limited to `CMCP_CHANGELOG.md` and `src/Command/AdministrationOwnerConfigurationToolDiscoveryCommand.php`, and was preserved.
+- Read the supplied CanonScanning RED report and current live Gating evidence. Historical Canon052 failure was consumer-local `.gating/` engine/policy duplication; live `composer gate` now passes Canon052 with 71 rules / 0 failed / 3 warnings, so destructive or duplicate Canon052 remediation is not justified.
+- Consulted Canonization `.canonization/Governance/Architecture/Rule/Canon052GatingIntegrationRule.md` and the current Administering `AGENTS.md`, `README.md`, and `composer.json`. Canon052 maps to the existing `gating/gate` `dev-master` dependency, sibling `../Gating` symlink, `gate` script, aggregate `quality` inclusion, production package separation, and artifact-only consumer `.gating/` boundary.
+- Read relevant `AGENTS.md`, `README.md`, and `composer.json` contracts from Objecting, Cruding, Viewing, Interfacing, and Gating. The selected change stays inside Administering command/documentation ownership and does not move Objecting system fields, generic CRUD, rendering, shell/interface, or executable Gating policy into this repository.
+- Market/maturity contour: EasyAdmin/Symfony administrative systems expect server-side action authorization rather than menu visibility alone; Backstage-style mature internal platforms separate permission policy from enforcement and expose structured audit events. RC-critical work remains deterministic governance contracts and verifiable operator handoffs; growth work remains broader authorization/audit UX, richer operator explainability, and systematic Canon031/040/042 debt reduction.
+- Live Canon031 baseline after the inherited discovery-command documentation change was classes 336/687 (48.9%) and contract methods 68/1010 (6.7%); Canon040 and Canon042 remain warning-level debt and are not promoted into this task's hard RC blocker.
+
+### Material implementation
+
+- Added semantic class, `configure()`, and `execute()` PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageApplyScriptCommand`, documenting its non-destructive owner-package handoff boundary, option contract, and failure semantics without changing runtime behavior.
+- Removed one redundant adjacent PHPDoc line on `requireLiteral()` while preserving its typed parameter contract.
+- No browser/mobile/user-observable UI surface changed; runtime restart, cohort browser execution, screenshots, and visual artifacts are not applicable to this documentation-only source change.
+
+### Verification and acceptance
+
+- Post-mutation Gating: PASS, 71 rules / 0 failed / 3 warnings. Canon031 improved to classes 337/687 (49.1%) and contract methods 70/1010 (6.9%); Canon052 remains PASS.
+- PHPStan: PASS, 0 errors. PHP-CS-Fixer dry-run: PASS, 0 fixable files. PHPUnit: PASS, 154 tests / 704 assertions. Composer manifest, 13 YAML files, and Symfony container lint all PASS.
+- Post-mutation Inspecting completed with PHPStan 0 errors and 104 medium structural observations. The changed apply-script command is reported for pre-existing long-method shape; no finding is autofixable and no applicable canon/gate promotes these observations to a blocker for this documentation-only change.
+- No UI behavior changed, so Panther/Playwright cohorts and screenshot evidence are not applicable.
+
+Что имеем? Historical Canon052 is superseded by current GREEN executable evidence; the selected Canon031 contract debt is remediated and deterministic acceptance is GREEN.
+Что осталось? Commit and publish the coherent two-file change, then verify final branch/upstream cleanliness.
+
 ## 2026-10-04 — engine-20261004102255-administering-f68504 Canon031 owner-tool discovery contract
 
 ### Factual baseline, market contour, and canon mapping
