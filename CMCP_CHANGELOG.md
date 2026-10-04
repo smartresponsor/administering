@@ -1068,6 +1068,62 @@ Verification:
 
 Что осталось до RC? Commit and push exactly `README.md`, `README.adoc`, and this orchestration journal, then verify the final clean/upstream-synchronized Git state.
 
+## 2026-10-04 — engine-20261004071448-administering-0b7c54 validator cohesion remediation
+
+### Reconnaissance baseline
+
+- Workspace resolved through Console MCP as `D:\\PhpstormProjects\\www\\Administering`; active branch `engine/administering-post-rc-canon-composer`, baseline HEAD `d950d7669a96c9b6a6da2a1bd3fc1c03fad5fada`, clean and aligned with upstream at reconnaissance.
+- Read the authoritative execution specification, root README/Composer/journal surfaces, the historical CanonScanning RED report, and the latest available Inspecting report tied to the current source lineages.
+- Read mandatory local contracts for Objecting, Cruding, Viewing, and Interfacing, plus Gating owner profile/rule-set and Canonization normative Canon014/021/031/040/042/052 rules.
+- Historical Canon052 RED is not the current baseline: the report failed because a copied Gating engine existed under consumer `.gating/`; current repository history has already removed that topology and later live Gating evidence is hard-green. The stale failure will not be replayed as a remediation target.
+- Latest Inspecting evidence `D--PhpstormProjects-www-Administering-20261004-075156.json` reports 112 medium findings, 0 high, PHPStan 0 errors and max complexity 23. Selected bounded hotspot: `AdministrationConfigurationToolDefinitionValidator::validate()` at 62 lines / cyclomatic complexity 22.
+- Existing dedicated validator tests cover a canonical producer definition, deterministic malformed/mismatched diagnostic ordering and severities, and executable legacy form-contract requirements. This makes the source refactor behaviorally bounded and directly verifiable.
+
+### Canonization mapping
+
+- Canon014: validation orchestration should remain cohesive; stable identity/provider/service/form/executable/key validation groups may be delegated to private typed helpers without inventing a new architecture layer.
+- Canon021: no generic CRUD machinery is introduced; EasyAdmin remains the permitted administrative surface while Cruding owns generic application CRUD.
+- Canon031: semantic PHPDoc coverage remains warning-level growth debt and is not used as justification for placeholder comments.
+- Canon040: executable coverage remains warning-level debt; this pass relies on existing direct regression tests and does not weaken coverage thresholds.
+- Canon042: no browser/mobile/UI surface is selected, so behavioral/UI screenshot evidence is not applicable to this source-only refactor.
+- Canon052: Gating remains package-owned; consumer `.gating/` will not gain executable policy/tooling.
+
+### Market / maturity split
+
+- Mature Symfony admin stacks keep server-side authorization and validation policy explicit and independently testable; mature developer portals likewise separate central policy decisions from resource/plugin enforcement.
+- RC-critical stream: reduce the selected validator complexity while preserving diagnostic order, severity, expected/actual values, and public interface behavior; prove the result with deterministic gates and fresh Inspecting.
+- Growth stream: broad PHPDoc, executable coverage, behavioral/UI inventory expansion, approval UX and operator explainability remain separate from this bounded RC repair.
+
+### Material risks and planned gates
+
+- Diagnostic order is observable to tests/report consumers and must remain byte-for-byte semantic-equivalent in ordering.
+- The variable-driven service contract check must remain lazy and preserve existing executable/form fallback semantics.
+- Planned verification: targeted PHPUnit, full PHPUnit, PHPStan, CS dry-run, Composer validation, YAML/container lint, architecture suite, live Gating, and post-mutation Inspecting. No runtime restart is justified because no runtime/UI entry surface is being changed.
+
+Что имеем? Current hard-canon state is clean, the historical RED is classified as stale, and one fresh Inspecting hotspot has direct regression coverage and a bounded refactor path.
+
+Что осталось? Implement the validator decomposition, re-run applicable deterministic gates and fresh Inspecting, update this journal with actual acceptance evidence, then commit/push only the coherent source/test/journal block.
+
+### Implementation and acceptance evidence
+
+- Refactored `AdministrationConfigurationToolDefinitionValidator::validate()` into cohesive private identity, service, form-convention, executable-contract, and tool-key validation groups. The public interface, violation ordering, severities, messages, and expected/actual values are preserved.
+- Full PHPUnit executed 152 tests / 689 assertions; 151 tests passed and the only failure is `AdministrationRuntimeScopeStateReaderTest::testItAggregatesComposerCatalogAndLockState`, whose production reader and test appeared as unrelated concurrent dirty work after this task's clean baseline. The validator regression tests therefore completed without failure.
+- `composer stan`: GREEN, 0 errors.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer gate`: GREEN hard gate, 0 failed; existing warning debt remains Canon031 PHPDoc plus stale Canon040/042 coverage evidence.
+- `composer inspect:architecture`: GREEN.
+- `composer lint:yaml`: GREEN, 13 files.
+- `composer lint:container`: GREEN.
+- `composer cs:check`: task-owned validator has no reported style finding; command is repository-level RED only because concurrently dirty `AdministrationRuntimeScopeStateReader.php` and new TransitionPauseGate/RuntimeScope tests require formatting.
+- Fresh Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-080909.json`. The selected `AdministrationConfigurationToolDefinitionValidator::validate()` complexity/long-method finding is absent and repository max complexity decreased from 23 to 21. Four fresh HIGH PHPStan findings are confined to the concurrently added `AdministrationOwnerConfigurationToolTransitionPauseGateCommandTest.php`, outside this task's ownership.
+- `lint:php` returned no process exit code through the Console MCP Composer wrapper and therefore is recorded as NOT_VERIFIED rather than inferred green; PHP syntax/type viability for this change is nevertheless covered by successful PHPStan, container lint, Gating, architecture guards, and PHPUnit execution through all 152 tests.
+- No UI/browser/mobile behavior was changed, so runtime restart, Playwright/Panther execution, screenshots, and cohort evidence are not applicable to this refactor.
+- Concurrent protected dirt observed and intentionally excluded from this task: TransitionPauseGate command/test plus RuntimeScope reader/path-resolver/test work. No stash/reset/clean/rewrite was used.
+
+Что имеем? The selected fresh Inspecting hotspot is materially remediated and all task-owned deterministic evidence is green; repository-wide PHPUnit/CS/Inspecting high findings are qualified by independently evolving protected concurrent paths.
+
+Что осталось? Create a coherent commit containing only `CMCP_CHANGELOG.md` and `src/Validator/Admin/AdministrationConfigurationToolDefinitionValidator.php`, publish it without absorbing concurrent work, then verify branch/upstream state.
+
 ## 2026-10-04 — engine-20261004072526-administering-41e817 live baseline and coverage hardening
 
 ### Factual baseline and mandatory contour
