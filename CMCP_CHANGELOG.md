@@ -19,6 +19,19 @@
 Что имеем? One bounded pre-existing Canon031 command-documentation slice is reviewed against the actual textual canon and dependency boundaries without overwriting it.
 Что осталось? Execute deterministic verification and fresh Inspecting, record actual acceptance evidence, then integrate/publish the coherent source+journal block if green.
 
+### Acceptance and integration reconciliation
+- Changed-PHP lint: GREEN for `AdministrationOwnerConfigurationToolExternalPackageOverlayPlanCommand.php`.
+- `composer validate --strict --check-lock`: GREEN.
+- PHPStan: GREEN — 730/730 files, 0 errors. PHP-CS-Fixer dry-run: GREEN — 0/730 fixable files. PHPUnit: GREEN — 154 tests / 704 assertions. YAML lint: GREEN — 13 files. Symfony container lint: GREEN.
+- Aggregate `composer quality` was not started because Console MCP capacity admission was `ADMIT_LIGHT_ONLY` under `ENGINE_BACKLOG_HIGH`; its deterministic constituents were executed individually and are GREEN. The capacity guard was not bypassed.
+- Live Gating: GREEN for hard acceptance — 71 rules, 0 failed, 3 warnings, 10 skipped. Canon052 is PASS. Canon031 is now 342/687 classes (49.8%) and 80/1010 contract methods (7.9%); the overlay-plan class/configure/execute cluster is absent from representative weak-symbol evidence. Canon040 and Canon042 remain explicit warning-level growth/test debt.
+- Fresh post-mutation Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-121758.json`: PHPStan 0 errors, 104 medium findings, 0 high/autofixable findings, max complexity 21. The touched command retains only pre-existing medium long-method observations for `execute()` and `buildOverlayPlan()`; the documentation-only change does not introduce or conceal a hard finding.
+- No route, form, template, JavaScript, navigation, browser/mobile, persistence, or runtime behavior changed, so runtime restart, cohort UI execution, screenshots, and visual artifacts are not applicable.
+- During verification, another authorized Administering execution integrated and published the exact source documentation plus this task baseline journal in commit `c1297c8` (`Document overlay plan command contract`). This run did not duplicate, reset, amend, stash, or overwrite that integration. Post-reconciliation worktree is clean and HEAD/upstream are synchronized at `c1297c8c53f3540969af2874cba720ac6865605a` before this terminal journal receipt.
+
+Что имеем? The bounded Canon031 overlay-plan documentation contract is materially integrated, deterministic hard acceptance is GREEN, historical Canon052 RED is superseded by live PASS evidence, and fresh Inspecting remains zero-HIGH.
+Что осталось? Publish only this terminal task-specific journal receipt, then confirm final clean worktree and upstream parity. Repository-wide Canon031/040/042 warning debt remains growth work rather than a blocker introduced by this task.
+
 ## 2026-10-04 — engine-20261004120541-administering-3e8fc6 Canon031 overlay-plan command contract
 
 ### Baseline, market contour, and canon mapping
