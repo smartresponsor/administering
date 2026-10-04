@@ -17,10 +17,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-handoff-bundle:validate',
     description: 'Validates a generated owner-side external handoff bundle without applying it.',
 )]
+/**
+ * Validates a generated owner-side handoff bundle before any repository overlay is attempted.
+ *
+ * The command verifies required artifacts, fail-closed safety literals, component-plan semantics,
+ * and operator checklist text without applying, moving, or deleting owner-repository files.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleValidateCommand extends Command
 {
     private const EXPECTED_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_handoff_bundle.v1';
 
+    /**
+     * Declares the handoff directory, optional JSON report target, and explicit tolerance switches.
+     *
+     * Empty or warning-bearing bundles remain failures unless the operator opts into the corresponding allowance.
+     */
     protected function configure(): void
     {
         $this
@@ -31,6 +42,12 @@ final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleVali
             ->addOption('allow-warnings', null, InputOption::VALUE_NONE, 'Do not fail when warnings are present.');
     }
 
+    /**
+     * Produces deterministic human or JSON validation evidence and returns a fail-closed exit status.
+     *
+     * Validation may write only the requested report artifact; it never applies the bundle and rejects missing
+     * required artifacts, invalid safety contracts, or non-permitted issues through the command exit status.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

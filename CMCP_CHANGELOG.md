@@ -18,8 +18,19 @@
 - Run changed-PHP/static/style/test/package/Symfony/Gating checks as available, measure the Canon031 delta, and obtain fresh post-mutation Inspecting evidence because tracked PHP source changes.
 - Integrate only this command-documentation plus task journal block and publish the current branch if deterministic acceptance remains green.
 
-Что имеем? Current hard canon is GREEN, the historical Canon052 failure is superseded by live evidence, concurrent ownership is separated, and one independent Canon031 contract target is selected.
-Что осталось? Apply semantic contract documentation, execute post-mutation verification, then commit/push and confirm clean upstream parity.
+### Material implementation and acceptance evidence
+
+- Added semantic class, `configure()`, and `execute()` PHPDoc to `AdministrationOwnerConfigurationToolExternalPackageHandoffBundleValidateCommand`, documenting its non-mutating handoff-validation responsibility, explicit CLI tolerance switches, and fail-closed acceptance semantics without changing command identity, options, report schema, artifacts, or runtime behavior.
+- PHP-CS-Fixer initially identified only the touched command for canonical comment alignment/line endings; repository-owned `composer cs:fix` normalized that file, and the repeated dry-run is GREEN at 0 / 730 fixable files.
+- `composer validate --strict --check-lock`: GREEN. PHPStan: GREEN — 730 / 730 files, 0 errors. PHPUnit: GREEN — 154 tests / 704 assertions. YAML lint: GREEN — 13 files. Symfony container lint: GREEN.
+- Post-mutation Gating: GREEN — 71 rules / 0 failed / 3 warnings / 10 skipped; Canon052 remains PASS. Canon031 moved from the live shared baseline 337/687 documented classes and 70/1010 contract methods to 339/687 and 74/1010. That delta is intentionally recorded as combined concurrent evidence because the separately owned handoff-bundle command was integrated while this task was executing; this validation command itself is no longer present in the representative Canon031 weak-symbol list.
+- `composer test:coverage`: GREEN — 154 tests / 704 assertions with fresh Xdebug path-coverage evidence. Canon040 is therefore current rather than stale and reports warning-level HIGH_TEST_DEBT at 14.5% lines / 10.2% methods / 53.7% branches. Canon042 remains warning-level stale/low behavioral-UI evidence and is not promoted into this documentation-only task.
+- Fresh post-mutation Inspecting report `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Administering-20261004-112022.json`: 104 medium findings, 0 high, 0 autofixable, PHPStan 0 errors, max complexity 21. The existing `validateHandoffDir()` 63-line observation remains medium structural debt; no hard finding is introduced by this semantic-documentation change.
+- Concurrent repository integration advanced and published the branch to `430617467f8c8037a46b20666d4ec3941e0f0218` while this task was verifying. That integration also carried the already-written baseline journal entry and the separately owned handoff-bundle command. This task did not reset, duplicate, amend, or absorb that source change; after reconciliation the only product-source dirt was this task's validation command.
+- No route, form, template, JavaScript, navigation, browser/mobile, persistence, or runtime-composition behavior changed. Runtime restart, Panther/Playwright cohorts, screenshots, and visual artifacts are not applicable.
+
+Что имеем? The independent Canon031 validation-command contract is materially documented, deterministic acceptance is GREEN, coverage evidence is fresh, and post-mutation Inspecting remains zero-HIGH.
+Что осталось? Commit exactly the validation command plus this acceptance journal, publish the synchronized branch, then verify final clean HEAD/upstream parity.
 
 ## 2026-10-04 — engine-20261004110910-administering-d05f63 Canon031 external-package handoff contract
 
