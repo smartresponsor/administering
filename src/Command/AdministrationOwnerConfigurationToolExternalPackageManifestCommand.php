@@ -21,6 +21,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-manifest',
     description: 'Builds a grouped non-destructive owner-side external package manifest for neighboring repositories.',
 )]
+/**
+ * Builds the non-destructive owner package manifest used to hand configuration tools to their owning components.
+ *
+ * Provider definitions are validated before inclusion so rejected tools remain explicit evidence instead of silently entering the handoff package.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand extends Command
 {
     /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
@@ -31,6 +36,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         parent::__construct();
     }
 
+    /**
+     * Declares component filtering, machine-readable output, artifact writing, and explicit tolerance switches for incomplete manifests.
+     */
     protected function configure(): void
     {
         $this
@@ -41,6 +49,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
             ->addOption('allow-rejected', null, InputOption::VALUE_NONE, 'Do not fail when some owner tools are rejected from the manifest.');
     }
 
+    /**
+     * Validates discovered owner tools, emits the grouped manifest, and fails closed unless explicitly allowed empty or rejected results are requested.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

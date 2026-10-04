@@ -1,5 +1,63 @@
 # CMCP Execution Journal
 
+## 2026-10-04 — engine-20261004114407-administering-de6a31 Canon031 manifest-command verification and integration
+
+### Baseline
+- Console MCP resolved the authoritative workspace at `D:\PhpstormProjects\www\Administering`; branch `engine/administering-post-rc-canon-composer` is aligned with its upstream at baseline and contains two pre-existing in-scope dirty paths: this journal and `src/Command/AdministrationOwnerConfigurationToolExternalPackageManifestCommand.php`.
+- Read repository instructions, package manifests, quality configuration, current source, the supplied CanonScanning Gating/Inspecting evidence, and the mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contracts.
+- Historical CanonScanning Gating evidence failed only Canon052 because consumer `.gating/` still contained a copied Gating engine/policy tree at scan time; current Canon052 requires `.gating/` to remain artifact-only and standard Composer Gating integration to own executable policy.
+- Canon031 is a warning contract requiring at least 70% meaningful descriptions for classes and contract-significant methods. The pre-existing source delta adds semantic PHPDoc to the external-package manifest command class plus `configure()` and `execute()` without changing executable behavior.
+- Supplied Inspecting evidence is observational: 114 medium maintainability/design findings and no high-severity finding. It includes the manifest command long-method observation, which is not changed by this documentation-only patch.
+
+### Canon mapping and work selection
+- Canon031: accept only documentation that describes the actual manifest command semantics; the reviewed descriptions match validation-before-inclusion, grouped manifest emission, fail-closed exit behavior, output modes, and explicit tolerance switches in the implementation.
+- Canon052: preserve package-owned Gating and artifact-only consumer `.gating/`; do not recreate local executable policy.
+- Objecting/Cruding/Viewing/Interfacing boundaries remain unchanged: this pass does not move system fields, generic CRUD, rendering, or shell responsibilities into Administering.
+- Mature admin/internal-platform tooling practice favors deterministic, fail-closed operator commands with independently understandable contracts and machine-readable evidence. RC-critical work here is semantic command documentation plus deterministic verification and integration. Growth work remains broader operator explainability, test/behavioral coverage, and repository-wide documentation coverage and does not block this focused RC pass.
+
+### Risks and acceptance gates
+- No runtime logic, routes, forms, templates, browser/mobile flow, Doctrine schema, or user-observable UI changes are present; runtime restart and visual/behavioral UI execution are therefore not applicable to this patch.
+- Run changed-PHP lint, strict Composer validation, PHPStan, CS dry-run, PHPUnit, YAML/container lint, live Gating, and fresh post-mutation Inspecting evidence. Preserve unrelated/concurrent work and integrate only the verified source plus orchestration journal.
+
+### Verification
+- `php -l` for the changed PHP file: GREEN.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer stan`: GREEN, 0 errors across 730 analyzed files.
+- `composer cs:check`: GREEN, 0/730 files require formatting changes.
+- `composer test`: GREEN, 154 tests / 704 assertions.
+- `composer lint:yaml`: GREEN, 13 YAML files valid.
+- `composer lint:container`: GREEN.
+- `composer gate`: GREEN for hard acceptance with 0 failed rules. Canon052 is now explicitly PASSED. Canon031 remains its expected warning but improves to classes 340/687 (49.5%) and contract methods 76/1010 (7.5%); this manifest command is no longer among representative weak symbols. Canon040 and Canon042 remain pre-existing stale/coverage warnings and are growth/debt backlog, not regressions from this documentation-only change.
+- Aggregate `composer quality` was not admitted because Console MCP was temporarily in `ADMIT_LIGHT_ONLY` capacity mode; all constituent deterministic scripts relevant to the patch were executed individually and passed.
+- Fresh post-mutation Inspecting: completed with PHPStan 0 errors and 104 medium-only structural findings (down from the supplied historical 114); no high-severity or autofixable finding. The existing manifest-command long-method observation remains unchanged and is observational rather than caused by this PHPDoc pass.
+- Runtime restart, behavioral UI execution, and screenshots are not applicable because executable logic and user-observable UI were not changed.
+
+Что имеем? Verified semantic Canon031 improvement, live Canon052 GREEN, all applicable deterministic constituent gates GREEN, and fresh Inspecting with no high-severity regression.
+Что осталось? Create a coherent signed commit for the source plus orchestration journal, publish the current branch, then inspect final HEAD/worktree/upstream state.
+
+## 2026-10-04 — engine-20261004113412-administering-1adba5 Canon031 external-package manifest contract
+
+### Factual baseline, market contour, and canon mapping
+
+- Console MCP resolved `D:\\PhpstormProjects\\www\\Administering` on `engine/administering-post-rc-canon-composer`; baseline HEAD `d528591a260e2da86f3ff5f09b6c56272491ff0a` is clean and synchronized with `origin/engine/administering-post-rc-canon-composer`.
+- Read the authoritative execution specification, current Administering root contracts, development/production Composer manifests, package/test/gate surfaces, historical CanonScanning RED, supplied Inspecting evidence, and the existing CMCP journal.
+- Read mandatory Objecting, Cruding, Viewing, and Interfacing root contracts plus Gating owner contracts/profile/rule-set and Canonization textual `Canon031PhpDocCoverageRule` and `Canon052GatingIntegrationRule`.
+- Historical Canon052 RED was a copied consumer-local Gating engine. Live Gating on the current tree is 71 rules / 0 failed / 3 warnings / 10 skipped with Canon052 PASS, so replaying the historical `.gating/` cleanup is not justified.
+- Canon031 currently reports 339/687 documented classes (49.3%) and 74/1010 documented contract methods (7.3%). The selected current representative weak symbol is `AdministrationOwnerConfigurationToolExternalPackageManifestCommand` with missing class, `configure()`, and `execute()` descriptions.
+- Supplied Inspecting evidence records 114 medium / 0 high findings and is consumed as the historical source-quality baseline. Because tracked PHP source will change, fresh post-mutation Inspecting evidence is required before closure.
+- Market/maturity contour: mature Symfony administrative and internal-platform tooling keeps operator commands explicit, deterministic, fail-closed, and independently understandable while generic CRUD, rendering, shell, and system-field mechanics remain in their owning packages. RC-critical maturity here is a precise operator contract plus deterministic evidence; broader approval/explainability UX and repository-wide documentation/test/UI coverage remain growth work.
+
+### Target-to-canon mapping and selected work
+
+- Canon031: add meaningful semantic PHPDoc for this command's manifest-building responsibility, CLI configuration contract, and exit/failure semantics; do not add placeholder/tag-only comments.
+- Canon052: keep Gating package-owned and consumer `.gating/` artifact-only; current executable evidence is already hard-green.
+- Objecting/Cruding/Viewing/Interfacing boundaries remain unchanged: this command only inventories Administering-owned owner-tool providers and produces a non-destructive handoff manifest.
+- No route, form, template, JavaScript, navigation, browser/mobile, persistence, or runtime-composition behavior is selected, so runtime restart, cohort UI execution, screenshots, and visual artifacts are not applicable unless scope changes.
+- Acceptance plan: changed-PHP lint, Composer validation, PHPStan, CS dry-run, PHPUnit, YAML/container lint, live Gating with measured Canon031 delta, fresh post-mutation Inspecting, then coherent Git integration/publication if green.
+
+Что имеем? Current hard canon is GREEN, the historical Canon052 RED is superseded by live evidence, and one bounded current Canon031 weak command contract is selected from executable evidence.
+Что осталось? Add semantic documentation without executable changes, run the full applicable acceptance contour plus fresh Inspecting, then commit/push exactly the coherent source+journal block and verify final upstream parity.
+
 ## 2026-10-04 — engine-20261004110859-administering-1a38e8 Canon031 handoff-bundle validation contract
 
 ### Factual baseline, market contour, and canon mapping
