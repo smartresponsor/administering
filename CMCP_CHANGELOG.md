@@ -863,6 +863,15 @@
 
 ## 2026-10-04 — engine-20261004083306-administering-e9ea19 runtime-scope lock normalization cohesion
 
+### Fresh Inspecting acceptance — 2026-10-05
+
+- Fresh standalone Inspecting completed successfully for the current Administering workspace at `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261005-210156.json`.
+- Result: 104 medium findings, 0 high findings; PHPStan errors 0; max complexity remains 21.
+- The previous `AdministrationRuntimeScopeLockService::normalize()` long-method / complexity finding is absent from the fresh report, confirming the bounded normalization refactor achieved its intended structural reduction without introducing a new targeted finding.
+- Compared with the prior 108-medium baseline, the fresh report contains 104 medium findings. Remaining findings are pre-existing broader Administering debt outside this bounded RC hardening scope.
+- This closes the previously recorded `NOT_VERIFIED` fresh-Inspecting tail for this task.
+
+
 ### Factual baseline and target-to-canon mapping
 
 - Workspace resolved exclusively through Console MCP at `D:\\PhpstormProjects\\www\\Administering`; the Windows path was never probed through the ChatGPT container.
