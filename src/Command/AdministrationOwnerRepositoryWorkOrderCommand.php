@@ -17,6 +17,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:owner-work-order',
     description: 'Builds the final work order for requesting owner/host current slices and starting concrete repository-specific patch waves.',
 )]
+/**
+ * Builds the final read-only work order for collecting owner and host current slices before repository-specific patch waves begin.
+ *
+ * The command translates readiness artifacts and requested component identities into explicit repository inputs and deliverables without applying cross-repository changes.
+ */
 final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
 {
     public function __construct(private readonly string $projectDir)
@@ -24,6 +29,9 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares owner-slice inputs, host-track selection, transition artifacts, evidence output, and advisory/fail-closed controls for the work order.
+     */
     protected function configure(): void
     {
         $this
@@ -39,6 +47,11 @@ final class AdministrationOwnerRepositoryWorkOrderCommand extends Command
             ->addOption('fail-if-no-components', null, InputOption::VALUE_NONE, 'Fail when no owner components are provided.');
     }
 
+    /**
+     * Builds deterministic owner and host repository work orders from current transition readiness evidence and requested component slices.
+     *
+     * Missing prerequisite artifacts fail closed unless advisory mode is explicitly enabled, while emitted paths and deliverables remain instructions only and never mutate neighboring repositories.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
