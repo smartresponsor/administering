@@ -1,5 +1,27 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC class-doc association pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `f4b03d3a423a30f094d7641af28a5621b0938f99`.
+- Fresh Gating remained `0 failed`; Canon031 baseline was classes `356/687 (51.8%)`, contract methods `100/1006 (9.9%)`.
+- Representative weak symbols now begin in the RC command family. Review showed several commands already had meaningful class PHPDoc, but the docblock preceded `#[AsCommand]`, so Canon031 did not associate it with the class declaration.
+- Corrected three current-evidence commands by moving their existing semantic PHPDoc adjacent to the class declaration after `#[AsCommand]`: `AdministrationRcAcceptanceCommand`, `AdministrationRcContractValidateCommand`, and `AdministrationRcFinalSealCommand`.
+- Documentation text was preserved verbatim; no executable statements, signatures, options, routes, UI, Doctrine metadata, DI, or runtime wiring changed.
+
+Что имеем? Corrected a systematic PHPDoc-association defect in the first RC class cluster instead of duplicating documentation.
+Что осталось? Re-run Gating to verify the three class weak symbols disappear, then run deterministic quality/Inspecting and integrate the isolated slice.
+
+### Expanded RC association repair
+- The first three moves were confirmed by live Gating: class coverage rose `356/687 (51.8%) -> 359/687 (52.3%)` and all three selected symbols disappeared.
+- Applied the same verified association repair to six additional RC commands whose meaningful PHPDoc also sat before `#[AsCommand]`: `AdministrationRcFinalSealValidateCommand`, `AdministrationRcFinalStatusValidateCommand`, `AdministrationRcHandoffBundleCommand`, `AdministrationRcHandoffBundleValidateCommand`, `AdministrationRcHandoffIndexCommand`, and `AdministrationRcHandoffIndexValidateCommand`.
+- Second live Gating result: `0 failed`; Canon031 classes `365/687 (53.1%)`, contract methods `100/1006 (9.9%)`; all nine repaired class symbols are gone from representative weak evidence. Canon052 remains GREEN.
+- Across all nine PHP files, only the relative placement of the existing class docblock and `#[AsCommand]` attribute changed; semantic documentation and executable code are unchanged.
+
+Что имеем? Nine genuine semantic class docs are now recognized by Canon031, improving class coverage by 9 classes / 1.3 percentage points in one non-runtime slice.
+Что осталось? Refresh canonical coverage evidence, run aggregate quality and fresh Inspecting, then signed commit/push if Git remains isolated and synchronized.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 owner work-order contract pass
 
 ### Current-slice reconciliation
@@ -851,12 +873,12 @@
 - `composer lint:container`: GREEN.
 - `composer inspect:architecture`: GREEN — all nine architecture guards pass.
 - `composer gate`: GREEN at hard severity — 71 rules, 0 failed, 3 warnings, 10 skipped; Canon014, Canon021 and Canon052 PASS. Remaining warnings are Canon031, Canon040 and Canon042.
-- A fresh post-mutation Inspecting run was requested through Console MCP with the full timeout envelope, but the call timed out before returning a receipt and no new persisted Administering report was discoverable afterward. Fresh Inspecting for this exact fingerprint is therefore NOT_VERIFIED; no result is inferred from the timeout.
+- Fresh post-mutation Inspecting is now verified from persisted report `D--PhpstormProjects-www-Administering-20261005-205222.json`. The MCP invocation timed out before returning a receipt, but the report completed and persisted: 104 medium findings, 0 high, PHPStan 0 errors, max complexity 21. Both prior `AdministrationRuntimeScopeLockService::normalize()` findings (87-line long method and cyclomatic complexity 17) are absent from the current maintainability/complexity inventories.
 - Because no user-observable UI/navigation/form/browser flow changed, runtime restart, Panther/Playwright cohort execution and screenshots are not applicable.
 
 Что имеем? The selected runtime-scope lock normalization hotspot is materially decomposed and all applicable deterministic source/package/canon gates are GREEN, with refreshed PHPUnit coverage evidence.
 
-Что осталось? Obtain fresh Inspecting evidence for this exact source fingerprint when the execution plane can return/persist it, then integrate the source+journal block and verify final clean HEAD/upstream parity. Canon031/040/042 remain explicit non-blocking growth debt.
+Что осталось? No RC-critical verification tail remains for this bounded remediation. Canon031/040/042 remain explicit non-blocking growth debt; only this journal acceptance update must be committed/pushed and final clean HEAD/upstream parity rechecked.
 
 ## 2026-10-04 — engine-20261004081953-administering-8712e5 post-integration reconciliation
 
