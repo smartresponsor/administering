@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:owner-patch-readiness',
     description: 'Builds a read-only readiness report for moving from owner slice intake to concrete owner repository patch waves.',
 )]
+/**
+ * Builds a read-only readiness assessment for repository-specific owner patch waves from current intake and transition evidence.
+ */
 final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
 {
     public function __construct(private readonly string $projectDir)
@@ -23,6 +26,9 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the intake, transition evidence, handoff, output, advisory, and fail-if-not-ready controls for the readiness report.
+     */
     protected function configure(): void
     {
         $this
@@ -35,6 +41,9 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             ->addOption('fail-if-not-ready', null, InputOption::VALUE_NONE, 'Fail when any owner repository is not ready for a concrete patch wave.');
     }
 
+    /**
+     * Evaluates required transition artifacts and current repository slices, then reports whether concrete owner-specific patch waves may begin.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
