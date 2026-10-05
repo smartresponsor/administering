@@ -1,5 +1,31 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 transition-status contract pass
+
+### Current-slice reconciliation
+- Windows Console MCP current HEAD was re-read before mutation because parallel work advanced the branch after the previous pass: `4fba969b576395222ec8ee60ec1568f00703b080`, clean and synchronized with origin.
+- Fresh Gating at that HEAD: `0 failed`, Canon052 GREEN, Canon031 classes `354/687 (51.5%)`, contract methods `92/1006 (9.1%)`.
+- Selected current weak symbols: `AdministrationOwnerConfigurationToolTransitionStatusCommand::configure()` and `::execute()`; the class itself already had meaningful PHPDoc.
+- Added semantic PHPDoc only. `configure()` now documents filtering/evidence/fail-threshold semantics; `execute()` documents deterministic ownership classification, handoff-path evidence, warning preservation, and opt-in fail-closed behavior.
+- No executable statements, signatures, routes, UI, entities, DI, or configuration changed.
+
+Что имеем? Reconciled the parallel current tree and completed another bounded Canon031 documentation-only pass on current evidence.
+Что осталось? Re-run deterministic quality and Inspecting against this exact current slice, then commit/push only if the branch remains conflict-free and synchronized.
+
+### Verification and integration evidence
+- PHP syntax for the changed command: GREEN.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; canonical coverage evidence refreshed.
+- `composer quality`: GREEN, including YAML/container lint, PHPStan, PHP-CS-Fixer check, PHPUnit, and Gating.
+- Canon031 contract-method coverage improved from `92/1006 (9.1%)` to `94/1006 (9.3%)`; the transition-status `configure()` and `execute()` weak symbols disappeared from representative evidence. Canon052 remains GREEN and Gating remains `0 failed`.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261005-185813.json`; PHPStan `0 errors`, 104 medium observational findings, no high/critical findings.
+- Runtime/UI behavioral verification remains not applicable because only PHPDoc and the orchestration journal changed.
+- Pre-integration branch check remained on `4fba969b576395222ec8ee60ec1568f00703b080`, `ahead=0`, `behind=0`, with exactly the two owned files dirty.
+
+Что имеем? This Canon031 transition-status slice is deterministic-gate GREEN and fresh-Inspecting clean at the error level, with measurable method-coverage improvement.
+Что осталось? Commit and push the two-file coherent slice; the repository-wide Canon031/040/042 debt remains for subsequent passes.
+
+
 ## 2026-10-05 — engine-20261004093813-administering-f8aafe — Canon031 Messenger boundary documentation repair
 
 - Baseline: resumed through Console MCP on `engine/administering-post-rc-canon-composer`; target source was clean while `CMCP_CHANGELOG.md` already contained concurrent task-owned journal changes that are preserved and will not be staged by this execution.
