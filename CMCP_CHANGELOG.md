@@ -21,6 +21,17 @@
 Что имеем? Nine genuine semantic class docs are now recognized by Canon031, improving class coverage by 9 classes / 1.3 percentage points in one non-runtime slice.
 Что осталось? Refresh canonical coverage evidence, run aggregate quality and fresh Inspecting, then signed commit/push if Git remains isolated and synchronized.
 
+### Verification and integration evidence
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; canonical coverage evidence refreshed.
+- Aggregate `composer quality` synchronous call exceeded the MCP call timeout, and the durable retry was temporarily denied by runtime `ADMIT_LIGHT_ONLY` capacity policy rather than by repository failure.
+- All applicable constituent quality gates were then executed directly and GREEN: changed-file PHP lint (9/9), `composer validate --strict --check-lock`, PHPStan (`730` files, `0 errors`), PHP-CS-Fixer dry-run (`0/730 fixable`), YAML lint (`13` files), container lint, PHPUnit coverage, and live Gating (`0 failed`).
+- Fresh Inspecting report: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261005-205824.json`; PHPStan `0 errors`, 104 medium observational findings, 0 high/critical, 0 autofixable.
+- Canon031 final delta for this slice: classes `356/687 (51.8%) -> 365/687 (53.1%)`; contract methods unchanged at `100/1006 (9.9%)`; nine RC class weak symbols removed. Canon052 remains GREEN.
+- Runtime/UI behavioral verification remains not applicable because executable behavior and user-observable surfaces did not change.
+
+Что имеем? A nine-class Canon031 association defect is repaired and independently verified across every constituent quality gate plus fresh Inspecting.
+Что осталось? Commit and push the ten-file coherent slice; repository-wide Canon031/040/042 warning debt remains for subsequent passes.
+
 
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 owner work-order contract pass
 

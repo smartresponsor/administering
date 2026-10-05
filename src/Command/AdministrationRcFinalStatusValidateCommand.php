@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:final-status:validate',
+    description: 'Validates the terminal Administering 3RC status artifact against current receipt and seal artifacts.',
+)]
 /**
  * Validates the terminal Administering 3RC status artifact.
  *
@@ -21,10 +25,6 @@ use Symfony\Component\Yaml\Yaml;
  * current receipt, receipt-validation, final-seal-validation, and manifest
  * files instead of trusting a stale status artifact.
  */
-#[AsCommand(
-    name: 'administering:rc:final-status:validate',
-    description: 'Validates the terminal Administering 3RC status artifact against current receipt and seal artifacts.',
-)]
 final class AdministrationRcFinalStatusValidateCommand extends Command
 {
     protected function configure(): void

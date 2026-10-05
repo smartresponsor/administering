@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:handoff-index:validate',
+    description: 'Validates the terminal Administering 3RC handoff index against current final-status and receipt artifacts.',
+)]
 /**
  * Validates the terminal Administering 3RC handoff index artifact.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * final-status, receipt, final-seal-validation, and manifest files instead of
  * trusting a stale handoff artifact.
  */
-#[AsCommand(
-    name: 'administering:rc:handoff-index:validate',
-    description: 'Validates the terminal Administering 3RC handoff index against current final-status and receipt artifacts.',
-)]
 final class AdministrationRcHandoffIndexValidateCommand extends Command
 {
     protected function configure(): void

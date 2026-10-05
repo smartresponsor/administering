@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:contract:validate',
+    description: 'Validates the static Administering 3RC composer/manifest/helper contract.',
+)]
 /**
  * Validates the static 3RC proof contract before running the expensive runtime chain.
  *
@@ -19,10 +23,6 @@ use Symfony\Component\Yaml\Yaml;
  * It only checks that composer.json, delivery/rc/manifest.yaml, and the Windows
  * helper agree on the canonical RC command sequence and terminal handoff files.
  */
-#[AsCommand(
-    name: 'administering:rc:contract:validate',
-    description: 'Validates the static Administering 3RC composer/manifest/helper contract.',
-)]
 final class AdministrationRcContractValidateCommand extends Command
 {
     /** @var list<string> */

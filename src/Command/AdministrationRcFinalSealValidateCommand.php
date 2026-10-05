@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:final-seal:validate',
+    description: 'Validates the captured Administering 3RC final-seal artifact against current proof files.',
+)]
 /**
  * Validates the already-written Administering 3RC final seal artifact.
  *
@@ -21,10 +25,6 @@ use Symfony\Component\Yaml\Yaml;
  * upstream files, verifies the manifest contract, and emits a separate
  * validation artifact for owner/watchdog intake.
  */
-#[AsCommand(
-    name: 'administering:rc:final-seal:validate',
-    description: 'Validates the captured Administering 3RC final-seal artifact against current proof files.',
-)]
 final class AdministrationRcFinalSealValidateCommand extends Command
 {
     protected function configure(): void

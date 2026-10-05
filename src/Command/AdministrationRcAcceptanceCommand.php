@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:acceptance',
+    description: 'Creates the terminal Administering 3RC acceptance marker from the validated handoff bundle.',
+)]
 /**
  * Creates the final owner/watchdog acceptance marker for the Administering 3RC handoff.
  *
@@ -19,10 +23,6 @@ use Symfony\Component\Yaml\Yaml;
  * proof layer. It verifies the already validated bundle-aware status and handoff
  * bundle validation, then emits one explicit acceptance artifact for owner handoff.
  */
-#[AsCommand(
-    name: 'administering:rc:acceptance',
-    description: 'Creates the terminal Administering 3RC acceptance marker from the validated handoff bundle.',
-)]
 final class AdministrationRcAcceptanceCommand extends Command
 {
     protected function configure(): void
