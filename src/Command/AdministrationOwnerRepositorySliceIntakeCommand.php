@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:owner-slice-intake',
     description: 'Builds the post-freeze intake checklist for owner/host repository current slices.',
 )]
+/**
+ * Builds a guarded intake report that proves which owner repository current slices are available before patch generation begins.
+ */
 final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
 {
     public function __construct(private readonly string $projectDir)
@@ -24,6 +27,9 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares repository-slice inputs, evidence output options, and fail-closed controls exposed by this command.
+     */
     protected function configure(): void
     {
         $this
@@ -37,6 +43,9 @@ final class AdministrationOwnerRepositorySliceIntakeCommand extends Command
             ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Allow an empty component list.');
     }
 
+    /**
+     * Resolves requested owner repositories into an auditable readiness report without inferring unavailable current slices.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
