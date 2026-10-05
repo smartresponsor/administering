@@ -21,6 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:operation:messenger-boundary-proof',
+    description: 'Persists an Administering operation and proves the Messenger message-handler boundary in-process.',
+)]
 /**
  * Proves the Messenger handler boundary without requiring a running worker.
  *
@@ -29,10 +33,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * catches drift between the queued operation key, persisted operation type,
  * runner support, status recorder, events, artifacts, and report provider.
  */
-#[AsCommand(
-    name: 'administering:operation:messenger-boundary-proof',
-    description: 'Persists an Administering operation and proves the Messenger message-handler boundary in-process.',
-)]
 final class AdministrationOperationMessengerBoundaryProofCommand extends Command
 {
     public function __construct(
@@ -45,6 +45,9 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the operation-type, target-reference, and JSON evidence options used by the Messenger boundary proof.
+     */
     protected function configure(): void
     {
         $this
@@ -53,6 +56,9 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON.');
     }
 
+    /**
+     * Persists and executes the in-process Messenger proof, returning failure unless terminal status, event, artifact, and key-integrity checks pass.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
