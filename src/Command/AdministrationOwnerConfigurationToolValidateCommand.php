@@ -32,6 +32,9 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares component filtering, machine-readable evidence output, and explicit warning/empty-provider tolerance switches.
+     */
     protected function configure(): void
     {
         $this
@@ -42,6 +45,9 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
             ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Do not fail when no owner providers are discovered.');
     }
 
+    /**
+     * Validates discovered owner definitions, emits deterministic evidence, and fails closed on errors or unapproved warning/empty-provider states.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

@@ -1,5 +1,25 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004114407-administering-de6a31 — Canon031 owner-tool validation contract pass
+
+- Reconciled current Windows MCP HEAD `83fd329dc06403a37210df67f91ca011f5089f3b` after parallel Administering work; baseline was clean and synchronized with origin.
+- Fresh live Gating before this pass exposed `AdministrationOwnerConfigurationToolValidateCommand::configure()` and `::execute()` as the next representative Canon031 weak methods.
+- Added semantic PHPDoc only: `configure()` documents component filtering, evidence output, and explicit warning/empty-provider tolerance; `execute()` documents deterministic validation evidence and fail-closed behavior for errors or unapproved warning/empty states.
+- No executable statements, signatures, routes, templates, forms, Doctrine metadata, DI, browser/mobile behavior, or runtime wiring changed.
+
+### Verification
+- Changed-PHP lint: GREEN.
+- `composer stan`: GREEN, 0 errors across 730 analyzed files.
+- `composer cs:check`: GREEN, 0/730 files require formatting changes.
+- `composer test`: GREEN, 154 tests / 704 assertions.
+- `composer gate`: hard-GREEN with 0 failed rules; Canon052 remains PASSED. Canon031 increased from contract methods 94/1006 (9.3%) to 96/1006 (9.5%), and this validate command disappeared from representative weak symbols.
+- Fresh standalone Inspecting completed on this exact slice: PHPStan 0 errors; 104 medium-only structural findings; 0 autofixable; no high-severity regression.
+- Canon040/Canon042 remain pre-existing stale/coverage warning debt and are unchanged by this documentation-only pass.
+- Runtime restart, behavioral UI execution, and screenshots remain not applicable because user-observable and executable behavior did not change.
+
+Что имеем? Verified Canon031 owner-tool validation contract pass with measurable +2 contract-method coverage, hard Gating GREEN, tests/static analysis GREEN, and fresh Inspecting without high-severity regression.
+Что осталось? Create and publish one coherent signed commit for this source+journal block, then verify final worktree/upstream parity.
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 transition-status contract pass
 
 ### Current-slice reconciliation
