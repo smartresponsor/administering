@@ -18,6 +18,9 @@ use Symfony\Component\Form\AbstractType;
     name: 'administering:config:validate',
     description: 'Validates discovered configuration tool descriptors, form classes, and secret/file whitelists.',
 )]
+/**
+ * Validates discovered configuration descriptors against approved form/service classes and writable-file or secret-name constraints.
+ */
 final class AdministrationConfigValidateCommand extends Command
 {
     public function __construct(private readonly AdministrationConfigToolRegistryService $registryService)
@@ -25,6 +28,9 @@ final class AdministrationConfigValidateCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Validates every discovered descriptor and reports success only when all form, service, file, and secret constraints pass.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

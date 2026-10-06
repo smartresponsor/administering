@@ -1,5 +1,28 @@
 # CMCP Execution Journal
 
+## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 config-command pass
+
+### Current-slice reconciliation
+- Windows MCP recovered and `master` was clean/synchronized at `754f8c2c6d4970571c603385a0c53aaf2805728d`.
+- Fresh Gating baseline: Canon031 classes `392/687 (57.1%)`, contract methods `138/1006 (13.7%)`; 0 failed rules.
+- Selected live front: `AdministrationConfigApplyCommand`, `AdministrationConfigDiscoverCommand`, `AdministrationConfigSyncCommand`, and `AdministrationConfigValidateCommand`.
+- Added semantic PHPDoc only for the class and live contract-method gaps. No executable behavior, signatures, registry semantics, persistence behavior, form resolution, validation policy, routes, Doctrine metadata, or UI behavior changed.
+
+Что имеем? Nine config-command contracts are now documented.
+Что осталось? Verify the exact Canon031 delta, refresh coverage/quality, run exactly one fresh Inspecting pass, then integrate if the diff remains isolated.
+
+### Verification evidence
+- Changed PHP lint: GREEN for all four config-command files.
+- Fresh `composer gate`: GREEN (`exit 0`); Canon031 advanced from classes `392/687 (57.1%)` to `396/687 (57.6%)` and contract methods `138/1006 (13.7%)` to `143/1006 (14.2%)`. All selected `Command/Config` weak entries disappeared from the live front.
+- `composer test:coverage`: GREEN; PHPUnit `154/154`, `704` assertions.
+- Aggregate `composer quality` was attempted once after transport recovery and stopped during Symfony YAML/container compilation because existing controller service `AdministrationAccessingAccountRecordCrudController::updateEntity()` references missing `doctrine.orm.system_entity_manager`. This is outside the four documentation-only files in this slice; no runtime/config repair was mixed into this bounded Canon031 change.
+- Exactly one fresh Inspecting pass completed: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-145201.json`; PHPStan errors `0`, file errors `0`, findings `104` medium, `0` high/critical, `0` autofixable.
+- Next live Canon031 front begins at `AdministrationComponentIntegrationContractRegistry`, then admin controllers.
+
+Что имеем? This documentation-only slice is verified by lint, Gating, coverage, PHPUnit, PHPStan, and fresh Inspecting; aggregate quality remains blocked by an unrelated existing Doctrine service-container reference.
+Что осталось? Integrate the isolated five-file slice, then continue the live Canon031 front separately from the Doctrine service configuration blocker.
+
+
 ## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 service-tool runtime-control pass
 
 ### Current-slice reconciliation

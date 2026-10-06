@@ -14,6 +14,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:config:discover',
     description: 'Discovers connected applications and config tools, then refreshes the SQLite registry.',
 )]
+/**
+ * Discovers trusted connected applications and configuration tools, then refreshes their materialized SQLite registry state.
+ */
 final class AdministrationConfigDiscoverCommand extends Command
 {
     public function __construct(private readonly AdministrationConfigToolRegistryService $registryService)
@@ -21,6 +24,9 @@ final class AdministrationConfigDiscoverCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Synchronizes discovered applications and tools into the registry and reports the resulting inventory counts.
+     */
     protected function execute(\Symfony\Component\Console\Input\InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

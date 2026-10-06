@@ -15,6 +15,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:config:sync',
     description: 'Synchronizes the SQLite configuration registry from trusted component manifests.',
 )]
+/**
+ * Synchronizes the materialized configuration registry from trusted component manifests and discovered tool descriptors.
+ */
 final class AdministrationConfigSyncCommand extends Command
 {
     public function __construct(private readonly AdministrationConfigToolRegistryService $registryService)
@@ -22,6 +25,9 @@ final class AdministrationConfigSyncCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Refreshes the trusted configuration registry and reports synchronized application and tool counts.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

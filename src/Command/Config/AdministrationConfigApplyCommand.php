@@ -20,6 +20,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:config:apply',
     description: 'Applies a trusted configuration tool using its registered Symfony Form and service class.',
 )]
+/**
+ * Applies pending configuration through a trusted registered tool, approved Symfony form, and persisted runtime state.
+ */
 final class AdministrationConfigApplyCommand extends Command
 {
     public function __construct(
@@ -31,6 +34,9 @@ final class AdministrationConfigApplyCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the application/tool selector and save-only mode for trusted configuration execution.
+     */
     protected function configure(): void
     {
         $this
@@ -39,6 +45,9 @@ final class AdministrationConfigApplyCommand extends Command
             ->addOption('save-only', null, InputOption::VALUE_NONE, 'Store pending state in SQLite without applying side effects.');
     }
 
+    /**
+     * Resolves the trusted tool and descriptor, hydrates pending values, then saves or applies configuration with command actor context.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
