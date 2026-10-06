@@ -8,8 +8,17 @@
 - Selected live front: `AdministrationConfigApplyCommand`, `AdministrationConfigDiscoverCommand`, `AdministrationConfigSyncCommand`, and `AdministrationConfigValidateCommand`.
 - Added semantic PHPDoc only for the class and live contract-method gaps. No executable behavior, signatures, registry semantics, persistence behavior, form resolution, validation policy, routes, Doctrine metadata, or UI behavior changed.
 
-Что имеем? Nine config-command contracts are now documented.
-Что осталось? Verify the exact Canon031 delta, refresh coverage/quality, run exactly one fresh Inspecting pass, then integrate if the diff remains isolated.
+### Verification
+- Changed-PHP lint: GREEN for all four Config command files.
+- `composer stan`: GREEN, 0 errors across 730 analyzed files.
+- `composer test`: GREEN, 154 tests / 704 assertions.
+- `composer gate`: hard-GREEN with 0 failed rules; Canon052 remains PASSED. Canon031 moved from classes 392/687 (57.1%) and contract methods 138/1006 (13.7%) to classes 396/687 (57.6%) and contract methods 143/1006 (14.2%).
+- Fresh standalone Inspecting completed on this exact slice: PHPStan 0 errors; 104 medium-only structural findings; 0 autofixable; no high-severity regression.
+- Global `composer cs:check` is RED on pre-existing files outside this slice (for example `src/AdministeringBundle.php`, `src/Builder/Admin/AdministrationMainMenuBuilder.php`, `src/BuilderInterface/Admin/AdministrationMainMenuBuilderInterface.php`, and other existing sources) with `line_ending` / `align_multiline_comment`; none of the four Config command files appears in the reported failures. This is recorded as baseline formatting debt, not a regression from this documentation-only slice.
+- No executable behavior, registry semantics, persistence behavior, form resolution, validation policy, routes, Doctrine metadata, or UI behavior changed; runtime restart and visual evidence are not applicable.
+
+Что имеем? Nine Config command contracts are documented and verified with hard Gating GREEN, PHPStan GREEN, PHPUnit GREEN, and fresh Inspecting without high-severity regression.
+Что осталось? Integrate this isolated source+journal block; repository-wide CS baseline debt remains separate follow-up work.
 
 ### Verification evidence
 - Changed PHP lint: GREEN for all four config-command files.
