@@ -1,5 +1,18 @@
 # CMCP Execution Journal
 
+## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 service-tool runtime-control pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `9ffc92dee03937d974123b5c7874932da9421068`.
+- Fresh Gating baseline: Canon031 classes `388/687 (56.5%)`, contract methods `130/1006 (12.9%)`; 0 failed rules.
+- Selected live front: `AdministrationServiceToolRelocationPlanValidateCommand`, `AdministrationServiceToolRuntimeConfigureCommand`, `AdministrationServiceToolRuntimeControlsExportCommand`, and `AdministrationServiceToolRuntimeControlsImportCommand`.
+- Each selected command lacked semantic PHPDoc for the class, `configure()`, and `execute()` contracts.
+- Added semantic PHPDoc only. Existing helper PHPDoc was preserved; no executable statements, signatures, command arguments/options, persistence semantics, audit behavior, filesystem behavior, routes, Doctrine metadata, or UI behavior changed.
+
+Что имеем? Twelve service-tool validation/runtime-control command contracts are now documented.
+Что осталось? Verify the exact Canon031 delta, refresh coverage, run aggregate quality plus exactly one fresh Inspecting pass, then integrate if the diff remains isolated.
+
+
 ## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 service-tool index/relocation pass
 
 ### Current-slice reconciliation

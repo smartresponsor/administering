@@ -18,6 +18,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-controls:export',
     description: 'Exports SQLite-owned service-tool runtime controls without exporting scanned filesystem identity as editable configuration.',
 )]
+/**
+ * Exports SQLite-owned service-tool runtime controls while preserving filesystem-derived tool identity as read-only source metadata.
+ */
 final class AdministrationServiceToolRuntimeControlsExportCommand extends Command
 {
     public function __construct(private readonly AdministrationPersistenceRepository $persistenceRepository)
@@ -25,6 +28,9 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
         parent::__construct();
     }
 
+    /**
+     * Declares optional section filtering, file export, and JSON output controls for runtime-control export.
+     */
     protected function configure(): void
     {
         $this
@@ -33,6 +39,9 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the full export payload as JSON.');
     }
 
+    /**
+     * Reads materialized runtime controls, optionally writes the export payload, and reports the filtered control state without mutating records.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

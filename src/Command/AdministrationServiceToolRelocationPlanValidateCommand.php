@@ -18,6 +18,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:relocation-plan:validate',
     description: 'Validates the non-destructive relocation plan for conflicts before owner-reviewed patching.',
 )]
+/**
+ * Validates non-destructive service-tool relocation recommendations for path and namespace conflicts before any owner-reviewed patching.
+ */
 final class AdministrationServiceToolRelocationPlanValidateCommand extends Command
 {
     public function __construct(
@@ -27,6 +30,9 @@ final class AdministrationServiceToolRelocationPlanValidateCommand extends Comma
         parent::__construct();
     }
 
+    /**
+     * Declares section filtering, JSON/report export, and validation-issue tolerance controls for relocation review.
+     */
     protected function configure(): void
     {
         $this
@@ -36,6 +42,9 @@ final class AdministrationServiceToolRelocationPlanValidateCommand extends Comma
             ->addOption('allow-issues', null, InputOption::VALUE_NONE, 'Return success even when validation issues are found.');
     }
 
+    /**
+     * Builds and validates the relocation plan, optionally exports the report, and fails when unresolved issues are not explicitly tolerated.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');

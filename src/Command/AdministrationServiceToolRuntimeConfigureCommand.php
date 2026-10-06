@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-configure',
     description: 'Updates runtime controls for a materialized service-tool record without changing scanned filesystem identity.',
 )]
+/**
+ * Updates mutable runtime controls for one materialized service-tool record while preserving its filesystem-derived identity and audit trail.
+ */
 final class AdministrationServiceToolRuntimeConfigureCommand extends Command
 {
     public function __construct(
@@ -28,6 +31,9 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares tool selection plus enablement, visibility, position, label, and JSON controls for runtime configuration.
+     */
     protected function configure(): void
     {
         $this
@@ -42,6 +48,9 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the updated runtime controls as JSON.');
     }
 
+    /**
+     * Validates requested runtime-control changes, persists them for the selected tool, records the audit event, and reports the resulting state.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-controls:import',
     description: 'Imports SQLite-owned service-tool runtime controls from a reviewed export without changing filesystem-derived tool identity.',
 )]
+/**
+ * Imports reviewed runtime-control state into materialized service-tool records while preserving filesystem-derived identity and auditability.
+ */
 final class AdministrationServiceToolRuntimeControlsImportCommand extends Command
 {
     public function __construct(
@@ -28,6 +31,9 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
         parent::__construct();
     }
 
+    /**
+     * Declares import-file, section filter, dry-run, missing-record tolerance, and JSON output controls for reviewed runtime-control imports.
+     */
     protected function configure(): void
     {
         $this
@@ -38,6 +44,9 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print import result as JSON.');
     }
 
+    /**
+     * Validates the reviewed export, previews or applies runtime-control changes, records audit events, and reports missing or invalid records.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
