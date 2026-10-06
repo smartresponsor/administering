@@ -35,6 +35,9 @@ use Symfony\Component\Routing\RouterInterface;
     name: 'administering:runtime:readiness',
     description: 'Checks the Administering runtime wiring needed before RC promotion.',
 )]
+/**
+ * Reports whether Administering runtime services, routes, persistence mappings, permission gates, and launchable operations are ready for RC promotion.
+ */
 final class AdministrationRuntimeReadinessCommand extends Command
 {
     /** @var list<class-string> */

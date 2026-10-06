@@ -1,5 +1,29 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 runtime-scope contract pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `85ddb788977d9ce01616106349908177d366ede5`.
+- Fresh Gating: `0 failed`; Canon031 baseline classes `373/687 (54.3%)`, contract methods `102/1006 (10.1%)`.
+- Current weak front began with `AdministrationRuntimeReadinessCommand` class coverage plus class/configure/execute coverage for `AdministrationRuntimeScopeCapabilityIndexCommand`, `AdministrationRuntimeScopeExportCommand`, and `AdministrationRuntimeScopeKernelRecipeCommand`.
+- Added semantic PHPDoc only: one runtime-readiness class contract and class/configure/execute contracts for the three RuntimeScope commands.
+- No executable statements, signatures, options, service wiring, routes, Doctrine metadata, UI, or runtime behavior changed.
+
+Что имеем? The first RuntimeScope Canon031 cluster now has explicit class and command-method contracts.
+Что осталось? Verify exact Canon031 delta, refresh coverage, run quality and one fresh Inspecting, then integrate if Git remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all four runtime-scope command files.
+- Fresh Gating: `0 failed`; Canon031 improved classes `373/687 (54.3%) -> 377/687 (54.9%)` and contract methods `102/1006 (10.1%) -> 108/1006 (10.7%)`; all 10 selected weak entries disappeared. Canon052 remains GREEN.
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; canonical coverage evidence refreshed.
+- `composer quality`: GREEN, including Composer/YAML/container, PHPStan, PHP-CS-Fixer, PHPUnit `154/154`, and Gating.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-023604.json`; PHPStan `0 errors`, 104 medium observational findings, 0 high/critical, 0 autofixable.
+- Runtime/UI behavioral verification is not applicable because this slice adds PHPDoc contracts only and updates the execution journal.
+
+Что имеем? The first runtime-scope documentation cluster is fully verified and Canon031 advanced on both class and method dimensions without runtime behavior changes.
+Что осталось? Commit/push this isolated five-file slice; the next live weak front begins with `AdministrationRuntimeScopeReferenceAuditCommand`, `AdministrationRuntimeScopeReportCommand`, `AdministrationRuntimeScopeSourceMirrorAuditCommand`, and `AdministrationRuntimeScopeValidateCommand`.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC receipt/status association pass
 
 ### Current-slice reconciliation
