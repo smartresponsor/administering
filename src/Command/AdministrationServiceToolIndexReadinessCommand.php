@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:index-readiness',
     description: 'Reports EasyAdmin readiness of the materialized SQLite service-tool index.',
 )]
+/**
+ * Reports materialized service-tool index readiness, including executability and form/data availability, for EasyAdmin-facing workflows.
+ */
 final class AdministrationServiceToolIndexReadinessCommand extends Command
 {
     public function __construct(private readonly AdministrationServiceToolIndexReadinessProviderInterface $readinessProvider)
@@ -24,6 +27,9 @@ final class AdministrationServiceToolIndexReadinessCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares section filtering, JSON output, and strict executability controls for readiness reporting.
+     */
     protected function configure(): void
     {
         $this
@@ -32,6 +38,9 @@ final class AdministrationServiceToolIndexReadinessCommand extends Command
             ->addOption('require-executable', null, InputOption::VALUE_NONE, 'Return failure unless all indexed tools are executable.');
     }
 
+    /**
+     * Builds the readiness report and returns failure only when strict executability is requested and unmet.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');

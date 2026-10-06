@@ -1,5 +1,30 @@
 # CMCP Execution Journal
 
+## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 service-tool index/relocation pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `1d949c0f9747c65026dbf8cae80f410609fba360`.
+- Fresh Gating baseline: Canon031 classes `384/687 (55.9%)`, contract methods `122/1006 (12.1%)`; 0 failed rules.
+- Selected first four fully visible weak commands from the live front: `AdministrationServiceToolIndexReadinessCommand`, `AdministrationServiceToolIndexRefreshCommand`, `AdministrationServiceToolRelocationPatchPlanCommand`, and `AdministrationServiceToolRelocationPlanCommand`.
+- Each selected command lacked semantic PHPDoc for the class, `configure()`, and `execute()` contracts.
+- Added semantic PHPDoc only. Existing helper PHPDoc was preserved verbatim; no statements, signatures, command arguments/options, DI, filesystem behavior, routes, Doctrine metadata, or UI behavior changed.
+
+Что имеем? Twelve live Canon031 weak contracts are now documented across the service-tool index and relocation command cluster.
+Что осталось? Verify the exact Gating delta, refresh coverage, run aggregate quality plus exactly one fresh Inspecting pass, then integrate if the diff remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all four selected command files.
+- Fresh `composer gate`: GREEN (`exit 0`); Canon031 advanced from classes `384/687 (55.9%)` to `388/687 (56.5%)` and contract methods `122/1006 (12.1%)` to `130/1006 (12.9%)`. All 12 selected weak entries disappeared from the live front.
+- `composer test:coverage`: GREEN; PHPUnit `154/154` tests, `704` assertions. Canon040 refreshed to lines `2492/17157 (14.5%)`, methods `240/2345 (10.2%)`, branches `1438/2679 (53.7%)`.
+- `composer quality`: GREEN (`exit 0`) including Composer validation, YAML/container lint, PHPStan, PHP-CS-Fixer, PHPUnit, and aggregate Gating.
+- Exactly one fresh Inspecting pass: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-114728.json`; PHPStan errors `0`, file errors `0`; php-structure findings remain stable at `104` medium, `0` high/critical, `0` autofixable.
+- Canon042 remains stale/low: functional `1/224 (0.4%)`, behavioral `1/1 (100%)`, UI `1/203 (0.5%)`, critical `1/1 (100%)`.
+- Runtime/UI behavioral verification is not applicable because this slice changes PHPDoc contracts only plus the execution journal.
+
+Что имеем? This service-tool index/relocation Canon031 slice is fully verified and behavior-neutral.
+Что осталось? Commit/push this isolated five-file slice; next live Canon031 front starts with `AdministrationServiceToolRelocationPlanValidateCommand`, `AdministrationServiceToolRuntimeConfigureCommand`, `AdministrationServiceToolRuntimeControlsExportCommand`, and `AdministrationServiceToolRuntimeControlsImportCommand`.
+
+
 ## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 configuration/service-command pass
 
 ### Current-slice reconciliation
