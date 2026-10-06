@@ -56,6 +56,9 @@ final class AdministrationComponentIntegrationContractRegistry
         return $provider->contract();
     }
 
+    /**
+     * Reports whether a component contract is registered without instantiating or interpreting the contract payload.
+     */
     public function has(string $componentKey): bool
     {
         return isset($this->index()[$componentKey]);
@@ -74,7 +77,11 @@ final class AdministrationComponentIntegrationContractRegistry
         );
     }
 
-    /** @return string[] */
+    /**
+     * Returns the registered component keys used for discovery, diagnostics, and missing-contract error reporting.
+     *
+     * @return list<string>
+     */
     public function keys(): array
     {
         return array_keys($this->index());

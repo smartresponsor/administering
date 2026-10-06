@@ -1,5 +1,24 @@
 # CMCP Execution Journal
 
+## 2026-10-06 — engine-20261004114407-administering-de6a31 — Canon031 integration-contract registry pass
+
+- Reconciled clean/synchronized Windows MCP `master` at `e73c9cf5f9974cc9d7c8c1f3d90a1ca304fa8642` after the parallel Config command pass completed.
+- Selected the next live non-UI Canon031 weak symbols: `AdministrationComponentIntegrationContractRegistry::has()` and `::keys()`.
+- Added semantic PHPDoc only. `has()` now documents membership lookup without interpreting contract payloads; `keys()` replaces a tags-only docblock with the discovery/diagnostic key-list contract.
+- No executable statements, signatures, container wiring, component discovery behavior, routes, Doctrine metadata, or UI behavior changed.
+
+### Verification
+- Changed-PHP lint: GREEN for `AdministrationComponentIntegrationContractRegistry.php`.
+- `composer stan`: GREEN, 0 errors across 730 analyzed files.
+- `composer test`: GREEN, 154 tests / 704 assertions.
+- `composer gate`: hard-GREEN with 0 failed rules; Canon052 remains PASSED. Canon031 contract-method coverage increased from 143/1006 (14.2%) to 145/1006 (14.4%); `has()` and `keys()` disappeared from representative weak symbols.
+- Fresh standalone Inspecting completed on this exact slice: PHPStan 0 errors; 104 medium-only structural findings; 0 autofixable; no high-severity regression.
+- Global `composer cs:check` remains RED on pre-existing files outside this slice, dominated by `line_ending` / `align_multiline_comment`; the registry file is not reported among failures. This remains separate baseline formatting debt.
+- No executable statements, signatures, container wiring, component discovery behavior, routes, Doctrine metadata, or UI behavior changed; runtime restart and screenshots are not applicable.
+
+Что имеем? Verified +2 Canon031 contract methods on the integration-contract registry with hard Gating GREEN, PHPStan GREEN, PHPUnit GREEN, and fresh Inspecting without high-severity regression.
+Что осталось? Integrate this isolated source+journal block; global CS baseline debt remains a separate repository-wide follow-up.
+
 ## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 config-command pass
 
 ### Current-slice reconciliation
