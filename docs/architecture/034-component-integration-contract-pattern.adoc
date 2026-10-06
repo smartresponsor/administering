@@ -25,7 +25,7 @@ Administering/component.yaml        Rolling/component.yaml
 [source,text]
 ----
 Rolling/
-  config/component/component.yaml          ← ADD integrations.rolling section
+  config/component/rolling_component.yaml                 ← ADD integrations.rolling section
   src/Contract/
     RollingIntegrationContract.php         ← NEW: typed DTO, Rolling owns all fields
   src/Provider/Configuration/
@@ -37,7 +37,7 @@ Rolling/
 [source,text]
 ----
 Administering/
-  config/component/component.yaml          ← REMOVE integrations.rolling block
+  config/component/administration_component.yaml          ← REMOVE integrations.rolling block
   src/Contract/
     AdministrationComponentIntegrationContractInterface.php   ← NEW: registry interface
     AdministrationComponentIntegrationContractRegistry.php    ← NEW: tagged_iterator discovery
@@ -106,7 +106,7 @@ final class BillingConfigurationToolProvider
 
     public function integrationContract(): BillingIntegrationContract
     {
-        $path   = $this->projectDir . '/config/component/component.yaml';
+        $path   = $this->projectDir . '/config/component/billing_component.yaml';
         $parsed = is_file($path) ? Yaml::parseFile($path) : [];
         $data   = $parsed['integrations']['billing'] ?? [];
         return BillingIntegrationContract::fromYaml(is_array($data) ? $data : []);

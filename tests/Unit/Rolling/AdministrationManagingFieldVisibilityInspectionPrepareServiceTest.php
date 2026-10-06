@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldVisibilityInspectionPrepareService;
-use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityInspectionPrepareRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldVisibilityInspectionPrepareServiceTest extends TestCase
@@ -13,7 +13,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareServiceTest ex
     public function testPreparesManagingInspectionPayload(): void
     {
         $service = new AdministrationManagingFieldVisibilityInspectionPrepareService();
-        $result = $service->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
+        $result = $service->prepare(new AdministrationManagingFieldVisibilityInspectionPrepareRequest(
             resourceClass: 'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
             fieldName: 'title',
             pageName: 'index',
@@ -33,7 +33,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareServiceTest ex
     public function testRejectsMissingPageName(): void
     {
         $service = new AdministrationManagingFieldVisibilityInspectionPrepareService();
-        $result = $service->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
+        $result = $service->prepare(new AdministrationManagingFieldVisibilityInspectionPrepareRequest(
             resourceClass: 'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
             fieldName: 'title',
             pageName: '',

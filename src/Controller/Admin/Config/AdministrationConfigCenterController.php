@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Config;
 
-use App\Administering\Entity\Config\AdministrationConfigTool;
+use App\Administering\Entity\Config\AdministrationConfigToolEntity;
 use App\Administering\Locator\Config\AdministrationConfigToolServiceLocator;
-use App\Administering\Service\Config\AdministrationConfigFormResolverService;
+use App\Administering\Repository\AdministrationPersistenceRepository;
+use App\Administering\Responder\Security\AdministrationAuthenticationRequiredResponder;
+use App\Administering\Service\Config\AdministrationConfigFormService;
 use App\Administering\Service\Config\AdministrationConfigStateService;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\ClickableInterface;
@@ -20,11 +21,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationConfigCenterController extends AbstractController
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationConfigToolServiceLocator $toolServiceLocator,
-        private readonly AdministrationConfigFormResolverService $formResolverService,
+        private readonly AdministrationConfigFormService $formResolverService,
         private readonly AdministrationConfigStateService $stateService,
         private readonly AdministrationCurrentUserContextProviderInterface $currentUserContextProvider,
+        private readonly AdministrationAuthenticationRequiredResponder $authenticationRequiredResponder,
     ) {
     }
 
@@ -36,16 +38,16 @@ final class AdministrationConfigCenterController extends AbstractController
     public function index(): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $this->denyAccessUnlessGranted('administration.config.view');
 
         return $this->disableCaching($this->render('@Administering/administering/config_center_index.html.twig', [
-            'applications' => $this->fetch('App\Administering\Entity\Config\AdministrationConfigApplication'),
-            'tools' => $this->fetch(AdministrationConfigTool::class),
-            'applicationCount' => $this->count('App\Administering\Entity\Config\AdministrationConfigApplication'),
-            'toolCount' => $this->count(AdministrationConfigTool::class),
+            'applications' => $this->fetch('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
+            'tools' => $this->fetch(AdministrationConfigToolEntity::class),
+            'applicationCount' => $this->count('App\Administering\Entity\Config\AdministrationConfigApplicationEntity'),
+            'toolCount' => $this->count(AdministrationConfigToolEntity::class),
             'secretToolCount' => $this->secretToolCount(),
             'applicationIndexUrl' => $this->generateUrl('administration_admin_index_administration_config_application_index'),
             'toolIndexUrl' => $this->generateUrl('administration_admin_index_administration_config_tool_index'),
@@ -62,11 +64,11 @@ final class AdministrationConfigCenterController extends AbstractController
     public function edit(string $applicationCode, string $toolCode, Request $request): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $tool = $this->tool($applicationCode, $toolCode);
-        if (!$tool instanceof AdministrationConfigTool) {
+        if (!$tool instanceof AdministrationConfigToolEntity) {
             throw $this->createNotFoundException(sprintf('Unknown configuration tool "%s/%s".', $applicationCode, $toolCode));
         }
 
@@ -153,12 +155,11 @@ final class AdministrationConfigCenterController extends AbstractController
      */
     private function fetch(string $entityClass): array
     {
-        $manager = $this->managerRegistry->getManagerForClass($entityClass);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor($entityClass)) {
             return [];
         }
 
-        return $manager->getRepository($entityClass)->findBy([], ['id' => 'ASC']);
+        return $this->persistenceRepository->findBy($entityClass, [], ['id' => 'ASC']);
     }
 
     private function count(string $entityClass): int
@@ -169,24 +170,23 @@ final class AdministrationConfigCenterController extends AbstractController
     private function secretToolCount(): int
     {
         return count(array_filter(
-            $this->fetch(AdministrationConfigTool::class),
-            static fn (AdministrationConfigTool $tool): bool => [] !== $tool->getSecretNames(),
+            $this->fetch(AdministrationConfigToolEntity::class),
+            static fn (AdministrationConfigToolEntity $tool): bool => [] !== $tool->getSecretNames(),
         ));
     }
 
-    private function tool(string $applicationCode, string $toolCode): ?AdministrationConfigTool
+    private function tool(string $applicationCode, string $toolCode): ?AdministrationConfigToolEntity
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationConfigTool::class);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor(AdministrationConfigToolEntity::class)) {
             return null;
         }
 
-        $tool = $manager->getRepository(AdministrationConfigTool::class)->findOneBy([
+        $tool = $this->persistenceRepository->findOneBy(AdministrationConfigToolEntity::class, [
             'applicationCode' => $applicationCode,
             'toolCode' => $toolCode,
         ]);
 
-        return $tool instanceof AdministrationConfigTool ? $tool : null;
+        return $tool instanceof AdministrationConfigToolEntity ? $tool : null;
     }
 
     private function disableCaching(Response $response): Response

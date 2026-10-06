@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Config\AdministrationConfigValue;
+use App\Administering\Entity\Config\AdministrationConfigValueEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationConfigValueCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationConfigValueCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationConfigValue::class;
+        return AdministrationConfigValueEntity::class;
     }
 
     protected function entityPermission(): string

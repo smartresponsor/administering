@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:owner-review',
+    description: 'Validates captured Administering 3RC proof artifacts and emits the owner-review verdict.',
+)]
 /**
  * Produces the final owner-facing 3RC review verdict from captured proof artifacts.
  *
@@ -19,10 +23,6 @@ use Symfony\Component\Yaml\Yaml;
  * ACLs, or touch system storage. It validates the captured proof/index/validation
  * files and emits a stable owner-review JSON artifact for handoff tooling.
  */
-#[AsCommand(
-    name: 'administering:rc:owner-review',
-    description: 'Validates captured Administering 3RC proof artifacts and emits the owner-review verdict.',
-)]
 final class AdministrationRcOwnerReviewCommand extends Command
 {
     protected function configure(): void
@@ -117,7 +117,7 @@ final class AdministrationRcOwnerReviewCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -327,7 +327,7 @@ final class AdministrationRcOwnerReviewCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

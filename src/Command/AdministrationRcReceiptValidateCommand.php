@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:receipt:validate',
+    description: 'Validates the Administering 3RC owner receipt against current RC artifacts.',
+)]
 /**
  * Validates the compact 3RC receipt after it has been generated.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * final-seal validation, and RC manifest files without manually inspecting the
  * full proof chain.
  */
-#[AsCommand(
-    name: 'administering:rc:receipt:validate',
-    description: 'Validates the Administering 3RC owner receipt against current RC artifacts.',
-)]
 final class AdministrationRcReceiptValidateCommand extends Command
 {
     protected function configure(): void
@@ -277,7 +277,7 @@ final class AdministrationRcReceiptValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $passed, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'passed' => $passed,
             'details' => $detail,
         ];

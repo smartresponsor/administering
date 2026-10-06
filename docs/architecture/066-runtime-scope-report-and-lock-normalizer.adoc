@@ -20,7 +20,7 @@ No foreign Symfony bundle class, entity class, service interface, or route class
 
 == Normalized lock evidence
 
-`AdministrationRuntimeScopeLockNormalizer` is the single lock payload normalizer.
+`AdministrationRuntimeScopeLockService` is the single lock payload normalizer.
 It converts a runtime lock file into `AdministrationRuntimeScopeLockEvidence`:
 
 * lock path/status/hash
@@ -49,4 +49,4 @@ The normalizer rejects PHP class-shaped lock evidence and accepts only token-sha
 == Boundary
 
 `AdministrationRuntimeScopeDecisionService` remains the public decision boundary outside RuntimeScope internals.
-`AdministrationRuntimeScopeLockNormalizer` is a low-level internal service used by state/validation/index services only.
+`AdministrationRuntimeScopeLockService` is a low-level internal service used by state/validation/index services only.

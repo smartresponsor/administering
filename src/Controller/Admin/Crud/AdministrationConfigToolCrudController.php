@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Config\AdministrationConfigTool;
+use App\Administering\Entity\Config\AdministrationConfigToolEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -13,11 +13,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationConfigToolCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationConfigToolCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationConfigTool::class;
+        return AdministrationConfigToolEntity::class;
     }
 
     protected function entityPermission(): string
@@ -35,7 +35,7 @@ final class AdministrationConfigToolCrudController extends AbstractReadOnlyAdmin
     public function configureActions(Actions $actions): Actions
     {
         $editConfig = Action::new('editConfig', 'Edit config')
-            ->linkToRoute('administration_config_tool_edit', static fn (AdministrationConfigTool $tool): array => [
+            ->linkToRoute('administration_config_tool_edit', static fn (AdministrationConfigToolEntity $tool): array => [
                 'applicationCode' => $tool->getApplicationCode(),
                 'toolCode' => $tool->getToolCode(),
             ]);

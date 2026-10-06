@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Managing\ManagingFieldViewProfileCatalogItem;
-use App\Administering\Value\Managing\ManagingFieldViewProfilePriorityRow;
-use App\Administering\Value\Managing\ManagingFieldViewProfileRuleShape;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileCatalogItem;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfilePriorityRow;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileRuleShape;
 
 /**
  * Provides read-only control-plane metadata for Managing field view profiles.
  */
 interface AdministrationFieldViewProfileCatalogProviderInterface
 {
-    /** @return list<ManagingFieldViewProfileCatalogItem> */
+    /** @return list<AdministrationManagingFieldViewProfileCatalogItem> */
     public function catalogItems(): array;
 
-    /** @return list<ManagingFieldViewProfilePriorityRow> */
+    /** @return list<AdministrationManagingFieldViewProfilePriorityRow> */
     public function priorityRows(): array;
 
-    /** @return list<ManagingFieldViewProfileRuleShape> */
+    /** @return list<AdministrationManagingFieldViewProfileRuleShape> */
     public function ruleShapes(): array;
 }

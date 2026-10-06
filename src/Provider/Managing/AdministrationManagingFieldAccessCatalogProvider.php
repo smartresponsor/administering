@@ -6,9 +6,9 @@ namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessCatalogProviderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface;
-use App\Administering\Value\Managing\ManagingFieldAccessCatalogItem;
-use App\Administering\Value\Managing\ManagingFieldAccessMatrixRow;
-use App\Administering\Value\Managing\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessCatalogItem;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMatrixRow;
+use App\Administering\Value\Managing\AdministrationManagingFieldPermissionVocabulary;
 use App\Administering\Value\Rolling\AdministrationRollingPermissionDescriptor;
 
 /**
@@ -28,9 +28,9 @@ final readonly class AdministrationManagingFieldAccessCatalogProvider implements
         }
 
         $items = [];
-        foreach (ManagingFieldPermissionVocabulary::policyKeys() as $permissionKey) {
+        foreach (AdministrationManagingFieldPermissionVocabulary::policyKeys() as $permissionKey) {
             $descriptor = $descriptors[$permissionKey] ?? null;
-            $items[] = new ManagingFieldAccessCatalogItem(
+            $items[] = new AdministrationManagingFieldAccessCatalogItem(
                 permissionKey: $permissionKey,
                 label: $descriptor?->label() ?? $this->fallbackLabel($permissionKey),
                 category: $descriptor?->category() ?? 'managing_field_access',
@@ -47,11 +47,11 @@ final readonly class AdministrationManagingFieldAccessCatalogProvider implements
     public function matrixRows(): array
     {
         return [
-            new ManagingFieldAccessMatrixRow(10, 'System/component hard deny', 'Managing', 'deny', 'Cannot be overridden', 'Field not available on page, component hard deny, or backend denied config.'),
-            new ManagingFieldAccessMatrixRow(20, 'Effective security decision', 'Rolling', 'allow/deny/abstain', 'Deny wins', 'Roles, groups, direct subject rules, and inherited grants decide access.'),
-            new ManagingFieldAccessMatrixRow(30, 'Admin-assigned policy/profile', 'Administering', 'allow/deny/profile assignment', 'Deny wins over user preference', 'Control-plane surface for role, group, and user field policies.'),
-            new ManagingFieldAccessMatrixRow(40, 'User personal view profile', 'Managing', 'visible/hidden', 'May only narrow allowed fields', 'User can hide or show only fields already allowed by security/admin policy.'),
-            new ManagingFieldAccessMatrixRow(50, 'EasyAdmin rendering', 'Managing', 'render/not-render', 'Receives final field set only', 'Hidden or denied fields are not emitted as EasyAdmin fields.'),
+            new AdministrationManagingFieldAccessMatrixRow(10, 'System/component hard deny', 'Managing', 'deny', 'Cannot be overridden', 'Field not available on page, component hard deny, or backend denied config.'),
+            new AdministrationManagingFieldAccessMatrixRow(20, 'Effective security decision', 'Rolling', 'allow/deny/abstain', 'Deny wins', 'Roles, groups, direct subject rules, and inherited grants decide access.'),
+            new AdministrationManagingFieldAccessMatrixRow(30, 'Admin-assigned policy/profile', 'Administering', 'allow/deny/profile assignment', 'Deny wins over user preference', 'Control-plane surface for role, group, and user field policies.'),
+            new AdministrationManagingFieldAccessMatrixRow(40, 'User personal view profile', 'Managing', 'visible/hidden', 'May only narrow allowed fields', 'User can hide or show only fields already allowed by security/admin policy.'),
+            new AdministrationManagingFieldAccessMatrixRow(50, 'EasyAdmin rendering', 'Managing', 'render/not-render', 'Receives final field set only', 'Hidden or denied fields are not emitted as EasyAdmin fields.'),
         ];
     }
 
@@ -62,11 +62,11 @@ final readonly class AdministrationManagingFieldAccessCatalogProvider implements
 
     private function controlPlaneGroup(string $permissionKey): string
     {
-        if (ManagingFieldPermissionVocabulary::FIELD_VIEW === $permissionKey) {
+        if (AdministrationManagingFieldPermissionVocabulary::FIELD_VIEW === $permissionKey) {
             return 'field access';
         }
 
-        if (ManagingFieldPermissionVocabulary::FIELD_CONFIGURE === $permissionKey) {
+        if (AdministrationManagingFieldPermissionVocabulary::FIELD_CONFIGURE === $permissionKey) {
             return 'field policy configuration';
         }
 

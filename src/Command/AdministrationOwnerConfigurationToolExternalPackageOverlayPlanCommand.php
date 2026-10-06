@@ -17,10 +17,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-overlay-plan',
     description: 'Builds a reviewed non-destructive overlay plan from an owner-side external package manifest.',
 )]
+/**
+ * Builds a non-destructive owner-reviewed overlay plan from an external package manifest.
+ *
+ * The command validates the manifest safety contract, preserves repository-relative file boundaries,
+ * and emits explicit review evidence without applying, deleting, or moving repository content.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageOverlayPlanCommand extends Command
 {
     private const EXPECTED_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_manifest.v1';
 
+    /**
+     * Declares manifest selection, machine-readable output, and explicit review-tolerance controls.
+     */
     protected function configure(): void
     {
         $this
@@ -32,6 +41,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageOverlayPlanComman
             ->addOption('allow-issues', null, InputOption::VALUE_NONE, 'Do not fail when non-fatal manifest/plan issues are found. Transitional/manual review only.');
     }
 
+    /**
+     * Produces the reviewed overlay plan and fails closed on invalid manifests, unsafe paths, or unapproved issues.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

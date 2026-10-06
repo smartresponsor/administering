@@ -44,14 +44,9 @@ final class AdministrationRuntimeScopeDecisionTest extends TestCase
         self::assertTrue($rows['cruding']['locked']);
         self::assertTrue($rows['cruding']['enabled']);
         self::assertFalse($rows['cruding']['disabled']);
-        self::assertSame('Component is inside APP_RUNTIME_SCOPE and enabled by runtime lock evidence.', $rows['cruding']['reason']);
+        self::assertSame('Component is inside Composer capability boundary and enabled by runtime lock evidence.', $rows['cruding']['reason']);
 
-        self::assertSame('missing_package', $rows['viewing']['status']);
-        self::assertFalse($rows['viewing']['present']);
-        self::assertTrue($rows['viewing']['allowed']);
-        self::assertFalse($rows['viewing']['locked']);
-        self::assertFalse($rows['viewing']['enabled']);
-        self::assertSame('Component is requested by APP_RUNTIME_SCOPE but composer inventory does not contain its package.', $rows['viewing']['reason']);
+        self::assertArrayNotHasKey('viewing', $rows);
     }
 
     public function testDecisionRowsExposeNormalizedObjectAndArrayContracts(): void

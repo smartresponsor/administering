@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:handoff-index',
+    description: 'Builds the terminal Administering 3RC handoff index from validated final status artifacts.',
+)]
 /**
  * Builds the terminal, owner-facing Administering 3RC handoff index.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * can be attached to a handoff package or consumed by a watchdog without
  * manually traversing every intermediate proof JSON file.
  */
-#[AsCommand(
-    name: 'administering:rc:handoff-index',
-    description: 'Builds the terminal Administering 3RC handoff index from validated final status artifacts.',
-)]
 final class AdministrationRcHandoffIndexCommand extends Command
 {
     protected function configure(): void
@@ -294,7 +294,7 @@ final class AdministrationRcHandoffIndexCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

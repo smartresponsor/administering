@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Administering\Service\Admin;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Materializes canonical filesystem service tools into SQLite/Doctrine records.
@@ -25,7 +24,7 @@ final readonly class AdministrationAdminServiceToolRecordSyncService implements 
 
     public function __construct(
         private AdministrationServiceToolCatalogInterface $toolCatalog,
-        private ManagerRegistry $managerRegistry,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -36,16 +35,16 @@ final readonly class AdministrationAdminServiceToolRecordSyncService implements 
 
     public function synchronize(): AdministrationServiceSectionAnchorSyncResult
     {
-        $manager = $this->entityManager();
-        $existingRecords = $this->existingRecordsByToolKey($manager);
-        $this->replaceRecords($manager);
+        $existingRecords = $this->existingRecordsByToolKey();
+        $this->replaceRecords();
+        $records = [];
         $count = 0;
         $messages = [];
 
         foreach ($this->toolCatalog->tools() as $position => $tool) {
             $existingRecord = $existingRecords[$tool->toolKey] ?? null;
 
-            $record = new AdministrationServiceToolRecord(
+            $record = new AdministrationServiceToolRecordEntity(
                 sectionKey: $tool->section,
                 directionToken: $tool->directionToken,
                 toolSlug: $tool->toolSlug,
@@ -97,30 +96,20 @@ final readonly class AdministrationAdminServiceToolRecordSyncService implements 
                 $record->configureRuntimeControls(null, null, null, $existingRecord->getLabelOverride());
             }
 
-            $manager->persist($record);
+            $records[] = $record;
             ++$count;
         }
 
-        $manager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationServiceToolRecordEntity::class);
         $messages[] = 'Synchronized strict convention-matched service tools into administration_service_tool_record while preserving existing runtime visibility/order/label override flags by toolKey.';
 
         return new AdministrationServiceSectionAnchorSyncResult('ServiceTool', $count, 'synced', $messages);
     }
 
-    private function entityManager(): EntityManagerInterface
+    /** @return array<string, AdministrationServiceToolRecordEntity> */
+    private function existingRecordsByToolKey(): array
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (!$manager instanceof EntityManagerInterface) {
-            throw new \LogicException('No Doctrine entity manager is configured for Administering service tool records. Configure the SQLite/system entity manager for App\\Administering entities.');
-        }
-
-        return $manager;
-    }
-
-    /** @return array<string, AdministrationServiceToolRecord> */
-    private function existingRecordsByToolKey(EntityManagerInterface $manager): array
-    {
-        $records = $manager->getRepository(AdministrationServiceToolRecord::class)->findAll();
+        $records = $this->persistenceRepository->findBy(AdministrationServiceToolRecordEntity::class, []);
         $indexed = [];
 
         foreach ($records as $record) {
@@ -130,11 +119,8 @@ final readonly class AdministrationAdminServiceToolRecordSyncService implements 
         return $indexed;
     }
 
-    private function replaceRecords(EntityManagerInterface $manager): void
+    private function replaceRecords(): void
     {
-        $manager->createQueryBuilder()
-            ->delete(AdministrationServiceToolRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationServiceToolRecordEntity::class, []);
     }
 }

@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:install-kernel-recipe',
     description: 'Installs the host Kernel runtime-scope reader files and optional Kernel hook for App-side bundle composition.',
 )]
+/**
+ * Plans or applies the host Kernel runtime-scope recipe while preserving explicit control over file writes and Kernel patching.
+ */
 final class AdministrationRuntimeScopeKernelRecipeCommand extends Command
 {
     public function __construct(
@@ -26,6 +29,9 @@ final class AdministrationRuntimeScopeKernelRecipeCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host, apply, force, Kernel-patch, and JSON controls for guarded runtime-scope recipe installation.
+     */
     protected function configure(): void
     {
         $this
@@ -36,6 +42,9 @@ final class AdministrationRuntimeScopeKernelRecipeCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the recipe report as JSON.');
     }
 
+    /**
+     * Executes the guarded Kernel recipe plan or apply flow and reports action outcomes in JSON or operator-readable form.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = $this->recipeService->install(new AdministrationRuntimeScopeKernelRecipeRequest(

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageManifestReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,9 +21,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-manifest',
     description: 'Builds a grouped non-destructive owner-side external package manifest for neighboring repositories.',
 )]
+/**
+ * Builds the non-destructive owner package manifest used to hand configuration tools to their owning components.
+ *
+ * Provider definitions are validated before inclusion so rejected tools remain explicit evidence instead of silently entering the handoff package.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -31,6 +36,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         parent::__construct();
     }
 
+    /**
+     * Declares component filtering, machine-readable output, artifact writing, and explicit tolerance switches for incomplete manifests.
+     */
     protected function configure(): void
     {
         $this
@@ -41,6 +49,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
             ->addOption('allow-rejected', null, InputOption::VALUE_NONE, 'Do not fail when some owner tools are rejected from the manifest.');
     }
 
+    /**
+     * Validates discovered owner tools, emits the grouped manifest, and fails closed unless explicitly allowed empty or rejected results are requested.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -179,7 +190,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
      *
      * @return array<string, mixed>
      */
-    private function buildToolEntry(string $componentKey, string $componentToken, string $providerClass, ConfigurationToolDefinition $definition, array $violations): array
+    private function buildToolEntry(string $componentKey, string $componentToken, string $providerClass, AdministrationConfigurationToolDefinition $definition, array $violations): array
     {
         $servicePath = sprintf('%s/src/Service/Configuration/%sConfiguration%sService.php', $componentKey, $componentKey, $definition->toolSlug());
         $formTypePath = null === $definition->formTypeClass ? null : sprintf('%s/src/Form/Configuration/%sConfiguration%sFormType.php', $componentKey, $componentKey, $definition->toolSlug());
@@ -263,7 +274,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestCommand e
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

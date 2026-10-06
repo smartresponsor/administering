@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Rolling\RollingSubjectRoleAssignment;
+use App\Administering\Entity\Rolling\AdministrationRollingSubjectRoleAssignmentEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -16,13 +16,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AdministrationRollingSubjectRoleAssignmentCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingSubjectRoleAssignmentCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 
     public static function getEntityFqcn(): string
     {
-        return RollingSubjectRoleAssignment::class;
+        return AdministrationRollingSubjectRoleAssignmentEntity::class;
     }
 
     protected function entityPermission(): string
@@ -75,14 +75,14 @@ final class AdministrationRollingSubjectRoleAssignmentCrudController extends Abs
         yield DateTimeField::new('assignedAt')->hideOnForm();
     }
 
-    /** @param AdminContext<RollingSubjectRoleAssignment> $context */
+    /** @param AdminContext<AdministrationRollingSubjectRoleAssignmentEntity> $context */
     #[AdminRoute(path: '/{entityId}/revoke', name: 'revoke', options: ['methods' => ['GET', 'POST']])]
     public function revoke(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingSubjectRoleAssignment $assignment */
-        $assignment = $this->rollingManagedEntity($context, RollingSubjectRoleAssignment::class);
+        /** @var AdministrationRollingSubjectRoleAssignmentEntity $assignment */
+        $assignment = $this->rollingManagedEntity($context, AdministrationRollingSubjectRoleAssignmentEntity::class);
 
         return $this->rollingRemoveAndRedirect(
             $context,
@@ -92,8 +92,8 @@ final class AdministrationRollingSubjectRoleAssignmentCrudController extends Abs
     }
 
     /**
-     * @param AdminContext<RollingSubjectRoleAssignment>   $context
-     * @param BatchActionDto<RollingSubjectRoleAssignment> $batchActionDto
+     * @param AdminContext<AdministrationRollingSubjectRoleAssignmentEntity>   $context
+     * @param BatchActionDto<AdministrationRollingSubjectRoleAssignmentEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/revoke', name: 'batch_revoke', options: ['methods' => ['POST']])]
     public function batchRevoke(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -103,7 +103,7 @@ final class AdministrationRollingSubjectRoleAssignmentCrudController extends Abs
         return $this->rollingBatchRemove(
             $context,
             $batchActionDto,
-            RollingSubjectRoleAssignment::class,
+            AdministrationRollingSubjectRoleAssignmentEntity::class,
             '%d selected role assignments revoked.',
         );
     }

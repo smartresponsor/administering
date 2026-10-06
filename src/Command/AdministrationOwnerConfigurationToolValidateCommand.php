@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -19,9 +19,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:validate',
     description: 'Validates owner-provided configuration tool definitions before SQLite/EasyAdmin materialization.',
 )]
+/**
+ * Validates owner-provided configuration-tool definitions before Administering materializes or executes them.
+ */
 final class AdministrationOwnerConfigurationToolValidateCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -29,6 +32,9 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares component filtering, machine-readable evidence output, and explicit warning/empty-provider tolerance switches.
+     */
     protected function configure(): void
     {
         $this
@@ -39,6 +45,9 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
             ->addOption('allow-empty', null, InputOption::VALUE_NONE, 'Do not fail when no owner providers are discovered.');
     }
 
+    /**
+     * Validates discovered owner definitions, emits deterministic evidence, and fails closed on errors or unapproved warning/empty-provider states.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -156,7 +165,7 @@ final class AdministrationOwnerConfigurationToolValidateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

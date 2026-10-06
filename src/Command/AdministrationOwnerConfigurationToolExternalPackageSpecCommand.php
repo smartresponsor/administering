@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolExternalPackageReport;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,9 +21,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-spec',
     description: 'Builds a reviewed external handoff spec for owner-side configuration tool packages.',
 )]
+/**
+ * Builds a non-destructive owner-package handoff specification from discovered configuration-tool providers.
+ *
+ * Provider definitions are validated before inclusion, rejected entries remain visible as evidence, and the
+ * generated paths are review guidance only: this command never moves or deletes neighboring repository source.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationConfigurationToolDefinitionValidatorInterface $validator,
         private readonly iterable $ownerToolProviders = [],
@@ -31,6 +37,10 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
         parent::__construct();
     }
 
+    /**
+     * Defines component filtering, machine-readable output, artifact writing, and explicit tolerance switches
+     * controlling whether an empty or partially rejected handoff may exit successfully.
+     */
     protected function configure(): void
     {
         $this
@@ -41,6 +51,12 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
             ->addOption('allow-rejected', null, InputOption::VALUE_NONE, 'Do not fail when some owner tools are rejected from the external package spec.');
     }
 
+    /**
+     * Collects matching owner providers, validates each tool definition, and emits one deterministic handoff report.
+     *
+     * Rejected definitions remain visible for review; absence and validation failures fail closed unless explicitly
+     * tolerated, while optional JSON writing persists evidence without applying the described repository overlay.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -149,8 +165,8 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
      * @return array<string, mixed>
      */
     private function buildEntry(
-        ConfigurationToolProviderInterface $provider,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolProviderInterface $provider,
+        AdministrationConfigurationToolDefinition $definition,
         array $violations,
     ): array {
         $componentKey = $this->normalizeComponentKey($definition->componentKey());
@@ -210,7 +226,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageSpecCommand exten
         return Command::SUCCESS;
     }
 
-    private function matchesComponentFilter(ConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
+    private function matchesComponentFilter(AdministrationConfigurationToolProviderInterface $provider, ?string $componentFilter): bool
     {
         if (null === $componentFilter) {
             return true;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Operation;
 
-use App\Administering\Entity\AdministrationOperationRun;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AdministrationOperationRunDetailController extends AbstractController
 {
-    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    public function __construct(private readonly AdministrationPersistenceRepository $persistenceRepository)
     {
     }
 
@@ -24,13 +24,8 @@ final class AdministrationOperationRunDetailController extends AbstractControlle
     {
         $this->denyAccessUnlessGranted('administration.operation.view', 'administering:operation');
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs.');
-        }
-
-        $operationRun = $manager->getRepository(AdministrationOperationRun::class)->findOneBy(['operationKey' => $operationKey]);
-        if (!$operationRun instanceof AdministrationOperationRun) {
+        $operationRun = $this->persistenceRepository->findOneBy(AdministrationOperationRunEntity::class, ['operationKey' => $operationKey]);
+        if (!$operationRun instanceof AdministrationOperationRunEntity) {
             throw $this->createNotFoundException(sprintf('Operation run "%s" was not found.', $operationKey));
         }
 

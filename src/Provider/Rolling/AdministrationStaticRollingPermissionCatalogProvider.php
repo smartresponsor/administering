@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Rolling;
 
 use App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface;
-use App\Administering\Value\Managing\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Managing\AdministrationManagingFieldPermissionVocabulary;
 use App\Administering\Value\Rolling\AdministrationRollingPermissionDescriptor;
 
 final readonly class AdministrationStaticRollingPermissionCatalogProvider implements AdministrationRollingPermissionCatalogInterface
@@ -20,7 +20,7 @@ final readonly class AdministrationStaticRollingPermissionCatalogProvider implem
     public function descriptors(): array
     {
         $descriptors = [];
-        foreach (ManagingFieldPermissionVocabulary::policyKeys() as $permissionKey) {
+        foreach (AdministrationManagingFieldPermissionVocabulary::policyKeys() as $permissionKey) {
             $descriptors[] = new AdministrationRollingPermissionDescriptor(
                 $permissionKey,
                 ucwords(str_replace(['.', '_'], ' ', $permissionKey)),

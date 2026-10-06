@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:final-seal',
+    description: 'Validates Administering 3RC owner-review artifacts and emits the final seal JSON.',
+)]
 /**
  * Emits the final read-only 3RC seal from owner-review artifacts.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * owner-review verdict is still consistent with the proof/index/validation files
  * and writes a small final seal JSON for owner/watchdog intake.
  */
-#[AsCommand(
-    name: 'administering:rc:final-seal',
-    description: 'Validates Administering 3RC owner-review artifacts and emits the final seal JSON.',
-)]
 final class AdministrationRcFinalSealCommand extends Command
 {
     protected function configure(): void
@@ -137,7 +137,7 @@ final class AdministrationRcFinalSealCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -349,7 +349,7 @@ final class AdministrationRcFinalSealCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

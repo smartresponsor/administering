@@ -17,10 +17,23 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-handoff-bundle',
     description: 'Builds a non-destructive reviewed handoff bundle from owner-side external package artifacts.',
 )]
+/**
+ * Builds a reviewable owner-package handoff from validated external-package planning artifacts.
+ *
+ * The command preserves Administering as the orchestration shell: it summarizes overlay plans,
+ * references optional validation/apply artifacts, and emits non-destructive operator handoff files
+ * without moving, deleting, or rewriting owner-repository source automatically.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleCommand extends Command
 {
     private const EXPECTED_OVERLAY_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_overlay_plan.v1';
 
+    /**
+     * Declares the reviewed handoff inputs, output directory, and explicit tolerance switches.
+     *
+     * Safety-affecting options only relax empty-plan or warning handling; they never enable
+     * automatic repository moves, source deletion, or namespace rewriting.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +47,12 @@ final class AdministrationOwnerConfigurationToolExternalPackageHandoffBundleComm
             ->addOption('allow-issues', null, InputOption::VALUE_NONE, 'Do not fail when the handoff bundle report contains non-fatal issues.');
     }
 
+    /**
+     * Validates the overlay plan, builds review artifacts, and returns a fail-closed CLI status.
+     *
+     * Missing or malformed required input fails immediately. Reported errors always fail; warnings
+     * and an empty plan fail unless the operator supplied the corresponding explicit tolerance option.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

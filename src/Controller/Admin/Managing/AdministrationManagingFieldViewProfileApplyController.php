@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Administering\Controller\Admin\Managing;
 
 use App\Administering\Form\Managing\AdministrationManagingFieldViewProfileApplyFormType;
+use App\Administering\Parser\Form\AdministrationFormInputParser;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileApplyServiceInterface;
-use App\Administering\Support\Form\AdministrationFormInputParser;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldViewProfileApplyData;
-use App\Administering\Value\Managing\ManagingFieldViewProfileApplyRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileApplyRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
     ) {
     }
 
-    #[Route('/ea/managing/field-view-profiles/apply', name: 'administration_managing_field_view_profile_apply', methods: ['GET'])]
+    #[Route('/ea/managing/field/view/profiles/apply', name: 'administration_managing_field_view_profile_apply', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');
@@ -47,7 +47,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
         ]);
     }
 
-    #[Route('/ea/managing/field-view-profiles/apply/prepare', name: 'administration_managing_field_view_profile_apply_prepare', methods: ['POST'])]
+    #[Route('/ea/managing/field/view/profiles/apply/prepare', name: 'administration_managing_field_view_profile_apply_prepare', methods: ['POST'])]
     public function prepare(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-view-profile-apply');
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldViewProfileApplyController extends Abstra
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
-            $result = $this->applyService->prepare(new ManagingFieldViewProfileApplyRequest(
+            $result = $this->applyService->prepare(new AdministrationManagingFieldViewProfileApplyRequest(
                 normalizedProfilePayload: AdministrationFormInputParser::parseJsonObject($data->normalizedProfilePayload, 'normalizedProfilePayload'),
                 reviewContext: AdministrationFormInputParser::parseJsonObject($data->reviewContext, 'reviewContext'),
                 requestedBySubject: $currentUser?->subjectIdentifier() ?? 'administering:anonymous',

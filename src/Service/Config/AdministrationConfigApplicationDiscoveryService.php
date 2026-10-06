@@ -28,7 +28,10 @@ final readonly class AdministrationConfigApplicationDiscoveryService
             }
 
             $rootPath = $this->componentRootPath($componentName);
-            $componentManifestPath = $rootPath.'/config/component/component.yaml';
+            $componentManifestPath = $this->componentManifestPath($rootPath);
+            if (null === $componentManifestPath) {
+                continue;
+            }
             if (!is_file($componentManifestPath)) {
                 continue;
             }
@@ -65,6 +68,29 @@ final readonly class AdministrationConfigApplicationDiscoveryService
     private function componentRootPath(string $componentName): string
     {
         return rtrim($this->projectDir, '/\\').'/../'.$componentName;
+    }
+
+    private function componentManifestPath(string $rootPath): ?string
+    {
+        $composerPath = $rootPath.'/composer.json';
+        if (!is_file($composerPath)) {
+            return null;
+        }
+
+        $composer = json_decode((string) file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
+
+        if (!is_array($composer) || !is_string($composer['name'] ?? null)) {
+            return null;
+        }
+
+        $nameParts = explode('/', $composer['name'], 2);
+        if (2 !== count($nameParts) || '' === trim($nameParts[1])) {
+            return null;
+        }
+
+        $subjectPrefix = str_replace('-', '_', strtolower(trim($nameParts[1])));
+
+        return $rootPath.'/config/component/'.$subjectPrefix.'_component.yaml';
     }
 
     private function scalarString(mixed $value): ?string

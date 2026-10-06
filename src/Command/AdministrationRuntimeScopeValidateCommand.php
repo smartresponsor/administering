@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:validate',
     description: 'Hard-validates App Kernel runtime-scope lock files for CI/delivery gates.',
 )]
+/**
+ * Hard-validates the selected App Kernel runtime-scope lock against its host environment and freshness constraints for CI and delivery gates.
+ */
 final class AdministrationRuntimeScopeValidateCommand extends Command
 {
     public function __construct(
@@ -25,6 +28,9 @@ final class AdministrationRuntimeScopeValidateCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host, environment, lock-age, and JSON controls for deterministic runtime-scope validation.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +40,9 @@ final class AdministrationRuntimeScopeValidateCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print machine-readable validation output.');
     }
 
+    /**
+     * Validates the selected runtime-scope lock and returns a failing exit status whenever validation errors remain.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = $this->validationService->validate(

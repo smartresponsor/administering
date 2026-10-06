@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$provider = $root.'/src/Contract/Accessing/AdministrationAccessingComponentIntegrationContractProvider.php';
+$provider = $root.'/src/Provider/Accessing/AdministrationAccessingComponentIntegrationContractProvider.php';
 $stub = $root.'/src/Contract/Accessing/AdministrationAccessingComponentIntegrationContractStub.php';
 
 if (!is_file($provider)) {

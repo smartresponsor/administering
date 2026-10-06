@@ -15,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
     name: 'administering:admin-surface:mirror-audit',
     description: 'Audits admin-surface index routes against service-backed actions and EasyAdmin menu mirrors.',
 )]
+/**
+ * Audits whether administrative route surfaces remain mirrored by executable services and EasyAdmin navigation.
+ */
 final class AdministrationAdminSurfaceMirrorAuditCommand extends Command
 {
     public function __construct(
@@ -24,11 +27,17 @@ final class AdministrationAdminSurfaceMirrorAuditCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the optional machine-readable output mode for automated audit consumers.
+     */
     protected function configure(): void
     {
         $this->addOption('json', null, InputOption::VALUE_NONE, 'Print machine-readable JSON report.');
     }
 
+    /**
+     * Scans the current administration surface and returns failure when mirror invariants are violated.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $report = $this->scanner->scan($this->projectDir);

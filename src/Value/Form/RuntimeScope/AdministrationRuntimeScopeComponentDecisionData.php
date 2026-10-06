@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Value\Form\RuntimeScope;
 
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
+use App\Administering\Entity\AdministrationConnectedComponentRecordEntity;
 
 final class AdministrationRuntimeScopeComponentDecisionData
 {
@@ -16,7 +16,7 @@ final class AdministrationRuntimeScopeComponentDecisionData
     ) {
     }
 
-    public static function fromRecord(AdministrationConnectedComponentRecord $record, string $environment): self
+    public static function fromRecord(AdministrationConnectedComponentRecordEntity $record, string $environment): self
     {
         return new self(
             componentKey: $record->getComponentName(),

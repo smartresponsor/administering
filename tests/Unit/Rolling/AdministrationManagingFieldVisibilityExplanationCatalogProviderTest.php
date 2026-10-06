@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Provider\Managing\AdministrationManagingFieldVisibilityExplanationCatalogProvider;
-use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationStep;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityExplanationStep;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldVisibilityExplanationCatalogProviderTest extends TestCase
@@ -15,7 +15,7 @@ final class AdministrationManagingFieldVisibilityExplanationCatalogProviderTest 
         $provider = new AdministrationManagingFieldVisibilityExplanationCatalogProvider();
 
         $steps = $provider->explanationSteps();
-        $labels = array_map(static fn (ManagingFieldVisibilityExplanationStep $step): string => $step->label, $steps);
+        $labels = array_map(static fn (AdministrationManagingFieldVisibilityExplanationStep $step): string => $step->label, $steps);
         $axisByLabel = [];
 
         foreach ($steps as $step) {
@@ -25,8 +25,8 @@ final class AdministrationManagingFieldVisibilityExplanationCatalogProviderTest 
         self::assertContains('External field-value access decision', $labels);
         self::assertContains('User personal profile', $labels);
         self::assertContains('Final EasyAdmin emission', $labels);
-        self::assertSame(ManagingFieldVisibilityExplanationStep::AXIS_ACCESS, $axisByLabel['External field-value access decision']);
-        self::assertSame(ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION, $axisByLabel['User personal profile']);
+        self::assertSame(AdministrationManagingFieldVisibilityExplanationStep::AXIS_ACCESS, $axisByLabel['External field-value access decision']);
+        self::assertSame(AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION, $axisByLabel['User personal profile']);
     }
 
     public function testDiagnosticScenariosAreAxisSeparatedAndPresentationSafe(): void
@@ -41,8 +41,8 @@ final class AdministrationManagingFieldVisibilityExplanationCatalogProviderTest 
             $axes = array_values(array_unique(array_merge($axes, $scenario->matchingAxes)));
         }
 
-        self::assertContains(ManagingFieldVisibilityExplanationStep::AXIS_ACCESS, $axes);
-        self::assertContains(ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION, $axes);
-        self::assertContains(ManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY, $axes);
+        self::assertContains(AdministrationManagingFieldVisibilityExplanationStep::AXIS_ACCESS, $axes);
+        self::assertContains(AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION, $axes);
+        self::assertContains(AdministrationManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY, $axes);
     }
 }

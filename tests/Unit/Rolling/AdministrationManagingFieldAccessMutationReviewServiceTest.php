@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
 use App\Administering\Service\Managing\AdministrationManagingFieldAccessMutationReviewService;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
-use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
-use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
-use App\Administering\Value\Managing\ManagingFieldAccessTarget;
-use App\Administering\Value\Managing\ManagingFieldPermissionVocabulary;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessTarget;
+use App\Administering\Value\Managing\AdministrationManagingFieldPermissionVocabulary;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
 use PHPUnit\Framework\TestCase;
@@ -21,16 +21,16 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
     {
         $capture = new \stdClass();
         $service = $this->service($capture);
-        $result = $service->review(new ManagingFieldAccessMutationReviewInput(
-            new ManagingFieldAccessPolicyDescriptor(
-                new ManagingFieldAccessTarget(
+        $result = $service->review(new AdministrationManagingFieldAccessMutationReviewInput(
+            new AdministrationManagingFieldAccessPolicyDescriptor(
+                new AdministrationManagingFieldAccessTarget(
                     'Managing',
                     'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
                     'internalCost',
                     'detail',
                 ),
-                ManagingFieldPermissionVocabulary::FIELD_VIEW,
-                ManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE,
+                AdministrationManagingFieldPermissionVocabulary::FIELD_VIEW,
+                AdministrationManagingFieldAccessPolicyDescriptor::SUBJECT_ROLE,
                 'security.admin',
                 'allow',
             ),
@@ -46,16 +46,16 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
     {
         $capture = new \stdClass();
         $service = $this->service($capture);
-        $service->review(new ManagingFieldAccessMutationReviewInput(
-            new ManagingFieldAccessPolicyDescriptor(
-                new ManagingFieldAccessTarget(
+        $service->review(new AdministrationManagingFieldAccessMutationReviewInput(
+            new AdministrationManagingFieldAccessPolicyDescriptor(
+                new AdministrationManagingFieldAccessTarget(
                     'Managing',
                     'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
                     'internalCost',
                     'detail',
                 ),
-                ManagingFieldPermissionVocabulary::FIELD_VIEW,
-                ManagingFieldAccessPolicyDescriptor::SUBJECT_USER,
+                AdministrationManagingFieldPermissionVocabulary::FIELD_VIEW,
+                AdministrationManagingFieldAccessPolicyDescriptor::SUBJECT_USER,
                 '42',
                 'deny',
             ),
@@ -73,12 +73,12 @@ final class AdministrationManagingFieldAccessMutationReviewServiceTest extends T
             {
             }
 
-            public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecord
+            public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecordEntity
             {
                 $this->capture->mutationType = $request->mutationType();
                 $this->capture->subjectIdentifier = $request->subjectIdentifier();
 
-                return new AdministrationAclMutationReviewRecord(
+                return new AdministrationAclMutationReviewRecordEntity(
                     'review-key',
                     $request->mutationType(),
                     $request->subjectIdentifier(),

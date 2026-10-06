@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:proof-artifact:validate',
+    description: 'Validates captured Administering RC proof/index artifacts against the RC manifest contract.',
+)]
 /**
  * Validates captured Administering RC proof artifacts after owner/CI proof capture.
  *
@@ -19,10 +23,6 @@ use Symfony\Component\Yaml\Yaml;
  * the handoff files written to delivery/rc/runtime-proof-results are present,
  * parseable, internally consistent, and bound to the RC manifest by SHA-256.
  */
-#[AsCommand(
-    name: 'administering:rc:proof-artifact:validate',
-    description: 'Validates captured Administering RC proof/index artifacts against the RC manifest contract.',
-)]
 final class AdministrationRcProofArtifactValidateCommand extends Command
 {
     protected function configure(): void
@@ -97,7 +97,7 @@ final class AdministrationRcProofArtifactValidateCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -285,7 +285,7 @@ final class AdministrationRcProofArtifactValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

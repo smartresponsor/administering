@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,15 +19,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-controls:import',
     description: 'Imports SQLite-owned service-tool runtime controls from a reviewed export without changing filesystem-derived tool identity.',
 )]
+/**
+ * Imports reviewed runtime-control state into materialized service-tool records while preserving filesystem-derived identity and auditability.
+ */
 final class AdministrationServiceToolRuntimeControlsImportCommand extends Command
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationAuditRecorderInterface $auditRecorder,
     ) {
         parent::__construct();
     }
 
+    /**
+     * Declares import-file, section filter, dry-run, missing-record tolerance, and JSON output controls for reviewed runtime-control imports.
+     */
     protected function configure(): void
     {
         $this
@@ -38,6 +44,9 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print import result as JSON.');
     }
 
+    /**
+     * Validates the reviewed export, previews or applies runtime-control changes, records audit events, and reports missing or invalid records.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -70,88 +79,7 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
             return Command::INVALID;
         }
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            $io->error('No Doctrine entity manager is configured for AdministrationServiceToolRecord.');
-
-            return Command::FAILURE;
-        }
-
-        /** @var array<string, array<string, mixed>> $changes */
-        $changes = [];
-        /** @var list<string> $missing */
-        $missing = [];
-        /** @var list<string> $invalid */
-        $invalid = [];
-        /** @var list<array<string, mixed>> $applied */
-        $applied = [];
-
-        foreach ($controls as $index => $control) {
-            if (!is_array($control)) {
-                $invalid[] = sprintf('controls[%d] must be an object.', $index);
-                continue;
-            }
-
-            $toolKey = $control['toolKey'] ?? null;
-            if (!is_string($toolKey) || '' === trim($toolKey)) {
-                $invalid[] = sprintf('controls[%d].toolKey must be a non-empty string.', $index);
-                continue;
-            }
-
-            $toolKey = trim($toolKey);
-            $controlSection = $control['sectionKey'] ?? null;
-            if (null !== $section && is_string($controlSection) && $section !== $this->normalizeOptionalSection($controlSection)) {
-                continue;
-            }
-
-            $enabled = $this->readBoolean($control, 'enabled', $invalid, $toolKey);
-            $visible = $this->readBoolean($control, 'visible', $invalid, $toolKey);
-            $position = $this->readInteger($control, 'position', $invalid, $toolKey);
-            $labelOverride = $this->readNullableLabel($control, 'labelOverride', $invalid, $toolKey);
-            if (!empty($invalid) && str_starts_with((string) end($invalid), $toolKey.':')) {
-                continue;
-            }
-
-            /** @var AdministrationServiceToolRecord|null $record */
-            $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
-            if (!$record instanceof AdministrationServiceToolRecord) {
-                $missing[] = $toolKey;
-                continue;
-            }
-
-            $before = [
-                'enabled' => $record->isEnabled(),
-                'visible' => $record->isVisible(),
-                'position' => $record->getPosition(),
-                'labelOverride' => $record->getLabelOverride(),
-                'displayLabel' => $record->getDisplayLabel(),
-            ];
-
-            $after = [
-                'enabled' => $enabled,
-                'visible' => $visible,
-                'position' => $position,
-                'labelOverride' => $labelOverride,
-                'displayLabel' => is_string($labelOverride) && '' !== trim($labelOverride) ? trim($labelOverride) : $record->getGeneratedLabel(),
-            ];
-
-            if ($before === $after) {
-                continue;
-            }
-
-            $changes[$toolKey] = [
-                'toolKey' => $toolKey,
-                'sectionKey' => $record->getSectionKey(),
-                'toolSlug' => $record->getToolSlug(),
-                'before' => $before,
-                'after' => $after,
-            ];
-
-            if (!$dryRun) {
-                $record->configureRuntimeControls($enabled, $visible, $position, $labelOverride, null === $labelOverride);
-                $applied[] = $changes[$toolKey];
-            }
-        }
+        [$changes, $missing, $invalid, $applied] = $this->collectChanges($controls, $section, $dryRun);
 
         if ([] !== $invalid) {
             $io->error('Runtime controls import payload contains invalid records.');
@@ -172,7 +100,7 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
         }
 
         if (!$dryRun) {
-            $manager->flush();
+            $this->persistenceRepository->flush(AdministrationServiceToolRecordEntity::class);
 
             foreach ($applied as $change) {
                 $this->auditRecorder->record('administration.service_tool.runtime_controls.imported', (string) $change['toolKey'], [
@@ -222,6 +150,107 @@ final class AdministrationServiceToolRuntimeControlsImportCommand extends Comman
         $io->success($dryRun ? 'Runtime controls import dry-run completed.' : 'Runtime controls imported.');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param array<mixed> $controls
+     *
+     * @return array{
+     *     0: array<string, array<string, mixed>>,
+     *     1: list<string>,
+     *     2: list<string>,
+     *     3: list<array<string, mixed>>
+     * }
+     */
+    private function collectChanges(array $controls, ?string $section, bool $dryRun): array
+    {
+        $changes = [];
+        $missing = [];
+        $invalid = [];
+        $applied = [];
+
+        foreach ($controls as $index => $control) {
+            if (!is_array($control)) {
+                $invalid[] = sprintf('controls[%d] must be an object.', $index);
+                continue;
+            }
+
+            $toolKey = $control['toolKey'] ?? null;
+            if (!is_string($toolKey) || '' === trim($toolKey)) {
+                $invalid[] = sprintf('controls[%d].toolKey must be a non-empty string.', $index);
+                continue;
+            }
+
+            $toolKey = trim($toolKey);
+            $controlSection = $control['sectionKey'] ?? null;
+            if (null !== $section && is_string($controlSection) && $section !== $this->normalizeOptionalSection($controlSection)) {
+                continue;
+            }
+
+            $enabled = $this->readBoolean($control, 'enabled', $invalid, $toolKey);
+            $visible = $this->readBoolean($control, 'visible', $invalid, $toolKey);
+            $position = $this->readInteger($control, 'position', $invalid, $toolKey);
+            $labelOverride = $this->readNullableLabel($control, 'labelOverride', $invalid, $toolKey);
+            if ([] !== $invalid && str_starts_with((string) end($invalid), $toolKey.':')) {
+                continue;
+            }
+
+            /** @var AdministrationServiceToolRecordEntity|null $record */
+            $record = $this->persistenceRepository->findOneBy(AdministrationServiceToolRecordEntity::class, ['toolKey' => $toolKey]);
+            if (!$record instanceof AdministrationServiceToolRecordEntity) {
+                $missing[] = $toolKey;
+                continue;
+            }
+
+            $change = $this->buildChange($record, $enabled, $visible, $position, $labelOverride);
+            if (null === $change) {
+                continue;
+            }
+
+            $changes[$toolKey] = $change;
+            if (!$dryRun) {
+                $record->configureRuntimeControls($enabled, $visible, $position, $labelOverride, null === $labelOverride);
+                $applied[] = $change;
+            }
+        }
+
+        return [$changes, $missing, $invalid, $applied];
+    }
+
+    /** @return array<string, mixed>|null */
+    private function buildChange(
+        AdministrationServiceToolRecordEntity $record,
+        bool $enabled,
+        bool $visible,
+        int $position,
+        ?string $labelOverride,
+    ): ?array {
+        $before = [
+            'enabled' => $record->isEnabled(),
+            'visible' => $record->isVisible(),
+            'position' => $record->getPosition(),
+            'labelOverride' => $record->getLabelOverride(),
+            'displayLabel' => $record->getDisplayLabel(),
+        ];
+        $after = [
+            'enabled' => $enabled,
+            'visible' => $visible,
+            'position' => $position,
+            'labelOverride' => $labelOverride,
+            'displayLabel' => is_string($labelOverride) && '' !== trim($labelOverride) ? trim($labelOverride) : $record->getGeneratedLabel(),
+        ];
+
+        if ($before === $after) {
+            return null;
+        }
+
+        return [
+            'toolKey' => $record->getToolKey(),
+            'sectionKey' => $record->getSectionKey(),
+            'toolSlug' => $record->getToolSlug(),
+            'before' => $before,
+            'after' => $after,
+        ];
     }
 
     /** @return array<string, mixed>|null */

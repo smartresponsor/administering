@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Connected;
 
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
+use App\Administering\Entity\AdministrationConnectedComponentRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeDecisionService;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeScopeDecisionRow;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Enabled Components CRUD anchor from runtime-scope decisions.
@@ -24,7 +24,7 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
         private string $projectDir,
         private string $environment,
         private AdministrationRuntimeScopeDecisionService $decisionService,
-        private EntityManagerInterface $entityManager,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -43,6 +43,7 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
         sort($componentKeys);
 
         $count = 0;
+        $records = [];
         foreach ($componentKeys as $componentKey) {
             $current = 'prod' === $this->environment ? ($prodRows[$componentKey] ?? null) : ($devRows[$componentKey] ?? null);
             $dev = $devRows[$componentKey] ?? null;
@@ -51,7 +52,7 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
             $status = null !== $current ? $current->status : ($dev->status ?? ($prod->status ?? 'unknown'));
             $readiness = in_array($status, ['available', 'reportable', 'auditable'], true) ? 'ready' : 'review';
 
-            $this->entityManager->persist(new AdministrationConnectedComponentRecord(
+            $records[] = new AdministrationConnectedComponentRecordEntity(
                 componentName: $componentKey,
                 status: $status,
                 readinessStatus: $readiness,
@@ -64,21 +65,18 @@ final readonly class AdministrationConnectedComponentRecordSyncService implement
                         'prod' => $prod?->toArray(),
                     ],
                 ],
-            ));
+            );
             ++$count;
         }
 
-        $this->entityManager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationConnectedComponentRecordEntity::class);
 
         return new AdministrationServiceSectionAnchorSyncResult($this->sectionKey(), $count);
     }
 
     private function replaceRecords(): void
     {
-        $this->entityManager->createQueryBuilder()
-            ->delete(AdministrationConnectedComponentRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationConnectedComponentRecordEntity::class, []);
     }
 
     /** @return array<string, mixed> */

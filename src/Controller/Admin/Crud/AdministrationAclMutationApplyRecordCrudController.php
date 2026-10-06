@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationAclMutationApplyRecord;
+use App\Administering\Entity\AdministrationAclMutationApplyRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -12,11 +12,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationAclMutationApplyRecordCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationAclMutationApplyRecordCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationAclMutationApplyRecord::class;
+        return AdministrationAclMutationApplyRecordEntity::class;
     }
 
     protected function entityPermission(): string

@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:final-seal:validate',
+    description: 'Validates the captured Administering 3RC final-seal artifact against current proof files.',
+)]
 /**
  * Validates the already-written Administering 3RC final seal artifact.
  *
@@ -21,10 +25,6 @@ use Symfony\Component\Yaml\Yaml;
  * upstream files, verifies the manifest contract, and emits a separate
  * validation artifact for owner/watchdog intake.
  */
-#[AsCommand(
-    name: 'administering:rc:final-seal:validate',
-    description: 'Validates the captured Administering 3RC final-seal artifact against current proof files.',
-)]
 final class AdministrationRcFinalSealValidateCommand extends Command
 {
     protected function configure(): void
@@ -142,7 +142,7 @@ final class AdministrationRcFinalSealValidateCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -336,7 +336,7 @@ final class AdministrationRcFinalSealValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

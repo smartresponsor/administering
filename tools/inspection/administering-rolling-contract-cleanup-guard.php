@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$providerPath = $root.'/src/Contract/Rolling/AdministrationRollingComponentIntegrationContractProvider.php';
+$providerPath = $root.'/src/Provider/Rolling/AdministrationRollingComponentIntegrationContractProvider.php';
 
 if (!is_file($providerPath)) {
     fwrite(STDERR, "Missing Rolling contract provider: {$providerPath}\n");

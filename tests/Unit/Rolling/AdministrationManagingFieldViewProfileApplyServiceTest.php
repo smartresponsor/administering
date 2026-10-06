@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Tests\Unit\Rolling;
 
 use App\Administering\Service\Managing\AdministrationManagingFieldViewProfileApplyService;
-use App\Administering\Value\Managing\ManagingFieldViewProfileApplyRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileApplyRequest;
 use PHPUnit\Framework\TestCase;
 
 final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestCase
@@ -13,7 +13,7 @@ final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestC
     public function testPreparesManagingApplyPayload(): void
     {
         $service = new AdministrationManagingFieldViewProfileApplyService();
-        $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
+        $result = $service->prepare(new AdministrationManagingFieldViewProfileApplyRequest(
             normalizedProfilePayload: [
                 'subjects' => [
                     'user:42' => [
@@ -44,7 +44,7 @@ final class AdministrationManagingFieldViewProfileApplyServiceTest extends TestC
     public function testRejectsEmptyPayload(): void
     {
         $service = new AdministrationManagingFieldViewProfileApplyService();
-        $result = $service->prepare(new ManagingFieldViewProfileApplyRequest(
+        $result = $service->prepare(new AdministrationManagingFieldViewProfileApplyRequest(
             normalizedProfilePayload: [],
             reviewContext: [
                 'surface' => 'managing_field_view_profile_review',

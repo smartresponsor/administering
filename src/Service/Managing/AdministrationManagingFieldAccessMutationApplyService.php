@@ -8,7 +8,7 @@ use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContex
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationApplyServiceInterface;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
-use App\Administering\Value\Managing\ManagingAclMutationApplyResult;
+use App\Administering\Value\Managing\AdministrationManagingAclMutationApplyResult;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
 
 /**
@@ -38,9 +38,9 @@ final readonly class AdministrationManagingFieldAccessMutationApplyService imple
             : AdministrationOperationExecutionResult::failed($result->safeMessage(), $this->executionSafeContext($invocation, $result));
     }
 
-    public function applyReviewedFieldAccessMutation(string $requestKey, string $requestedBySubject): ManagingAclMutationApplyResult
+    public function applyReviewedFieldAccessMutation(string $requestKey, string $requestedBySubject): AdministrationManagingAclMutationApplyResult
     {
-        return ManagingAclMutationApplyResult::skipped($requestKey, 'Managing field-access apply is dry-run only inside Administering standalone runtime.', [
+        return AdministrationManagingAclMutationApplyResult::skipped($requestKey, 'Managing field-access apply is dry-run only inside Administering standalone runtime.', [
             'requested_by_subject' => $requestedBySubject,
             'reason' => 'owner_managing_runtime_not_connected',
             'mode' => 'administering_self_contained_dry_runtime',
@@ -53,7 +53,7 @@ final readonly class AdministrationManagingFieldAccessMutationApplyService imple
     }
 
     /** @return array<string, mixed> */
-    private function executionSafeContext(AdministrationServiceToolInvocation $invocation, ManagingAclMutationApplyResult $result): array
+    private function executionSafeContext(AdministrationServiceToolInvocation $invocation, AdministrationManagingAclMutationApplyResult $result): array
     {
         return [
             'tool_key' => $invocation->toolKey,

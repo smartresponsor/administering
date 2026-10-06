@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:handoff-bundle',
+    description: 'Builds the terminal Administering 3RC handoff bundle manifest from validated terminal artifacts.',
+)]
 /**
  * Builds the terminal Administering 3RC handoff bundle manifest.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * with paths, SHA-256 hashes, statuses, and owner-oriented copy/apply hints so
  * the host application, watchdog, or owner review can consume one stable index.
  */
-#[AsCommand(
-    name: 'administering:rc:handoff-bundle',
-    description: 'Builds the terminal Administering 3RC handoff bundle manifest from validated terminal artifacts.',
-)]
 final class AdministrationRcHandoffBundleCommand extends Command
 {
     protected function configure(): void
@@ -282,7 +282,7 @@ final class AdministrationRcHandoffBundleCommand extends Command
      */
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
-        $checks[] = ['nameEntity' => $nameEntity, 'passed' => $ok, 'details' => $detail];
+        $checks[] = ['name' => $nameEntity, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
             $errors[] = sprintf('%s: %s', $nameEntity, $detail);
         }

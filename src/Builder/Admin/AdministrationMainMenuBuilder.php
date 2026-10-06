@@ -17,6 +17,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
  */
 final readonly class AdministrationMainMenuBuilder implements AdministrationMainMenuBuilderInterface
 {
+    /**
+     * Builds the operator-facing EasyAdmin navigation for Administering.
+     *
+     * @return iterable<object> menu items ordered by the primary administration workflows
+     */
     public function build(): iterable
     {
         yield MenuItem::linkToDashboard('Home', 'fa fa-home')

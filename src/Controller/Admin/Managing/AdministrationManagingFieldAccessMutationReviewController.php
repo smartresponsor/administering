@@ -8,9 +8,9 @@ use App\Administering\Form\Managing\AdministrationManagingFieldAccessMutationRev
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldAccessMutationReviewServiceInterface;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldAccessMutationReviewData;
-use App\Administering\Value\Managing\ManagingFieldAccessMutationReviewInput;
-use App\Administering\Value\Managing\ManagingFieldAccessPolicyDescriptor;
-use App\Administering\Value\Managing\ManagingFieldAccessTarget;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMutationReviewInput;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessPolicyDescriptor;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessTarget;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
     ) {
     }
 
-    #[Route('/ea/managing/field-access-mutations', name: 'administration_managing_field_access_mutations', methods: ['GET'])]
+    #[Route('/ea/managing/field/access/mutations', name: 'administration_managing_field_access_mutations', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review.view', 'administering:managing-field-access');
@@ -48,7 +48,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
         ]);
     }
 
-    #[Route('/ea/managing/field-access-mutations/review', name: 'administration_managing_field_access_mutation_review', methods: ['POST'])]
+    #[Route('/ea/managing/field/access/mutations/review', name: 'administration_managing_field_access_mutation_review', methods: ['POST'])]
     public function review(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.review', 'administering:managing-field-access');
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
 
         $data = $form->getData();
         try {
-            $result = $this->reviewService->review(new ManagingFieldAccessMutationReviewInput(
+            $result = $this->reviewService->review(new AdministrationManagingFieldAccessMutationReviewInput(
                 $this->descriptorFromData($data),
                 $this->currentUserSubject(),
             ));
@@ -117,10 +117,10 @@ final class AdministrationManagingFieldAccessMutationReviewController extends Ab
         ]);
     }
 
-    private function descriptorFromData(AdministrationManagingFieldAccessMutationReviewData $data): ManagingFieldAccessPolicyDescriptor
+    private function descriptorFromData(AdministrationManagingFieldAccessMutationReviewData $data): AdministrationManagingFieldAccessPolicyDescriptor
     {
-        return new ManagingFieldAccessPolicyDescriptor(
-            new ManagingFieldAccessTarget(
+        return new AdministrationManagingFieldAccessPolicyDescriptor(
+            new AdministrationManagingFieldAccessTarget(
                 'managing',
                 trim($data->resourceClass),
                 trim($data->fieldName),

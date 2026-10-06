@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Rolling\RollingRoleHierarchy;
+use App\Administering\Entity\Rolling\AdministrationRollingRoleHierarchyEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -23,13 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
  * than direct EasyAdmin entity edits. This screen closes the visibility gap for
  * the default administration hierarchy and any synchronized role edge state.
  */
-final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingRoleHierarchyCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 
     public static function getEntityFqcn(): string
     {
-        return RollingRoleHierarchy::class;
+        return AdministrationRollingRoleHierarchyEntity::class;
     }
 
     protected function entityPermission(): string
@@ -53,13 +53,13 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
             ->linkToCrudAction('enable')
             ->renderAsForm()
             ->asSuccessAction()
-            ->displayIf(static fn (RollingRoleHierarchy $hierarchy): bool => !$hierarchy->isEnabled());
+            ->displayIf(static fn (AdministrationRollingRoleHierarchyEntity $hierarchy): bool => !$hierarchy->isEnabled());
 
         $disable = Action::new('disable', 'Disable', 'fa fa-toggle-off')
             ->linkToCrudAction('disable')
             ->renderAsForm()
             ->asWarningAction()
-            ->displayIf(static fn (RollingRoleHierarchy $hierarchy): bool => $hierarchy->isEnabled());
+            ->displayIf(static fn (AdministrationRollingRoleHierarchyEntity $hierarchy): bool => $hierarchy->isEnabled());
 
         $batchEnable = Action::new('batchEnable', 'Enable selected', 'fa fa-toggle-on')
             ->createAsBatchAction()
@@ -98,35 +98,35 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         yield BooleanField::new('enabled')->hideOnForm();
     }
 
-    /** @param AdminContext<RollingRoleHierarchy> $context */
+    /** @param AdminContext<AdministrationRollingRoleHierarchyEntity> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRoleHierarchy $hierarchy */
-        $hierarchy = $this->rollingManagedEntity($context, RollingRoleHierarchy::class);
+        /** @var AdministrationRollingRoleHierarchyEntity $hierarchy */
+        $hierarchy = $this->rollingManagedEntity($context, AdministrationRollingRoleHierarchyEntity::class);
         $hierarchy->enable();
 
         return $this->rollingPersistAndRedirect($context, $hierarchy, sprintf('Hierarchy edge "%s" -> "%s" enabled.', $hierarchy->parentRoleKey(), $hierarchy->childRoleKey()));
     }
 
-    /** @param AdminContext<RollingRoleHierarchy> $context */
+    /** @param AdminContext<AdministrationRollingRoleHierarchyEntity> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRoleHierarchy $hierarchy */
-        $hierarchy = $this->rollingManagedEntity($context, RollingRoleHierarchy::class);
+        /** @var AdministrationRollingRoleHierarchyEntity $hierarchy */
+        $hierarchy = $this->rollingManagedEntity($context, AdministrationRollingRoleHierarchyEntity::class);
         $hierarchy->disable();
 
         return $this->rollingPersistAndRedirect($context, $hierarchy, sprintf('Hierarchy edge "%s" -> "%s" disabled.', $hierarchy->parentRoleKey(), $hierarchy->childRoleKey()));
     }
 
     /**
-     * @param AdminContext<RollingRoleHierarchy>   $context
-     * @param BatchActionDto<RollingRoleHierarchy> $batchActionDto
+     * @param AdminContext<AdministrationRollingRoleHierarchyEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRoleHierarchyEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -136,8 +136,8 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRoleHierarchy::class,
-            static function (RollingRoleHierarchy $hierarchy): void {
+            AdministrationRollingRoleHierarchyEntity::class,
+            static function (AdministrationRollingRoleHierarchyEntity $hierarchy): void {
                 $hierarchy->enable();
             },
             '%d selected hierarchy edges enabled.',
@@ -145,8 +145,8 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
     }
 
     /**
-     * @param AdminContext<RollingRoleHierarchy>   $context
-     * @param BatchActionDto<RollingRoleHierarchy> $batchActionDto
+     * @param AdminContext<AdministrationRollingRoleHierarchyEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRoleHierarchyEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -156,8 +156,8 @@ final class AdministrationRollingRoleHierarchyCrudController extends AbstractAdm
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRoleHierarchy::class,
-            static function (RollingRoleHierarchy $hierarchy): void {
+            AdministrationRollingRoleHierarchyEntity::class,
+            static function (AdministrationRollingRoleHierarchyEntity $hierarchy): void {
                 $hierarchy->disable();
             },
             '%d selected hierarchy edges disabled.',

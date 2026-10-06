@@ -19,6 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:export',
     description: 'Materializes App Kernel runtime-scope lock files from composer.json/composer.prod.json inventory and Administering runtime-scope token catalog.',
 )]
+/**
+ * Materializes normalized runtime-scope lock data from host Composer inventory, Administering catalog rules, and explicit component overrides.
+ */
 final class AdministrationRuntimeScopeExportCommand extends Command
 {
     public function __construct(
@@ -30,6 +33,9 @@ final class AdministrationRuntimeScopeExportCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host, environment, catalog, component override, strictness, dry-run, and JSON controls for runtime-scope export.
+     */
     protected function configure(): void
     {
         $this
@@ -45,6 +51,9 @@ final class AdministrationRuntimeScopeExportCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the normalized runtime-scope output schema.');
     }
 
+    /**
+     * Executes runtime-scope lock export and publishes normalized JSON, dry-run details, or the resulting lock summary.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

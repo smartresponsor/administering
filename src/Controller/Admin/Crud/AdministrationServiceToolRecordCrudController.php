@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,11 +16,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationServiceToolRecordCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationServiceToolRecordCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationServiceToolRecord::class;
+        return AdministrationServiceToolRecordEntity::class;
     }
 
     protected function entityPermission(): string
@@ -39,13 +39,13 @@ final class AdministrationServiceToolRecordCrudController extends AbstractReadOn
     public function configureActions(Actions $actions): Actions
     {
         $openTool = Action::new('openTool', 'Open tool')
-            ->linkToRoute('administration_service_tool_open', static fn (AdministrationServiceToolRecord $record): array => [
+            ->linkToRoute('administration_service_tool_open', static fn (AdministrationServiceToolRecordEntity $record): array => [
                 'toolKey' => $record->getToolKey(),
             ])
-            ->displayIf(static fn (AdministrationServiceToolRecord $record): bool => $record->isOpenable());
+            ->displayIf(static fn (AdministrationServiceToolRecordEntity $record): bool => $record->isOpenable());
 
         $runtimeControls = Action::new('runtimeControls', 'Runtime controls')
-            ->linkToRoute('administration_service_tool_runtime_controls', static fn (AdministrationServiceToolRecord $record): array => [
+            ->linkToRoute('administration_service_tool_runtime_controls', static fn (AdministrationServiceToolRecordEntity $record): array => [
                 'toolKey' => $record->getToolKey(),
             ]);
 

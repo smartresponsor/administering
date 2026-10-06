@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Administering\Recorder\Operation;
 
-use App\Administering\Entity\AdministrationOperationEvent;
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationEventEntity;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRecorderInterface;
 use App\Administering\Value\Operation\AdministrationOperationExecutionResult;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Updates persisted operation runs and appends metadata-only operation events.
  */
 final class AdministrationDoctrineOperationStatusRecorder implements AdministrationOperationStatusRecorderInterface
 {
-    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    public function __construct(private readonly AdministrationPersistenceRepository $persistenceRepository)
     {
     }
 
@@ -50,31 +50,21 @@ final class AdministrationDoctrineOperationStatusRecorder implements Administrat
         $this->persistEvent($operationKey, 'failed', $safeReason, ['exception' => $throwable::class]);
     }
 
-    private function operationRun(string $operationKey): ?AdministrationOperationRun
+    private function operationRun(string $operationKey): ?AdministrationOperationRunEntity
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor(AdministrationOperationRunEntity::class)) {
             return null;
         }
 
-        $repository = $manager->getRepository(AdministrationOperationRun::class);
-        $operationRun = $repository->findOneBy(['operationKey' => $operationKey]);
+        $operationRun = $this->persistenceRepository->findOneBy(AdministrationOperationRunEntity::class, ['operationKey' => $operationKey]);
 
-        return $operationRun instanceof AdministrationOperationRun ? $operationRun : null;
+        return $operationRun instanceof AdministrationOperationRunEntity ? $operationRun : null;
     }
 
     /** @param array<string, mixed> $safeContext */
     private function persistEvent(string $operationKey, string $status, string $safeMessage, array $safeContext): void
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationEvent::class)
-            ?? $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-
-        if (null === $manager) {
-            return;
-        }
-
-        $manager->persist(new AdministrationOperationEvent($operationKey, $status, $this->redact($safeMessage), $safeContext));
-        $manager->flush();
+        $this->persistenceRepository->persistIfManaged(new AdministrationOperationEventEntity($operationKey, $status, $this->redact($safeMessage), $safeContext));
     }
 
     private function redact(string $message): string

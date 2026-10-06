@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Managing;
 
-use App\Administering\Value\Managing\ManagingFieldAccessCatalogItem;
-use App\Administering\Value\Managing\ManagingFieldAccessMatrixRow;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessCatalogItem;
+use App\Administering\Value\Managing\AdministrationManagingFieldAccessMatrixRow;
 
 /**
  * Provides read-only control-plane metadata for Managing field access administration.
  */
 interface AdministrationFieldAccessCatalogProviderInterface
 {
-    /** @return list<ManagingFieldAccessCatalogItem> */
+    /** @return list<AdministrationManagingFieldAccessCatalogItem> */
     public function catalogItems(): array;
 
-    /** @return list<ManagingFieldAccessMatrixRow> */
+    /** @return list<AdministrationManagingFieldAccessMatrixRow> */
     public function matrixRows(): array;
 }

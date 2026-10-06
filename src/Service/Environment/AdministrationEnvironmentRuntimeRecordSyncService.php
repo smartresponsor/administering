@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Environment;
 
-use App\Administering\Entity\AdministrationEnvironmentRuntimeRecord;
+use App\Administering\Entity\AdministrationEnvironmentRuntimeRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceSectionAnchorSyncServiceInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolHandlerInterface;
 use App\Administering\ServiceInterface\Environment\AdministrationEnvironmentRuntimeStatusProviderInterface;
 use App\Administering\ServiceTrait\Admin\AdministrationServiceSectionAnchorSyncToolHandlerTrait;
 use App\Administering\Value\Admin\AdministrationServiceSectionAnchorSyncResult;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Synchronizes the Environment primary CRUD anchor from safe runtime metadata.
@@ -21,7 +21,7 @@ final readonly class AdministrationEnvironmentRuntimeRecordSyncService implement
 
     public function __construct(
         private AdministrationEnvironmentRuntimeStatusProviderInterface $runtimeStatusProvider,
-        private EntityManagerInterface $entityManager,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -34,19 +34,20 @@ final readonly class AdministrationEnvironmentRuntimeRecordSyncService implement
     {
         $this->replaceRecords();
         $count = 0;
+        $records = [];
 
         foreach ($this->runtimeStatusProvider->status() as $key => $value) {
-            $this->entityManager->persist(new AdministrationEnvironmentRuntimeRecord(
+            $records[] = new AdministrationEnvironmentRuntimeRecordEntity(
                 environmentKey: (string) $key,
                 category: 'runtime',
                 status: 'available',
                 sourceType: $this->sourceType((string) $key),
                 safeContext: ['value' => (string) $value],
-            ));
+            );
             ++$count;
         }
 
-        $this->entityManager->flush();
+        $this->persistenceRepository->persistAll($records, AdministrationEnvironmentRuntimeRecordEntity::class);
 
         return new AdministrationServiceSectionAnchorSyncResult($this->sectionKey(), $count);
     }
@@ -62,9 +63,6 @@ final readonly class AdministrationEnvironmentRuntimeRecordSyncService implement
 
     private function replaceRecords(): void
     {
-        $this->entityManager->createQueryBuilder()
-            ->delete(AdministrationEnvironmentRuntimeRecord::class, 'record')
-            ->getQuery()
-            ->execute();
+        $this->persistenceRepository->deleteBy(AdministrationEnvironmentRuntimeRecordEntity::class, []);
     }
 }

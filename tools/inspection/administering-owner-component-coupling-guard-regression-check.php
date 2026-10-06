@@ -52,19 +52,10 @@ try {
         throw new RuntimeException('Unable to create regression fixture directory.');
     }
 
-    $violatingSource = <<<'PHP'
-<?php
-
-declare(strict_types=1);
-
-namespace App\Administering\Probe;
-
-use App\Cruding\Service\CrudProcessor;
-
-final class ViolatingProbe
-{
-}
-PHP;
+    $violatingSource = file_get_contents(__DIR__.'/../stubs/owner-component-coupling/ViolatingProbe.php');
+    if (false === $violatingSource) {
+        throw new RuntimeException('Unable to read violating regression fixture source.');
+    }
 
     $fixtureFile = $sourceDirectory.DIRECTORY_SEPARATOR.'ViolatingProbe.php';
     if (false === file_put_contents($fixtureFile, $violatingSource)) {
@@ -90,17 +81,10 @@ PHP;
         }
     }
 
-    $cleanSource = <<<'PHP'
-<?php
-
-declare(strict_types=1);
-
-namespace App\Administering\Probe;
-
-final class CleanProbe
-{
-}
-PHP;
+    $cleanSource = file_get_contents(__DIR__.'/../stubs/owner-component-coupling/CleanProbe.php');
+    if (false === $cleanSource) {
+        throw new RuntimeException('Unable to read clean regression fixture source.');
+    }
 
     if (false === file_put_contents($fixtureFile, $cleanSource)) {
         throw new RuntimeException('Unable to write clean regression fixture.');

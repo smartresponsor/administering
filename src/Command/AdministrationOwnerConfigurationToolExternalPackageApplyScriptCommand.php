@@ -17,10 +17,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-apply-script',
     description: 'Generates a non-destructive PowerShell overlay script from an owner-side external package overlay plan.',
 )]
+/**
+ * Converts a validated owner-side overlay plan into an explicitly non-destructive PowerShell handoff script.
+ *
+ * The command preserves repository ownership boundaries: it validates package-relative targets, never emits delete
+ * operations, and leaves final application of the generated overlay under operator control.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageApplyScriptCommand extends Command
 {
     private const EXPECTED_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_overlay_plan.v1';
 
+    /**
+     * Declares overlay-plan selection, optional component filtering, artifact output, and bounded exception switches.
+     */
     protected function configure(): void
     {
         $this
@@ -32,6 +41,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageApplyScriptComman
             ->addOption('allow-issues', null, InputOption::VALUE_NONE, 'Do not fail when script generation report contains non-fatal issues.');
     }
 
+    /**
+     * Validates the supplied plan, builds the handoff script/report, and fails on unsafe or unresolved plan state.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -303,7 +315,6 @@ PS1;
         return null;
     }
 
-    /** @param array<string, mixed> $payload @param list<array<string, string>> $issues */
     /**
      * @param array<string, mixed>        $payload
      * @param list<array<string, string>> $issues

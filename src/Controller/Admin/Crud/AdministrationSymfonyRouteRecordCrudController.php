@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationSymfonyRouteRecord;
+use App\Administering\Entity\AdministrationSymfonyRouteRecordEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationSymfonyRouteRecordCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationSymfonyRouteRecordCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationSymfonyRouteRecord::class;
+        return AdministrationSymfonyRouteRecordEntity::class;
     }
 
     protected function entityPermission(): string

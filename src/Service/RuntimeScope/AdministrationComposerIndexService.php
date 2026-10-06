@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\RuntimeScope;
 
-use App\Administering\Entity\AdministrationEnvironmentRuntimeRecord;
+use App\Administering\Entity\AdministrationEnvironmentRuntimeRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\Value\RuntimeScope\AdministrationRuntimeSourceIndex;
-use Doctrine\Persistence\ManagerRegistry;
 
 final readonly class AdministrationComposerIndexService
 {
     public function __construct(
         private string $projectDir,
-        private ManagerRegistry $managerRegistry,
+        private AdministrationPersistenceRepository $persistenceRepository,
     ) {
     }
 
@@ -120,12 +120,11 @@ final readonly class AdministrationComposerIndexService
     /** @return list<array{environmentKey: string, category: string, status: string, sourceType: string, checkedAt: string, context: string}> */
     private function registeredComposerRecords(): array
     {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationEnvironmentRuntimeRecord::class);
-        if (null === $manager) {
+        if (!$this->persistenceRepository->hasManagerFor(AdministrationEnvironmentRuntimeRecordEntity::class)) {
             return [];
         }
 
-        $records = $manager->getRepository(AdministrationEnvironmentRuntimeRecord::class)->findBy([], ['id' => 'DESC'], 200);
+        $records = $this->persistenceRepository->findBy(AdministrationEnvironmentRuntimeRecordEntity::class, [], ['id' => 'DESC'], 200);
         $result = [];
         foreach ($records as $record) {
             $key = strtolower($record->getEnvironmentKey().' '.$record->getCategory().' '.$record->getSourceType());

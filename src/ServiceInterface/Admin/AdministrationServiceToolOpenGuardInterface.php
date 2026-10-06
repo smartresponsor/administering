@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Admin;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
 
 /**
@@ -16,7 +16,7 @@ use App\Administering\Value\Admin\AdministrationServiceToolInvocation;
  */
 interface AdministrationServiceToolOpenGuardInterface
 {
-    public function assertRecordCanOpen(AdministrationServiceToolRecord $record): void;
+    public function assertRecordCanOpen(AdministrationServiceToolRecordEntity $record): void;
 
     public function assertInvocationCanExecute(AdministrationServiceToolInvocation $invocation): void;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\ServiceInterface\Operation;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 
 /**
@@ -12,5 +12,5 @@ use App\Administering\Value\Operation\AdministrationOperationPlan;
  */
 interface AdministrationOperationSubmitterInterface
 {
-    public function submitForCurrentUser(AdministrationOperationPlan $plan): AdministrationOperationRun;
+    public function submitForCurrentUser(AdministrationOperationPlan $plan): AdministrationOperationRunEntity;
 }

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
-use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
-use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareResult;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityInspectionPrepareResult;
 
 /**
  * Prepares read-only Managing field visibility inspection payloads without Managing runtime calls.
  */
 final readonly class AdministrationManagingFieldVisibilityInspectionPrepareService implements AdministrationFieldVisibilityInspectionPrepareServiceInterface
 {
-    public function prepare(ManagingFieldVisibilityInspectionPrepareRequest $request): ManagingFieldVisibilityInspectionPrepareResult
+    public function prepare(AdministrationManagingFieldVisibilityInspectionPrepareRequest $request): AdministrationManagingFieldVisibilityInspectionPrepareResult
     {
         $violations = [];
         foreach (['resource class' => $request->resourceClass, 'field nameEntity' => $request->fieldName, 'page nameEntity' => $request->pageName] as $label => $value) {
@@ -22,7 +22,7 @@ final readonly class AdministrationManagingFieldVisibilityInspectionPrepareServi
             }
         }
 
-        return new ManagingFieldVisibilityInspectionPrepareResult(
+        return new AdministrationManagingFieldVisibilityInspectionPrepareResult(
             [] === $violations,
             [] === $violations ? 'prepared' : 'rejected',
             [] === $violations ? 'Managing visibility inspection payload prepared for owner runtime.' : implode(' ', $violations),

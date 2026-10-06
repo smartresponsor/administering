@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace App\Administering\Locator\Config;
 
 use App\Administering\Form\Config\AdministrationDynamicConfigToolFormType;
-use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Administering\ServiceInterface\Config\ManagedConfigVariablesProviderInterface;
-use App\Administering\Value\Config\ConfigToolDescriptor;
-use App\Administering\Value\Config\ConfigVariableStorage;
+use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
+use App\Administering\ServiceInterface\Config\AdministrationManagedConfigVariablesProviderInterface;
+use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
+use App\Administering\Value\Config\AdministrationConfigVariableStorage;
 
 final readonly class AdministrationConfigToolServiceLocator
 {
-    /** @var list<ConfigToolServiceInterface> */
+    /** @var list<AdministrationConfigToolServiceInterface> */
     private array $toolServices;
 
     /**
-     * @param iterable<ConfigToolServiceInterface> $toolServices
+     * @param iterable<AdministrationConfigToolServiceInterface> $toolServices
      */
     public function __construct(iterable $toolServices = [])
     {
         $this->toolServices = $this->materializeToolServices($toolServices);
     }
 
-    public function forTool(string $applicationCode, string $toolCode): ?ConfigToolServiceInterface
+    public function forTool(string $applicationCode, string $toolCode): ?AdministrationConfigToolServiceInterface
     {
         foreach ($this->toolServices as $service) {
             $descriptor = $service->descriptor();
@@ -35,28 +35,28 @@ final readonly class AdministrationConfigToolServiceLocator
         return null;
     }
 
-    /** @return list<ConfigToolDescriptor> */
+    /** @return list<AdministrationConfigToolDescriptor> */
     public function descriptors(): array
     {
         return array_map(
-            fn (ConfigToolServiceInterface $service): ConfigToolDescriptor => $this->descriptorForService($service),
+            fn (AdministrationConfigToolServiceInterface $service): AdministrationConfigToolDescriptor => $this->descriptorForService($service),
             $this->toolServices,
         );
     }
 
-    /** @return list<ConfigToolDescriptor> */
+    /** @return list<AdministrationConfigToolDescriptor> */
     public function descriptorsForApplication(string $applicationCode): array
     {
         return array_values(array_filter(
             $this->descriptors(),
-            static fn (ConfigToolDescriptor $descriptor): bool => $descriptor->applicationCode === $applicationCode,
+            static fn (AdministrationConfigToolDescriptor $descriptor): bool => $descriptor->applicationCode === $applicationCode,
         ));
     }
 
     /**
-     * @param iterable<ConfigToolServiceInterface> $toolServices
+     * @param iterable<AdministrationConfigToolServiceInterface> $toolServices
      *
-     * @return list<ConfigToolServiceInterface>
+     * @return list<AdministrationConfigToolServiceInterface>
      */
     private function materializeToolServices(iterable $toolServices): array
     {
@@ -68,10 +68,10 @@ final readonly class AdministrationConfigToolServiceLocator
         return $services;
     }
 
-    private function descriptorForService(ConfigToolServiceInterface $service): ConfigToolDescriptor
+    private function descriptorForService(AdministrationConfigToolServiceInterface $service): AdministrationConfigToolDescriptor
     {
         $descriptor = $service->descriptor();
-        if (!$service instanceof ManagedConfigVariablesProviderInterface) {
+        if (!$service instanceof AdministrationManagedConfigVariablesProviderInterface) {
             return $descriptor;
         }
 
@@ -91,7 +91,7 @@ final readonly class AdministrationConfigToolServiceLocator
             $editableFields[] = $variable->key;
             $managedVariableMetadata[] = $variable->toArray();
 
-            if (ConfigVariableStorage::SECRET === $variable->storage) {
+            if (AdministrationConfigVariableStorage::SECRET === $variable->storage) {
                 $sensitiveFields[] = $variable->key;
                 $secretNames[$variable->key] = $variable->key;
             }
@@ -103,7 +103,7 @@ final readonly class AdministrationConfigToolServiceLocator
 
         $targetFiles = array_values(array_unique($targetFiles));
 
-        return new ConfigToolDescriptor(
+        return new AdministrationConfigToolDescriptor(
             applicationCode: $descriptor->applicationCode,
             toolCode: $descriptor->toolCode,
             label: $descriptor->label,
@@ -125,7 +125,7 @@ final readonly class AdministrationConfigToolServiceLocator
         );
     }
 
-    /** @return array<string, list<ConfigToolDescriptor>> */
+    /** @return array<string, list<AdministrationConfigToolDescriptor>> */
     public function descriptorsByApplicationCode(): array
     {
         $descriptors = [];

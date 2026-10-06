@@ -27,4 +27,4 @@ These anchors replace temporary borrowed fallbacks such as `AdministrationConfig
 
 == Storage boundary
 
-The new anchor entities, including `AdministrationServiceSectionRecord`, are Administering system records. They belong to the system/internal storage side of the host application. They are not business/user-data entities.
+The new anchor entities, including `AdministrationServiceSectionRecordEntity`, are Administering system records. They belong to the system/internal storage side of the host application. They are not business/user-data entities.

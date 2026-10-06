@@ -18,8 +18,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-pipeline',
     description: 'Runs the non-destructive owner-side external handoff generation and validation pipeline.',
 )]
+/**
+ * Orchestrates the non-destructive external-package handoff pipeline for owner configuration tools.
+ *
+ * The command dispatches manifest, validation, overlay-plan, apply-script, and handoff-bundle stages in deterministic order while preserving each child command's explicit failure contract. It can stop on the first failed stage or collect all failures without applying changes to neighboring repositories.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand extends Command
 {
+    /**
+     * Defines artifact locations, reporting modes, tolerance switches, and pipeline failure policy.
+     *
+     * Options are forwarded only to stages that own them, while `continue-on-failure` controls orchestration rather than weakening any child validation contract.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +44,11 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
             ->addOption('continue-on-failure', null, InputOption::VALUE_NONE, 'Continue running later steps after a failed step and report all failures.');
     }
 
+    /**
+     * Runs the ordered handoff pipeline and publishes deterministic human or JSON evidence.
+     *
+     * Execution creates only the requested artifact directories and files, returns a failure status when dispatch or any stage fails, and never applies the generated overlay to neighboring repositories.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -58,16 +73,87 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
             return Command::FAILURE;
         }
 
+        $pipeline = $this->pipelineDefinitions(
+            $outputRoot,
+            $handoffDir,
+            $allowEmpty,
+            $allowRejected,
+            $allowWarnings,
+            $allowIssues,
+        );
+
+        [$steps, $issues] = $this->runPipeline($application, $io, $output, $pipeline, $continueOnFailure);
+
+        $report = new AdministrationOwnerConfigurationToolExternalPackagePipelineReport($outputRoot, $handoffDir, $steps, $issues);
+        $this->writeReport($input, $io, $report);
+
+        if ((bool) $input->getOption('json')) {
+            $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            return $report->hasErrors() ? Command::FAILURE : Command::SUCCESS;
+        }
+
+        $this->renderReport($io, $report);
+
+        return $report->hasErrors() ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    private function writeReport(InputInterface $input, SymfonyStyle $io, AdministrationOwnerConfigurationToolExternalPackagePipelineReport $report): void
+    {
+        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
+        if (null === $writeJson) {
+            return;
+        }
+
+        $targetDirectory = dirname($writeJson);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            throw new \RuntimeException(sprintf('Unable to create pipeline report directory: %s', $targetDirectory));
+        }
+
+        file_put_contents($writeJson, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner-side external package pipeline report written to %s.', $writeJson));
+    }
+
+    private function renderReport(SymfonyStyle $io, AdministrationOwnerConfigurationToolExternalPackagePipelineReport $report): void
+    {
+        $io->section('Owner-side external package pipeline');
+        $io->writeln(sprintf('Output root: <info>%s</info>', $report->outputRoot));
+        $io->writeln(sprintf('Handoff dir: <info>%s</info>', $report->handoffDir));
+        $io->writeln(sprintf('Steps: <info>%d</info>', $report->stepCount()));
+        $io->writeln(sprintf('Failed steps: <comment>%d</comment>', $report->failedStepCount()));
+        $io->writeln(sprintf('Errors: <comment>%d</comment>', $report->errorCount()));
+
+        $io->table(
+            ['Step', 'Command', 'Status', 'Output path'],
+            array_map(static fn (array $step): array => [
+                $step['step'],
+                $step['command'],
+                $step['status'],
+                $step['outputPath'] ?? '',
+            ], $report->steps),
+        );
+
+        $io->note('Generated apply script remains non-destructive. Run it with -WhatIfOnly before any overlay into neighboring repositories.');
+    }
+
+    /**
+     * @return list<array{step: string, command: string, outputPath: string, arguments: array<string, mixed>}>
+     */
+    private function pipelineDefinitions(
+        string $outputRoot,
+        string $handoffDir,
+        bool $allowEmpty,
+        bool $allowRejected,
+        bool $allowWarnings,
+        bool $allowIssues,
+    ): array {
         $manifestPath = $outputRoot.'/administering_owner_configuration_tool_external_package_manifest.json';
         $manifestValidationPath = $outputRoot.'/administering_owner_configuration_tool_external_package_manifest_validation.json';
         $overlayPlanPath = $outputRoot.'/administering_owner_configuration_tool_external_package_overlay_plan.json';
         $applyScriptPath = $outputRoot.'/apply_owner_configuration_external_package_overlay.ps1';
         $handoffValidationPath = $outputRoot.'/administering_owner_configuration_tool_external_handoff_bundle_validation.json';
 
-        $steps = [];
-        $issues = [];
-
-        $pipeline = [
+        return [
             [
                 'step' => 'manifest',
                 'command' => 'administering:owner-configuration-tools:external-package-manifest',
@@ -136,6 +222,17 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param list<array{step: string, command: string, outputPath: string, arguments: array<string, mixed>}> $pipeline
+     *
+     * @return array{0: list<array{step: string, command: string, status: string, exitCode: int, outputPath: string}>, 1: list<array{severity: string, path: string, message: string}>}
+     */
+    private function runPipeline(\Symfony\Component\Console\Application $application, SymfonyStyle $io, OutputInterface $output, array $pipeline, bool $continueOnFailure): array
+    {
+        $steps = [];
+        $issues = [];
 
         foreach ($pipeline as $definition) {
             $stepName = $definition['step'];
@@ -175,46 +272,9 @@ final class AdministrationOwnerConfigurationToolExternalPackagePipelineCommand e
             }
         }
 
-        $report = new AdministrationOwnerConfigurationToolExternalPackagePipelineReport($outputRoot, $handoffDir, $steps, $issues);
-        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
-        if (null !== $writeJson) {
-            $targetDirectory = dirname($writeJson);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                throw new \RuntimeException(sprintf('Unable to create pipeline report directory: %s', $targetDirectory));
-            }
-            file_put_contents($writeJson, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner-side external package pipeline report written to %s.', $writeJson));
-        }
-
-        if ((bool) $input->getOption('json')) {
-            $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-
-            return $report->hasErrors() ? Command::FAILURE : Command::SUCCESS;
-        }
-
-        $io->section('Owner-side external package pipeline');
-        $io->writeln(sprintf('Output root: <info>%s</info>', $report->outputRoot));
-        $io->writeln(sprintf('Handoff dir: <info>%s</info>', $report->handoffDir));
-        $io->writeln(sprintf('Steps: <info>%d</info>', $report->stepCount()));
-        $io->writeln(sprintf('Failed steps: <comment>%d</comment>', $report->failedStepCount()));
-        $io->writeln(sprintf('Errors: <comment>%d</comment>', $report->errorCount()));
-
-        $io->table(
-            ['Step', 'Command', 'Status', 'Output path'],
-            array_map(static fn (array $step): array => [
-                $step['step'],
-                $step['command'],
-                $step['status'],
-                $step['outputPath'] ?? '',
-            ], $report->steps),
-        );
-
-        $io->note('Generated apply script remains non-destructive. Run it with -WhatIfOnly before any overlay into neighboring repositories.');
-
-        return $report->hasErrors() ? Command::FAILURE : Command::SUCCESS;
+        return [$steps, $issues];
     }
 
-    /** @param array<string, mixed> $arguments @return array<string, mixed> */
     /**
      * @param array<string, mixed> $arguments
      *

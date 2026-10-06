@@ -2,7 +2,7 @@
 
 Administering now has a metadata-only reporting boundary for Rolling ACL apply attempts.
 
-The report provider reads `AdministrationAclMutationApplyRecord` records from the system storage and exposes only safe summary fields:
+The report provider reads `AdministrationAclMutationApplyRecordEntity` records from the system storage and exposes only safe summary fields:
 
 * totals by status;
 * totals by mutation type;

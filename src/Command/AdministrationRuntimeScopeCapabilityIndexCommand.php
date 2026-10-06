@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:capability-index',
     description: 'Builds a runtime capability index from APP_ENV, APP_RUNTIME_SCOPE, composer inventory, and runtime-scope lock facts.',
 )]
+/**
+ * Builds the normalized runtime-scope capability index used to explain component presence, policy allowance, lock state, and effective enablement.
+ */
 final class AdministrationRuntimeScopeCapabilityIndexCommand extends Command
 {
     public function __construct(
@@ -26,6 +29,9 @@ final class AdministrationRuntimeScopeCapabilityIndexCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host-directory, environment, and JSON controls for deterministic runtime-scope capability inspection.
+     */
     protected function configure(): void
     {
         $this
@@ -34,6 +40,9 @@ final class AdministrationRuntimeScopeCapabilityIndexCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print JSON.');
     }
 
+    /**
+     * Resolves runtime-scope policy facts and publishes the normalized capability index in JSON or operator-readable table form.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $hostDir = (string) $input->getOption('host-dir');

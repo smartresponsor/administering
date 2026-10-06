@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Rolling\RollingRole;
+use App\Administering\Entity\Rolling\AdministrationRollingRoleEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -16,13 +16,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AdministrationRollingRoleCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingRoleCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 
     public static function getEntityFqcn(): string
     {
-        return RollingRole::class;
+        return AdministrationRollingRoleEntity::class;
     }
 
     protected function entityPermission(): string
@@ -46,13 +46,13 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
             ->linkToCrudAction('enable')
             ->renderAsForm()
             ->asSuccessAction()
-            ->displayIf(static fn (RollingRole $role): bool => !$role->isEnabled());
+            ->displayIf(static fn (AdministrationRollingRoleEntity $role): bool => !$role->isEnabled());
 
         $disable = Action::new('disable', 'Disable', 'fa fa-toggle-off')
             ->linkToCrudAction('disable')
             ->renderAsForm()
             ->asWarningAction()
-            ->displayIf(static fn (RollingRole $role): bool => $role->isEnabled());
+            ->displayIf(static fn (AdministrationRollingRoleEntity $role): bool => $role->isEnabled());
 
         $batchEnable = Action::new('batchEnable', 'Enable selected', 'fa fa-toggle-on')
             ->createAsBatchAction()
@@ -92,35 +92,35 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         yield BooleanField::new('enabled')->hideOnForm();
     }
 
-    /** @param AdminContext<RollingRole> $context */
+    /** @param AdminContext<AdministrationRollingRoleEntity> $context */
     #[AdminRoute(path: '/{entityId}/enable', name: 'enable', options: ['methods' => ['GET', 'POST']])]
     public function enable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRole $role */
-        $role = $this->rollingManagedEntity($context, RollingRole::class);
+        /** @var AdministrationRollingRoleEntity $role */
+        $role = $this->rollingManagedEntity($context, AdministrationRollingRoleEntity::class);
         $role->setEnabled(true);
 
         return $this->rollingPersistAndRedirect($context, $role, sprintf('Role "%s" enabled.', $role->getRoleKey()));
     }
 
-    /** @param AdminContext<RollingRole> $context */
+    /** @param AdminContext<AdministrationRollingRoleEntity> $context */
     #[AdminRoute(path: '/{entityId}/disable', name: 'disable', options: ['methods' => ['GET', 'POST']])]
     public function disable(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRole $role */
-        $role = $this->rollingManagedEntity($context, RollingRole::class);
+        /** @var AdministrationRollingRoleEntity $role */
+        $role = $this->rollingManagedEntity($context, AdministrationRollingRoleEntity::class);
         $role->setEnabled(false);
 
         return $this->rollingPersistAndRedirect($context, $role, sprintf('Role "%s" disabled.', $role->getRoleKey()));
     }
 
     /**
-     * @param AdminContext<RollingRole>   $context
-     * @param BatchActionDto<RollingRole> $batchActionDto
+     * @param AdminContext<AdministrationRollingRoleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRoleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/enable', name: 'batch_enable', options: ['methods' => ['POST']])]
     public function batchEnable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -130,8 +130,8 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRole::class,
-            static function (RollingRole $role): void {
+            AdministrationRollingRoleEntity::class,
+            static function (AdministrationRollingRoleEntity $role): void {
                 $role->setEnabled(true);
             },
             '%d selected roles enabled.',
@@ -139,8 +139,8 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
     }
 
     /**
-     * @param AdminContext<RollingRole>   $context
-     * @param BatchActionDto<RollingRole> $batchActionDto
+     * @param AdminContext<AdministrationRollingRoleEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRoleEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/disable', name: 'batch_disable', options: ['methods' => ['POST']])]
     public function batchDisable(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -150,8 +150,8 @@ final class AdministrationRollingRoleCrudController extends AbstractAdministrati
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRole::class,
-            static function (RollingRole $role): void {
+            AdministrationRollingRoleEntity::class,
+            static function (AdministrationRollingRoleEntity $role): void {
                 $role->setEnabled(false);
             },
             '%d selected roles disabled.',

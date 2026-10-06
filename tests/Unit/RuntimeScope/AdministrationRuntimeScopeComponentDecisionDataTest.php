@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Tests\Unit\RuntimeScope;
 
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
+use App\Administering\Entity\AdministrationConnectedComponentRecordEntity;
 use App\Administering\Value\Form\RuntimeScope\AdministrationRuntimeScopeComponentDecisionData;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +12,7 @@ final class AdministrationRuntimeScopeComponentDecisionDataTest extends TestCase
 {
     public function testItReadsDevDecisionFromConnectedComponentRecord(): void
     {
-        $record = new AdministrationConnectedComponentRecord('accessing', 'present', 'ready', [
+        $record = new AdministrationConnectedComponentRecordEntity('accessing', 'present', 'ready', [
             'metadata' => [
                 'dev' => [
                     'enabled' => true,
@@ -35,7 +35,7 @@ final class AdministrationRuntimeScopeComponentDecisionDataTest extends TestCase
 
     public function testItReadsProdDecisionFromConnectedComponentRecord(): void
     {
-        $record = new AdministrationConnectedComponentRecord('paying', 'present', 'pending', [
+        $record = new AdministrationConnectedComponentRecordEntity('paying', 'present', 'pending', [
             'metadata' => [
                 'dev' => [
                     'enabled' => true,

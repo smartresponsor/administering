@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\Rolling\RollingRolePermission;
+use App\Administering\Entity\Rolling\AdministrationRollingRolePermissionEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -16,13 +16,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AdministrationRollingRolePermissionCrudController extends AbstractAdministrationRollingCrudController
+final class AdministrationRollingRolePermissionCrudController extends AdministrationAbstractRollingCrudController
 {
     use AdministrationRollingCrudActionSupportTrait;
 
     public static function getEntityFqcn(): string
     {
-        return RollingRolePermission::class;
+        return AdministrationRollingRolePermissionEntity::class;
     }
 
     protected function entityPermission(): string
@@ -46,13 +46,13 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
             ->linkToCrudAction('allow')
             ->renderAsForm()
             ->asSuccessAction()
-            ->displayIf(static fn (RollingRolePermission $grant): bool => 'allow' !== $grant->getEffect());
+            ->displayIf(static fn (AdministrationRollingRolePermissionEntity $grant): bool => 'allow' !== $grant->getEffect());
 
         $deny = Action::new('deny', 'Deny', 'fa fa-ban')
             ->linkToCrudAction('deny')
             ->renderAsForm()
             ->asDangerAction()
-            ->displayIf(static fn (RollingRolePermission $grant): bool => 'deny' !== $grant->getEffect());
+            ->displayIf(static fn (AdministrationRollingRolePermissionEntity $grant): bool => 'deny' !== $grant->getEffect());
 
         $batchAllow = Action::new('batchAllow', 'Allow selected', 'fa fa-check')
             ->createAsBatchAction()
@@ -95,35 +95,35 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         ]);
     }
 
-    /** @param AdminContext<RollingRolePermission> $context */
+    /** @param AdminContext<AdministrationRollingRolePermissionEntity> $context */
     #[AdminRoute(path: '/{entityId}/allow', name: 'allow', options: ['methods' => ['GET', 'POST']])]
     public function allow(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRolePermission $grant */
-        $grant = $this->rollingManagedEntity($context, RollingRolePermission::class);
+        /** @var AdministrationRollingRolePermissionEntity $grant */
+        $grant = $this->rollingManagedEntity($context, AdministrationRollingRolePermissionEntity::class);
         $grant->setEffect('allow');
 
         return $this->rollingPersistAndRedirect($context, $grant, sprintf('Role permission "%s / %s" set to allow.', $grant->getRoleKey(), $grant->getPermissionKey()));
     }
 
-    /** @param AdminContext<RollingRolePermission> $context */
+    /** @param AdminContext<AdministrationRollingRolePermissionEntity> $context */
     #[AdminRoute(path: '/{entityId}/deny', name: 'deny', options: ['methods' => ['GET', 'POST']])]
     public function deny(AdminContext $context): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.acl_mutation.apply', 'administering:rolling');
 
-        /** @var RollingRolePermission $grant */
-        $grant = $this->rollingManagedEntity($context, RollingRolePermission::class);
+        /** @var AdministrationRollingRolePermissionEntity $grant */
+        $grant = $this->rollingManagedEntity($context, AdministrationRollingRolePermissionEntity::class);
         $grant->setEffect('deny');
 
         return $this->rollingPersistAndRedirect($context, $grant, sprintf('Role permission "%s / %s" set to deny.', $grant->getRoleKey(), $grant->getPermissionKey()));
     }
 
     /**
-     * @param AdminContext<RollingRolePermission>   $context
-     * @param BatchActionDto<RollingRolePermission> $batchActionDto
+     * @param AdminContext<AdministrationRollingRolePermissionEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRolePermissionEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/allow', name: 'batch_allow', options: ['methods' => ['POST']])]
     public function batchAllow(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -133,8 +133,8 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRolePermission::class,
-            static function (RollingRolePermission $grant): void {
+            AdministrationRollingRolePermissionEntity::class,
+            static function (AdministrationRollingRolePermissionEntity $grant): void {
                 $grant->setEffect('allow');
             },
             '%d selected role permissions set to allow.',
@@ -142,8 +142,8 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
     }
 
     /**
-     * @param AdminContext<RollingRolePermission>   $context
-     * @param BatchActionDto<RollingRolePermission> $batchActionDto
+     * @param AdminContext<AdministrationRollingRolePermissionEntity>   $context
+     * @param BatchActionDto<AdministrationRollingRolePermissionEntity> $batchActionDto
      */
     #[AdminRoute(path: '/batch/deny', name: 'batch_deny', options: ['methods' => ['POST']])]
     public function batchDeny(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -153,8 +153,8 @@ final class AdministrationRollingRolePermissionCrudController extends AbstractAd
         return $this->rollingBatchMutate(
             $context,
             $batchActionDto,
-            RollingRolePermission::class,
-            static function (RollingRolePermission $grant): void {
+            AdministrationRollingRolePermissionEntity::class,
+            static function (AdministrationRollingRolePermissionEntity $grant): void {
                 $grant->setEffect('deny');
             },
             '%d selected role permissions set to deny.',

@@ -35,7 +35,7 @@ services:
   App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface: '@App\Administering\Service\Rolling\AdministrationRollingAclMutationApplyService'
   App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface: '@App\Administering\Recorder\Rolling\AdministrationDoctrineAclMutationReviewRecorder'
   App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionCatalogInterface: '@App\Administering\Provider\Rolling\AdministrationStaticRollingPermissionCatalogProvider'
-  App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionDecisionServiceInterface: '@App\Administering\Provider\Rolling\AdministrationDenyRollingPermissionDecisionService'
+  App\Administering\ServiceInterface\Rolling\AdministrationRollingPermissionDecisionServiceInterface: '@App\Administering\Service\Rolling\AdministrationDenyRollingPermissionDecisionService'
   App\Administering\ServiceInterface\Rolling\AdministrationRollingAclMutationExecutionReportProviderInterface: '@App\Administering\Provider\Rolling\AdministrationDryRollingAclMutationExecutionReportProvider'
   App\Administering\ServiceInterface\Rolling\AdministrationRollingSubjectAccessReportProviderInterface: '@App\Administering\Provider\Rolling\AdministrationDryRollingSubjectAccessReportProvider'
   App\Administering\ServiceInterface\Managing\AdministrationRollingBackedManagingAccessReadinessProviderInterface: '@App\Administering\Provider\Managing\AdministrationDryRollingBackedManagingAccessReadinessProvider'
@@ -136,7 +136,7 @@ services:
 
   App\Administering\Executor\Admin\AdministrationServiceToolExecutor:
     arguments:
-      $toolHandlers: !tagged_locator { tag: 'administering.service_tool_handler' }
+      $toolHandlers: !tagged_iterator { tag: 'administering.service_tool_handler' }
 
   App\Administering\ServiceInterface\Operation\AdministrationOperationArtifactWriterInterface: '@App\Administering\Writer\Operation\AdministrationFilesystemOperationArtifactWriter'
 

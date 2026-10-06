@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Administering\Recorder\Rolling;
 
-use App\Administering\Entity\AdministrationAclMutationReviewRecord;
+use App\Administering\Entity\AdministrationAclMutationReviewRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationReviewRecorderInterface;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationRequest;
 use App\Administering\Value\Rolling\AdministrationRollingAclMutationReview;
-use Doctrine\Persistence\ManagerRegistry;
 
 final readonly class AdministrationDoctrineAclMutationReviewRecorder implements AdministrationAclMutationReviewRecorderInterface
 {
     public function __construct(
-        private ManagerRegistry $managerRegistry,
+        private AdministrationPersistenceRepository $persistenceRepository,
         private AdministrationAuditRecorderInterface $auditRecorder,
     ) {
     }
 
-    public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecord
+    public function record(AdministrationRollingAclMutationRequest $request, AdministrationRollingAclMutationReview $review): AdministrationAclMutationReviewRecordEntity
     {
-        $record = new AdministrationAclMutationReviewRecord(
+        $record = new AdministrationAclMutationReviewRecordEntity(
             sprintf('acl-review-%s', bin2hex(random_bytes(8))),
             $review->mutationType(),
             $review->subjectIdentifier(),
@@ -32,9 +32,7 @@ final readonly class AdministrationDoctrineAclMutationReviewRecorder implements 
             $review->toSafeArray(),
         );
 
-        $manager = $this->manager();
-        $manager->persist($record);
-        $manager->flush();
+        $this->persistenceRepository->persist($record);
 
         $this->auditRecorder->record('administration.rolling.acl_mutation.reviewed', $request->requestedBySubject(), [
             'request_key' => $record->requestKey(),
@@ -46,16 +44,5 @@ final readonly class AdministrationDoctrineAclMutationReviewRecorder implements 
         ]);
 
         return $record;
-    }
-
-    private function manager(): \Doctrine\Persistence\ObjectManager
-    {
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationAclMutationReviewRecord::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering ACL mutation review records. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        return $manager;
     }
 }

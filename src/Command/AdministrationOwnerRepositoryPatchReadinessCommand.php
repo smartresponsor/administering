@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:owner-patch-readiness',
     description: 'Builds a read-only readiness report for moving from owner slice intake to concrete owner repository patch waves.',
 )]
+/**
+ * Builds a read-only readiness assessment for repository-specific owner patch waves from current intake and transition evidence.
+ */
 final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
 {
     public function __construct(private readonly string $projectDir)
@@ -23,6 +26,9 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the intake, transition evidence, handoff, output, advisory, and fail-if-not-ready controls for the readiness report.
+     */
     protected function configure(): void
     {
         $this
@@ -35,6 +41,9 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             ->addOption('fail-if-not-ready', null, InputOption::VALUE_NONE, 'Fail when any owner repository is not ready for a concrete patch wave.');
     }
 
+    /**
+     * Evaluates required transition artifacts and current repository slices, then reports whether concrete owner-specific patch waves may begin.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -45,22 +54,22 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
 
         $artifactChecks = [
             [
-                'nameEntity' => 'owner repository slice intake report',
+                'name' => 'owner repository slice intake report',
                 'path' => $intakePath,
                 'status' => is_file($intakePath) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'transition freeze report',
+                'name' => 'transition freeze report',
                 'path' => $freezePath,
                 'status' => is_file($freezePath) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'owner-side external handoff directory',
+                'name' => 'owner-side external handoff directory',
                 'path' => $handoffDir,
                 'status' => is_dir($handoffDir) ? 'present' : 'missing',
             ],
             [
-                'nameEntity' => 'owner-side handoff report',
+                'name' => 'owner-side handoff report',
                 'path' => rtrim($handoffDir, '/\\').'/handoff-report.json',
                 'status' => is_file(rtrim($handoffDir, '/\\').'/handoff-report.json') ? 'present' : 'missing',
             ],
@@ -112,19 +121,49 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
             $nextWorkMode,
         );
 
-        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
-        if (null !== $writeJson) {
-            $targetPath = $this->projectPath($writeJson);
-            $targetDirectory = dirname($targetPath);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
-                $io->error(sprintf('Unable to create patch readiness report directory: %s', $targetDirectory));
-
-                return Command::FAILURE;
-            }
-            file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $io->success(sprintf('Owner repository patch readiness report written to %s.', $targetPath));
+        if (!$this->writeReport($input, $io, $report)) {
+            return Command::FAILURE;
         }
 
+        return $this->renderReport($input, $output, $io, $report, $artifactChecks, $repositoryReadiness);
+    }
+
+    private function writeReport(
+        InputInterface $input,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositoryPatchReadinessReport $report,
+    ): bool {
+        $writeJson = $this->normalizeOptionalString($input->getOption('write-json'));
+        if (null === $writeJson) {
+            return true;
+        }
+
+        $targetPath = $this->projectPath($writeJson);
+        $targetDirectory = dirname($targetPath);
+        if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true) && !is_dir($targetDirectory)) {
+            $io->error(sprintf('Unable to create patch readiness report directory: %s', $targetDirectory));
+
+            return false;
+        }
+
+        file_put_contents($targetPath, json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $io->success(sprintf('Owner repository patch readiness report written to %s.', $targetPath));
+
+        return true;
+    }
+
+    /**
+     * @param list<array<string, string>> $artifactChecks
+     * @param list<array<string, mixed>>  $repositoryReadiness
+     */
+    private function renderReport(
+        InputInterface $input,
+        OutputInterface $output,
+        SymfonyStyle $io,
+        AdministrationOwnerRepositoryPatchReadinessReport $report,
+        array $artifactChecks,
+        array $repositoryReadiness,
+    ): int {
         $shouldFail = (bool) $input->getOption('fail-if-not-ready') && !$report->readyForPatchWaves;
         if ((bool) $input->getOption('json')) {
             $output->writeln(json_encode($report->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -142,7 +181,7 @@ final class AdministrationOwnerRepositoryPatchReadinessCommand extends Command
         $io->table(
             ['Artifact', 'Status', 'Path'],
             array_map(static fn (array $item): array => [
-                $item['nameEntity'],
+                $item['name'],
                 $item['status'],
                 $item['path'],
             ], $artifactChecks),

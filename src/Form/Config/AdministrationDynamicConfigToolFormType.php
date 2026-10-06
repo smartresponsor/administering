@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Form\Config;
 
 use App\Administering\Mapper\Config\AdministrationConfigVariableFormMapper;
-use App\Administering\Value\Config\ConfigVariable;
-use App\Administering\Value\Config\ConfigVariableType;
+use App\Administering\Value\Config\AdministrationConfigVariable;
+use App\Administering\Value\Config\AdministrationConfigVariableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,13 +22,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Generic Administering-owned form builder for producer-declared variables.
  *
- * Producers declare variables through Configuring\ConfigVariable; they do not
+ * Producers declare variables through Configuring\AdministrationConfigVariable; they do not
  * need component-specific Symfony FormType classes for ordinary config tools.
  */
 final class AdministrationDynamicConfigToolFormType extends AbstractType
 {
     /**
-     * @param array{variables:list<ConfigVariable>} $options
+     * @param array{variables:list<AdministrationConfigVariable>} $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -51,21 +51,21 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
         $resolver->setAllowedTypes('variables', 'array');
     }
 
-    private function fieldType(ConfigVariable $variable): string
+    private function fieldType(AdministrationConfigVariable $variable): string
     {
         return match ($variable->type) {
-            ConfigVariableType::BOOL => CheckboxType::class,
-            ConfigVariableType::INT => IntegerType::class,
-            ConfigVariableType::FLOAT => NumberType::class,
-            ConfigVariableType::ENUM => ChoiceType::class,
-            ConfigVariableType::LIST, ConfigVariableType::MAP, ConfigVariableType::JSON, ConfigVariableType::YAML => TextareaType::class,
-            ConfigVariableType::SECRET_REF => PasswordType::class,
+            AdministrationConfigVariableType::BOOL => CheckboxType::class,
+            AdministrationConfigVariableType::INT => IntegerType::class,
+            AdministrationConfigVariableType::FLOAT => NumberType::class,
+            AdministrationConfigVariableType::ENUM => ChoiceType::class,
+            AdministrationConfigVariableType::LIST, AdministrationConfigVariableType::MAP, AdministrationConfigVariableType::JSON, AdministrationConfigVariableType::YAML => TextareaType::class,
+            AdministrationConfigVariableType::SECRET_REF => PasswordType::class,
             default => TextType::class,
         };
     }
 
     /** @return array<string, mixed> */
-    private function fieldOptions(ConfigVariable $variable): array
+    private function fieldOptions(AdministrationConfigVariable $variable): array
     {
         $options = [
             'label' => $variable->label,
@@ -73,17 +73,17 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
             'help' => $this->help($variable),
         ];
 
-        if (ConfigVariableType::BOOL === $variable->type) {
+        if (AdministrationConfigVariableType::BOOL === $variable->type) {
             $options['required'] = false;
         }
 
-        if (ConfigVariableType::SECRET_REF === $variable->type) {
+        if (AdministrationConfigVariableType::SECRET_REF === $variable->type) {
             $options['required'] = false;
             $options['always_empty'] = false;
             $options['help'] = trim((string) $options['help'].' Leave blank to keep the current secret reference.');
         }
 
-        if (ConfigVariableType::ENUM === $variable->type) {
+        if (AdministrationConfigVariableType::ENUM === $variable->type) {
             $choices = $this->choices($variable);
             if ([] !== $choices) {
                 $options['choices'] = $choices;
@@ -94,7 +94,7 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
     }
 
     /** @return array<string, string> */
-    private function choices(ConfigVariable $variable): array
+    private function choices(AdministrationConfigVariable $variable): array
     {
         $rawChoices = $variable->constraints['choices'] ?? $variable->metadata['choices'] ?? [];
         if (!is_array($rawChoices)) {
@@ -111,7 +111,7 @@ final class AdministrationDynamicConfigToolFormType extends AbstractType
         return $choices;
     }
 
-    private function help(ConfigVariable $variable): string
+    private function help(AdministrationConfigVariable $variable): string
     {
         $parts = [$variable->storage];
         if (null !== $variable->targetFile && '' !== $variable->targetFile) {

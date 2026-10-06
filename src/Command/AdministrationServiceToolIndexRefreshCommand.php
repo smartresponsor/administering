@@ -18,6 +18,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:refresh-index',
     description: 'Synchronizes the SQLite service-tool index and audits src/Service/<Direction> convention drift.',
 )]
+/**
+ * Refreshes the materialized service-tool index from valid tools and reports convention drift excluded from materialization.
+ */
 final class AdministrationServiceToolIndexRefreshCommand extends Command
 {
     public function __construct(
@@ -27,6 +30,9 @@ final class AdministrationServiceToolIndexRefreshCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares optional section filtering, JSON output, and convention-violation tolerance for index refresh.
+     */
     protected function configure(): void
     {
         $this
@@ -35,6 +41,9 @@ final class AdministrationServiceToolIndexRefreshCommand extends Command
             ->addOption('allow-violations', null, InputOption::VALUE_NONE, 'Return success even when convention violations are found.');
     }
 
+    /**
+     * Refreshes the service-tool index, audits convention violations, and returns failure unless violations are explicitly tolerated.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');

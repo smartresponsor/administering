@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Handler\AdministrationOperationRunMessageHandler;
 use App\Administering\Message\AdministrationOperationRunMessage;
-use App\Administering\MessageHandler\AdministrationOperationRunMessageHandler;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 use App\Administering\Value\Operation\AdministrationOperationReport;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:operation:messenger-boundary-proof',
+    description: 'Persists an Administering operation and proves the Messenger message-handler boundary in-process.',
+)]
 /**
  * Proves the Messenger handler boundary without requiring a running worker.
  *
@@ -29,10 +33,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * catches drift between the queued operation key, persisted operation type,
  * runner support, status recorder, events, artifacts, and report provider.
  */
-#[AsCommand(
-    name: 'administering:operation:messenger-boundary-proof',
-    description: 'Persists an Administering operation and proves the Messenger message-handler boundary in-process.',
-)]
 final class AdministrationOperationMessengerBoundaryProofCommand extends Command
 {
     public function __construct(
@@ -40,11 +40,14 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         private readonly AdministrationOperationRunnerInterface $operationRunner,
         private readonly AdministrationOperationRunMessageHandler $messageHandler,
         private readonly AdministrationOperationReportProviderInterface $reportProvider,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
     ) {
         parent::__construct();
     }
 
+    /**
+     * Declares the operation-type, target-reference, and JSON evidence options used by the Messenger boundary proof.
+     */
     protected function configure(): void
     {
         $this
@@ -53,6 +56,9 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON.');
     }
 
+    /**
+     * Persists and executes the in-process Messenger proof, returning failure unless terminal status, event, artifact, and key-integrity checks pass.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -147,17 +153,10 @@ final class AdministrationOperationMessengerBoundaryProofCommand extends Command
         }
     }
 
-    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRun
+    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRunEntity
     {
         $operationRun = $this->operationRunFactory->createForCurrentUser($plan);
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        $manager->persist($operationRun);
-        $manager->flush();
+        $this->persistenceRepository->persist($operationRun);
 
         return $operationRun;
     }

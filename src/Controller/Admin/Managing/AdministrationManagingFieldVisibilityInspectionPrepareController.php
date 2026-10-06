@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Administering\Controller\Admin\Managing;
 
 use App\Administering\Form\Managing\AdministrationManagingFieldVisibilityInspectionPrepareFormType;
+use App\Administering\Parser\Form\AdministrationFormInputParser;
 use App\Administering\ServiceInterface\Accessing\AdministrationCurrentUserContextProviderInterface;
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityInspectionPrepareServiceInterface;
-use App\Administering\Support\Form\AdministrationFormInputParser;
 use App\Administering\Value\Form\Managing\AdministrationManagingFieldVisibilityInspectionPrepareData;
-use App\Administering\Value\Managing\ManagingFieldVisibilityInspectionPrepareRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityInspectionPrepareRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
     ) {
     }
 
-    #[Route('/ea/managing/field-visibility-inspection', name: 'administration_managing_field_visibility_inspection', methods: ['GET'])]
+    #[Route('/ea/managing/field/visibility/inspection', name: 'administration_managing_field_visibility_inspection', methods: ['GET'])]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');
@@ -47,7 +47,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
         ]);
     }
 
-    #[Route('/ea/managing/field-visibility-inspection/prepare', name: 'administration_managing_field_visibility_inspection_prepare', methods: ['POST'])]
+    #[Route('/ea/managing/field/visibility/inspection/prepare', name: 'administration_managing_field_visibility_inspection_prepare', methods: ['POST'])]
     public function prepare(Request $request): Response
     {
         $this->denyAccessUnlessGranted('administration.rolling.permission_catalog.view', 'administering:managing-field-visibility-inspection');
@@ -73,7 +73,7 @@ final class AdministrationManagingFieldVisibilityInspectionPrepareController ext
         $data = $form->getData();
         $currentUser = $this->currentUserContextProvider->current();
         try {
-            $result = $this->prepareService->prepare(new ManagingFieldVisibilityInspectionPrepareRequest(
+            $result = $this->prepareService->prepare(new AdministrationManagingFieldVisibilityInspectionPrepareRequest(
                 resourceClass: trim($data->resourceClass),
                 fieldName: trim($data->fieldName),
                 pageName: trim($data->pageName),

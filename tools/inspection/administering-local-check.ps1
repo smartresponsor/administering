@@ -29,7 +29,7 @@ try {
     }
 
     if (Test-Path bin/console) {
-        php bin/console lint:yaml config
+        php bin/console lint:yaml config --parse-tags
         if ($LASTEXITCODE -ne 0) { throw 'Symfony YAML lint failed.' }
     }
 } finally {

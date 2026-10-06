@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:terminal-status:validate',
+    description: 'Validates the terminal Administering 3RC status artifact against current handoff and seal artifacts.',
+)]
 /**
  * Validates the terminal Administering 3RC status artifact after handoff-index validation.
  *
@@ -21,10 +25,6 @@ use Symfony\Component\Yaml\Yaml;
  * final-seal validation, and manifest artifacts instead of trusting a stale
  * status artifact.
  */
-#[AsCommand(
-    name: 'administering:rc:terminal-status:validate',
-    description: 'Validates the terminal Administering 3RC status artifact against current handoff and seal artifacts.',
-)]
 final class AdministrationRcTerminalStatusValidateCommand extends Command
 {
     protected function configure(): void
@@ -186,7 +186,7 @@ final class AdministrationRcTerminalStatusValidateCommand extends Command
         );
 
         $io->table(['Check', 'Result', 'Detail'], array_map(
-            static fn (array $check): array => [$check['nameEntity'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
+            static fn (array $check): array => [$check['name'], $check['ok'] ? 'ok' : 'failed', $check['detail']],
             $checks,
         ));
 
@@ -328,7 +328,7 @@ final class AdministrationRcTerminalStatusValidateCommand extends Command
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail = ''): void
     {
         $checks[] = [
-            'nameEntity' => $nameEntity,
+            'name' => $nameEntity,
             'ok' => $ok,
             'detail' => $detail,
         ];

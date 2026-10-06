@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,15 +19,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-configure',
     description: 'Updates runtime controls for a materialized service-tool record without changing scanned filesystem identity.',
 )]
+/**
+ * Updates mutable runtime controls for one materialized service-tool record while preserving its filesystem-derived identity and audit trail.
+ */
 final class AdministrationServiceToolRuntimeConfigureCommand extends Command
 {
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationAuditRecorderInterface $auditRecorder,
     ) {
         parent::__construct();
     }
 
+    /**
+     * Declares tool selection plus enablement, visibility, position, label, and JSON controls for runtime configuration.
+     */
     protected function configure(): void
     {
         $this
@@ -42,6 +48,9 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the updated runtime controls as JSON.');
     }
 
+    /**
+     * Validates requested runtime-control changes, persists them for the selected tool, records the audit event, and reports the resulting state.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -86,15 +95,8 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
             return Command::INVALID;
         }
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            $io->error('No Doctrine entity manager is configured for AdministrationServiceToolRecord.');
-
-            return Command::FAILURE;
-        }
-
-        $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        $record = $this->persistenceRepository->findOneBy(AdministrationServiceToolRecordEntity::class, ['toolKey' => $toolKey]);
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             $io->error(sprintf('Service-tool record "%s" was not found. Run administering:service-tools:refresh-index first.', $toolKey));
 
             return Command::FAILURE;
@@ -113,7 +115,7 @@ final class AdministrationServiceToolRuntimeConfigureCommand extends Command
         /* @var int|null $position */
         /* @var string|null $labelOverride */
         $record->configureRuntimeControls($enabled, $visible, $position, $labelOverride, $clearLabelOverride);
-        $manager->flush();
+        $this->persistenceRepository->flush(AdministrationServiceToolRecordEntity::class);
 
         $after = [
             'enabled' => $record->isEnabled(),

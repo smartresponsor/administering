@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:handoff-bundle:validate',
+    description: 'Validates the terminal Administering 3RC handoff bundle against current terminal proof artifacts.',
+)]
 /**
  * Validates the terminal Administering 3RC handoff bundle after it has been created.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Yaml\Yaml;
  * final-seal validation, and manifest files without re-running the whole runtime
  * proof sequence.
  */
-#[AsCommand(
-    name: 'administering:rc:handoff-bundle:validate',
-    description: 'Validates the terminal Administering 3RC handoff bundle against current terminal proof artifacts.',
-)]
 final class AdministrationRcHandoffBundleValidateCommand extends Command
 {
     protected function configure(): void
@@ -276,7 +276,7 @@ final class AdministrationRcHandoffBundleValidateCommand extends Command
      */
     private function addCheck(array &$checks, array &$errors, string $nameEntity, bool $ok, string $detail): void
     {
-        $checks[] = ['nameEntity' => $nameEntity, 'passed' => $ok, 'details' => $detail];
+        $checks[] = ['name' => $nameEntity, 'passed' => $ok, 'details' => $detail];
         if (!$ok) {
             $errors[] = sprintf('%s: %s', $nameEntity, $detail);
         }

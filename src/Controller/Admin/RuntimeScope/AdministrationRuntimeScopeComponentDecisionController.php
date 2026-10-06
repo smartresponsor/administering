@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\RuntimeScope;
 
-use App\Administering\Entity\AdministrationConnectedComponentRecord;
+use App\Administering\Entity\AdministrationConnectedComponentRecordEntity;
 use App\Administering\Form\RuntimeScope\AdministrationRuntimeScopeComponentDecisionType;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\Service\RuntimeScope\AdministrationRuntimeScopeComponentDecisionApplyService;
 use App\Administering\Value\Form\RuntimeScope\AdministrationRuntimeScopeComponentDecisionData;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdministrationRuntimeScopeComponentDecisionController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationRuntimeScopeComponentDecisionApplyService $applyService,
     ) {
     }
@@ -68,11 +68,12 @@ final class AdministrationRuntimeScopeComponentDecisionController extends Abstra
         ]);
     }
 
-    private function record(string $componentKey): ?AdministrationConnectedComponentRecord
+    private function record(string $componentKey): ?AdministrationConnectedComponentRecordEntity
     {
-        return $this->entityManager
-            ->getRepository(AdministrationConnectedComponentRecord::class)
-            ->findOneBy(['componentName' => strtolower(trim($componentKey))]);
+        return $this->persistenceRepository->findOneBy(
+            AdministrationConnectedComponentRecordEntity::class,
+            ['componentName' => strtolower(trim($componentKey))],
+        );
     }
 
     private function requestedEnvironment(Request $request): string

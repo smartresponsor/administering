@@ -20,6 +20,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:relocation-patch-plan',
     description: 'Builds a non-destructive touched-archive relocation patch plan for service-tool surface cleanup.',
 )]
+/**
+ * Builds a validated, non-destructive relocation patch plan that separates patchable service-tool candidates from blocked entries and manual deletions.
+ */
 final class AdministrationServiceToolRelocationPatchPlanCommand extends Command
 {
     public function __construct(
@@ -29,6 +32,9 @@ final class AdministrationServiceToolRelocationPatchPlanCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares section filtering, patch-plan export paths, JSON output, and blocked-entry tolerance controls.
+     */
     protected function configure(): void
     {
         $this
@@ -39,6 +45,9 @@ final class AdministrationServiceToolRelocationPatchPlanCommand extends Command
             ->addOption('allow-blocked', null, InputOption::VALUE_NONE, 'Return success even when some relocation entries are blocked by validation issues.');
     }
 
+    /**
+     * Builds and validates the relocation patch plan, writes optional review artifacts, and fails when blocked entries are not allowed.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');

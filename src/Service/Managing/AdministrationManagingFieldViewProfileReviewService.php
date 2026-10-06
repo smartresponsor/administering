@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Administering\Service\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldViewProfileReviewServiceInterface;
-use App\Administering\Value\Managing\ManagingFieldViewProfileEditRequest;
-use App\Administering\Value\Managing\ManagingFieldViewProfileReviewResult;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileEditRequest;
+use App\Administering\Value\Managing\AdministrationManagingFieldViewProfileReviewResult;
 
 /**
  * Builds safe review payloads for Managing field view profile edits without requiring Managing runtime.
  */
 final readonly class AdministrationManagingFieldViewProfileReviewService implements AdministrationFieldViewProfileReviewServiceInterface
 {
-    public function review(ManagingFieldViewProfileEditRequest $request): ManagingFieldViewProfileReviewResult
+    public function review(AdministrationManagingFieldViewProfileEditRequest $request): AdministrationManagingFieldViewProfileReviewResult
     {
         $violations = [];
         if ('' === trim($request->profileKey)) {
@@ -22,7 +22,7 @@ final readonly class AdministrationManagingFieldViewProfileReviewService impleme
 
         $changeType = $request->currentProfilePayload === $request->requestedProfilePayload ? 'no_change' : 'profile_payload_update';
 
-        return new ManagingFieldViewProfileReviewResult(
+        return new AdministrationManagingFieldViewProfileReviewResult(
             $request->profileKey,
             $changeType,
             [] === $violations,

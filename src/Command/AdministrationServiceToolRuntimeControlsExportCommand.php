@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationServiceToolRecord;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,13 +18,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:runtime-controls:export',
     description: 'Exports SQLite-owned service-tool runtime controls without exporting scanned filesystem identity as editable configuration.',
 )]
+/**
+ * Exports SQLite-owned service-tool runtime controls while preserving filesystem-derived tool identity as read-only source metadata.
+ */
 final class AdministrationServiceToolRuntimeControlsExportCommand extends Command
 {
-    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    public function __construct(private readonly AdministrationPersistenceRepository $persistenceRepository)
     {
         parent::__construct();
     }
 
+    /**
+     * Declares optional section filtering, file export, and JSON output controls for runtime-control export.
+     */
     protected function configure(): void
     {
         $this
@@ -33,25 +39,21 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the full export payload as JSON.');
     }
 
+    /**
+     * Reads materialized runtime controls, optionally writes the export payload, and reports the filtered control state without mutating records.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $section = $this->normalizeOptionalSection($input->getArgument('section'));
-
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            $io->error('No Doctrine entity manager is configured for AdministrationServiceToolRecord.');
-
-            return Command::FAILURE;
-        }
 
         $criteria = [];
         if (null !== $section) {
             $criteria['sectionKey'] = $section;
         }
 
-        /** @var list<AdministrationServiceToolRecord> $records */
-        $records = $manager->getRepository(AdministrationServiceToolRecord::class)->findBy($criteria, [
+        /** @var list<AdministrationServiceToolRecordEntity> $records */
+        $records = $this->persistenceRepository->findBy(AdministrationServiceToolRecordEntity::class, $criteria, [
             'sectionKey' => 'ASC',
             'position' => 'ASC',
             'toolKey' => 'ASC',
@@ -62,7 +64,7 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
             'exportedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             'section' => $section,
             'count' => count($records),
-            'controls' => array_map(static fn (AdministrationServiceToolRecord $record): array => [
+            'controls' => array_map(static fn (AdministrationServiceToolRecordEntity $record): array => [
                 'toolKey' => $record->getToolKey(),
                 'sectionKey' => $record->getSectionKey(),
                 'toolSlug' => $record->getToolSlug(),
@@ -113,7 +115,7 @@ final class AdministrationServiceToolRuntimeControlsExportCommand extends Comman
 
         $io->table(
             ['Tool key', 'Display label', 'Enabled', 'Visible', 'Position', 'Openable', 'Runnable'],
-            array_map(static fn (AdministrationServiceToolRecord $record): array => [
+            array_map(static fn (AdministrationServiceToolRecordEntity $record): array => [
                 $record->getToolKey(),
                 $record->getDisplayLabel(),
                 $record->isEnabled() ? 'yes' : 'no',

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Administering\Validator\Admin;
 
-use App\Administering\ServiceInterface\Config\ConfigVariableToolServiceInterface;
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Config\AdministrationConfigVariableToolServiceInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\ValidatorInterface\Admin\AdministrationConfigurationToolDefinitionValidatorInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolViolation;
-use App\Administering\Value\Tool\ConfigurationToolDefinition;
+use App\Administering\Value\Tool\AdministrationConfigurationToolDefinition;
 
 /**
  * Validates producer-side configuration tool definitions before materialization.
@@ -19,13 +19,26 @@ use App\Administering\Value\Tool\ConfigurationToolDefinition;
 final readonly class AdministrationConfigurationToolDefinitionValidator implements AdministrationConfigurationToolDefinitionValidatorInterface
 {
     public function validate(
-        ConfigurationToolProviderInterface $provider,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolProviderInterface $provider,
+        AdministrationConfigurationToolDefinition $definition,
+    ): array {
+        return [
+            ...$this->identityViolations($provider, $definition),
+            ...$this->serviceViolations($definition),
+            ...$this->formConventionViolations($definition),
+            ...$this->executableContractViolations($definition),
+            ...$this->toolKeyViolations($definition),
+        ];
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function identityViolations(
+        AdministrationConfigurationToolProviderInterface $provider,
+        AdministrationConfigurationToolDefinition $definition,
     ): array {
         $violations = [];
         $componentKey = $definition->componentKey();
         $componentToken = $definition->componentToken();
-        $toolKey = $definition->toolKey();
 
         if ('' === trim($componentKey)) {
             $violations[] = $this->violation('error', $definition, 'componentKey', 'Component key must not be blank.');
@@ -43,6 +56,14 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('error', $definition, 'componentToken', 'Definition component token must match provider component token.', $provider->componentToken(), $componentToken);
         }
 
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function serviceViolations(AdministrationConfigurationToolDefinition $definition): array
+    {
+        $violations = [];
+
         if ('' === trim($definition->toolSlug()) || 1 !== preg_match('/^[A-Z][A-Za-z0-9]*$/', $definition->toolSlug())) {
             $violations[] = $this->violation('error', $definition, 'toolSlug', 'Tool slug must be non-empty PascalCase.', 'PascalCase', $definition->toolSlug());
         }
@@ -55,7 +76,15 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('error', $definition, 'serviceShortName', 'Producer tool service must use producer-side Configuration prefix and Service suffix.', $definition->expectedServicePrefix().'*Service', $definition->serviceShortName());
         }
 
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function formConventionViolations(AdministrationConfigurationToolDefinition $definition): array
+    {
+        $violations = [];
         $expectedFormSuffix = $definition->expectedServicePrefix().$definition->toolSlug().'FormType';
+
         if (null !== $definition->formTypeClass && !str_ends_with($definition->formTypeClass, '\\'.$expectedFormSuffix)) {
             $violations[] = $this->violation('warning', $definition, 'formTypeClass', 'Producer form type should follow producer-side Configuration prefix convention.', '*\\'.$expectedFormSuffix, $definition->formTypeClass);
         }
@@ -65,7 +94,15 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Producer form data should follow producer-side Configuration prefix convention.', '*\\'.$expectedDataSuffix, $definition->formDataClass);
         }
 
-        $variableDriven = is_a($definition->serviceClass, ConfigVariableToolServiceInterface::class, true);
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function executableContractViolations(AdministrationConfigurationToolDefinition $definition): array
+    {
+        $violations = [];
+        $variableDriven = is_a($definition->serviceClass, AdministrationConfigVariableToolServiceInterface::class, true);
+
         if ($definition->executable && null === $definition->formTypeClass && !$variableDriven) {
             $violations[] = $this->violation('error', $definition, 'formTypeClass', 'Executable producer tool must either expose a legacy form type or implement the Configuring variable-driven tool contract.');
         }
@@ -74,16 +111,25 @@ final readonly class AdministrationConfigurationToolDefinitionValidator implemen
             $violations[] = $this->violation('warning', $definition, 'formDataClass', 'Legacy executable producer tool should expose a form data class for stable form payload semantics.');
         }
 
-        if ($toolKey !== strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug())) {
-            $violations[] = $this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', strtolower($componentToken).'.'.$this->camelToSnake($definition->toolSlug()), $toolKey);
+        return $violations;
+    }
+
+    /** @return list<AdministrationOwnerConfigurationToolViolation> */
+    private function toolKeyViolations(AdministrationConfigurationToolDefinition $definition): array
+    {
+        $toolKey = $definition->toolKey();
+        $expectedToolKey = strtolower($definition->componentToken()).'.'.$this->camelToSnake($definition->toolSlug());
+
+        if ($toolKey !== $expectedToolKey) {
+            return [$this->violation('error', $definition, 'toolKey', 'Tool key must be derived from component token and tool slug.', $expectedToolKey, $toolKey)];
         }
 
-        return $violations;
+        return [];
     }
 
     private function violation(
         string $severity,
-        ConfigurationToolDefinition $definition,
+        AdministrationConfigurationToolDefinition $definition,
         string $field,
         string $message,
         ?string $expected = null,

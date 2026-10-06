@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Administering\Command;
 
-use App\Administering\Entity\AdministrationOperationRun;
+use App\Administering\Entity\AdministrationOperationRunEntity;
+use App\Administering\Repository\AdministrationPersistenceRepository;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationReportProviderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunFactoryInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationRunnerInterface;
@@ -12,7 +13,6 @@ use App\Administering\ServiceInterface\Operation\AdministrationOperationStatusRe
 use App\Administering\Value\Operation\AdministrationOperationPlan;
 use App\Administering\Value\Operation\AdministrationOperationReport;
 use App\Administering\Value\Operation\AdministrationOperationType;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:operation:lifecycle-proof',
+    description: 'Executes a safe Administering operation synchronously and verifies run/event/artifact reporting.',
+)]
 /**
  * Runs one metadata-only Administering operation synchronously as a 3RC proof.
  *
@@ -28,10 +32,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * process so operators and watchdog checks can prove the lifecycle without a
  * running async worker.
  */
-#[AsCommand(
-    name: 'administering:operation:lifecycle-proof',
-    description: 'Executes a safe Administering operation synchronously and verifies run/event/artifact reporting.',
-)]
 final class AdministrationOperationLifecycleProofCommand extends Command
 {
     public function __construct(
@@ -39,11 +39,14 @@ final class AdministrationOperationLifecycleProofCommand extends Command
         private readonly AdministrationOperationRunnerInterface $operationRunner,
         private readonly AdministrationOperationStatusRecorderInterface $statusRecorder,
         private readonly AdministrationOperationReportProviderInterface $reportProvider,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
     ) {
         parent::__construct();
     }
 
+    /**
+     * Configures the launchable operation, safe proof target, and machine-readable output controls.
+     */
     protected function configure(): void
     {
         $this
@@ -52,6 +55,9 @@ final class AdministrationOperationLifecycleProofCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON.');
     }
 
+    /**
+     * Persists and executes the synchronous lifecycle proof, returning failure unless terminal status, events, and artifact evidence all satisfy the RC contract.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -144,17 +150,10 @@ final class AdministrationOperationLifecycleProofCommand extends Command
         }
     }
 
-    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRun
+    private function persistProofRun(AdministrationOperationPlan $plan): AdministrationOperationRunEntity
     {
         $operationRun = $this->operationRunFactory->createForCurrentUser($plan);
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationOperationRun::class);
-
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering operation runs. Configure the system SQLite entity manager for App\\Administering entities.');
-        }
-
-        $manager->persist($operationRun);
-        $manager->flush();
+        $this->persistenceRepository->persist($operationRun);
 
         return $operationRun;
     }

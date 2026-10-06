@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Administering\Controller\Admin\Crud;
 
-use App\Administering\Entity\AdministrationOperationEvent;
+use App\Administering\Entity\AdministrationOperationEventEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class AdministrationOperationEventCrudController extends AbstractReadOnlyAdministrationCrudController
+final class AdministrationOperationEventCrudController extends AdministrationAbstractReadOnlyCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return AdministrationOperationEvent::class;
+        return AdministrationOperationEventEntity::class;
     }
 
     protected function entityPermission(): string

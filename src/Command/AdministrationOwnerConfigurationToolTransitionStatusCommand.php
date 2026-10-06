@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Administering\Command;
 
 use App\Administering\CatalogInterface\Admin\AdministrationServiceToolCatalogInterface;
-use App\Administering\ServiceInterface\Tool\ConfigurationToolProviderInterface;
+use App\Administering\ServiceInterface\Tool\AdministrationConfigurationToolProviderInterface;
 use App\Administering\Value\Admin\AdministrationOwnerConfigurationToolTransitionStatusReport;
 use App\Administering\Value\Admin\AdministrationServiceTool;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -20,9 +20,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:transition-status',
     description: 'Reports owner-side migration status for internal and owner-provided configuration tools.',
 )]
+/**
+ * Reports current owner-side migration status for Administering configuration tools and providers.
+ */
 final class AdministrationOwnerConfigurationToolTransitionStatusCommand extends Command
 {
-    /** @param iterable<ConfigurationToolProviderInterface> $ownerToolProviders */
+    /** @param iterable<AdministrationConfigurationToolProviderInterface> $ownerToolProviders */
     public function __construct(
         private readonly AdministrationServiceToolCatalogInterface $toolCatalog,
         private readonly iterable $ownerToolProviders = [],
@@ -30,6 +33,11 @@ final class AdministrationOwnerConfigurationToolTransitionStatusCommand extends 
         parent::__construct();
     }
 
+    /**
+     * Defines filtering, evidence output, and optional fail-closed thresholds for transition candidates.
+     *
+     * The command remains observational by default; failure switches only change the exit status when unresolved owner or host extraction candidates are present.
+     */
     protected function configure(): void
     {
         $this
@@ -40,6 +48,11 @@ final class AdministrationOwnerConfigurationToolTransitionStatusCommand extends 
             ->addOption('fail-on-host-candidates', null, InputOption::VALUE_NONE, 'Fail when host-application extraction candidates remain.');
     }
 
+    /**
+     * Builds a deterministic transition inventory for internal tools and owner-provided configuration providers.
+     *
+     * The report classifies ownership, records recommended handoff paths, preserves warning evidence, and fails only when the caller explicitly enables the corresponding unresolved-candidate threshold.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

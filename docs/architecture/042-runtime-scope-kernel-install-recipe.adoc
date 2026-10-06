@@ -53,4 +53,4 @@ Before modifying `src/Kernel.php`, the command writes a timestamped backup next 
 
 `config/bundles.php` remains the Symfony/static bootstrap registry. It should contain framework/system/dev-only bundles and any truly always-on boot bundles.
 
-Profile-controlled Smart Responsor bundles belong in the runtime scope lock files.
+Profile-controlled application bundles belong in the runtime scope lock files.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Administering\Service\Config;
 
-use App\Administering\Value\Config\ConfigToolDescriptor;
+use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
 
 final readonly class AdministrationConfigApplyService
 {
@@ -22,7 +22,7 @@ final readonly class AdministrationConfigApplyService
      * @return array{status:string, messages:list<string>, masked_changes:array<string, mixed>, file_changes:list<array<string, mixed>>, secret_changes:list<array<string, mixed>>}
      */
     public function save(
-        ConfigToolDescriptor $descriptor,
+        AdministrationConfigToolDescriptor $descriptor,
         string $actorIdentifier,
         array $values,
         array $changedFields = [],
@@ -50,7 +50,7 @@ final readonly class AdministrationConfigApplyService
      * @return array{status:string, messages:list<string>, masked_changes:array<string, mixed>, file_changes:list<array<string, mixed>>, secret_changes:list<array<string, mixed>>}
      */
     public function apply(
-        ConfigToolDescriptor $descriptor,
+        AdministrationConfigToolDescriptor $descriptor,
         string $actorIdentifier,
         array $values,
         array $changedFields = [],

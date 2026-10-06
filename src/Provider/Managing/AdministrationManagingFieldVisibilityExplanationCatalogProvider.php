@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Administering\Provider\Managing;
 
 use App\Administering\ServiceInterface\Managing\AdministrationFieldVisibilityExplanationCatalogProviderInterface;
-use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationScenario;
-use App\Administering\Value\Managing\ManagingFieldVisibilityExplanationStep;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityExplanationScenario;
+use App\Administering\Value\Managing\AdministrationManagingFieldVisibilityExplanationStep;
 
 /**
  * Documents the read-only Administering view of Managing field visibility diagnostics.
@@ -16,65 +16,65 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
     public function explanationSteps(): array
     {
         return [
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 10,
                 'Page availability',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_AVAILABILITY,
                 'deny/pass',
                 'terminal on unavailable',
                 'Availability removes fields unavailable for index/detail/new/edit before access or profile checks.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 20,
                 'Backend access deny config',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
                 'deny/pass',
                 'terminal on denied',
                 'A configured deny is an access-axis decision and cannot be overridden by user profiles.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 25,
                 'Backend presentation config',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden/pass',
                 'non-terminal',
                 'Configured visible/hidden rules shape presentation inside an already allowed access corridor.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 30,
                 'External field-value access decision',
                 'Rolling',
-                ManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_ACCESS,
                 'allow/deny/abstain',
                 'terminal on deny',
                 'Rolling deny blocks field values; allow only opens access and never forces presentation visibility.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 40,
                 'Field definition default',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden',
                 'non-terminal',
                 'Metadata defaults provide presentation when no stronger backend presentation rule decided.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 50,
                 'User personal profile',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'visible/hidden/pass',
                 'non-terminal unless rejected',
                 'User preference may only affect already allowed and hideable presentation fields.',
             ),
-            new ManagingFieldVisibilityExplanationStep(
+            new AdministrationManagingFieldVisibilityExplanationStep(
                 60,
                 'Final EasyAdmin emission',
                 'Managing',
-                ManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
+                AdministrationManagingFieldVisibilityExplanationStep::AXIS_PRESENTATION,
                 'render/not-render',
                 'final',
                 'EasyAdmin receives only fields that remain access-allowed and presentation-visible.',
@@ -85,7 +85,7 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
     public function diagnosticScenarios(): array
     {
         return [
-            new ManagingFieldVisibilityExplanationScenario(
+            new AdministrationManagingFieldVisibilityExplanationScenario(
                 'rolling-deny',
                 'Rolling denies field-value access',
                 'Field is denied and not emitted.',
@@ -93,7 +93,7 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 'Do not emit the field and surface the Rolling denial as access-axis evidence.',
                 ['availability', 'access'],
             ),
-            new ManagingFieldVisibilityExplanationScenario(
+            new AdministrationManagingFieldVisibilityExplanationScenario(
                 'user-hidden',
                 'User hides an allowed field',
                 'Field is hidden and not emitted.',
@@ -101,7 +101,7 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 'Keep access allowed but omit the field from the emitted EasyAdmin field list.',
                 ['access', 'presentation'],
             ),
-            new ManagingFieldVisibilityExplanationScenario(
+            new AdministrationManagingFieldVisibilityExplanationScenario(
                 'required-form-field',
                 'User tries to hide a required form field',
                 'Field remains visible and emitted.',
@@ -109,7 +109,7 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 'Reject the hide request for required or non-hideable form fields.',
                 ['availability', 'presentation'],
             ),
-            new ManagingFieldVisibilityExplanationScenario(
+            new AdministrationManagingFieldVisibilityExplanationScenario(
                 'backend-hidden-user-visible',
                 'User shows a backend-hidden presentation default',
                 'Field is visible and emitted when access is allowed.',
@@ -117,7 +117,7 @@ final readonly class AdministrationManagingFieldVisibilityExplanationCatalogProv
                 'Allow the profile to override presentation only after access remains allowed.',
                 ['access', 'presentation'],
             ),
-            new ManagingFieldVisibilityExplanationScenario(
+            new AdministrationManagingFieldVisibilityExplanationScenario(
                 'page-unavailable',
                 'Field is unavailable on the requested page',
                 'Field is denied and not emitted.',

@@ -17,10 +17,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:owner-configuration-tools:external-package-manifest:validate',
     description: 'Validates a non-destructive owner-side external package manifest before neighbor overlays.',
 )]
+/**
+ * Validates owner-side package manifests before any neighboring repository overlay handoff is accepted.
+ */
 final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateCommand extends Command
 {
     private const EXPECTED_SCHEMA = 'smart-responsor.administering.owner_configuration_external_package_manifest.v1';
 
+    /**
+     * Declares manifest input, machine-readable reporting, and explicit warning or error tolerance controls.
+     */
     protected function configure(): void
     {
         $this
@@ -31,6 +37,9 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
             ->addOption('allow-errors', null, InputOption::VALUE_NONE, 'Do not fail when errors are found. Transitional/manual review only.');
     }
 
+    /**
+     * Validates manifest structure and overlay safety, emits evidence, and fails closed unless tolerance is explicit.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -136,63 +145,7 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
 
         $allFiles = [];
         foreach ($components as $index => $componentManifest) {
-            $componentPath = sprintf('componentManifests[%d]', $index);
-            if (!is_array($componentManifest)) {
-                $issues[] = $this->issue('error', $componentPath, 'Component manifest must be an object.');
-                continue;
-            }
-
-            $componentKey = $this->stringValue($componentManifest['componentKey'] ?? null);
-            $componentToken = $this->stringValue($componentManifest['componentToken'] ?? null);
-            $providerClass = $this->stringValue($componentManifest['providerClass'] ?? null);
-            $tools = is_array($componentManifest['tools'] ?? null) ? $componentManifest['tools'] : [];
-            $files = is_array($componentManifest['files'] ?? null) ? $componentManifest['files'] : [];
-
-            if (null === $componentKey || '' === $componentKey) {
-                $issues[] = $this->issue('error', $componentPath.'.componentKey', 'componentKey is required.');
-            }
-            if (null === $componentToken || '' === $componentToken || strtolower($componentToken) !== $componentToken) {
-                $issues[] = $this->issue('error', $componentPath.'.componentToken', 'componentToken is required and must be lowercase.');
-            }
-            if (null === $providerClass || '' === $providerClass) {
-                $issues[] = $this->issue('error', $componentPath.'.providerClass', 'providerClass is required.');
-            }
-
-            $this->requireLiteral($componentManifest, 'deliveryMode', 'overlay_only', $issues, $componentPath.'.deliveryMode');
-            $this->requireLiteral($componentManifest, 'deleteMode', 'none', $issues, $componentPath.'.deleteMode');
-            $this->requireLiteral($componentManifest, 'automaticMoveAllowed', false, $issues, $componentPath.'.automaticMoveAllowed');
-
-            foreach ($files as $fileIndex => $file) {
-                if (!is_string($file) || '' === trim($file)) {
-                    $issues[] = $this->issue('error', sprintf('%s.files[%d]', $componentPath, $fileIndex), 'File path must be a non-empty string.');
-                    continue;
-                }
-                if (str_contains($file, '..') || str_starts_with($file, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $file)) {
-                    $issues[] = $this->issue('error', sprintf('%s.files[%d]', $componentPath, $fileIndex), 'File path must be repository-relative and must not contain traversal.');
-                }
-                if (isset($allFiles[$file])) {
-                    $issues[] = $this->issue('error', sprintf('%s.files[%d]', $componentPath, $fileIndex), sprintf('Duplicate overlay target also listed by %s.', $allFiles[$file]));
-                }
-                $allFiles[$file] = $componentPath;
-            }
-
-            foreach ($tools as $toolIndex => $tool) {
-                $toolPath = sprintf('%s.tools[%d]', $componentPath, $toolIndex);
-                if (!is_array($tool)) {
-                    $issues[] = $this->issue('error', $toolPath, 'Tool entry must be an object.');
-                    continue;
-                }
-
-                $this->validateToolEntry($tool, $toolPath, $componentKey, $componentToken, $issues);
-            }
-
-            $componentSummaries[] = [
-                'componentKey' => $componentKey ?? 'Unknown',
-                'componentToken' => $componentToken ?? 'unknown',
-                'providerClass' => $providerClass ?? '-',
-                'toolCount' => count($tools),
-                'fileCount' => count($files),
-            ];
+            $this->validateComponentManifest($componentManifest, $index, $issues, $componentSummaries, $allFiles);
         }
 
         $rejected = $payload['rejectedEntries'] ?? [];
@@ -201,6 +154,111 @@ final class AdministrationOwnerConfigurationToolExternalPackageManifestValidateC
         }
 
         return new AdministrationOwnerConfigurationToolExternalPackageManifestValidationReport($manifestPath, $schemaAccepted, $issues, $componentSummaries);
+    }
+
+    /**
+     * @param list<array<string, string>> $issues
+     * @param list<array<string, mixed>>  $componentSummaries
+     * @param array<string, string>       $allFiles
+     */
+    private function validateComponentManifest(
+        mixed $componentManifest,
+        int $index,
+        array &$issues,
+        array &$componentSummaries,
+        array &$allFiles,
+    ): void {
+        $componentPath = sprintf('componentManifests[%d]', $index);
+        if (!is_array($componentManifest)) {
+            $issues[] = $this->issue('error', $componentPath, 'Component manifest must be an object.');
+
+            return;
+        }
+
+        $componentKey = $this->stringValue($componentManifest['componentKey'] ?? null);
+        $componentToken = $this->stringValue($componentManifest['componentToken'] ?? null);
+        $providerClass = $this->stringValue($componentManifest['providerClass'] ?? null);
+        $tools = is_array($componentManifest['tools'] ?? null) ? $componentManifest['tools'] : [];
+        $files = is_array($componentManifest['files'] ?? null) ? $componentManifest['files'] : [];
+
+        $this->validateComponentIdentity($componentPath, $componentKey, $componentToken, $providerClass, $issues);
+        $this->requireLiteral($componentManifest, 'deliveryMode', 'overlay_only', $issues, $componentPath.'.deliveryMode');
+        $this->requireLiteral($componentManifest, 'deleteMode', 'none', $issues, $componentPath.'.deleteMode');
+        $this->requireLiteral($componentManifest, 'automaticMoveAllowed', false, $issues, $componentPath.'.automaticMoveAllowed');
+        $this->validateComponentFiles($files, $componentPath, $issues, $allFiles);
+        $this->validateComponentTools($tools, $componentPath, $componentKey, $componentToken, $issues);
+
+        $componentSummaries[] = [
+            'componentKey' => $componentKey ?? 'Unknown',
+            'componentToken' => $componentToken ?? 'unknown',
+            'providerClass' => $providerClass ?? '-',
+            'toolCount' => count($tools),
+            'fileCount' => count($files),
+        ];
+    }
+
+    /** @param list<array<string, string>> $issues */
+    private function validateComponentIdentity(
+        string $componentPath,
+        ?string $componentKey,
+        ?string $componentToken,
+        ?string $providerClass,
+        array &$issues,
+    ): void {
+        if (null === $componentKey || '' === $componentKey) {
+            $issues[] = $this->issue('error', $componentPath.'.componentKey', 'componentKey is required.');
+        }
+        if (null === $componentToken || '' === $componentToken || strtolower($componentToken) !== $componentToken) {
+            $issues[] = $this->issue('error', $componentPath.'.componentToken', 'componentToken is required and must be lowercase.');
+        }
+        if (null === $providerClass || '' === $providerClass) {
+            $issues[] = $this->issue('error', $componentPath.'.providerClass', 'providerClass is required.');
+        }
+    }
+
+    /**
+     * @param array<mixed>                $files
+     * @param list<array<string, string>> $issues
+     * @param array<string, string>       $allFiles
+     */
+    private function validateComponentFiles(array $files, string $componentPath, array &$issues, array &$allFiles): void
+    {
+        foreach ($files as $fileIndex => $file) {
+            $filePath = sprintf('%s.files[%d]', $componentPath, $fileIndex);
+            if (!is_string($file) || '' === trim($file)) {
+                $issues[] = $this->issue('error', $filePath, 'File path must be a non-empty string.');
+                continue;
+            }
+            if (str_contains($file, '..') || str_starts_with($file, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $file)) {
+                $issues[] = $this->issue('error', $filePath, 'File path must be repository-relative and must not contain traversal.');
+            }
+            if (isset($allFiles[$file])) {
+                $issues[] = $this->issue('error', $filePath, sprintf('Duplicate overlay target also listed by %s.', $allFiles[$file]));
+            }
+            $allFiles[$file] = $componentPath;
+        }
+    }
+
+    /**
+     * @param array<mixed>                $tools
+     * @param list<array<string, string>> $issues
+     */
+    private function validateComponentTools(
+        array $tools,
+        string $componentPath,
+        ?string $componentKey,
+        ?string $componentToken,
+        array &$issues,
+    ): void {
+        foreach ($tools as $toolIndex => $tool) {
+            $toolPath = sprintf('%s.tools[%d]', $componentPath, $toolIndex);
+            if (!is_array($tool)) {
+                $issues[] = $this->issue('error', $toolPath, 'Tool entry must be an object.');
+                continue;
+            }
+
+            $this->validateToolEntry($tool, $toolPath, $componentKey, $componentToken, $issues);
+        }
     }
 
     /** @param array<string, mixed> $tool @param list<array<string, string>> $issues */

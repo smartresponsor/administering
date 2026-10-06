@@ -7,15 +7,16 @@ namespace App\Administering\Controller\Admin;
 use App\Administering\BuilderInterface\Admin\AdministrationMainMenuBuilderInterface;
 use App\Administering\Controller\Admin\Crud\AdministrationConfigToolCrudController;
 use App\Administering\Controller\Admin\Crud\AdministrationServiceToolRecordCrudController;
-use App\Administering\Entity\AdministrationServiceToolRecord;
+use App\Administering\Entity\AdministrationServiceToolRecordEntity;
 use App\Administering\Form\Admin\AdministrationAdminServiceToolRuntimeControlsFormType;
 use App\Administering\ProviderInterface\Admin\AdministrationServiceSectionToolDashboardProviderInterface;
+use App\Administering\Repository\AdministrationPersistenceRepository;
+use App\Administering\Responder\Security\AdministrationAuthenticationRequiredResponder;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOpenGuardInterface;
 use App\Administering\ServiceInterface\Admin\AdministrationServiceToolOperationPlanFactoryInterface;
 use App\Administering\ServiceInterface\Audit\AdministrationAuditRecorderInterface;
 use App\Administering\ServiceInterface\Operation\AdministrationOperationSubmitterInterface;
 use App\Administering\Value\Form\Admin\AdministrationAdminServiceToolRuntimeControlsData;
-use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -34,11 +35,12 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         private readonly AdministrationMainMenuBuilderInterface $mainMenuBuilder,
         private readonly AdministrationServiceSectionToolDashboardProviderInterface $toolDashboardProvider,
         private readonly AdminUrlGenerator $adminUrlGenerator,
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly AdministrationPersistenceRepository $persistenceRepository,
         private readonly AdministrationServiceToolOperationPlanFactoryInterface $toolOperationPlanFactory,
         private readonly AdministrationServiceToolOpenGuardInterface $toolOpenGuard,
         private readonly AdministrationOperationSubmitterInterface $operationSubmitter,
         private readonly AdministrationAuditRecorderInterface $auditRecorder,
+        private readonly AdministrationAuthenticationRequiredResponder $authenticationRequiredResponder,
     ) {
     }
 
@@ -65,7 +67,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         }
 
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -87,7 +89,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
 
         $crudController = $controllerFactory->getCrudControllerInstance(AdministrationConfigToolCrudController::class, Crud::PAGE_INDEX, $request);
         if (null === $crudController) {
-            throw new \LogicException('Unable to instantiate the AdministrationConfigTool CRUD controller for the main dashboard.');
+            throw new \LogicException('Unable to instantiate the AdministrationConfigToolEntity CRUD controller for the main dashboard.');
         }
 
         $request->attributes->set(EA::CRUD_CONTROLLER_FQCN, AdministrationConfigToolCrudController::class);
@@ -128,7 +130,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceSectionTools(string $sectionKey): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $dashboard = $this->toolDashboardProvider->dashboardForSection($sectionKey);
@@ -150,7 +152,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceSectionToolDetail(string $sectionKey, string $toolShortName): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
         $detail = $this->toolDashboardProvider->detailForTool($sectionKey, $toolShortName);
@@ -174,17 +176,12 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function openServiceTool(string $toolKey, Request $request): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering service tool records.');
-        }
+        $record = $this->persistenceRepository->findOneBy(AdministrationServiceToolRecordEntity::class, ['toolKey' => $toolKey]);
 
-        $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
-
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             throw $this->createNotFoundException(sprintf('Unknown Administering service tool "%s".', $toolKey));
         }
 
@@ -231,16 +228,11 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
     public function serviceToolRuntimeControls(string $toolKey, Request $request): Response
     {
         if (null === $this->getUser()) {
-            return $this->disableCaching($this->redirectToRoute('interfacing_welcome_sign_in'));
+            return $this->disableCaching($this->authenticationRequiredResponder->respond());
         }
 
-        $manager = $this->managerRegistry->getManagerForClass(AdministrationServiceToolRecord::class);
-        if (null === $manager) {
-            throw new \LogicException('No Doctrine manager is configured for Administering service tool records.');
-        }
-
-        $record = $manager->getRepository(AdministrationServiceToolRecord::class)->findOneBy(['toolKey' => $toolKey]);
-        if (!$record instanceof AdministrationServiceToolRecord) {
+        $record = $this->persistenceRepository->findOneBy(AdministrationServiceToolRecordEntity::class, ['toolKey' => $toolKey]);
+        if (!$record instanceof AdministrationServiceToolRecordEntity) {
             throw $this->createNotFoundException(sprintf('Unknown Administering service tool "%s".', $toolKey));
         }
 
@@ -260,7 +252,7 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
             ];
 
             $record->configureRuntimeControls($data->enabled, $data->visible, $data->position, $data->labelOverride, $data->clearLabelOverride);
-            $manager->flush();
+            $this->persistenceRepository->flush(AdministrationServiceToolRecordEntity::class);
 
             $this->auditRecorder->record('administration.service_tool.runtime_controls.updated', $record->getToolKey(), [
                 'source' => 'easyadmin',

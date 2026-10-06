@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:relocation-plan',
     description: 'Builds a non-destructive relocation plan for non-tool files under src/Service/<Direction>.',
 )]
+/**
+ * Builds a non-destructive relocation recommendation set for non-tool service files without moving, deleting, or rewriting source files.
+ */
 final class AdministrationServiceToolRelocationPlanCommand extends Command
 {
     public function __construct(private readonly AdministrationServiceToolRelocationPlannerInterface $planner)
@@ -24,6 +27,9 @@ final class AdministrationServiceToolRelocationPlanCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares optional section filtering, JSON output, and repository-relative plan export controls.
+     */
     protected function configure(): void
     {
         $this
@@ -32,6 +38,9 @@ final class AdministrationServiceToolRelocationPlanCommand extends Command
             ->addOption('write-json', null, InputOption::VALUE_REQUIRED, 'Write the relocation plan JSON to a repository-relative path.');
     }
 
+    /**
+     * Builds and optionally exports relocation recommendations while preserving a non-destructive failure signal when candidates remain.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');
