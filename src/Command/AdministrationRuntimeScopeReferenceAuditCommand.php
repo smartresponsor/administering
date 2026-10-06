@@ -18,6 +18,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:reference-audit',
     description: 'Audits host references against APP_ENV, APP_RUNTIME_SCOPE, composer inventory, and runtime-scope lock.',
 )]
+/**
+ * Audits host source references against the effective runtime scope so disabled or out-of-scope components cannot remain silently referenced.
+ */
 final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
 {
     public function __construct(
@@ -29,6 +32,9 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host-directory, environment, and JSON controls for deterministic runtime-scope reference auditing.
+     */
     protected function configure(): void
     {
         $this
@@ -37,6 +43,9 @@ final class AdministrationRuntimeScopeReferenceAuditCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print machine-readable JSON.');
     }
 
+    /**
+     * Resolves the active runtime scope, scans forbidden component references, and reports findings in JSON or operator-readable form.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $hostDir = (string) $input->getOption('host-dir');

@@ -15,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
     name: 'administering:runtime-scope-source:mirror-audit',
     description: 'Audits runtime-scope source index routes against service-backed actions and EasyAdmin menu mirrors.',
 )]
+/**
+ * Audits runtime-scope source routes for service-backed action coverage and matching EasyAdmin navigation mirrors.
+ */
 final class AdministrationRuntimeScopeSourceMirrorAuditCommand extends Command
 {
     public function __construct(
@@ -24,11 +27,17 @@ final class AdministrationRuntimeScopeSourceMirrorAuditCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares machine-readable output control for the runtime-scope source mirror audit.
+     */
     protected function configure(): void
     {
         $this->addOption('json', null, InputOption::VALUE_NONE, 'Print machine-readable JSON report.');
     }
 
+    /**
+     * Scans source-route mirror coverage and reports route, service, menu, and issue evidence with clean/failure exit status.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $report = $this->scanner->scan($this->projectDir);

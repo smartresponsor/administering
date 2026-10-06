@@ -18,6 +18,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:runtime-scope:report',
     description: 'Reports the normalized runtime-scope decision for every component token.',
 )]
+/**
+ * Reports the normalized runtime-scope decision together with lock validation, warnings, and source errors for every component token.
+ */
 final class AdministrationRuntimeScopeReportCommand extends Command
 {
     public function __construct(
@@ -29,6 +32,9 @@ final class AdministrationRuntimeScopeReportCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares host, environment, lock-age, and JSON controls for the normalized runtime-scope decision report.
+     */
     protected function configure(): void
     {
         $this
@@ -38,6 +44,9 @@ final class AdministrationRuntimeScopeReportCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the report as JSON.');
     }
 
+    /**
+     * Builds the runtime-scope decision and validation report and returns failure when normalized report errors remain.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $hostDir = $this->absolutePath((string) $input->getOption('host-dir'));

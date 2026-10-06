@@ -1,5 +1,29 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 runtime-scope audit/report/validate pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `27e6f938161c1b5d344124b7f849eeeb24db8d79`.
+- Fresh Gating remained executable and green; current Canon031 front began with `AdministrationRuntimeScopeReferenceAuditCommand`, `AdministrationRuntimeScopeReportCommand`, `AdministrationRuntimeScopeSourceMirrorAuditCommand`, and `AdministrationRuntimeScopeValidateCommand`, each missing class/configure/execute semantic PHPDoc.
+- Added semantic PHPDoc only for those 12 class/method contracts.
+- The first unified-patch attempt was rejected before application because the guarded patch tool requires `diff --git` headers; no file was changed by that rejected attempt. The slice was then applied through exact-text repository replacements.
+- No executable statements, signatures, options, service wiring, routes, Doctrine metadata, UI, or runtime behavior changed.
+
+Что имеем? The remaining RuntimeScope audit/report/validate front now has explicit class and Symfony command-method contracts.
+Что осталось? Verify the exact Canon031 delta, refresh canonical coverage, run quality and one fresh Inspecting, then integrate if Git remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all four RuntimeScope command files.
+- Fresh `composer gate`: GREEN (`exit 0`). This slice supplies the four missing class contracts and eight missing `configure()`/`execute()` contracts from the live Canon031 front, advancing the documented totals from classes `377/687` to `381/687` and contract methods `108/1006` to `116/1006`.
+- `composer test:coverage`: GREEN (`exit 0`); canonical PHPUnit coverage evidence refreshed.
+- Aggregate `composer quality` completed Composer validation, YAML/container lint, PHPStan, and PHP-CS-Fixer, then its ordinary PHPUnit subprocess returned code 255 without test output. A single durable rerun reproduced the same PHPUnit-wrapper failure. Independent coverage and Gating are GREEN, so this is recorded as runner-lifecycle instability rather than a repository regression; no retry loop was used.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-041607.json`; php-structure reported the stable 104 medium observational findings, 0 high/critical, 0 autofixable. This run did not emit a PHPStan analyzer result, while repository-local PHPStan had already completed before the aggregate quality PHPUnit failure.
+- Runtime/UI behavioral verification is not applicable because this slice adds PHPDoc contracts only and updates the execution journal.
+
+Что имеем? The live RuntimeScope audit/report/validate Canon031 cluster is documented and independently gated/coverage-verified without runtime behavior changes.
+Что осталось? Commit/push this isolated five-file slice; the next live Canon031 front moves to `AdministrationScanConfigurationCommand`, `AdministrationServiceSectionAnchorSyncCommand`, `AdministrationServiceToolConventionAuditCommand`, and subsequent command contracts.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 runtime-scope contract pass
 
 ### Current-slice reconciliation
