@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-tools:convention-audit',
     description: 'Audits src/Service/<Direction> files against the canonical Administering service-tool naming convention.',
 )]
+/**
+ * Audits Administering service files against the canonical directional service-tool naming and placement convention.
+ */
 final class AdministrationServiceToolConventionAuditCommand extends Command
 {
     public function __construct(private readonly AdministrationServiceToolConventionAuditorInterface $auditor)
@@ -24,6 +27,9 @@ final class AdministrationServiceToolConventionAuditCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the optional service-section selector and JSON output control for convention auditing.
+     */
     protected function configure(): void
     {
         $this
@@ -31,6 +37,9 @@ final class AdministrationServiceToolConventionAuditCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print violations as JSON.');
     }
 
+    /**
+     * Evaluates service-tool convention violations and reports actionable placement and naming guidance with failure status when violations remain.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $section = $input->getArgument('section');

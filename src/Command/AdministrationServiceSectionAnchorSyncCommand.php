@@ -17,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'administering:service-section-anchors:sync',
     description: 'Synchronizes service-section primary CRUD anchor tables from their canonical providers.',
 )]
+/**
+ * Synchronizes service-section primary CRUD anchor records from canonical providers and reports section-level synchronization outcomes.
+ */
 final class AdministrationServiceSectionAnchorSyncCommand extends Command
 {
     public function __construct(private readonly AdministrationServiceSectionAnchorSyncOperationServiceInterface $syncOperationService)
@@ -24,6 +27,9 @@ final class AdministrationServiceSectionAnchorSyncCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Declares the optional service-section selector and JSON output control for anchor synchronization.
+     */
     protected function configure(): void
     {
         $this
@@ -31,6 +37,9 @@ final class AdministrationServiceSectionAnchorSyncCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Print the sync result as JSON.');
     }
 
+    /**
+     * Runs canonical anchor synchronization for the selected section set and returns failure when any section does not reach synced status.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

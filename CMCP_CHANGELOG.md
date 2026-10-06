@@ -1,5 +1,29 @@
 # CMCP Execution Journal
 
+## 2026-10-06 — engine-20261004121851-administering-50b9bf — Canon031 configuration/service-command pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `33914fe51b5be4e0ee8fe69080a960ade054d4a9`.
+- Fresh Gating remained executable and GREEN before mutation.
+- Selected live Canon031 front: `AdministrationScanConfigurationCommand`, `AdministrationServiceSectionAnchorSyncCommand`, and `AdministrationServiceToolConventionAuditCommand`.
+- Each selected command lacked semantic PHPDoc for the class, `configure()`, and `execute()` contracts.
+- Added semantic PHPDoc only; no executable statements, signatures, arguments/options, DI, service wiring, routes, Doctrine metadata, or UI behavior changed.
+
+Что имеем? Three additional command contracts are now explicitly documented.
+Что осталось? Verify the exact Canon031 delta, refresh canonical coverage, run quality and one fresh Inspecting, then integrate if Git remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all three selected command files.
+- Fresh `composer gate`: GREEN (`exit 0`). This slice adds three class contracts and six `configure()`/`execute()` contracts from the live Canon031 front, moving the documented Canon031 counts from classes `381/687` to `384/687` and contract methods `116/1006` to `122/1006`.
+- `composer test:coverage`: GREEN (`exit 0`); canonical coverage evidence refreshed.
+- Aggregate `composer quality` again completed Composer validation, YAML/container lint, PHPStan, and PHP-CS-Fixer before the ordinary PHPUnit subprocess returned code 255 without test output. Independent coverage and Gating are GREEN; no retry loop was used because this matches the already-observed runner-lifecycle instability.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-052743.json`; php-structure reported the stable 104 medium findings, 0 high/critical, 0 autofixable. This run again did not emit a PHPStan analyzer result, while repository-local PHPStan had already completed before the aggregate quality PHPUnit failure.
+- Runtime/UI behavioral verification is not applicable because this slice adds PHPDoc contracts only and updates the execution journal.
+
+Что имеем? The configuration scan and service-command Canon031 slice is independently gated and coverage-verified without runtime behavior changes.
+Что осталось? Commit/push this isolated four-file slice, then continue from the next live command-contract front.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 runtime-scope audit/report/validate pass
 
 ### Current-slice reconciliation
