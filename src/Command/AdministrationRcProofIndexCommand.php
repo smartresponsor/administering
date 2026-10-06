@@ -11,6 +11,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:rc:proof-index',
+    description: 'Builds the Administering 3RC proof-index artifact from proof and manifest files.',
+)]
 /**
  * Writes the small proof-index artifact used by the 3RC handoff contract.
  *
@@ -19,12 +23,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * watchdog flows can run the complete 3RC sequence with composer scripts on any
  * environment that can execute bin/console.
  */
-#[AsCommand(
-    name: 'administering:rc:proof-index',
-    description: 'Builds the Administering 3RC proof-index artifact from proof and manifest files.',
-)]
 final class AdministrationRcProofIndexCommand extends Command
 {
+    /**
+     * Declares proof, manifest, output, operation, target-prefix, and JSON controls for deterministic 3RC proof-index generation.
+     */
     protected function configure(): void
     {
         $this
@@ -36,6 +39,9 @@ final class AdministrationRcProofIndexCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit the generated index JSON.');
     }
 
+    /**
+     * Validates current proof/manifest inputs and writes a deterministic hash-bound 3RC proof-index artifact for downstream handoff validation.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

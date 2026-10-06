@@ -14,6 +14,10 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:rc:proof',
+    description: 'Runs the Administering readiness, lifecycle, and Messenger-boundary proof gates for RC promotion.',
+)]
 /**
  * Aggregates the pre-3RC Administering proof commands into one owner/CI gate.
  *
@@ -22,10 +26,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * machine-readable gate that can be used by owner handoff scripts while still
  * preserving the dedicated commands for manual diagnosis.
  */
-#[AsCommand(
-    name: 'administering:rc:proof',
-    description: 'Runs the Administering readiness, lifecycle, and Messenger-boundary proof gates for RC promotion.',
-)]
 final class AdministrationRcProofCommand extends Command
 {
     /** @var list<string> */

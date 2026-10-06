@@ -1,5 +1,30 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC proof cluster pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `af2c40d2ab907ed79ead85c419804396bc0f020e`.
+- Fresh Gating: `0 failed`; Canon031 baseline classes `365/687 (53.1%)`, contract methods `100/1006 (9.9%)`.
+- Current representative weak symbols began with `AdministrationRcOwnerReviewCommand`, `AdministrationRcProofArtifactValidateCommand`, `AdministrationRcProofCommand`, and `AdministrationRcProofIndexCommand`; `ProofIndex` also lacked `configure()`/`execute()` contract docs.
+- The four RC classes already had meaningful PHPDoc before `#[AsCommand]`; moved those existing docblocks adjacent to each class declaration so Canon031 can associate them correctly.
+- Added semantic contract PHPDoc to `AdministrationRcProofIndexCommand::configure()` and `::execute()` only.
+- No executable statements, signatures, options, routes, UI, Doctrine metadata, DI, or runtime wiring changed.
+
+Что имеем? Four existing RC class contracts are canonically associated and the proof-index command now documents both Symfony contract methods.
+Что осталось? Verify the exact Canon031 delta, refresh coverage, run aggregate quality and fresh Inspecting, then integrate if Git remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all four RC command files.
+- Fresh Gating: `0 failed`; Canon031 improved classes `365/687 (53.1%) -> 369/687 (53.7%)` and contract methods `100/1006 (9.9%) -> 102/1006 (10.1%)`; all six selected weak symbols disappeared. Canon052 remains GREEN.
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; canonical coverage evidence refreshed.
+- Aggregate `composer quality` verified Composer/YAML/container/PHPStan/PHP-CS-Fixer and ordinary PHPUnit `154/154`; its durable wrapper then reported `process_not_running` during the final Gating subprocess lifecycle. Independent `composer gate` is GREEN, so this is recorded as runner-lifecycle instability rather than a repository failure.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-014022.json`; PHPStan `0 errors`, 104 medium observational findings, 0 high/critical, 0 autofixable.
+- Runtime/UI behavioral verification is not applicable because this slice changes only PHPDoc association/content plus the execution journal.
+
+Что имеем? Four RC proof-family classes and two proof-index contract methods are now recognized by Canon031, with syntax, coverage tests, static analysis, style, PHPUnit, Gating, and fresh Inspecting evidence green at the repository level.
+Что осталось? Commit/push this isolated five-file slice; repository-wide Canon031/040/042 debt remains for subsequent passes.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC class-doc association pass
 
 ### Current-slice reconciliation
