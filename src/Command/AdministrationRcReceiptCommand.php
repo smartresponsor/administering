@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'administering:rc:receipt',
+    description: 'Builds a compact Administering 3RC owner receipt from validated RC status artifacts.',
+)]
 /**
  * Builds a compact owner-facing receipt after the full Administering 3RC chain.
  *
@@ -19,10 +23,6 @@ use Symfony\Component\Yaml\Yaml;
  * 3RC status and final-seal validation artifacts, records current SHA-256 hashes,
  * and emits a small JSON/text pair suitable for handoff intake.
  */
-#[AsCommand(
-    name: 'administering:rc:receipt',
-    description: 'Builds a compact Administering 3RC owner receipt from validated RC status artifacts.',
-)]
 final class AdministrationRcReceiptCommand extends Command
 {
     protected function configure(): void

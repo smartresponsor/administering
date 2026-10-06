@@ -12,6 +12,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'administering:rc:status',
+    description: 'Summarizes captured Administering 3RC proof artifacts and final-seal validation status.',
+)]
 /**
  * Emits a compact read-only status summary for captured Administering 3RC artifacts.
  *
@@ -20,10 +24,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * and watchdog-friendly inventory view after the full RC proof/final-seal chain
  * has already produced its artifacts.
  */
-#[AsCommand(
-    name: 'administering:rc:status',
-    description: 'Summarizes captured Administering 3RC proof artifacts and final-seal validation status.',
-)]
 final class AdministrationRcStatusCommand extends Command
 {
     public function __construct(private readonly AdministrationRcStatusReportService $statusReportService)

@@ -1,5 +1,29 @@
 # CMCP Execution Journal
 
+## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC receipt/status association pass
+
+### Current-slice reconciliation
+- Windows MCP baseline: clean/synchronized `fd4b7977f84c342d20ae6b2bbfdde0d0c0cbce88`.
+- Fresh Gating: `0 failed`; Canon031 baseline classes `369/687 (53.7%)`, contract methods `102/1006 (10.1%)`.
+- Current representative weak symbols began with `AdministrationRcReceiptCommand`, `AdministrationRcReceiptValidateCommand`, `AdministrationRcStatusCommand`, and `AdministrationRcTerminalStatusValidateCommand`.
+- All four classes already had meaningful semantic PHPDoc before `#[AsCommand]`; moved those existing docblocks adjacent to their class declarations so Canon031 can associate them correctly.
+- Documentation text was preserved verbatim; no executable statements, signatures, options, routes, UI, Doctrine metadata, DI, or runtime wiring changed.
+
+Что имеем? Four receipt/status RC class contracts are now structurally associated with their class declarations.
+Что осталось? Verify the Canon031 delta, refresh coverage, run quality/Inspecting, then integrate if Git remains isolated.
+
+### Verification and integration evidence
+- Changed PHP lint: GREEN for all four receipt/status command files.
+- Fresh Gating: `0 failed`; Canon031 classes improved `369/687 (53.7%) -> 373/687 (54.3%)`; contract methods remain `102/1006 (10.1%)`. All four selected RC class weak symbols disappeared. Canon052 remains GREEN.
+- `composer test:coverage`: GREEN, `154 tests / 704 assertions`; canonical coverage evidence refreshed.
+- `composer quality`: GREEN, including Composer/YAML/container, PHPStan, PHP-CS-Fixer, PHPUnit `154/154`, and Gating.
+- Fresh Inspecting: `D:\PhpstormProjects\www\Inspecting\.inspecting\reports\D--PhpstormProjects-www-Administering-20261006-021711.json`; PHPStan `0 errors`, 104 medium observational findings, 0 high/critical, 0 autofixable.
+- Runtime/UI behavioral verification is not applicable because this slice only re-associated existing PHPDoc and updated the execution journal.
+
+Что имеем? Four more RC receipt/status classes are canonically documented with all deterministic quality gates green and no runtime behavior change.
+Что осталось? Commit/push this isolated five-file slice; the next live Canon031 front begins at `AdministrationRuntimeReadinessCommand` and the RuntimeScope command family.
+
+
 ## 2026-10-05 — engine-20261004121851-administering-50b9bf — Canon031 RC proof cluster pass
 
 ### Current-slice reconciliation
