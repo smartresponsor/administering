@@ -20,6 +20,11 @@ final class AdministrationAccessingAccountActionAuditController extends Abstract
     {
     }
 
+    /**
+     * Render the authorized operator audit view from safe, bounded projections.
+     *
+     * Access is checked before retrieving any account-action audit metadata.
+     */
     #[Route('/ea/accessing/account/action/audit', name: 'administration_accessing_account_action_audit', methods: ['GET'])]
     public function index(): Response
     {
@@ -33,6 +38,12 @@ final class AdministrationAccessingAccountActionAuditController extends Abstract
         ]);
     }
 
+    /**
+     * Return the authorized filtered audit report without exposing raw account events.
+     *
+     * Optional query parameters select action, status, account reference and row limit;
+     * the projection provider owns report filtering and safe serialization.
+     */
     #[Route('/ea/accessing/account/action/audit/report.json', name: 'administration_accessing_account_action_audit_report', methods: ['GET'])]
     public function report(Request $request): JsonResponse
     {

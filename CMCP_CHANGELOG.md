@@ -1,5 +1,19 @@
 # CMCP Execution Journal
 
+## 2026-10-11 — engine-20261004100706-administering-bbf243 — current gate baseline
+
+- Windows Console MCP baseline: Git master `9b61597bde0cff677087b45e014f91c232a82bba`, clean, origin/master aligned.
+- Read: current Administering README, AGENTS, composer and dependency contour; upstream CanonScanning RED report; canonical and sibling entry point contracts.
+- Canon mapping: App/Symfony typed-layer structure, Cruding generic CRUD ownership and EasyAdmin exception; Composer links to Objecting, Cruding, Viewing, Interfacing and Gating. Inspecting remains a separate verifier.
+- Historical RED: canon.052 Gating integration failure on 2026-09-29. Current `composer gate`: PASS (71 rules, zero failed, 3 warnings, 10 skipped), canon.052 PASS; do not destructively modify ignored .gating from stale evidence.
+- Current warnings: PHPDoc 57.6% classes/14.4% contract methods; stale PHPUnit coverage and stale behavioral/UI coverage evidence.
+- RC workstream: refresh relevant coverage evidence and validate runtime/behavioral acceptance, preserving current healthy runtime. Growth workstream: administrative UX and diagnostics beyond RC scope.
+- Risk: journal is large and cross-repository contracts need complete canonical review before structural changes; no speculative architectural mutation.
+- Material change: documented authorization and safe projection invariants on audit view/report controller methods; runtime behavior unchanged.
+- Post-change gates: `lint:composer` PASS; PHPUnit 154 tests / 704 assertions PASS; PHP-CS-Fixer dry-run PASS; Gating 71 rules / 0 failed / 3 warnings PASS.
+- Что имеем? Current Gating green, bounded PHPDoc improvement and passing deterministic checks. Что осталось? Refresh stale coverage/UI evidence, complete runtime RC acceptance, publish verified Git state.
+
+
 ## 2026-10-06 — engine-20261004114407-administering-de6a31 — Canon031 integration-contract registry pass
 
 - Reconciled clean/synchronized Windows MCP `master` at `e73c9cf5f9974cc9d7c8c1f3d90a1ca304fa8642` after the parallel Config command pass completed.
