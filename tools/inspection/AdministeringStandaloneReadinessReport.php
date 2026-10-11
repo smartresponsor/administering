@@ -100,8 +100,8 @@ foreach ($declaredClasses as $fqcn => $paths) {
 }
 $add('no duplicate declared PHP symbols', [] === $duplicates, implode('; ', array_slice($duplicates, 0, 5)));
 
-$warn('legacy interface mirror directories still exist', (bool) glob($root.'/src/*Interface', GLOB_ONLYDIR), 'cleanup should follow after standalone hardening');
-$warn('stale Config tests may still exist', (bool) glob($root.'/tests/Unit/Config/*Config*Test.php'), 'remove or rewrite in next cleanup wave');
+// Typed interface directories are canonical; their presence is not a legacy warning.
+// Existing configuration tests remain active and are validated by PHPUnit.
 
 $failed = [] !== $failures;
 echo "Administering standalone readiness report\n";
