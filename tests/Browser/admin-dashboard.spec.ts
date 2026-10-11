@@ -9,3 +9,12 @@ test('standalone admin dashboard fails closed when host authentication is unavai
   expect(response?.headers()['cache-control']).toContain('private');
   await expect(page.getByText('Authentication is required.')).toBeVisible();
 });
+
+test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
+  const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
+
+  expect(response).not.toBeNull();
+  expect(response?.status()).toBe(401);
+  expect(response?.headers()['cache-control']).toContain('no-store');
+  await expect(page.getByText('Authentication is required.')).toBeVisible();
+});
