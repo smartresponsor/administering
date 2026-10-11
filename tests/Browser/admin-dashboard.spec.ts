@@ -5,5 +5,7 @@ test('standalone admin dashboard fails closed when host authentication is unavai
 
   expect(response).not.toBeNull();
   expect(response?.status()).toBe(401);
+  expect(response?.headers()['cache-control']).toContain('no-store');
+  expect(response?.headers()['cache-control']).toContain('private');
   await expect(page.getByText('Authentication is required.')).toBeVisible();
 });
