@@ -28,6 +28,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Owns the operator-facing EasyAdmin entry point and administration tool workflows.
+ *
+ * Generic application CRUD routing remains the responsibility of Cruding.
+ * Requests without host authentication fail closed before any back-office data is loaded.
+ */
 #[AdminDashboard(routePath: '/ea/administration', routeName: 'administration_admin_index')]
 final class AdministrationDashboardController extends AbstractDashboardController
 {
@@ -54,6 +60,12 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         ]);
     }
 
+    /**
+     * Renders the dashboard only for an authenticated administrator.
+     *
+     * Unauthenticated standalone requests receive an uncached HTTP 401 response;
+     * authenticated requests require ROLE_ADMIN before any CRUD view is assembled.
+     */
     public function index(): Response
     {
         $requestStack = $this->container->get(\Symfony\Component\HttpFoundation\RequestStack::class);
@@ -284,6 +296,11 @@ final class AdministrationDashboardController extends AbstractDashboardControlle
         return Dashboard::new()->setTitle('Administering');
     }
 
+    /**
+     * Delegates navigation construction to the canonical operator menu builder.
+     *
+     * @return iterable<object>
+     */
     public function configureMenuItems(): iterable
     {
         yield from $this->mainMenuBuilder->build();
