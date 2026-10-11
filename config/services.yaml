@@ -7,7 +7,7 @@ services:
     autowire: true
     autoconfigure: true
     bind:
-      Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.system_entity_manager'
+      Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.entity_manager'
 
   _instanceof:
     App\Administering\Contract\AdministrationComponentIntegrationContractInterface:
