@@ -1,5 +1,13 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — Administering UI anonymous mutation boundary
+
+- Added Playwright assertions that anonymous tool mutation POST requests cannot redirect or establish cookies.
+- Browser suite: 10/10 passing. Functional/UI route coverage remains 5/224 and 5/203; this test does not claim new route coverage.
+- Authenticated EasyAdmin journeys require a dedicated host-authenticated test environment; standalone security provider has no login flow.
+
+
+
 ## 2026-10-12 — UI DOM access regression
 
 - Added browser assertions that anonymous users cannot see forms, buttons, or navigation on dashboard, section index, and tool-open routes.
