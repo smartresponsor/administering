@@ -1,5 +1,27 @@
 # CMCP Execution Journal
 
+## 2026-10-11 — engine-20261004101843-administering-541214
+
+- Baseline: master 5bfb4700d8d7550b4199bdcb3fe81021fdfb1d45, origin/master aligned; pre-existing journal change preserved.
+- Read: execution specification, Administering README/AGENTS/Composer, historical CanonScanning and Inspecting reports, companion README contracts (Canonization, Gating, Objecting, Cruding, Viewing, Interfacing).
+- Relevant canon mappings: Canon021 assigns generic CRUD to Cruding; EasyAdmin administration exception preserved. Canon052 requires artifact-only consumer .gating/ and standard Composer Gating integration; App\\Administering namespace preserved.
+- Historical Canon052 RED is stale. Current composer gate: 0 failed, 3 warnings (PHPDoc, PHP coverage, UI/functional coverage).
+- RC change: semantic authorization, caching, and save/apply PHPDoc in AdministrationConfigCenterController; no behavior changes.
+- Post-change PHP lint, cs:check, and gate pass; PHPUnit 154 tests/704 assertions passed. Fresh Inspecting: PHPStan 0 errors, 104 medium maintainability/design/complexity findings with no autofixes. Residual: broader test coverage and UI/functional coverage; no user-observable UI change in this patch.
+- Growth deferred: operator UX/diagnostics beyond release-critical proof.
+
+
+## 2026-10-11 — engine-20261004101102-administering-1cf88e
+
+- Baseline: master 3ba470852284fd3eb4fa239dfb9425e1fb791d8b; clean, origin/master aligned.
+- Read: target README, AGENTS, Composer and sibling Canonization, Gating, Objecting, Cruding, Viewing, Interfacing contracts; textual Canon021 and Canon052.
+- Historical RED (2026-09-29): Canon052 detects source/policy copies in consumer .gating/; requires confirmation on current HEAD.
+- Canon mapping: Canon021 permits EasyAdmin back-office CRUD but forbids generic app CRUD; Canon052 requires artifact-only consumer .gating/ and Composer Gating integration.
+- RC: classify .gating/ state and remediate without destructive operations, then verify Gating, PHP quality and regression tests.
+- Growth, deferred: improve operator UX and operation observability.
+- Gate run deferred by Console MCP RESOURCE_PRESSURE_WATCH; no process started.
+
+
 ## 2026-10-11 — engine-20261004100706-administering-bbf243 — current gate baseline
 
 - Windows Console MCP baseline: Git master `9b61597bde0cff677087b45e014f91c232a82bba`, clean, origin/master aligned.
