@@ -63,6 +63,16 @@ test('anonymous tool mutations do not redirect or set authentication cookies', a
   }
 });
 
+test('configuration catalog and edit screens fail closed to anonymous browsers', async ({ page }) => {
+  for (const path of ['/ea/administration/config', '/ea/administration/config/example/example/edit']) {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(401);
+    expect(response?.headers()['cache-control']).toContain('no-store');
+    await expect(page.getByText('Authentication is required.')).toBeVisible();
+    await expect(page.locator('form, input, button')).toHaveCount(0);
+  }
+});
+
 test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
   const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
 

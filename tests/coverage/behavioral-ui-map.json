@@ -53,6 +53,16 @@
       "ui": [
         "surface:administration_service_tool_runtime_controls"
       ]
+    },
+    "configuration catalog and edit screens fail closed to anonymous browsers": {
+      "functional": [
+        "route:administration_config_center_index",
+        "route:administration_config_tool_edit"
+      ],
+      "ui": [
+        "surface:administration_config_center_index",
+        "surface:administration_config_tool_edit"
+      ]
     }
   }
 }

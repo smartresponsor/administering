@@ -1,5 +1,15 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — Configuration UI routing regression
+
+- Browser test exposed HTTP 500 on configuration catalog/edit anonymous navigation.
+- Root cause: EasyAdmin AdminRouterSubscriber received null dashboard controller metadata on two configuration routes.
+- Fixed route defaults with AdministrationDashboardController; anonymous navigation now returns HTTP 401 before config data access.
+- Verified Playwright 11/11, functional 7/224, UI 7/203, PHPUnit 154/154, architecture GREEN, gating 0 failures.
+- Authorized operator journeys and screenshots remain unverified.
+
+
+
 ## 2026-10-12 — Administering UI anonymous mutation boundary
 
 - Added Playwright assertions that anonymous tool mutation POST requests cannot redirect or establish cookies.

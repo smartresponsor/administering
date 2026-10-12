@@ -38,6 +38,7 @@ final class AdministrationConfigCenterController extends AbstractController
 
     #[Route('/ea/administration/config', name: 'administration_config_center_index', methods: ['GET'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
+        EA::DASHBOARD_CONTROLLER_FQCN => \App\Administering\Controller\Admin\AdministrationDashboardController::class,
         EA::CRUD_CONTROLLER_FQCN => null,
         EA::CRUD_ACTION => null,
     ])]
@@ -69,6 +70,7 @@ final class AdministrationConfigCenterController extends AbstractController
 
     #[Route('/ea/administration/config/{applicationCode}/{toolCode}/edit', name: 'administration_config_tool_edit', methods: ['GET', 'POST'], defaults: [
         EA::ROUTE_CREATED_BY_EASYADMIN => true,
+        EA::DASHBOARD_CONTROLLER_FQCN => \App\Administering\Controller\Admin\AdministrationDashboardController::class,
         EA::CRUD_CONTROLLER_FQCN => null,
         EA::CRUD_ACTION => null,
     ])]
