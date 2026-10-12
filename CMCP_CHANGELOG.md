@@ -1,5 +1,13 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — Config edit POST browser boundary
+
+- Added Playwright regression for anonymous configuration edit POST: HTTP 401, no redirect, no set-cookie, private no-store behavior.
+- Verified 12/12 Playwright, 154/154 PHPUnit, architecture GREEN, gate zero failures.
+- Coverage unchanged: functional 7/224, UI 7/203; authorized UI and screenshots remain unverified.
+
+
+
 ## 2026-10-12 — Configuration UI routing regression
 
 - Browser test exposed HTTP 500 on configuration catalog/edit anonymous navigation.

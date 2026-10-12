@@ -73,6 +73,18 @@ test('configuration catalog and edit screens fail closed to anonymous browsers',
   }
 });
 
+test('configuration edit rejects anonymous POST before resolving tools', async ({ request }) => {
+  const response = await request.post('/ea/administration/config/example/example/edit', {
+    form: { apply: '1' },
+    maxRedirects: 0,
+  });
+  expect(response.status()).toBe(401);
+  expect(response.headers()['cache-control']).toContain('no-store');
+  expect(response.headers()['location']).toBeUndefined();
+  expect(response.headers()['set-cookie']).toBeUndefined();
+  expect(await response.text()).toContain('Authentication is required.');
+});
+
 test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
   const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
 
