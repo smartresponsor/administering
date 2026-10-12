@@ -18,6 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Provides permission-checked administrative configuration discovery and save/apply flows.
+ *
+ * Configuration execution is delegated to registered tool services; this controller
+ * never performs generic application CRUD or writes configuration files directly.
+ */
 final class AdministrationConfigCenterController extends AbstractController
 {
     public function __construct(
@@ -35,6 +41,11 @@ final class AdministrationConfigCenterController extends AbstractController
         EA::CRUD_CONTROLLER_FQCN => null,
         EA::CRUD_ACTION => null,
     ])]
+    /**
+     * Render the configuration catalog without exposing it to anonymous operators.
+     *
+     * Responses are explicitly non-cacheable because tool and permission state is mutable.
+     */
     public function index(): Response
     {
         if (null === $this->getUser()) {
@@ -61,6 +72,12 @@ final class AdministrationConfigCenterController extends AbstractController
         EA::CRUD_CONTROLLER_FQCN => null,
         EA::CRUD_ACTION => null,
     ])]
+    /**
+     * Resolve one approved tool and perform its permission-checked save or apply action.
+     *
+     * A missing tool is a 404; missing form or service registration is a configuration
+     * error, rather than an implicit fallback to unrestricted file mutation.
+     */
     public function edit(string $applicationCode, string $toolCode, Request $request): Response
     {
         if (null === $this->getUser()) {
