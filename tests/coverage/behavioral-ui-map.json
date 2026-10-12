@@ -21,6 +21,38 @@
       "critical": [
         "workflow:standalone-admin-authentication-required"
       ]
+    },
+    "standalone admin section detail rejects unauthenticated navigation": {
+      "functional": [
+        "route:administration_service_section_tool_detail"
+      ],
+      "ui": [
+        "surface:administration_service_section_tool_detail"
+      ]
+    },
+    "standalone admin tools cannot be opened without host authentication": {
+      "functional": [
+        "route:administration_service_section_tools"
+      ],
+      "ui": [
+        "surface:administration_service_section_tools"
+      ]
+    },
+    "standalone admin operation /ea/administration/tool/example/open fails closed": {
+      "functional": [
+        "route:administration_service_tool_open"
+      ],
+      "ui": [
+        "surface:administration_service_tool_open"
+      ]
+    },
+    "standalone admin operation /ea/administration/tool/example/control fails closed": {
+      "functional": [
+        "route:administration_service_tool_runtime_controls"
+      ],
+      "ui": [
+        "surface:administration_service_tool_runtime_controls"
+      ]
     }
   }
 }

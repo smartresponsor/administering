@@ -36,6 +36,13 @@ for (const path of [
   });
 }
 
+test('standalone admin section detail rejects unauthenticated navigation', async ({ page }) => {
+  const response = await page.goto('/ea/administration/section/configuration/tool/example', { waitUntil: 'commit' });
+  expect(response?.status()).toBe(401);
+  expect(response?.headers()['cache-control']).toContain('no-store');
+  await expect(page.getByText('Authentication is required.')).toBeVisible();
+});
+
 test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
   const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
 

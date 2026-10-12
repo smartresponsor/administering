@@ -1,5 +1,16 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — Administering browser coverage expansion
+
+- Baseline: master 9c8d2dea892a89f820a029ced247246b30c1ac66, clean and aligned to origin/master before changes; 7 passing Playwright cases, 1/224 functional and 1/203 UI route coverage.
+- Canon mapping: Canon021 reserves generic CRUD for Cruding while permitting EasyAdmin admin operations; Canon041/042 require meaningful browser test evidence tied to actual routes. No source routing or controller contract was modified.
+- RC change: add explicit unauthenticated section-tool-detail browser case and map four existing route-level authorization assertions to their real Symfony route names.
+- Verification: npm test completed GREEN, 8 Playwright tests; coverage 5/224 functional, 5/203 UI, 1/1 behavioral, 1/1 critical.
+- Residual: authenticated operator flows and full functional/UI coverage remain unverified; do not count anonymous rejection as authorized workflow acceptance.
+- Growth: extend test fixtures for authorized host-user cohorts and deeper operator controls separately from this fail-closed hardening pass.
+
+
+
 ## 2026-10-11 — engine-20261004101843-administering-541214
 
 - Baseline: master 5bfb4700d8d7550b4199bdcb3fe81021fdfb1d45, origin/master aligned; pre-existing journal change preserved.
