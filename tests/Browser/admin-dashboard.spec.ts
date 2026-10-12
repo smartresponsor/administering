@@ -43,6 +43,16 @@ test('standalone admin section detail rejects unauthenticated navigation', async
   await expect(page.getByText('Authentication is required.')).toBeVisible();
 });
 
+test('anonymous admin pages cannot expose operational controls or navigation', async ({ page }) => {
+  for (const path of ['/ea/administration', '/ea/administration/section/configuration/tool', '/ea/administration/tool/example/open']) {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(401);
+    await expect(page.getByText('Authentication is required.')).toBeVisible();
+    await expect(page.locator('form, input, button, nav, [role="navigation"]')).toHaveCount(0);
+    expect(await page.locator('body').innerText()).not.toContain('Symfony Exception');
+  }
+});
+
 test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
   const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
 

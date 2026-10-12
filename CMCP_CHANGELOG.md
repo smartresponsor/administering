@@ -1,5 +1,14 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — UI DOM access regression
+
+- Added browser assertions that anonymous users cannot see forms, buttons, or navigation on dashboard, section index, and tool-open routes.
+- Verified 9 Playwright tests pass; route coverage remains functional 5/224 and UI 5/203.
+- Gating: 71 rules, zero failures. Architecture guards and 154 PHPUnit tests pass.
+- Remaining: authenticated operator journeys and visual screenshots not verified.
+
+
+
 ## 2026-10-12 — Administering browser coverage expansion
 
 - Baseline: master 9c8d2dea892a89f820a029ced247246b30c1ac66, clean and aligned to origin/master before changes; 7 passing Playwright cases, 1/224 functional and 1/203 UI route coverage.
