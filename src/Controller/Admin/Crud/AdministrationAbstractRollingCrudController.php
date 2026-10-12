@@ -9,8 +9,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\ActionGroup;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 
+/**
+ * Reusable read-only EasyAdmin base for Rolling governance listings.
+ *
+ * Adds a contextual empty state and links to the existing access and
+ * permission diagnostics without duplicating application CRUD behavior.
+ */
 abstract class AdministrationAbstractRollingCrudController extends AdministrationAbstractReadOnlyCrudController
 {
+    /** Keep detail navigation explicit rather than treating row clicks as edits. */
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
@@ -18,6 +25,7 @@ abstract class AdministrationAbstractRollingCrudController extends Administratio
             ->setDefaultRowAction(Action::DETAIL);
     }
 
+    /** Populate the index empty-state contract only for genuinely empty listings. */
     public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
     {
         $entities = $responseParameters->get('entities');

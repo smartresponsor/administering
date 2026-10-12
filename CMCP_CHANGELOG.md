@@ -1,5 +1,17 @@
 # CMCP Execution Journal
 
+## 2026-10-12 — engine-20261004093233-administering-521051
+
+- Baseline: master 3d32a6f09ccfccf54e42770c865f61b0029bb485, clean, origin/master synchronized at opening.
+- Read: Administering README.md, AGENTS.md, composer.json and .gitignore; Canonization README.md, AGENTS.md, normative Canon052GatingIntegrationRule.md; Gating README.md and AGENTS.md; Objecting, Cruding, Viewing, Interfacing README contracts; upstream CanonScanning Gating and Inspecting reports.
+- Canon map: Canon052 mandates Gating as symlinked dev Composer dependency and packaged production dependency, a standard quality gate, and generated-only consumer .gating/. The old upstream RED was for copied local Gating implementation; fresh composer gate succeeds. Canon021 reserves generic application CRUD for Cruding and permits EasyAdmin back-office controllers. Namespace remains App\\Administering.
+- RC-critical pass: validated current Gating and administration architecture guards; documented the existing Rolling read-only EasyAdmin controller and its empty-state lifecycle without behavioral modification.
+- Growth track: semantic PHPDoc expansion, PHPUnit coverage uplift, renewed Playwright UI evidence, and operator diagnostics remain separate from the canonical blocker.
+- Risks: old Gating evidence cannot override fresh local gate results; no destructive cleaning, neighboring changes, or runtime restarts.
+- Verification: composer gate GREEN, composer inspect:architecture GREEN; post-edit checks and integration recorded in follow-up.
+
+
+
 ## 2026-10-12 — Config edit POST browser boundary
 
 - Added Playwright regression for anonymous configuration edit POST: HTTP 401, no redirect, no set-cookie, private no-store behavior.
