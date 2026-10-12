@@ -24,6 +24,18 @@ for (const path of [
   });
 }
 
+for (const path of [
+  '/ea/administration/tool/example/open',
+  '/ea/administration/tool/example/control',
+]) {
+  test(`standalone admin mutation ${path} rejects anonymous POST`, async ({ request }) => {
+    const response = await request.post(path, { form: { confirmation: 'true' } });
+    expect(response.status()).toBe(401);
+    expect(response.headers()['cache-control']).toContain('no-store');
+    expect(await response.text()).toContain('Authentication is required.');
+  });
+}
+
 test('standalone admin tools cannot be opened without host authentication', async ({ page }) => {
   const response = await page.goto('/ea/administration/section/configuration/tool', { waitUntil: 'commit' });
 
